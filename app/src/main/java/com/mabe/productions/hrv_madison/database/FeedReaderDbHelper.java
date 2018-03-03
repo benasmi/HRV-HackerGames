@@ -5,6 +5,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
     /*
@@ -16,12 +20,14 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
      * ###########################
      * #  ID  #  DATE  #  RMSSD  #
      * ###########################
+     * gitlab.org
+     * #############################################################################################################################################################################
+     * #                                                                    HRV DATA                                                                                  # JSON array #
+     * #############################################################################################################################################################################
+     * #  ID  #  RMSSD  #  LN_RMSSD  #  LOWEST_RMSSD  #  HIGHEST_RMSSD  #  LOWEST_BPM  #  HIGHEST_BPM  #  AVERAGE_BPM  #  LF_BAND  #  VLF_BAND  #  VHF_BAND  #  DATE  #  BPM data  #
+     * #############################################################################################################################################################################
      *
-     * ################################################################################################################################################################
-     * #                                                                    HRV DATA                                                                                  #
-     * ################################################################################################################################################################
-     * #  ID  #  RMSSD  #  LN_RMSSD  #  LOWEST_RMSSD  #  HIGHEST_RMSSD  #  LOWEST_BPM  #  HIGHEST_BPM  #  AVERAGE_BPM  #  LF_BAND  #  VLF_BAND  #  VHF_BAND  #  DATE  #
-     * ################################################################################################################################################################
+     * BPM data row is a json array converted to string, that contains bpm values
      *
      * Initial user data is stored in SharedPreference, called user_data
      *
@@ -36,6 +42,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public final static String COL_LOWEST_BPM = "lowest_BPM";
     public final static String COL_HIGHEST_BPM = "highest_BPM";
     public final static String COL_AVERAGE_BPM = "average_BPM";
+    public final static String COL_BPM_DATA = "BPM_data";
     public final static String COL_LF_BAND = "LF_BAND";
     public final static String COL_HF_BAND = "HF_BAND";
     public final static String COL_VLF_BAND = "VLF_BAND";
@@ -90,6 +97,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
                     FeedReaderDbHelper.COL_HF_BAND + " FLOAT," +
                     FeedReaderDbHelper.COL_VLF_BAND + " FLOAT," +
                     FeedReaderDbHelper.COL_VHF_BAND + " FLOAT," +
+                    FeedReaderDbHelper.COL_BPM_DATA + " STRING," +
                     FeedReaderDbHelper.COL_RMSSD + " INTEGER)";
 
 
@@ -121,6 +129,44 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
     }
+
+    public static int[] getBpmValuesFromString(String jsonArray){
+        try {
+            JSONArray array = new JSONArray(jsonArray);
+
+            int[] bpmValues = new int[array.length()];
+
+            for(int i = 0; i < array.length(); i++){
+                bpmValues[i] = array.getInt(i);
+            }
+
+            return bpmValues;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String getStringFromBpmValues(int[] bpmValues){
+
+        JSONArray array = new JSONArray();
+
+        try{
+            for(int i = 0; i < bpmValues.length; i++){
+                array.put(i, bpmValues[i]);
+            }
+            return array.toString();
+        }catch(JSONException e){
+            e.printStackTrace();
+        }
+
+        return null;
+
+
+    }
+
+
 
 
 
