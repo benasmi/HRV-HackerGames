@@ -27,7 +27,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
      * #  ID  #  RMSSD  #  LN_RMSSD  #  LOWEST_RMSSD  #  HIGHEST_RMSSD  #  LOWEST_BPM  #  HIGHEST_BPM  #  AVERAGE_BPM  #  LF_BAND  #  VLF_BAND  #  VHF_BAND  #  DATE  #  BPM data  #
      * #############################################################################################################################################################################
      *
-     * BPM data row is a json array converted to string, that contains bpm values
+     * BPM data row is a json array converted to string, that contains bpm values as integers
      *
      * Initial user data is stored in SharedPreference, called user_data
      *

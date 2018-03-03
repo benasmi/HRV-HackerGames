@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
@@ -66,6 +67,16 @@ public class DataTodayFragment extends Fragment {
     private TextView bpm_card_value_highest;
     private TextView bpm_card_value_lowest;
 
+    //Daily reccomendation cardview
+    private TextView reccomendation_txt_yesterday_hrv;
+    private TextView reccomendation_txt_today_hrv;
+    private TextView reccomendation_txt_explanation;
+    private TextView reccomendation_txt_pulse_zone;
+    private TextView reccomendation_txt_workout_duration;
+    private ImageView reccomendation_status_arrow;
+    private ImageView reccomendation_status_circle;
+
+
 
     public DataTodayFragment() {
         // Required empty public constructor
@@ -89,7 +100,6 @@ public class DataTodayFragment extends Fragment {
     public void updateData(){
         //TODO: populate cardviews with measurement data
         User user = User.getUser(getContext());
-
         user.getAllMeasurements(getContext());
 
 
@@ -133,6 +143,15 @@ public class DataTodayFragment extends Fragment {
         bpm_card_value_highest = (TextView) view.findViewById(R.id.bpm_highest_value);
         bpm_card_value_lowest = (TextView) view.findViewById(R.id.bpm_value_lowest);
 
+        //Reccomendation cardview
+        reccomendation_status_arrow = view.findViewById(R.id.weekly_reccomendation_status_arrow);
+        reccomendation_status_circle = view.findViewById(R.id.weekly_reccomendation_status_circle);
+        reccomendation_txt_explanation = view.findViewById(R.id.weekly_reccomendation_explanation);
+        reccomendation_txt_workout_duration = view.findViewById(R.id.weekly_program_duration_reccomendation);
+        reccomendation_txt_pulse_zone = view.findViewById(R.id.weekly_program_pulse_zone);
+        reccomendation_txt_today_hrv = view.findViewById(R.id.weekly_reccomendation_today_hrv);
+        reccomendation_txt_yesterday_hrv = view.findViewById(R.id.weekly_reccomendation_yesterday_hrv);
+
     }
 
 
@@ -146,6 +165,12 @@ public class DataTodayFragment extends Fragment {
         frequency_chart.setCenterTextTypeface(futura);
         health_index_chart.setCenterTextTypeface(futura);
 
+        //Weekly reccomendation
+        reccomendation_txt_today_hrv.setTypeface(futura);
+        reccomendation_txt_yesterday_hrv.setTypeface(futura);
+        reccomendation_txt_workout_duration.setTypeface(futura);
+        reccomendation_txt_pulse_zone.setTypeface(futura);
+        reccomendation_txt_explanation.setTypeface(futura);
 
         //FrequencyCardView
         freq_card_txt_freq_band.setTypeface(futura);

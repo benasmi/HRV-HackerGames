@@ -64,6 +64,9 @@
     <string name="please_select_gender">Prašome pasirinkti lytį!</string>
     <string name="select_at_least_two_days">Prašome pasirinkti bent dvi dienas!</string>
     <string name="how_long_can_you_work_out">Kiek laiko per dieną galite sportuoti?</string>
-    <string name="bpm_rate">Širdies ritmas</string>
+    <string name="weekly_program">Savaitės programa</string>
+    <string name="todays_program">Šiandienos programa</string>
+    <string name="todays_program_subtext">Šiandien jums rekomenduojame</string>
+    <string name="bpm_rate">Širdies pulso duomenys</string>
 </resources>
 
