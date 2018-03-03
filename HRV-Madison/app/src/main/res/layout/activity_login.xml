@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_login"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_background"
+    tools:context="com.mabe.productions.hrv_madison.LoginActivity">
+
+    <TextView
+        android:text="@string/app_name"
+        android:textSize="25dp"
+        android:textColor="#FFF"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/slogan" />
+
+    <EditText
+        android:layout_width="270dp"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:textColor="#FFFFFF"
+        android:textSize="16dp"
+        android:paddingBottom="10dp"
+        android:hint="@string/email"
+        android:drawableLeft="@drawable/ic_email"
+        android:drawablePadding="10dp"
+        android:letterSpacing="0.1"
+        android:textColorHint="#FFF"
+        android:background="@drawable/login_edittext"
+        android:layout_marginTop="111dp"
+        android:id="@+id/usernameEditText"
+        android:layout_below="@+id/slogan"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="270dp"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:textColor="#FFFFFF"
+        android:textSize="16dp"
+        android:paddingBottom="10dp"
+        android:hint="@string/password"
+        android:drawableLeft="@drawable/ic_lock"
+        android:drawablePadding="10dp"
+        android:letterSpacing="0.1"
+        android:textColorHint="#FFF"
+        android:background="@drawable/login_edittext"
+        android:layout_marginTop="20dp"
+        android:id="@+id/passwordEditText"
+        android:layout_below="@+id/usernameEditText"
+        android:layout_alignLeft="@+id/usernameEditText"
+        android:layout_alignStart="@+id/usernameEditText" />
+
+    <android.support.v7.widget.AppCompatImageButton
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_facebook"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/buttonLogin"
+            android:id="@+id/login_facebook"
+            android:background="@drawable/login_socialmedia"
+            android:layout_alignLeft="@+id/buttonLogin"/>
+
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/buttonLogin"
+        android:src="@drawable/ic_googleicon"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/login_socialmedia"
+        android:layout_alignRight="@+id/buttonLogin"
+        android:id="@+id/login_googlePlus"
+        />
+
+    <ImageView
+        android:layout_width="5dp"
+        android:layout_height="5dp"
+        android:background="@drawable/circle"
+        android:id="@+id/circleDot"
+        android:layout_centerVertical="@+id/login_googlePlus"
+        android:layout_alignBottom="@+id/login_googlePlus"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp"/>
+
+
+
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        app:srcCompat="@drawable/intro_screen_anim_2"
+        android:layout_marginTop="35dp"
+        android:id="@+id/imageView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_account_click_prompt"
+        android:layout_below="@+id/login_facebook"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:clickable="true"
+        android:textColor="#EEEEEE"
+        android:id="@+id/noAccount"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/proceed_without_account"
+        android:textStyle="italic"
+        android:layout_alignParentBottom="true"
+        android:textSize="13dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:clickable="true"
+        android:textColor="#EEEEEE"
+        android:id="@+id/noRegistration"
+        />
+
+    <android.support.v7.widget.AppCompatButton
+        android:layout_width="270dp"
+        android:layout_height="35dp"
+        android:textSize="15dp"
+        android:text="@string/log_in"
+        android:textColor="#FFF"
+        android:textAllCaps="false"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/login_button_gradient"
+        android:id="@+id/buttonLogin"
+        android:layout_below="@+id/passwordEditText"
+        android:layout_alignLeft="@+id/passwordEditText"
+        android:layout_alignStart="@+id/passwordEditText"
+        android:onClick="login"
+        />
+
+
+</RelativeLayout>

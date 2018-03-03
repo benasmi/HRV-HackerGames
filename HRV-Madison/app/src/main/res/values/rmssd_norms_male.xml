@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="baseline_18_24_M">42</integer> <!--TODO: find actual values !-->
+    <integer name="baseline_bias_18_24_M">23</integer>
+
+    <integer name="baseline_25_34_M">40</integer>
+    <integer name="baseline_bias_25_34_M">20</integer>
+
+    <integer name="baseline_35_44_M">32</integer>
+    <integer name="baseline_bias_35_44_M">17</integer>
+
+    <integer name="baseline_45_54_M">23</integer>
+    <integer name="baseline_bias_45_54_M">11</integer>
+
+    <integer name="baseline_55_64_M">20</integer>
+    <integer name="baseline_bias_55_64_M">11</integer>
+
+    <integer name="baseline_65_74_M">19</integer>
+    <integer name="baseline_bias_65_74_M">11</integer>
+
+    <integer name="baseline_75_M">42</integer> <!--TODO: find actual values !-->
+    <integer name="baseline_bias_75_M">23</integer>
+
+
+</resources>
