@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_background"
+    tools:context="com.mabe.productions.hrv_madison.initialInfo.IntroInitialInfoBirthday">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Kada jūsų gimtadienis?"
+        android:gravity="center"
+        android:textColor="#FFF"
+        android:textSize="25dp"
+        android:layout_marginTop="40dp"
+        android:id="@+id/txt_when_is_your_birthday"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        >
+
+        <DatePicker
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:calendarViewShown="false"
+            android:theme="@style/MyDatePickerSpinnerStyle"
+            android:id="@+id/datePicker"
+            android:datePickerMode="spinner"></DatePicker>
+
+
+
+    </LinearLayout>
+
+
+    <Button
+        android:layout_width="368dp"
+        android:layout_height="48dp"
+        android:background="#003e5266"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentBottom="true"
+        android:text="Tęsti"
+        android:onClick="start"
+        android:id="@+id/initial_btn_continue_birthday"
+        android:textAllCaps="false"
+        android:textSize="13dp"
+        android:textColor="#F62459"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>

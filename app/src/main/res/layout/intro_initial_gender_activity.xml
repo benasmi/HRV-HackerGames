@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_background"
+    tools:context="com.mabe.productions.hrv_madison.initialInfo.IntroInitialGender">
+
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Kokia jūsų lytis?"
+        android:gravity="center"
+        android:textColor="#FFF"
+        android:textSize="25dp"
+        android:layout_marginTop="40dp"
+        android:id="@+id/txt_what_is_your_gender"/>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerVertical="true"
+        android:weightSum="4">
+        <ImageView
+            android:layout_width="0px"
+            android:layout_height="180dp"
+            android:layout_weight="2"
+            android:layout_gravity="center"
+            android:id="@+id/male_icon"
+            android:padding="40dp"
+            android:src="@drawable/ic_superior"
+            android:paddingLeft="30dp"/>
+
+        <ImageView
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#fff"
+            android:id="@+id/initial_img_divider"
+            android:rotation="15"/>
+        <ImageView
+            android:layout_width="0px"
+            android:layout_height="180dp"
+            android:padding="40dp"
+            android:id="@+id/female_icon"
+            android:paddingRight="30dp"
+            android:layout_gravity="center"
+            android:layout_weight="2"
+            android:src="@drawable/ic_female"/>
+    </LinearLayout>
+
+
+    <Button
+        android:layout_width="368dp"
+        android:layout_height="48dp"
+        android:background="#003e5266"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentBottom="true"
+        android:text="Tęsti"
+        android:onClick="start"
+        android:textAllCaps="false"
+        android:id="@+id/initial_btn_continue_gender"
+        android:textSize="13dp"
+        android:textColor="#F62459"
+        android:layout_centerHorizontal="true"/>
+
+
+</RelativeLayout>

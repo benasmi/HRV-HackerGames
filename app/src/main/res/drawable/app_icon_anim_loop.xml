@@ -1,0 +1,49 @@
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:repeatCount="10">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="vector"
+            android:width="262dp"
+            android:height="262dp"
+            android:viewportWidth="262"
+            android:viewportHeight="262">
+            <group android:name="xmlid_3_">
+                <path
+                    android:name="xmlid_22_"
+                    android:pathData="M 0 131.2 C 77.3 185.4 77.3 185.4 131.2 131.5 C 185.1 77.6 262.4 131.2 262.4 131.2 L 131.2 262.5 L 0 131.2 Z"
+                    android:fillColor="#f62459"
+                    android:strokeWidth="1"/>
+                <group android:name="xmlid_21_">
+                    <path
+                        android:name="xmlid_13_"
+                        android:pathData="M 131.2 33 L 229.5 131.6 L 131.2 229.9 L 33 131.5 L 131.2 33 M 131.2 0 L 0 131.2 L 131.2 262.4 L 262.4 131.2 L 131.2 0 Z"
+                        android:fillColor="#ffffff"
+                        android:strokeWidth="1"/>
+                </group>
+            </group>
+        </vector>
+    </aapt:attr>
+    <target android:name="xmlid_22_">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="pathData"
+                    android:duration="2000"
+                    android:valueFrom="M 0 131.2 C 77.3 185.4 77.3 185.4 131.2 131.5 C 185.1 77.6 262.4 131.2 262.4 131.2 L 131.2 262.5 L 0 131.2 Z"
+                    android:valueTo="M 0 131.2 C 0 131.2 77.3 77.5 131.2 131.5 C 185.1 185.5 262.4 131.2 262.4 131.2 L 131.2 262.5 L 0 131.2 Z"
+                    android:valueType="pathType"
+                    android:interpolator="@android:anim/accelerate_decelerate_interpolator"/>
+                <objectAnimator
+                    android:propertyName="pathData"
+                    android:startOffset="2000"
+                    android:duration="2000"
+                    android:valueFrom="M 0 131.2 C 0 131.2 77.3 77.5 131.2 131.5 C 185.1 185.5 262.4 131.2 262.4 131.2 L 131.2 262.5 L 0 131.2 Z"
+                    android:valueTo="M 0 131.2 C 77.3 185.4 77.3 185.4 131.2 131.5 C 185.1 77.6 262.4 131.2 262.4 131.2 L 131.2 262.5 L 0 131.2 Z"
+                    android:valueType="pathType"
+                    android:interpolator="@android:anim/accelerate_decelerate_interpolator"/>
+            </set>
+        </aapt:attr>
+    </target>
+</animated-vector>

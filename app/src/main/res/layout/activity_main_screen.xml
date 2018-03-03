@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mabe.productions.hrv_madison.MainScreenActivity">
+
+
+
+    <RelativeLayout
+                    android:id="@+id/activity_main_screen"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/login_background">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/my_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#2c3e50"
+            android:elevation="4dp"
+            >
+
+
+
+            <TextView
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="No device"
+                android:layout_gravity="left"
+                android:textColor="#FFF"
+                android:gravity="left"
+                android:textSize="17dp"
+                android:id="@+id/toolbar_title" />
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_gravity="right">
+
+
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="35dp"
+                    android:id="@+id/img_login"
+                    android:layout_marginRight="30dp"
+                    android:src="@drawable/ic_user"/>
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="35dp"
+                    android:id="@+id/img_add_device"
+                    android:layout_marginRight="15dp"
+                    android:src="@drawable/ic_add"
+                    android:onClick="addDevice"/>
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="10dp"
+                    android:id="@+id/imag_ask"
+                    android:src="@drawable/ic_question"/>
+
+            </LinearLayout>
+
+
+        </android.support.v7.widget.Toolbar>
+
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/my_toolbar"
+            android:layout_above="@+id/sad_line"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:background="#EFEFEF"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:id="@+id/sad_line"
+            android:layout_height="4dp"
+            android:layout_above="@+id/bottom_navigation"
+            android:background="@drawable/elevation_gradient"/>
+
+        <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"/>
+
+</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>
