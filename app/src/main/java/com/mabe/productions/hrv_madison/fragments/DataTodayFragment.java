@@ -2,6 +2,7 @@ package com.mabe.productions.hrv_madison.fragments;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,8 +11,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -46,9 +52,19 @@ public class DataTodayFragment extends Fragment {
     private TextView hrv_card_txt_average_hrv;
     private TextView hrv_card_txt_average_norm_hrv;
 
+
+
     private PieChart frequency_chart;
     private PieChart health_index_chart;
-    private PieChart hrv_chart;
+    private LineChart bpm_line_chart;
+    private TextView bpm_card_txt_bpm;
+    private TextView bpm_card_txt_date;
+    private TextView bpm_card_txt_average;
+    private TextView bpm_card_txt_highest;
+    private TextView bpm_card_txt_lowest;
+    private TextView bpm_card_value_average;
+    private TextView bpm_card_value_highest;
+    private TextView bpm_card_value_lowest;
 
 
     public DataTodayFragment() {
@@ -65,7 +81,7 @@ public class DataTodayFragment extends Fragment {
         setFonts();
         frequency_pieChart();
         health_index_pieChart();
-
+        bpm_lineChart();
         return view;
 
     }
@@ -102,6 +118,18 @@ public class DataTodayFragment extends Fragment {
         hrv_card_txt_hrv_after= (TextView) view.findViewById(R.id.hrc_card_txt_hrv);
         hrv_card_txt_average_hrv= (TextView)view.findViewById(R.id.hrc_card_txt_average_hrv);
         hrv_card_txt_average_norm_hrv= (TextView) view.findViewById(R.id.hrc_card_txt_norm_hrv);
+
+        //BPM PieChart
+        bpm_line_chart = (LineChart) view.findViewById(R.id.chart_bpm);
+        bpm_card_txt_bpm = (TextView) view.findViewById(R.id.bpm_index_text_view);
+        bpm_card_txt_date = (TextView) view.findViewById(R.id.bpm_index_measurement_date);
+        bpm_card_txt_average = (TextView) view.findViewById(R.id.bpm_txt_average);
+        bpm_card_txt_highest = (TextView) view.findViewById(R.id.bpm_highest_value);
+        bpm_card_txt_lowest = (TextView) view.findViewById(R.id.bpm_txt_lowest);
+        bpm_card_value_average = (TextView) view.findViewById(R.id.bpm_value);
+        bpm_card_value_highest = (TextView) view.findViewById(R.id.bpm_highest_value);
+        bpm_card_value_lowest = (TextView) view.findViewById(R.id.bpm_value_lowest);
+
     }
 
 
@@ -138,6 +166,30 @@ public class DataTodayFragment extends Fragment {
         hrv_card_txt_hrv_after.setTypeface(futura);
         hrv_card_txt_average_hrv.setTypeface(futura);
         hrv_card_txt_average_norm_hrv.setTypeface(futura);
+
+        bpm_card_txt_bpm.setTypeface(futura);
+        bpm_card_txt_date.setTypeface(futura);
+        bpm_card_txt_average.setTypeface(futura);
+        bpm_card_txt_highest.setTypeface(futura);
+        bpm_card_txt_lowest.setTypeface(futura);
+        bpm_card_value_average.setTypeface(futura);
+        bpm_card_value_highest.setTypeface(futura);
+        bpm_card_value_lowest.setTypeface(futura);
+
+
+        bpm_line_chart.getLegend().setEnabled(false);
+        bpm_line_chart.getXAxis().setDrawAxisLine(false);
+        bpm_line_chart.getAxisRight().setDrawAxisLine(false);
+        bpm_line_chart.getAxisLeft().setDrawAxisLine(true);
+        bpm_line_chart.getAxisLeft().setDrawGridLines(true);
+        bpm_line_chart.getXAxis().setDrawGridLines(false);
+        bpm_line_chart.getAxisRight().setDrawGridLines(false);
+        bpm_line_chart.setDescription(null);
+        bpm_line_chart.getAxisLeft().setDrawLabels(true);
+        bpm_line_chart.getAxisRight().setDrawLabels(false);
+        bpm_line_chart.getXAxis().setDrawLabels(false);
+        bpm_line_chart.setTouchEnabled(false);
+        bpm_line_chart.setViewPortOffsets(0f, 0f, 0f, 0f);
     }
 
     private void frequency_pieChart(){
@@ -187,49 +239,37 @@ public class DataTodayFragment extends Fragment {
         legend.setEnabled(false);
     }
 
-    private void hrv_pieChart(){
+    private void bpm_lineChart(){
+            LineData data = new LineData();
+        //Creating a line with single hr value
+            ArrayList<Entry> singleValueList = new ArrayList<>();
+            singleValueList.add(new Entry(0, 16));
+            singleValueList.add(new Entry(1, 24));
+            singleValueList.add(new Entry(2, 64));
+            singleValueList.add(new Entry(3, 35));
+            LineDataSet set = new LineDataSet(singleValueList, "HR");
+            set.setLineWidth(getContext().getResources().getDimension(R.dimen.bpm_line_width));
+            set.setDrawValues(false);
+            set.setDrawCircleHole(false);
+            set.setCircleRadius(getContext().getResources().getDimension(R.dimen.circle_radius));
+            set.setCircleColor(Color.parseColor("#FFFFFF"));
+            set.setColor(Color.parseColor("#F62459"));
+            set.setDrawFilled(true);
 
-        //Casual modifications
-        hrv_chart.setUsePercentValues(true);
-        hrv_chart.setDrawSliceText(false);
-        hrv_chart.getDescription().setEnabled(false);
+            GradientDrawable drawable = new GradientDrawable();
+            drawable.setColors(new int[]{
+                    Color.parseColor("#a6f62459"),
+                    Color.TRANSPARENT
+            });
 
-        //Space inside chart and color
-        hrv_chart.setTransparentCircleRadius(50f);
-        hrv_chart.setHoleColor(Color.TRANSPARENT);
-        hrv_chart.setHoleRadius(60f);
-        hrv_chart.setCenterText("HRV");
-        hrv_chart.setCenterTextSize(20f);
-        hrv_chart.setCenterTextColor(Color.WHITE);
+            drawable.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+            drawable.setShape(GradientDrawable.RECTANGLE);
+            drawable.setSize(240, 160);
+            set.setFillDrawable(drawable);
+            data.addDataSet(set);
+            bpm_line_chart.setData(data);
 
 
-        //Remove X-axis values
-        hrv_chart.setDrawEntryLabels(false);
-
-        //Animate pieChart
-        hrv_chart.animateY(1000, Easing.EasingOption.EaseInOutCubic);
-
-        ArrayList<PieEntry> values = new ArrayList<>();
-        values.add(new PieEntry(65f,"BPM"));
-
-        //Modify Y-axis value
-        final PieDataSet dataSet = new PieDataSet(values,"Frequencies");
-        dataSet.setSliceSpace(2f);
-        dataSet.setSelectionShift(3f);
-        dataSet.setColor(Color.parseColor("#22A7F0"));
-        dataSet.setDrawValues(false);
-
-        //Modify Data looks
-        PieData data = new PieData(dataSet);
-        data.setValueTextSize(10f);
-        data.setValueTextColor(Color.YELLOW);
-
-        //Setting data
-        hrv_chart.setData(data);
-
-        //Modify data
-        Legend legend = hrv_chart.getLegend();
-        legend.setEnabled(false);
 
     }
 
