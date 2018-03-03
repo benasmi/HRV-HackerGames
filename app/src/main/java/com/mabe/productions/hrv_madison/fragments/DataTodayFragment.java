@@ -74,6 +74,9 @@ public class DataTodayFragment extends Fragment {
         //TODO: populate cardviews with measurement data
         User user = User.getUser(getContext());
 
+        user.getAllMeasurements(getContext());
+
+
 
     }
 

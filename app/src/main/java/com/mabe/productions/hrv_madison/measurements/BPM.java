@@ -48,4 +48,12 @@ public class BPM {
         return highest_bpm;
     }
 
+    public int[] getBpmValues(){
+        int[] values = new int[bpmList.size()];
+        for(int i = 0; i < values.length; i++){
+            values[i] = bpmList.get(i);
+        }
+        return values;
+    }
+
 }
