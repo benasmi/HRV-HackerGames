@@ -80,5 +80,12 @@ public class RMSSD {
         return highest_rmssd;
     }
 
+    public int[] getRMSSDValues(){
+        int[] values = new int[rmssdList.size()];
+        for(int i = 0; i < values.length; i++){
+            values[i] = rmssdList.get(i);
+        }
+        return values;
+    }
 
 }

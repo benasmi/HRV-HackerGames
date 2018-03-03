@@ -37,8 +37,6 @@ public class IntroInitialPage extends AppCompatActivity {
                 "fonts/Verdana.ttf");
 
 
-
-
         txt_request_info_explanation.setTypeface(verdana);
     }//
 

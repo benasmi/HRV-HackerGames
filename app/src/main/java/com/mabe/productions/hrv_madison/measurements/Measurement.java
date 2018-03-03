@@ -23,8 +23,9 @@ public class Measurement {
     private float VHF_band;
     private float HF_band;
     private int[] bpm_data;
+    private int[] rmssd_data;
 
-    public Measurement(Date date, int rmssd, float ln_rmssd, float lowest_rmssd, float highest_rmssd, float lowest_bpm, float highest_bpm, float average_bpm, float LF_band, float VLF_band, float VHF_band, float HF_band, int[] bpm_data) {
+    public Measurement(Date date, int rmssd, float ln_rmssd, float lowest_rmssd, float highest_rmssd, float lowest_bpm, float highest_bpm, float average_bpm, float LF_band, float VLF_band, float VHF_band, float HF_band, int[] bpm_data, int[] rmssd_data) {
         this.date = date;
         this.rmssd = rmssd;
         this.ln_rmssd = ln_rmssd;
@@ -38,6 +39,7 @@ public class Measurement {
         this.VHF_band = VHF_band;
         this.HF_band = HF_band;
         this.bpm_data = bpm_data;
+        this.rmssd_data = rmssd_data;
     }
 
     public Measurement(RMSSD rmssd, FrequencyMethod frequencies, BPM bpm){
@@ -106,5 +108,8 @@ public class Measurement {
 
     public int[] getBpm_data() {
         return bpm_data;
+    }
+    public int[] getRmssd_data() {
+        return rmssd_data;
     }
 }
