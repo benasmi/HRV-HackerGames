@@ -226,6 +226,7 @@ public class MeasurementFragment extends Fragment {
 
     private void addEntry(int hr) {
 
+        //TODO: bubbles
         LineData data = chart_hr.getData();
         LineDataSet set = (LineDataSet) data.getDataSetByIndex(0);
         if (set == null) {

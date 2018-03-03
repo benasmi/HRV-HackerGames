@@ -24,10 +24,11 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
+import com.mabe.productions.hrv_madison.measurements.Measurement;
 
 import java.util.ArrayList;
 
-
+//todo: card view animations and title snaping like 'prisiuk antraste'
 public class DataTodayFragment extends Fragment {
 
     //FrequencyCardView
@@ -60,12 +61,14 @@ public class DataTodayFragment extends Fragment {
     private LineChart bpm_line_chart;
     private TextView bpm_card_txt_bpm;
     private TextView bpm_card_txt_date;
+
     private TextView bpm_card_txt_average;
-    private TextView bpm_card_txt_highest;
-    private TextView bpm_card_txt_lowest;
     private TextView bpm_card_value_average;
-    private TextView bpm_card_value_highest;
-    private TextView bpm_card_value_lowest;
+
+    private TextView bpm_card_txt_hrv_average_value;
+    private TextView bpm_card_hrv_average_value;
+
+
 
     //Daily reccomendation cardview
     private TextView reccomendation_txt_yesterday_hrv;
@@ -93,6 +96,7 @@ public class DataTodayFragment extends Fragment {
         frequency_pieChart();
         health_index_pieChart();
         bpm_lineChart();
+        updateData();
         return view;
 
     }
@@ -100,9 +104,38 @@ public class DataTodayFragment extends Fragment {
     public void updateData(){
         //TODO: populate cardviews with measurement data
         User user = User.getUser(getContext());
-        user.getAllMeasurements(getContext());
 
+        Measurement measurement = user.getLastMeasurement(getContext());
+        if(measurement!=null){
+            int bpmValues[] = measurement.getBpm_data();
+            int rmssdValues[] = measurement.getRmssd_data();
 
+            int maxGraphValue = bpmValues.length > rmssdValues.length ? bpmValues.length : rmssdValues.length;
+
+            for(int i = 0; i<bpmValues.length; i++){
+                if(i<=maxGraphValue){
+                    addEntryBpm(bpmValues[i],maxGraphValue);
+
+                }
+
+            }
+
+            for(int i = 0; i<rmssdValues.length; i++){
+                if(i<=maxGraphValue){
+                    addEntryRmssd(rmssdValues[i], maxGraphValue);
+
+                }
+            }
+
+            freq_card_txt_norm_hf.setText(String.valueOf(measurement.getHF_band()));
+            freq_card_txt_norm_lf.setText(String.valueOf(measurement.getHF_band()));
+            freq_card_txt_norm_vhf.setText(String.valueOf(measurement.getVHF_band()));
+            bpm_card_hrv_average_value.setText(String.valueOf(measurement.getRmssd()));
+            bpm_card_value_average.setText(String.valueOf((int)measurement.getAverage_bpm()));
+
+        }
+
+        bpm_line_chart.animateY(2000, Easing.EasingOption.EaseInOutSine);
 
     }
 
@@ -137,11 +170,12 @@ public class DataTodayFragment extends Fragment {
         bpm_card_txt_bpm = (TextView) view.findViewById(R.id.bpm_index_text_view);
         bpm_card_txt_date = (TextView) view.findViewById(R.id.bpm_index_measurement_date);
         bpm_card_txt_average = (TextView) view.findViewById(R.id.bpm_txt_average);
-        bpm_card_txt_highest = (TextView) view.findViewById(R.id.bpm_highest_value);
-        bpm_card_txt_lowest = (TextView) view.findViewById(R.id.bpm_txt_lowest);
         bpm_card_value_average = (TextView) view.findViewById(R.id.bpm_value);
-        bpm_card_value_highest = (TextView) view.findViewById(R.id.bpm_highest_value);
-        bpm_card_value_lowest = (TextView) view.findViewById(R.id.bpm_value_lowest);
+
+        bpm_card_txt_hrv_average_value = (TextView) view.findViewById(R.id.bpm_card_txt_hrv_average_value);
+        bpm_card_hrv_average_value = (TextView) view.findViewById(R.id.bpm_card_hrv_average_value);
+
+
 
         //Reccomendation cardview
         reccomendation_status_arrow = view.findViewById(R.id.weekly_reccomendation_status_arrow);
@@ -198,11 +232,10 @@ public class DataTodayFragment extends Fragment {
         bpm_card_txt_bpm.setTypeface(futura);
         bpm_card_txt_date.setTypeface(futura);
         bpm_card_txt_average.setTypeface(futura);
-        bpm_card_txt_highest.setTypeface(futura);
-        bpm_card_txt_lowest.setTypeface(futura);
         bpm_card_value_average.setTypeface(futura);
-        bpm_card_value_highest.setTypeface(futura);
-        bpm_card_value_lowest.setTypeface(futura);
+        bpm_card_txt_hrv_average_value.setTypeface(futura);
+        bpm_card_hrv_average_value.setTypeface(futura);
+
 
 
         bpm_line_chart.getLegend().setEnabled(false);
@@ -267,22 +300,115 @@ public class DataTodayFragment extends Fragment {
         legend.setEnabled(false);
     }
 
+    private void addEntryBpm(int hr, int max_points) {
+
+        LineData data = bpm_line_chart.getData();
+        LineDataSet set = (LineDataSet) data.getDataSetByIndex(0);
+        if (set == null) {
+            //Creating a line with single hr value
+            ArrayList<Entry> singleValueList = new ArrayList<>();
+            singleValueList.add(new Entry(0, hr));
+            set = new LineDataSet(singleValueList, "HR");
+            set.setLineWidth(getContext().getResources().getDimension(R.dimen.line_width));
+            set.setDrawValues(false);
+            set.setDrawCircleHole(false);
+            set.setDrawCircles(false);
+            set.setCircleRadius(getContext().getResources().getDimension(R.dimen.circle_radius));
+            set.setCircleColor(Color.parseColor("#F62459"));
+            set.setColor(Color.parseColor("#F62459"));
+            set.setDrawFilled(false);
+
+            GradientDrawable drawable = new GradientDrawable();
+            drawable.setColors(new int[]{
+                    Color.parseColor("#a6f62459"),
+                    Color.TRANSPARENT
+            });
+            drawable.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+            drawable.setShape(GradientDrawable.RECTANGLE);
+            drawable.setSize(240, 160);
+            set.setFillDrawable(drawable);
+            data.addDataSet(set);
+        } else {
+            set.addEntry(new Entry(set.getEntryCount(), hr));
+        }
+
+        data.notifyDataChanged();
+        bpm_line_chart.notifyDataSetChanged();
+
+        //chart_hr.setData(data);
+        //chart_hr.animate();
+        //chart_hr.moveViewToX(set.getEntryCount());
+        bpm_line_chart.setVisibleXRangeMaximum(max_points);
+        bpm_line_chart.setVisibleXRangeMinimum(0);
+        //chart_hr.setAutoScaleMinMaxEnabled(true);
+
+
+    }
+
+    private void addEntryRmssd(int rmssd, int max_points) {
+
+        LineData data = bpm_line_chart.getData();
+        LineDataSet set = (LineDataSet) data.getDataSetByIndex(1);
+        if (set == null) {
+            //Creating a line with single hr value
+            ArrayList<Entry> singleValueList = new ArrayList<>();
+            singleValueList.add(new Entry(0, rmssd));
+            set = new LineDataSet(singleValueList, "HR");
+            set.setLineWidth(getContext().getResources().getDimension(R.dimen.line_width));
+            set.setDrawValues(false);
+            set.setDrawCircleHole(false);
+            set.setDrawCircles(false);
+            set.setCircleRadius(getContext().getResources().getDimension(R.dimen.circle_radius));
+            set.setCircleColor(Color.parseColor("#F62459"));
+            set.setColor(Color.parseColor("#2ecc71"));
+            set.setDrawFilled(true);
+
+            GradientDrawable drawable = new GradientDrawable();
+            drawable.setColors(new int[]{
+                    Color.parseColor("#a6f62459"),
+                    Color.TRANSPARENT
+            });
+            drawable.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+            drawable.setShape(GradientDrawable.RECTANGLE);
+            drawable.setSize(240, 160);
+            set.setFillDrawable(drawable);
+            data.addDataSet(set);
+        } else {
+            set.addEntry(new Entry(set.getEntryCount(), rmssd));
+        }
+
+        data.notifyDataChanged();
+        bpm_line_chart.notifyDataSetChanged();
+
+        //chart_hr.setData(data);
+        //chart_hr.animate();
+        //chart_hr.moveViewToX(set.getEntryCount());
+        bpm_line_chart.setVisibleXRangeMaximum(max_points);
+        bpm_line_chart.setVisibleXRangeMinimum(0);
+        //chart_hr.setAutoScaleMinMaxEnabled(true);
+
+
+    }
+
     private void bpm_lineChart(){
             LineData data = new LineData();
         //Creating a line with single hr value
+
+            //BPM DATA SET
             ArrayList<Entry> singleValueList = new ArrayList<>();
             singleValueList.add(new Entry(0, 16));
             singleValueList.add(new Entry(1, 24));
             singleValueList.add(new Entry(2, 64));
             singleValueList.add(new Entry(3, 35));
             LineDataSet set = new LineDataSet(singleValueList, "HR");
-            set.setLineWidth(getContext().getResources().getDimension(R.dimen.bpm_line_width));
+            set.setLineWidth(1);
             set.setDrawValues(false);
             set.setDrawCircleHole(false);
+            set.setDrawCircles(false);
             set.setCircleRadius(getContext().getResources().getDimension(R.dimen.circle_radius));
             set.setCircleColor(Color.parseColor("#FFFFFF"));
             set.setColor(Color.parseColor("#F62459"));
-            set.setDrawFilled(true);
+            set.setDrawFilled(false);
 
             GradientDrawable drawable = new GradientDrawable();
             drawable.setColors(new int[]{
@@ -295,7 +421,27 @@ public class DataTodayFragment extends Fragment {
             drawable.setSize(240, 160);
             set.setFillDrawable(drawable);
             data.addDataSet(set);
-            bpm_line_chart.setData(data);
+
+            //RMSSD DATA SET
+        ArrayList<Entry> secondValueList = new ArrayList<>();
+        secondValueList.add(new Entry(0, 35));
+        secondValueList.add(new Entry(1, 65));
+        secondValueList.add(new Entry(2, 14));
+        secondValueList.add(new Entry(3, 34));
+        LineDataSet rmssdSet = new LineDataSet(secondValueList, "HR");
+        rmssdSet.setLineWidth(1);
+        rmssdSet.setDrawValues(false);
+        rmssdSet.setDrawCircleHole(false);
+        rmssdSet.setDrawCircles(false);
+        rmssdSet.setCircleRadius(getContext().getResources().getDimension(R.dimen.circle_radius));
+        rmssdSet.setCircleColor(Color.parseColor("#FFFFFF"));
+        rmssdSet.setColor(Color.parseColor("#2ecc71"));
+        rmssdSet.setDrawFilled(false);
+
+
+        data.addDataSet(rmssdSet);
+
+        bpm_line_chart.setData(data);
 
 
 

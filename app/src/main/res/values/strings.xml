@@ -67,6 +67,6 @@
     <string name="weekly_program">Savaitės programa</string>
     <string name="todays_program">Šiandienos programa</string>
     <string name="todays_program_subtext">Šiandien jums rekomenduojame</string>
-    <string name="bpm_rate">Širdies pulso duomenys</string>
+    <string name="bpm_rate">Pulso rodikliai</string>
 </resources>
 

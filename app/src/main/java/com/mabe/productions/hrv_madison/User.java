@@ -106,6 +106,8 @@ public class User {
             values.put(FeedReaderDbHelper.COL_LN_RMSSD, hrv.getLnRmssd());
             values.put(FeedReaderDbHelper.COL_LOWEST_RMSSD, hrv.getLowestRmssd());
             values.put(FeedReaderDbHelper.COL_HIGHEST_RMSSD, hrv.getHighestRmssd());
+            values.put(FeedReaderDbHelper.COL_RMSSD_DATA, FeedReaderDbHelper.getStringFromBpmValues(hrv.getRMSSDValues()));
+
         }
         if(bpm != null){
             values.put(FeedReaderDbHelper.COL_LOWEST_BPM, bpm.getLowestBpm());
@@ -124,6 +126,7 @@ public class User {
         values.put(FeedReaderDbHelper.COL_DATE, Utils.getStringFromDate(Calendar.getInstance().getTime()));
 
         Log.i("bpmdata", "bpm data insertion: " + FeedReaderDbHelper.getStringFromBpmValues(bpm.getBpmValues()));
+        Log.i("rmssdata", "rmssd data insertion: " + FeedReaderDbHelper.getStringFromBpmValues(hrv.getRMSSDValues()));
 
         db.insert(FeedReaderDbHelper.HRV_DATA_TABLE_NAME, null, values);
 
@@ -149,7 +152,8 @@ public class User {
                 FeedReaderDbHelper.COL_VLF_BAND,
                 FeedReaderDbHelper.COL_VHF_BAND,
                 FeedReaderDbHelper.COL_HF_BAND,
-                FeedReaderDbHelper.COL_BPM_DATA
+                FeedReaderDbHelper.COL_BPM_DATA,
+                FeedReaderDbHelper.COL_RMSSD_DATA
         };
 
         String sortOrder =
@@ -197,7 +201,17 @@ public class User {
 
             int[] bpmData = FeedReaderDbHelper.getBpmValuesFromString(bpmDataString);
 
-            Measurement measurement = new Measurement(date, rmssd, ln_rmssd, lowest_rmssd, highest_rmssd, lowest_bpm, highest_bpm, average_bpm, LF_band, VLF_band, VHF_band, HF_band, bpmData);
+            String rmssdDataString = cursor.getString(
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_RMSSD_DATA));
+            int[] rmssdData = FeedReaderDbHelper.getBpmValuesFromString(rmssdDataString);
+
+
+
+            Measurement measurement = new Measurement(date, rmssd, ln_rmssd, lowest_rmssd, highest_rmssd, lowest_bpm, highest_bpm, average_bpm, LF_band, VLF_band, VHF_band, HF_band, bpmData, rmssdData);
+
+            for(int i = 0; i<rmssdData.length; i++){
+                Log.i("TEST", String.valueOf(rmssdData[i]));
+            }
 
             return measurement;
 
@@ -227,7 +241,9 @@ public class User {
                 FeedReaderDbHelper.COL_VLF_BAND,
                 FeedReaderDbHelper.COL_VHF_BAND,
                 FeedReaderDbHelper.COL_HF_BAND,
-                FeedReaderDbHelper.COL_BPM_DATA
+                FeedReaderDbHelper.COL_BPM_DATA,
+                FeedReaderDbHelper.COL_RMSSD_DATA
+
         };
 
         String sortOrder =
@@ -277,15 +293,18 @@ public class User {
             Log.i("bpmdata", "bpm data string: " + bpmDataString);
             int[] bpmData = FeedReaderDbHelper.getBpmValuesFromString(bpmDataString);
 
-            Measurement measurement = new Measurement(date, rmssd, ln_rmssd, lowest_rmssd, highest_rmssd, lowest_bpm, highest_bpm, average_bpm, LF_band, VLF_band, VHF_band, HF_band, bpmData);
+
+            String rmssdDataString = cursor.getString(
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_RMSSD_DATA));
+            int[] rmssdData = FeedReaderDbHelper.getBpmValuesFromString(rmssdDataString);
+
+            Measurement measurement = new Measurement(date, rmssd, ln_rmssd, lowest_rmssd, highest_rmssd, lowest_bpm, highest_bpm, average_bpm, LF_band, VLF_band, VHF_band, HF_band, bpmData,rmssdData);
 
             measurementList.add(measurement);
 
         }
 
-        for(int bpm : measurementList.get(0).getBpm_data()){
-            Log.i("bpmdata", "BPM: " + bpm);
-        }
+
 
         return measurementList;
     }

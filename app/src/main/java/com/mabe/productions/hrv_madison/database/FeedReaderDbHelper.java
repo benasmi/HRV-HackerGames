@@ -43,6 +43,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public final static String COL_HIGHEST_BPM = "highest_BPM";
     public final static String COL_AVERAGE_BPM = "average_BPM";
     public final static String COL_BPM_DATA = "BPM_data";
+    public final static String COL_RMSSD_DATA = "RMSSD_data";
     public final static String COL_LF_BAND = "LF_BAND";
     public final static String COL_HF_BAND = "HF_BAND";
     public final static String COL_VLF_BAND = "VLF_BAND";
@@ -98,6 +99,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
                     FeedReaderDbHelper.COL_VLF_BAND + " FLOAT," +
                     FeedReaderDbHelper.COL_VHF_BAND + " FLOAT," +
                     FeedReaderDbHelper.COL_BPM_DATA + " STRING," +
+                    FeedReaderDbHelper.COL_RMSSD_DATA + " STRING," +
                     FeedReaderDbHelper.COL_RMSSD + " INTEGER)";
 
 
@@ -110,6 +112,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "HRV_Madison.db";
 
     public final static String COL_ID = "ID";
+
 
 
     public FeedReaderDbHelper(Context context) {
