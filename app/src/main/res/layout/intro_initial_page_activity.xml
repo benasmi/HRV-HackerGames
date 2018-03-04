@@ -14,7 +14,7 @@
         android:layout_height="45dp"
         android:background="#003e5266"
         android:layout_alignParentBottom="true"
-        android:text="Pradėkime"
+        android:text="@string/initial_start_btn"
         android:id="@+id/initial_start_btn"
         android:onClick="start"
         android:layout_marginBottom="25dp"
@@ -45,9 +45,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/initial_txt_request_info_explanation"
             android:gravity="center"
-            android:text="Pateikite informaciją apie save"
+            android:text="@string/initial_ask_user_info"
             android:textColor="#fff"
-            android:textSize="25dp"
+            android:textSize="20dp"
             android:layout_gravity="center"/>
 
     </LinearLayout>

@@ -101,7 +101,7 @@ public class IntroInitialGender extends AppCompatActivity {
     public void start(View view) {
         if(selectedGender!=-1){
             Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_GENDER, selectedGender,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-            startActivity(new Intent(this, IntroInitialInfoBirthday.class));
+            startActivity(new Intent(this, IntroInitialActivityIndex.class));
         }else{
             Toast.makeText(this, R.string.please_select_gender, Toast.LENGTH_LONG).show();
         }

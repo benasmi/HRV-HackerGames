@@ -165,6 +165,6 @@ public class IntroInitialActivityIndex extends AppCompatActivity {
         int activity_index = i_training_duration*i_training_frequency*i_training_intensity;
         Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_ACTIVITY_INDEX, activity_index,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
         Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_DONE_INITIAL,true,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-        startActivity(new Intent(this, MainScreenActivity.class));
+        startActivity(new Intent(this, IntroInitialInfoBirthday.class));
     }
 }

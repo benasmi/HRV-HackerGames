@@ -124,10 +124,6 @@ public class User {
         }
 
         values.put(FeedReaderDbHelper.COL_DATE, Utils.getStringFromDate(Calendar.getInstance().getTime()));
-
-        Log.i("bpmdata", "bpm data insertion: " + FeedReaderDbHelper.getStringFromBpmValues(bpm.getBpmValues()));
-        Log.i("rmssdata", "rmssd data insertion: " + FeedReaderDbHelper.getStringFromBpmValues(hrv.getRMSSDValues()));
-
         db.insert(FeedReaderDbHelper.HRV_DATA_TABLE_NAME, null, values);
 
     }

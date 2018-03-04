@@ -47,6 +47,9 @@ public class Utils {
         }
 
     }
+    public static int getScreenHeight(Context context){
+        return context.getResources().getDisplayMetrics().heightPixels;
+    }
 
 
     /*

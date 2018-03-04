@@ -8,15 +8,17 @@
     android:layout_height="match_parent"
     tools:context="com.mabe.productions.hrv_madison.initialInfo.IntroInitialActivityIndex">
 
+
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_marginTop="30dp"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Kiek kartų per savaitę \nsportuojate?"
+            android:text="@string/txt_activity_index_question"
             android:gravity="center"
             android:textColor="#FFF"
             android:id="@+id/training_frequency_question"
@@ -48,7 +50,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Kiek trunka jūsų treniruotė?"
+            android:text="@string/initial_how_much_do_you_workout"
             android:gravity="center"
             android:id="@+id/training_duration_question"
             android:textColor="#FFF"
@@ -81,7 +83,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Koks jūsų treniruočių intesyvumas?"
+            android:text="@string/initial_what_is_your_intensity"
             android:gravity="center"
             android:textColor="#FFF"
             android:id="@+id/activity_index_question"
@@ -120,7 +122,7 @@
         android:layout_height="48dp"
         android:background="#003e5266"
         android:layout_alignParentBottom="true"
-        android:text="Tęsti"
+        android:text="@string/initial_continue_btn"
         android:onClick="next"
         android:textAllCaps="false"
         android:textSize="13dp"

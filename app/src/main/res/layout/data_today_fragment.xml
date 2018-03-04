@@ -11,176 +11,8 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            card_view:cardElevation="4dp"
-            android:layout_margin="10dp"
-            card_view:cardMaxElevation="6dp"
-            card_view:cardCornerRadius="5dp"
-            android:layout_marginTop="15dp"
-            card_view:contentPadding="5dp"
-            card_view:cardBackgroundColor="#2c3e50">
 
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/todays_program"
-                    android:gravity="center"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="20dp"/>
-
-
-
-
-
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:padding="5dp">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:layout_width="200dp"
-                            android:layout_height="200dp"
-                            android:layout_centerHorizontal="true"
-                            android:id="@+id/weekly_reccomendation_status_circle"
-                            android:src="@drawable/hrv_circle"/>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerVertical="true"
-
-                            android:orientation="horizontal">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical">
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="80"
-                                    android:id="@+id/weekly_reccomendation_today_hrv"
-                                    android:textColor="#fff"
-                                    android:textSize="33dp"/>
-                                <View
-                                    android:layout_width="match_parent"
-                                    android:layout_height="2dp"
-                                    android:background="@color/colorAccent"/>
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="59"
-                                    android:textColor="#fff"
-                                    android:textSize="30dp"
-                                    android:id="@+id/weekly_reccomendation_yesterday_hrv"/>
-                            </LinearLayout>
-
-                            <ImageView
-                                android:layout_width="60dp"
-                                android:layout_height="match_parent"
-                                android:id="@+id/weekly_reccomendation_status_arrow"
-                                android:src="@drawable/ic_arrow_up"/>
-
-                        </LinearLayout>
-
-                    </RelativeLayout>
-
-
-                </RelativeLayout>
-
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Jūsų savijauta pagerėjo, todėl pasunkinome jūsų programą!"
-                    android:gravity="center"
-                    android:id="@+id/weekly_reccomendation_explanation"
-                    android:textColor="#fff"
-                    android:textSize="20dp"/>
-
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:weightSum="2"
-                    android:padding="5dp"
-                    android:layout_height="wrap_content">
-
-
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginTop="10dp"
-                        android:padding="5dp">
-                        <ImageView
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:src="@drawable/ic_clock"
-                            android:id="@+id/weekly_program_clock_icon"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="45min"
-                            android:layout_toRightOf="@+id/weekly_program_clock_icon"
-                            android:layout_marginLeft="10dp"
-                            android:textSize="15dp"
-                            android:textColor="#fff"
-                            android:layout_centerVertical="true"
-                            android:id="@+id/weekly_program_duration_reccomendation"/>
-
-                    </RelativeLayout>
-
-
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:padding="5dp">
-                        <ImageView
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:src="@drawable/ic_heart"
-                            android:id="@+id/weekly_program_heart_icon"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="1-2 pulso zona"
-                            android:layout_toRightOf="@+id/weekly_program_heart_icon"
-                            android:layout_marginLeft="10dp"
-                            android:textSize="15dp"
-                            android:textColor="#fff"
-                            android:layout_centerVertical="true"
-                            android:id="@+id/weekly_program_pulse_zone"/>
-
-                    </RelativeLayout>
-
-
-                </LinearLayout>
-
-
-
-
-</LinearLayout>
-
-        </android.support.v7.widget.CardView>
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="250dp"
@@ -188,6 +20,7 @@
             android:layout_margin="10dp"
             card_view:cardMaxElevation="6dp"
             card_view:cardCornerRadius="5dp"
+            android:id="@+id/bpm_card"
             android:layout_marginTop="15dp"
             card_view:contentPadding="5dp"
             card_view:cardBackgroundColor="#2c3e50">
@@ -247,7 +80,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Vidutinis BPM"
+                            android:text="@string/txt_average_bpm"
                             android:id="@+id/bpm_txt_average"
                             android:layout_gravity="center"
                             android:textColor="#F62459"
@@ -272,7 +105,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Vidutinis RMSSD"
+                            android:text="@string/txt_average_rmssd"
                             android:id="@+id/bpm_card_txt_hrv_average_value"
                             android:layout_gravity="center"
                             android:textColor="#F62459"
@@ -310,12 +143,13 @@
         <!-- health index card view !-->
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:visibility="gone"
             android:layout_height="250dp"
+            android:visibility="gone"
             card_view:cardElevation="4dp"
             android:layout_margin="10dp"
             card_view:cardMaxElevation="6dp"
             card_view:cardCornerRadius="5dp"
+            android:id="@+id/healt_index_card"
             android:layout_marginTop="15dp"
             card_view:contentPadding="5dp"
             card_view:cardBackgroundColor="#2c3e50"
@@ -512,6 +346,7 @@
             card_view:cardElevation="4dp"
             card_view:cardMaxElevation="6dp"
             android:layout_margin="10dp"
+            android:id="@+id/frequency_card"
             card_view:cardCornerRadius="5dp"
             card_view:contentPadding="5dp"
             card_view:cardBackgroundColor="#2c3e50"
@@ -587,9 +422,10 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
                             android:orientation="vertical"
-                            android:layout_weight="1">
+                            >
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -669,6 +505,92 @@
                                     android:textSize="12dp"/>
                             </RelativeLayout>
 
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/standarts"
+                                    android:textColor="#F62459"
+                                    android:gravity="left"
+                                    android:id="@+id/freq_card_txt_norm"
+                                    android:paddingBottom="5dp"
+                                    />
+
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp">
+
+                                    <ImageView
+                                        android:layout_width="10dp"
+                                        android:layout_height="10dp"
+                                        android:background="@drawable/hf_circle"
+                                        android:id="@+id/norm_HF_color"
+                                        />
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_toRightOf="@id/norm_HF_color"
+                                        android:layout_marginLeft="10dp"
+                                        android:text="@string/HF"
+                                        android:id="@+id/freq_card_norm_hf"
+                                        android:textColor="#fff"
+                                        android:textSize="12dp"/>
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp">
+
+                                    <ImageView
+                                        android:layout_width="10dp"
+                                        android:layout_height="10dp"
+                                        android:background="@drawable/lf_circle"
+                                        android:id="@+id/norm_LF_color"
+                                        />
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_toRightOf="@id/norm_LF_color"
+                                        android:id="@+id/freq_card_norm_lf"
+                                        android:layout_marginLeft="10dp"
+                                        android:text="@string/LF"
+                                        android:textColor="#fff"
+                                        android:textSize="12dp"/>
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp">
+
+                                    <ImageView
+                                        android:layout_width="10dp"
+                                        android:layout_height="10dp"
+                                        android:background="@drawable/vlf_circle"
+                                        android:id="@+id/norm_VLF_color"
+                                        />
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_toRightOf="@id/norm_VLF_color"
+                                        android:layout_marginLeft="10dp"
+                                        android:text="@string/VLF"
+                                        android:textColor="#fff"
+                                        android:id="@+id/freq_card_norm_vlf"
+                                        android:textSize="12dp"/>
+                                </RelativeLayout>
+                            </LinearLayout>
 
                         </LinearLayout>
 
@@ -676,92 +598,6 @@
 
 
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="@string/standarts"
-                                android:textColor="#F62459"
-                                android:gravity="left"
-                                android:id="@+id/freq_card_txt_norm"
-                                android:paddingBottom="5dp"
-                                />
-
-
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp">
-
-                                <ImageView
-                                    android:layout_width="10dp"
-                                    android:layout_height="10dp"
-                                    android:background="@drawable/hf_circle"
-                                    android:id="@+id/norm_HF_color"
-                                    />
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_toRightOf="@id/norm_HF_color"
-                                    android:layout_marginLeft="10dp"
-                                    android:text="@string/HF"
-                                    android:id="@+id/freq_card_norm_hf"
-                                    android:textColor="#fff"
-                                    android:textSize="12dp"/>
-                            </RelativeLayout>
-
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp">
-
-                                <ImageView
-                                    android:layout_width="10dp"
-                                    android:layout_height="10dp"
-                                    android:background="@drawable/lf_circle"
-                                    android:id="@+id/norm_LF_color"
-                                    />
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_toRightOf="@id/norm_LF_color"
-                                    android:id="@+id/freq_card_norm_lf"
-                                    android:layout_marginLeft="10dp"
-                                    android:text="@string/LF"
-                                    android:textColor="#fff"
-                                    android:textSize="12dp"/>
-                            </RelativeLayout>
-
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp">
-
-                                <ImageView
-                                    android:layout_width="10dp"
-                                    android:layout_height="10dp"
-                                    android:background="@drawable/vlf_circle"
-                                    android:id="@+id/norm_VLF_color"
-                                    />
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_toRightOf="@id/norm_VLF_color"
-                                    android:layout_marginLeft="10dp"
-                                    android:text="@string/VLF"
-                                    android:textColor="#fff"
-                                    android:id="@+id/freq_card_norm_vlf"
-                                    android:textSize="12dp"/>
-                            </RelativeLayout>
-                        </LinearLayout>
 
 
                     </LinearLayout>
@@ -772,6 +608,179 @@
 
         </android.support.v7.widget.CardView>
         <!-- frequency card view end !-->
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:id="@+id/recommendation_card"
+            android:layout_height="wrap_content"
+            card_view:cardElevation="4dp"
+            android:layout_margin="10dp"
+            card_view:cardMaxElevation="6dp"
+            card_view:cardCornerRadius="5dp"
+            android:layout_marginTop="15dp"
+            card_view:contentPadding="5dp"
+            card_view:cardBackgroundColor="#2c3e50">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/todays_program"
+                    android:gravity="center"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="20dp"/>
+
+
+
+
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:padding="5dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/weekly_reccomendation_status_circle"
+                            android:layout_width="200dp"
+                            android:layout_height="200dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/hrv_circle" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="80"
+                                    android:id="@+id/weekly_reccomendation_today_hrv"
+                                    android:textColor="#fff"
+                                    android:textSize="33dp"/>
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="2dp"
+                                    android:background="@color/colorAccent"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="59"
+                                    android:textColor="#fff"
+                                    android:textSize="30dp"
+                                    android:id="@+id/weekly_reccomendation_yesterday_hrv"/>
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="60dp"
+                                android:layout_height="match_parent"
+                                android:id="@+id/weekly_reccomendation_status_arrow"
+                                android:src="@drawable/ic_arrow_up"/>
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+
+                </RelativeLayout>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Jūsų savijauta pagerėjo, todėl pasunkinome jūsų programą!"
+                    android:gravity="center"
+                    android:id="@+id/weekly_reccomendation_explanation"
+                    android:textColor="#fff"
+                    android:textSize="20dp"/>
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:padding="5dp"
+                    android:layout_height="wrap_content">
+
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginTop="10dp"
+                        android:padding="5dp">
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/ic_clock"
+                            android:id="@+id/weekly_program_clock_icon"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="45min"
+                            android:layout_toRightOf="@+id/weekly_program_clock_icon"
+                            android:layout_marginLeft="10dp"
+                            android:textSize="15dp"
+                            android:textColor="#fff"
+                            android:layout_centerVertical="true"
+                            android:id="@+id/weekly_program_duration_reccomendation"/>
+
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:padding="5dp">
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/ic_heart"
+                            android:id="@+id/weekly_program_heart_icon"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1-2 pulso zona"
+                            android:layout_toRightOf="@+id/weekly_program_heart_icon"
+                            android:layout_marginLeft="10dp"
+                            android:textSize="15dp"
+                            android:textColor="#fff"
+                            android:layout_centerVertical="true"
+                            android:id="@+id/weekly_program_pulse_zone"/>
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+
+
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
 
 
     </LinearLayout>
