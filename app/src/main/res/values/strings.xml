@@ -68,5 +68,8 @@
     <string name="todays_program">Šiandienos programa</string>
     <string name="todays_program_subtext">Šiandien jums rekomenduojame</string>
     <string name="bpm_rate">Pulso rodikliai</string>
+    <string name="program_downgraded">Jūsų savijauta prasta. Programą palengviname.</string>
+    <string name="program_upgraded">Jūsų savijauta puiki. Programa pasunkinama.</string>
+    <string name="program_unchanged">Jūsų savijauta įprasta. Programa nepakeista</string>
 </resources>
 

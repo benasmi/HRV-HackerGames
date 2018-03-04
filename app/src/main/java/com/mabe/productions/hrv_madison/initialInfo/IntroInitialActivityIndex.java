@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.github.channguyen.rsv.RangeSliderView;
 import com.mabe.productions.hrv_madison.MainScreenActivity;
 import com.mabe.productions.hrv_madison.R;
+import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 
@@ -166,5 +167,6 @@ public class IntroInitialActivityIndex extends AppCompatActivity {
         Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_ACTIVITY_INDEX, activity_index,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
         Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_DONE_INITIAL,true,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
         startActivity(new Intent(this, MainScreenActivity.class));
+
     }
 }

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -147,9 +148,10 @@ public class MainScreenActivity extends AppCompatActivity {
                     BluetoothDevice device = intent.getParcelableExtra("BT_DEVICE");
                     txt_toolbar_title.setText(device.getName());
                     Log.i("TEST", "ACTION_CONNECTED");
-
+                    Log.i("TEST", "About to start measurement immediately");
                     //If the measure button has already been pressed, starting the measurement automatically.
                     if(viewPagerAdapter.measurementFragment.shouldStartMeasurementImmediately){
+                        Log.i("TEST", "Starting measurement immediately");
                         viewPagerAdapter.measurementFragment.start_calculation();
                         viewPagerAdapter.measurementFragment.shouldStartMeasurementImmediately = false;
                     }
@@ -245,7 +247,16 @@ public class MainScreenActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if(requestCode == PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION){
             if(Utils.isBluetoothEnabled()){
-                new LeDevicesDialog(this);
+
+                LeDevicesDialog dialog = new LeDevicesDialog(this);
+                viewPagerAdapter.measurementFragment.shouldStartMeasurementImmediately=true;
+                dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        viewPagerAdapter.measurementFragment.shouldStartMeasurementImmediately=false;
+                    }
+                });
+
             }else{
                 Toast.makeText(this, "Please enable bluetooth!", Toast.LENGTH_LONG).show(); //TODO: add a nice dialog or something
             }

@@ -30,6 +30,12 @@ public class User {
     private static final float LOW_INITIAL_WORKOUT_DURATION = 15;
     private static final float HIGH_INITIAL_WORKOUT_DURATION = 20;
 
+    private int program_update_state;
+
+    public static final int PROGRAM_STATE_UPGRADED = 0;
+    public static final int PROGRAM_STATE_DOWNGRADED = 1;
+    public static final int PROGRAM_STATE_UNCHANGED = 2;
+
     private float KMI;
     private float current_hrv;
     private float yesterday_hrv;
@@ -212,6 +218,8 @@ public class User {
             for(int i = 0; i<rmssdData.length; i++){
                 Log.i("TEST", String.valueOf(rmssdData[i]));
             }
+
+
 
             return measurement;
 
@@ -401,11 +409,31 @@ public class User {
 
 
         //Dummy data
-        user.setCurrentHrv(40);
+        //user.setCurrentHrv(40);
         user.setLastWeekHrv(30);
         user.setSecondLastWeekHrv(20);
         user.setSelectedSport(SPORT_JOGGING);
         user.setMaxDuration(20);
+        ArrayList<Measurement> measurements = user.getAllMeasurements(context);
+
+        calendar = Calendar.getInstance();
+        int today = calendar.get(Calendar.DAY_OF_YEAR);
+
+        for(int i = 0; i < measurements.size(); i++){
+            calendar.setTime(measurements.get(i).getDate());
+            int measurementDay = calendar.get(Calendar.DAY_OF_YEAR);
+
+            if(measurementDay == today){
+                //Today's measurement
+                user.setCurrentHrv(measurements.get(i).getRmssd());
+            }else if(measurementDay == today-1){
+                //yesterday's measurement
+                user.setYesterdayHrv(measurements.get(i).getRmssd());
+            }
+        }
+
+        user.generateDailyReccomendation(context);
+
         return user;
     }
 
@@ -418,6 +446,7 @@ public class User {
     public String generateWeeklyProgram(Context context){
 
 
+
         //First time
         if(last_week_hrv == 0){
 
@@ -428,7 +457,6 @@ public class User {
                 //Fit duration
                 workout_duration = 20;
             }
-
             saveProgram(context);
             return "Jums sugeneruota pirmoji programa";
         }
@@ -446,6 +474,7 @@ public class User {
 
         //Upgrading program due to very good hrv score
         if(current_hrv >= last_week_hrv*0.85){
+
 
             //if user has reached his max available workout duration, increasing pulse_zone(intensity) and decreasing workout duration(time).
             if(workout_duration == max_duration){
@@ -470,6 +499,7 @@ public class User {
             }
 
             //Increasing workout duration and checking if it does not exceed maximum available duration
+
             workout_duration*=1.1;
             if(workout_duration<= max_duration){
                 saveProgram(context);
@@ -479,6 +509,8 @@ public class User {
                 saveProgram(context);
                 return "Pasiekėtė max trukmę, todėl ši savaitė bus užtvirtinamoji.";
             }
+
+
         }
 
         return "not supported";
@@ -542,39 +574,47 @@ public class User {
 
 
 
-            if(minBaselineHrv <= current_hrv && current_hrv <= maxBaselineHrv){
+            if(minBaselineHrv <= current_hrv /*&& current_hrv <= maxBaselineHrv*/){
 
                 float percentageChange = current_hrv/yesterday_hrv;
 
                 //Hrv has increased
                 if(percentageChange >= 1 ){
+                    program_update_state = PROGRAM_STATE_UPGRADED;
                     float percentageIncrease = percentageChange-1;
 
                     if(percentageChange >= HIGH_INCREASE){
                         //hrv has greatly increased
+                        Log.i("TEST", "hrv has greatly increased");
                         return "hrv has greatly increased";
                     }
                     if(percentageChange >= MEDIOCRE_INCREASE){
+                        Log.i("TEST", "mediocre hrv increase");
                         return "detected mediocre hrv increase";
                     }
                     if(percentageChange <= MINIMAL_INCREASE){
+                        program_update_state = PROGRAM_STATE_UNCHANGED;
+                        Log.i("TEST", "detected minimal hrv increase");
                         return "detected minimal hrv increase";
                     }
 
                 }else{
                     //Hrv has decreased
+                    program_update_state = PROGRAM_STATE_DOWNGRADED;
                     float percentageDecrease = 1-percentageChange;
 
                     if(percentageChange >= HIGH_DECREASE){
                         //hrv has greatly increased
+                        Log.i("TEST", "detected great hrv decrease");
                         return "hrv has greatly decreased";
                     }
                     if(percentageChange >= MEDIOCRE_DECREASE){
-
+                        Log.i("TEST", "detected mediocre hrv decrease");
                         return "detected mediocre hrv decrease";
                     }
                     if(percentageChange <= MINIMAL_DECREASE){
-
+                        program_update_state = PROGRAM_STATE_UNCHANGED;
+                        Log.i("TEST", "detected minimal hrv decrease");
                         return "detected minimal hrv decrese";
                     }
                 }
@@ -606,7 +646,7 @@ public class User {
         this.KMI = KMI;
     }
 
-    public float getCurrent_hrv() {
+    public float getCurrentHrv() {
         return current_hrv;
     }
 
@@ -735,5 +775,9 @@ public class User {
 
     public void setSecondLastWeekHrv(float second_last_week_hrv) {
         this.second_last_week_hrv = second_last_week_hrv;
+    }
+
+    public int getProgramUpdateState() {
+        return program_update_state;
     }
 }

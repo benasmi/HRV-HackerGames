@@ -17,6 +17,7 @@
             card_view:cardElevation="4dp"
             android:layout_margin="10dp"
             card_view:cardMaxElevation="6dp"
+            android:id="@+id/reccomendation_cardview"
             card_view:cardCornerRadius="5dp"
             android:layout_marginTop="15dp"
             card_view:contentPadding="5dp"
@@ -56,7 +57,7 @@
                             android:layout_height="200dp"
                             android:layout_centerHorizontal="true"
                             android:id="@+id/weekly_reccomendation_status_circle"
-                            android:src="@drawable/hrv_circle"/>
+                            android:src="@drawable/hrv_circle_upgraded"/>
 
                         <LinearLayout
                             android:layout_width="wrap_content"

@@ -58,6 +58,10 @@ public class LoginActivity extends AppCompatActivity {
         initializeViews();
         setFonts();
 
+        //todo: remove this dummy data
+        Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_WEEK_DAYS, new boolean[]{true, true, true, true, true, true, true}, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+
+
         //todo: this crashes on several phone models or versions
         //Checking if android version supports animated vector drawables. If it doesn't, regular drawable is set.
         //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

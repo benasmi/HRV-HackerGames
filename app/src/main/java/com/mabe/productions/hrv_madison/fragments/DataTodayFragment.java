@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,6 @@ import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -78,6 +78,7 @@ public class DataTodayFragment extends Fragment {
     private TextView reccomendation_txt_workout_duration;
     private ImageView reccomendation_status_arrow;
     private ImageView reccomendation_status_circle;
+    private CardView reccomendation_cardview;
 
 
 
@@ -137,6 +138,42 @@ public class DataTodayFragment extends Fragment {
 
         bpm_line_chart.animateY(2000, Easing.EasingOption.EaseInOutSine);
 
+        reccomendation_txt_yesterday_hrv.setText(String.valueOf(user.getYesterdayHrv()));
+        reccomendation_txt_today_hrv.setText(String.valueOf(user.getCurrentHrv()));
+        reccomendation_cardview.setVisibility(View.VISIBLE);
+        reccomendation_status_arrow.setVisibility(View.VISIBLE);
+        reccomendation_status_arrow.setRotation(0);
+
+        switch (user.getProgramUpdateState()){
+            case User.PROGRAM_STATE_DOWNGRADED:
+                reccomendation_status_arrow.setRotation(180);
+                reccomendation_status_arrow.setImageResource(R.drawable.ic_arrow_down);
+                reccomendation_txt_explanation.setText(R.string.program_downgraded);
+                reccomendation_status_circle.setImageResource(R.drawable.hrv_circle_downgraded);
+                reccomendation_txt_yesterday_hrv.setTextColor(Color.parseColor("#e74c3c"));
+                reccomendation_txt_today_hrv.setTextColor(Color.parseColor("#e74c3c"));
+                break;
+            case User.PROGRAM_STATE_UPGRADED:
+
+                reccomendation_status_arrow.setImageResource(R.drawable.ic_arrow_up);
+                reccomendation_status_circle.setImageResource(R.drawable.hrv_circle_upgraded);
+                reccomendation_txt_today_hrv.setTextColor(Color.parseColor("#2ecc71"));
+                reccomendation_txt_yesterday_hrv.setTextColor(Color.parseColor("#2ecc71"));
+                reccomendation_txt_explanation.setText(R.string.program_upgraded);
+                break;
+            case User.PROGRAM_STATE_UNCHANGED:
+                reccomendation_status_arrow.setVisibility(View.GONE);
+                reccomendation_status_circle.setImageResource(R.drawable.hrv_circle_unchanged);
+                reccomendation_txt_today_hrv.setTextColor(Color.WHITE);
+                reccomendation_txt_yesterday_hrv.setTextColor(Color.WHITE);
+                reccomendation_txt_explanation.setText(R.string.program_unchanged);
+                break;
+
+            default:
+                reccomendation_cardview.setVisibility(View.GONE);
+                break;
+        }
+
     }
 
     private void initializeViews(View view){
@@ -185,6 +222,7 @@ public class DataTodayFragment extends Fragment {
         reccomendation_txt_pulse_zone = view.findViewById(R.id.weekly_program_pulse_zone);
         reccomendation_txt_today_hrv = view.findViewById(R.id.weekly_reccomendation_today_hrv);
         reccomendation_txt_yesterday_hrv = view.findViewById(R.id.weekly_reccomendation_yesterday_hrv);
+        reccomendation_cardview = view.findViewById(R.id.reccomendation_cardview);
 
     }
 
