@@ -12,7 +12,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Kada jūsų gimtadienis?"
+        android:text="@string/initial_when_is_your_birthday"
         android:gravity="center"
         android:textColor="#FFF"
         android:textSize="25dp"
@@ -45,7 +45,7 @@
         android:background="#003e5266"
         android:layout_marginBottom="20dp"
         android:layout_alignParentBottom="true"
-        android:text="Tęsti"
+        android:text="@string/initial_continue_btn"
         android:onClick="start"
         android:id="@+id/initial_btn_continue_birthday"
         android:textAllCaps="false"

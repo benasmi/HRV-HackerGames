@@ -13,7 +13,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Kokia jūsų lytis?"
+        android:text="@string/txt_what_gender"
         android:gravity="center"
         android:textColor="#FFF"
         android:textSize="25dp"
@@ -62,7 +62,7 @@
         android:background="#003e5266"
         android:layout_marginBottom="20dp"
         android:layout_alignParentBottom="true"
-        android:text="Tęsti"
+        android:text="@string/initial_continue_btn"
         android:onClick="start"
         android:textAllCaps="false"
         android:id="@+id/initial_btn_continue_gender"

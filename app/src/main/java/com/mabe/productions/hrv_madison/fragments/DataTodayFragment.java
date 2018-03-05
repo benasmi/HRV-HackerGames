@@ -9,6 +9,7 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,6 +25,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
+import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
 
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ import java.util.ArrayList;
 public class DataTodayFragment extends Fragment {
 
     //FrequencyCardView
+    private CardView freq_card;
     private TextView freq_card_txt_freq_band;
     private TextView freq_card_txt_freq_band_date;
     private TextView freq_card_txt_after_this_measure;
@@ -42,9 +45,11 @@ public class DataTodayFragment extends Fragment {
     private TextView freq_card_txt_norm_hf;
     private TextView freq_card_txt_norm_vhf;
     private TextView freq_card_txt_norm_lf;
+    private PieChart frequency_chart;
 
 
     //HrvCardView
+    private CardView hrv_card;
     private TextView hrv_card_txt_hrv;
     private TextView hrv_card_txt_hrv_band_date;
     private TextView hrv_card_txt_bpm;
@@ -53,24 +58,23 @@ public class DataTodayFragment extends Fragment {
     private TextView hrv_card_txt_hrv_after;
     private TextView hrv_card_txt_average_hrv;
     private TextView hrv_card_txt_average_norm_hrv;
-
-
-
-    private PieChart frequency_chart;
     private PieChart health_index_chart;
+
+
+
     private LineChart bpm_line_chart;
+    private CardView bpm_card;
     private TextView bpm_card_txt_bpm;
     private TextView bpm_card_txt_date;
-
     private TextView bpm_card_txt_average;
     private TextView bpm_card_value_average;
-
     private TextView bpm_card_txt_hrv_average_value;
     private TextView bpm_card_hrv_average_value;
 
 
 
     //Daily reccomendation cardview
+    private CardView recommendation_card;
     private TextView reccomendation_txt_yesterday_hrv;
     private TextView reccomendation_txt_today_hrv;
     private TextView reccomendation_txt_explanation;
@@ -179,6 +183,7 @@ public class DataTodayFragment extends Fragment {
     private void initializeViews(View view){
 
         //Frequency PieChart
+        freq_card = (CardView)  view.findViewById(R.id.frequency_card);
         freq_card_txt_freq_band = (TextView) view.findViewById(R.id.frequency_bands_text_view);
         freq_card_txt_freq_band_date  = (TextView) view.findViewById(R.id.frequency_bands_measurement_date);
         freq_card_txt_after_this_measure = (TextView) view.findViewById(R.id.freq_card_txt_after_this_measure);
@@ -203,18 +208,18 @@ public class DataTodayFragment extends Fragment {
         hrv_card_txt_average_norm_hrv= (TextView) view.findViewById(R.id.hrc_card_txt_norm_hrv);
 
         //BPM PieChart
+        bpm_card = (CardView) view.findViewById(R.id.bpm_card);
         bpm_line_chart = (LineChart) view.findViewById(R.id.chart_bpm);
         bpm_card_txt_bpm = (TextView) view.findViewById(R.id.bpm_index_text_view);
         bpm_card_txt_date = (TextView) view.findViewById(R.id.bpm_index_measurement_date);
         bpm_card_txt_average = (TextView) view.findViewById(R.id.bpm_txt_average);
         bpm_card_value_average = (TextView) view.findViewById(R.id.bpm_value);
-
         bpm_card_txt_hrv_average_value = (TextView) view.findViewById(R.id.bpm_card_txt_hrv_average_value);
         bpm_card_hrv_average_value = (TextView) view.findViewById(R.id.bpm_card_hrv_average_value);
 
 
-
         //Reccomendation cardview
+        recommendation_card = view.findViewById(R.id.recommendation_card);
         reccomendation_status_arrow = view.findViewById(R.id.weekly_reccomendation_status_arrow);
         reccomendation_status_circle = view.findViewById(R.id.weekly_reccomendation_status_circle);
         reccomendation_txt_explanation = view.findViewById(R.id.weekly_reccomendation_explanation);
@@ -222,7 +227,21 @@ public class DataTodayFragment extends Fragment {
         reccomendation_txt_pulse_zone = view.findViewById(R.id.weekly_program_pulse_zone);
         reccomendation_txt_today_hrv = view.findViewById(R.id.weekly_reccomendation_today_hrv);
         reccomendation_txt_yesterday_hrv = view.findViewById(R.id.weekly_reccomendation_yesterday_hrv);
-        reccomendation_cardview = view.findViewById(R.id.reccomendation_cardview);
+        reccomendation_cardview = view.findViewById(R.id.recommendation_card);
+
+        bpm_card.setTranslationY( Utils.getScreenHeight(getContext()));
+        bpm_card.animate()
+                .translationY(0)
+                .setInterpolator(new DecelerateInterpolator(3.f))
+                .setDuration(1500)
+                .start();
+
+        freq_card.setTranslationY( Utils.getScreenHeight(getContext()));
+        freq_card.animate()
+                .translationY(0)
+                .setInterpolator(new DecelerateInterpolator(3.f))
+                .setDuration(1500)
+                .start();
 
     }
 
@@ -231,52 +250,53 @@ public class DataTodayFragment extends Fragment {
     private void setFonts(){
         Typeface futura = Typeface.createFromAsset(getContext().getAssets(),
                 "fonts/futura_light.ttf");
-        Typeface corbel = Typeface.createFromAsset(getContext().getAssets(),
-                "fonts/Corbel Bold.ttf");
+        Typeface verdana = Typeface.createFromAsset(getContext().getAssets(),
+                "fonts/Verdana.ttf");
+
 
         frequency_chart.setCenterTextTypeface(futura);
         health_index_chart.setCenterTextTypeface(futura);
 
         //Weekly reccomendation
-        reccomendation_txt_today_hrv.setTypeface(futura);
-        reccomendation_txt_yesterday_hrv.setTypeface(futura);
-        reccomendation_txt_workout_duration.setTypeface(futura);
-        reccomendation_txt_pulse_zone.setTypeface(futura);
-        reccomendation_txt_explanation.setTypeface(futura);
+        reccomendation_txt_today_hrv.setTypeface(verdana);
+        reccomendation_txt_yesterday_hrv.setTypeface(verdana);
+        reccomendation_txt_workout_duration.setTypeface(verdana);
+        reccomendation_txt_pulse_zone.setTypeface(verdana);
+        reccomendation_txt_explanation.setTypeface(verdana);
 
         //FrequencyCardView
-        freq_card_txt_freq_band.setTypeface(futura);
-        freq_card_txt_freq_band_date.setTypeface(futura);
-        freq_card_txt_after_this_measure.setTypeface(futura);
-        freq_card_txt_hf_after_measurament.setTypeface(futura);
-        freq_card_txt_lf_after_measurement.setTypeface(futura);
-        freq_card_txt_vlf_after_measurement.setTypeface(futura);
-        freq_card_txt_norm.setTypeface(futura);
-        freq_card_txt_norm_hf.setTypeface(futura);
-        freq_card_txt_norm_vhf.setTypeface(futura);
-        freq_card_txt_norm_lf.setTypeface(futura);
+        freq_card_txt_freq_band.setTypeface(verdana);
+        freq_card_txt_freq_band_date.setTypeface(verdana);
+        freq_card_txt_after_this_measure.setTypeface(verdana);
+        freq_card_txt_hf_after_measurament.setTypeface(verdana);
+        freq_card_txt_lf_after_measurement.setTypeface(verdana);
+        freq_card_txt_vlf_after_measurement.setTypeface(verdana);
+        freq_card_txt_norm.setTypeface(verdana);
+        freq_card_txt_norm_hf.setTypeface(verdana);
+        freq_card_txt_norm_vhf.setTypeface(verdana);
+        freq_card_txt_norm_lf.setTypeface(verdana);
 
 
         //HrvCardView
-        hrv_card_txt_hrv.setTypeface(futura);
-        hrv_card_txt_hrv_band_date.setTypeface(futura);
-        hrv_card_txt_bpm.setTypeface(futura);
-        hrv_card_txt_bpm_after_measurament.setTypeface(futura);
-        hrv_card_txt_bpm_norm_after_measurement.setTypeface(futura);
-        hrv_card_txt_hrv_after.setTypeface(futura);
-        hrv_card_txt_average_hrv.setTypeface(futura);
-        hrv_card_txt_average_norm_hrv.setTypeface(futura);
+        hrv_card_txt_hrv.setTypeface(verdana);
+        hrv_card_txt_hrv_band_date.setTypeface(verdana);
+        hrv_card_txt_bpm.setTypeface(verdana);
+        hrv_card_txt_bpm_after_measurament.setTypeface(verdana);
+        hrv_card_txt_bpm_norm_after_measurement.setTypeface(verdana);
+        hrv_card_txt_hrv_after.setTypeface(verdana);
+        hrv_card_txt_average_hrv.setTypeface(verdana);
+        hrv_card_txt_average_norm_hrv.setTypeface(verdana);
 
-        bpm_card_txt_bpm.setTypeface(futura);
-        bpm_card_txt_date.setTypeface(futura);
-        bpm_card_txt_average.setTypeface(futura);
-        bpm_card_value_average.setTypeface(futura);
-        bpm_card_txt_hrv_average_value.setTypeface(futura);
-        bpm_card_hrv_average_value.setTypeface(futura);
+        bpm_card_txt_bpm.setTypeface(verdana);
+        bpm_card_txt_date.setTypeface(verdana);
+        bpm_card_txt_average.setTypeface(verdana);
+        bpm_card_value_average.setTypeface(verdana);
+        bpm_card_txt_hrv_average_value.setTypeface(verdana);
+        bpm_card_hrv_average_value.setTypeface(verdana);
 
 
-
-        bpm_line_chart.getLegend().setEnabled(false);
+        bpm_line_chart.getLegend().setPosition(Legend.LegendPosition.BELOW_CHART_RIGHT);
+        bpm_line_chart.getLegend().setTextColor(Color.WHITE);
         bpm_line_chart.getXAxis().setDrawAxisLine(false);
         bpm_line_chart.getAxisRight().setDrawAxisLine(false);
         bpm_line_chart.getAxisLeft().setDrawAxisLine(true);
@@ -391,7 +411,7 @@ public class DataTodayFragment extends Fragment {
             //Creating a line with single hr value
             ArrayList<Entry> singleValueList = new ArrayList<>();
             singleValueList.add(new Entry(0, rmssd));
-            set = new LineDataSet(singleValueList, "HR");
+            set = new LineDataSet(singleValueList, "RMSSD");
             set.setLineWidth(getContext().getResources().getDimension(R.dimen.line_width));
             set.setDrawValues(false);
             set.setDrawCircleHole(false);
@@ -466,7 +486,7 @@ public class DataTodayFragment extends Fragment {
         secondValueList.add(new Entry(1, 65));
         secondValueList.add(new Entry(2, 14));
         secondValueList.add(new Entry(3, 34));
-        LineDataSet rmssdSet = new LineDataSet(secondValueList, "HR");
+        LineDataSet rmssdSet = new LineDataSet(secondValueList, "RMSSD");
         rmssdSet.setLineWidth(1);
         rmssdSet.setDrawValues(false);
         rmssdSet.setDrawCircleHole(false);

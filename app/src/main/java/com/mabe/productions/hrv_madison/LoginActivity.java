@@ -63,13 +63,13 @@ public class LoginActivity extends AppCompatActivity {
 
 
         //todo: this crashes on several phone models or versions
-        //Checking if android version supports animated vector drawables. If it doesn't, regular drawable is set.
-        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        //    final AnimatedVectorDrawable d = (AnimatedVectorDrawable) img_login_appicon.getDrawable();
-        //    d.start();
-        //}else{
-        //    img_login_appicon.setImageResource(R.drawable.ic_appicon_rectangle);
-        //}
+        // if android version supports animated vector drawables. If it doesn't, regular drawable is set.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final AnimatedVectorDrawable d = (AnimatedVectorDrawable) img_login_appicon.getDrawable();
+            d.start();
+        }else{
+            img_login_appicon.setImageResource(R.drawable.ic_appicon_rectangle);
+        }
 
         
     }

@@ -122,7 +122,7 @@
         android:background="#003e5266"
         android:layout_marginBottom="20dp"
         android:layout_alignParentBottom="true"
-        android:text="Tęsti"
+        android:text="@string/initial_continue_btn"
         android:onClick="start"
         android:textAllCaps="false"
         android:id="@+id/initial_btn_continue_day_selection"
