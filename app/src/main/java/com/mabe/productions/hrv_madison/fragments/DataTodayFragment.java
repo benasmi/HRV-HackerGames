@@ -75,14 +75,13 @@ public class DataTodayFragment extends Fragment {
 
     //Daily reccomendation cardview
     private CardView recommendation_card;
-    private TextView reccomendation_txt_yesterday_hrv;
-    private TextView reccomendation_txt_today_hrv;
-    private TextView reccomendation_txt_explanation;
+    private TextView reccomendation_txt_todays_program;
+    private TextView reccomendation_txt_hrv_increase;
+    private TextView reccomendation_txt_duration;
     private TextView reccomendation_txt_pulse_zone;
-    private TextView reccomendation_txt_workout_duration;
-    private ImageView reccomendation_status_arrow;
-    private ImageView reccomendation_status_circle;
-    private CardView reccomendation_cardview;
+    private TextView reccomendation_txt_verbal_recommendation;
+
+
 
 
 
@@ -132,9 +131,9 @@ public class DataTodayFragment extends Fragment {
                 }
             }
 
-            freq_card_txt_norm_hf.setText(String.valueOf(measurement.getHF_band()));
-            freq_card_txt_norm_lf.setText(String.valueOf(measurement.getHF_band()));
-            freq_card_txt_norm_vhf.setText(String.valueOf(measurement.getVHF_band()));
+            freq_card_txt_hf_after_measurament.setText(String.valueOf(measurement.getHF_band()));
+            freq_card_txt_lf_after_measurement.setText(String.valueOf(measurement.getHF_band()));
+            freq_card_txt_vlf_after_measurement.setText(String.valueOf(measurement.getVHF_band()));
             bpm_card_hrv_average_value.setText(String.valueOf(measurement.getRmssd()));
             bpm_card_value_average.setText(String.valueOf((int)measurement.getAverage_bpm()));
 
@@ -142,41 +141,41 @@ public class DataTodayFragment extends Fragment {
 
         bpm_line_chart.animateY(2000, Easing.EasingOption.EaseInOutSine);
 
-        reccomendation_txt_yesterday_hrv.setText(String.valueOf(user.getYesterdayHrv()));
-        reccomendation_txt_today_hrv.setText(String.valueOf(user.getCurrentHrv()));
-        reccomendation_cardview.setVisibility(View.VISIBLE);
-        reccomendation_status_arrow.setVisibility(View.VISIBLE);
-        reccomendation_status_arrow.setRotation(0);
-
-        switch (user.getProgramUpdateState()){
-            case User.PROGRAM_STATE_DOWNGRADED:
-                reccomendation_status_arrow.setRotation(180);
-                reccomendation_status_arrow.setImageResource(R.drawable.ic_arrow_down);
-                reccomendation_txt_explanation.setText(R.string.program_downgraded);
-                reccomendation_status_circle.setImageResource(R.drawable.hrv_circle_downgraded);
-                reccomendation_txt_yesterday_hrv.setTextColor(Color.parseColor("#e74c3c"));
-                reccomendation_txt_today_hrv.setTextColor(Color.parseColor("#e74c3c"));
-                break;
-            case User.PROGRAM_STATE_UPGRADED:
-
-                reccomendation_status_arrow.setImageResource(R.drawable.ic_arrow_up);
-                reccomendation_status_circle.setImageResource(R.drawable.hrv_circle_upgraded);
-                reccomendation_txt_today_hrv.setTextColor(Color.parseColor("#2ecc71"));
-                reccomendation_txt_yesterday_hrv.setTextColor(Color.parseColor("#2ecc71"));
-                reccomendation_txt_explanation.setText(R.string.program_upgraded);
-                break;
-            case User.PROGRAM_STATE_UNCHANGED:
-                reccomendation_status_arrow.setVisibility(View.GONE);
-                reccomendation_status_circle.setImageResource(R.drawable.hrv_circle_unchanged);
-                reccomendation_txt_today_hrv.setTextColor(Color.WHITE);
-                reccomendation_txt_yesterday_hrv.setTextColor(Color.WHITE);
-                reccomendation_txt_explanation.setText(R.string.program_unchanged);
-                break;
-
-            default:
-                reccomendation_cardview.setVisibility(View.GONE);
-                break;
-        }
+//        reccomendation_txt_yesterday_hrv.setText(String.valueOf(user.getYesterdayHrv()));
+//        reccomendation_txt_today_hrv.setText(String.valueOf(user.getCurrentHrv()));
+//        reccomendation_cardview.setVisibility(View.VISIBLE);
+//        reccomendation_status_arrow.setVisibility(View.VISIBLE);
+//        reccomendation_status_arrow.setRotation(0);
+//
+//        switch (user.getProgramUpdateState()){
+//            case User.PROGRAM_STATE_DOWNGRADED:
+//                reccomendation_status_arrow.setRotation(180);
+//                reccomendation_status_arrow.setImageResource(R.drawable.ic_arrow_down);
+//                reccomendation_txt_explanation.setText(R.string.program_downgraded);
+//                reccomendation_status_circle.setImageResource(R.drawable.hrv_circle_downgraded);
+//                reccomendation_txt_yesterday_hrv.setTextColor(Color.parseColor("#e74c3c"));
+//                reccomendation_txt_today_hrv.setTextColor(Color.parseColor("#e74c3c"));
+//                break;
+//            case User.PROGRAM_STATE_UPGRADED:
+//
+//                reccomendation_status_arrow.setImageResource(R.drawable.ic_arrow_up);
+//                reccomendation_status_circle.setImageResource(R.drawable.hrv_circle_upgraded);
+//                reccomendation_txt_today_hrv.setTextColor(Color.parseColor("#2ecc71"));
+//                reccomendation_txt_yesterday_hrv.setTextColor(Color.parseColor("#2ecc71"));
+//                reccomendation_txt_explanation.setText(R.string.program_upgraded);
+//                break;
+//            case User.PROGRAM_STATE_UNCHANGED:
+//                reccomendation_status_arrow.setVisibility(View.GONE);
+//                reccomendation_status_circle.setImageResource(R.drawable.hrv_circle_unchanged);
+//                reccomendation_txt_today_hrv.setTextColor(Color.WHITE);
+//                reccomendation_txt_yesterday_hrv.setTextColor(Color.WHITE);
+//                reccomendation_txt_explanation.setText(R.string.program_unchanged);
+//                break;
+//
+//            default:
+//                reccomendation_cardview.setVisibility(View.GONE);
+//                break;
+//        }
 
     }
 
@@ -220,24 +219,22 @@ public class DataTodayFragment extends Fragment {
 
         //Reccomendation cardview
         recommendation_card = view.findViewById(R.id.recommendation_card);
-        reccomendation_status_arrow = view.findViewById(R.id.weekly_reccomendation_status_arrow);
-        reccomendation_status_circle = view.findViewById(R.id.weekly_reccomendation_status_circle);
-        reccomendation_txt_explanation = view.findViewById(R.id.weekly_reccomendation_explanation);
-        reccomendation_txt_workout_duration = view.findViewById(R.id.weekly_program_duration_reccomendation);
-        reccomendation_txt_pulse_zone = view.findViewById(R.id.weekly_program_pulse_zone);
-        reccomendation_txt_today_hrv = view.findViewById(R.id.weekly_reccomendation_today_hrv);
-        reccomendation_txt_yesterday_hrv = view.findViewById(R.id.weekly_reccomendation_yesterday_hrv);
-        reccomendation_cardview = view.findViewById(R.id.recommendation_card);
+        reccomendation_txt_todays_program = view.findViewById(R.id.txt_todays_program);
+        reccomendation_txt_hrv_increase = view.findViewById(R.id.txt_hrv_increase);
+        reccomendation_txt_duration = view.findViewById(R.id.txt_duration_value);
+        reccomendation_txt_pulse_zone = view.findViewById(R.id.txt_pulse_zone_value);
+        reccomendation_txt_verbal_recommendation = view.findViewById(R.id.txt_verbal_recomendation);
 
-        bpm_card.setTranslationY( Utils.getScreenHeight(getContext()));
-        bpm_card.animate()
+
+        recommendation_card.setTranslationY( Utils.getScreenHeight(getContext()));
+        recommendation_card.animate()
                 .translationY(0)
                 .setInterpolator(new DecelerateInterpolator(3.f))
                 .setDuration(1500)
                 .start();
 
-        freq_card.setTranslationY( Utils.getScreenHeight(getContext()));
-        freq_card.animate()
+        bpm_card.setTranslationY( Utils.getScreenHeight(getContext()));
+        bpm_card.animate()
                 .translationY(0)
                 .setInterpolator(new DecelerateInterpolator(3.f))
                 .setDuration(1500)
@@ -258,11 +255,6 @@ public class DataTodayFragment extends Fragment {
         health_index_chart.setCenterTextTypeface(futura);
 
         //Weekly reccomendation
-        reccomendation_txt_today_hrv.setTypeface(verdana);
-        reccomendation_txt_yesterday_hrv.setTypeface(verdana);
-        reccomendation_txt_workout_duration.setTypeface(verdana);
-        reccomendation_txt_pulse_zone.setTypeface(verdana);
-        reccomendation_txt_explanation.setTypeface(verdana);
 
         //FrequencyCardView
         freq_card_txt_freq_band.setTypeface(verdana);
@@ -309,6 +301,14 @@ public class DataTodayFragment extends Fragment {
         bpm_line_chart.getXAxis().setDrawLabels(false);
         bpm_line_chart.setTouchEnabled(false);
         bpm_line_chart.setViewPortOffsets(0f, 0f, 0f, 0f);
+
+        //Reccomendation cardview
+        reccomendation_txt_todays_program.setTypeface(verdana);
+        reccomendation_txt_hrv_increase.setTypeface(verdana);
+        reccomendation_txt_duration.setTypeface(verdana);
+        reccomendation_txt_pulse_zone.setTypeface(verdana);
+        reccomendation_txt_verbal_recommendation.setTypeface(verdana);
+
     }
 
     private void frequency_pieChart(){

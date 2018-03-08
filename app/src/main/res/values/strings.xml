@@ -89,6 +89,11 @@
     <string name="initial_continue_btn">Next</string>
     <string name="initial_how_much_do_you_workout">How much time do you workout?</string>
     <string name="initial_what_is_your_intensity">What\'s your intensity?</string>
+    <string name="txt_hrv_increase">+14 % \n increase</string>
+    <string name="txt_duration">30 min</string>
+    <string name="txt_suggestion">Your HRV is elevated. Suggesting to workout harder</string>
+    <string name="start_your_workout">Start workout!</string>
+    <string name="txt_pulse_zone">1-2 pulse zone</string>
 
 </resources>
 

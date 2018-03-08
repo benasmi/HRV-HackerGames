@@ -24,6 +24,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -317,6 +319,8 @@ public class MeasurementFragment extends Fragment {
         img_breathing_indicator.setVisibility(View.VISIBLE);
 
         //Again, a weird way to restart the animation
+        Animation top_to_bottom = AnimationUtils.loadAnimation(getContext(),R.anim.top_to_bottom);
+        img_breathing_indicator.startAnimation(top_to_bottom);
         img_breathing_indicator.post(new Runnable() {
             @Override
             public void run() {

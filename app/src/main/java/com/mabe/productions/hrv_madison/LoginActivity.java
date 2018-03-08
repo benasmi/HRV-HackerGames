@@ -60,8 +60,6 @@ public class LoginActivity extends AppCompatActivity {
         initializeViews();
         setFonts();
 
-        //todo: remove this dummy data
-        Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_WEEK_DAYS, new boolean[]{true, true, true, true, true, true, true}, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
 
 
         //Starting the pre-loop animation for the app icon, and after it ends, starting the loop
@@ -94,6 +92,7 @@ public class LoginActivity extends AppCompatActivity {
                 });
             }
         });
+
         animatedIconVectorIntro.start();
 
 

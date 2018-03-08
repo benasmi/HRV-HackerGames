@@ -98,8 +98,8 @@ public class MainScreenActivity extends AppCompatActivity {
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
         //bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_HIDE);
         bottomNavigation.setColored(false);
-        bottomNavigation.setCurrentItem(0);
-        viewpager.setCurrentItem(0);
+        bottomNavigation.setCurrentItem(1);
+        viewpager.setCurrentItem(1);
 
 
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
