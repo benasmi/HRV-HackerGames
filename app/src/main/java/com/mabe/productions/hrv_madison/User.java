@@ -57,7 +57,7 @@ public class User {
 
     private boolean[] week_days = new boolean[7];
     private float max_duration; //In minutes
-
+    private ArrayList<Measurement> measurements;
 
 
     /*
@@ -65,7 +65,7 @@ public class User {
      * @param overrideByDate If true, existing table row with today's date is overriden.
      */
     //todo: save measurement duration
-    public static void addMeasurementData(Context context, RMSSD hrv, BPM bpm, FrequencyMethod frequencies, boolean overrideByDate){
+    public static void addMeasurementData(Context context, Measurement measurement, boolean overrideByDate){
         SQLiteDatabase db = new FeedReaderDbHelper(context).getWritableDatabase();
 
         //Checking if a measurement with today's date exists
@@ -105,29 +105,22 @@ public class User {
 
         }
 
-        //Inserting values TODO: do we need to check if null?
+        //Inserting values
         ContentValues values = new ContentValues();
-        if(hrv != null){
-            values.put(FeedReaderDbHelper.COL_RMSSD, hrv.calculateRMSSD());
-            values.put(FeedReaderDbHelper.COL_LN_RMSSD, hrv.getLnRmssd());
-            values.put(FeedReaderDbHelper.COL_LOWEST_RMSSD, hrv.getLowestRmssd());
-            values.put(FeedReaderDbHelper.COL_HIGHEST_RMSSD, hrv.getHighestRmssd());
-            values.put(FeedReaderDbHelper.COL_RMSSD_DATA, FeedReaderDbHelper.getStringFromBpmValues(hrv.getRMSSDValues()));
+            values.put(FeedReaderDbHelper.COL_RMSSD, measurement.getRmssd());
+            values.put(FeedReaderDbHelper.COL_LN_RMSSD, measurement.getLn_rmssd());
+            values.put(FeedReaderDbHelper.COL_LOWEST_RMSSD, measurement.getLowest_rmssd());
+            values.put(FeedReaderDbHelper.COL_HIGHEST_RMSSD, measurement.getHighest_rmssd());
+            values.put(FeedReaderDbHelper.COL_RMSSD_DATA, FeedReaderDbHelper.getStringFromBpmValues(measurement.getRmssd_data()));
+            values.put(FeedReaderDbHelper.COL_LOWEST_BPM, measurement.getLowest_bpm());
+            values.put(FeedReaderDbHelper.COL_HIGHEST_BPM, measurement.getHighest_bpm());
+            values.put(FeedReaderDbHelper.COL_AVERAGE_BPM, measurement.getAverage_bpm());
+            values.put(FeedReaderDbHelper.COL_BPM_DATA, FeedReaderDbHelper.getStringFromBpmValues(measurement.getBpm_data()));
 
-        }
-        if(bpm != null){
-            values.put(FeedReaderDbHelper.COL_LOWEST_BPM, bpm.getLowestBpm());
-            values.put(FeedReaderDbHelper.COL_HIGHEST_BPM, bpm.getHighestBpm());
-            values.put(FeedReaderDbHelper.COL_AVERAGE_BPM, bpm.getAverageBpm());
-            values.put(FeedReaderDbHelper.COL_BPM_DATA, FeedReaderDbHelper.getStringFromBpmValues(bpm.getBpmValues()));
-        }
-
-        if(frequencies != null){
-            values.put(FeedReaderDbHelper.COL_LF_BAND, frequencies.getLF_value());
-            values.put(FeedReaderDbHelper.COL_HF_BAND, frequencies.getHF_value());
-            values.put(FeedReaderDbHelper.COL_VLF_BAND, frequencies.getVLF_value());
-            values.put(FeedReaderDbHelper.COL_VHF_BAND, frequencies.getVHF_value());
-        }
+            values.put(FeedReaderDbHelper.COL_LF_BAND, measurement.getLF_band());
+            values.put(FeedReaderDbHelper.COL_HF_BAND, measurement.getHF_band());
+            values.put(FeedReaderDbHelper.COL_VLF_BAND, measurement.getVLF_band());
+            values.put(FeedReaderDbHelper.COL_VHF_BAND, measurement.getVHF_band());
 
         values.put(FeedReaderDbHelper.COL_DATE, Utils.getStringFromDate(Calendar.getInstance().getTime()));
         db.insert(FeedReaderDbHelper.HRV_DATA_TABLE_NAME, null, values);
@@ -136,96 +129,13 @@ public class User {
 
     /*
      * Returns last saved measurement
+     * todo: not sure if this returns the last, or the first measurement
      */
-    public Measurement getLastMeasurement(Context context){
-        SQLiteDatabase db = new FeedReaderDbHelper(context).getWritableDatabase();
-
-        String[] projection = {
-                FeedReaderDbHelper.COL_DATE,
-                FeedReaderDbHelper.COL_ID,
-                FeedReaderDbHelper.COL_RMSSD,
-                FeedReaderDbHelper.COL_LN_RMSSD,
-                FeedReaderDbHelper.COL_LOWEST_RMSSD,
-                FeedReaderDbHelper.COL_HIGHEST_RMSSD,
-                FeedReaderDbHelper.COL_LOWEST_BPM,
-                FeedReaderDbHelper.COL_HIGHEST_BPM,
-                FeedReaderDbHelper.COL_AVERAGE_BPM,
-                FeedReaderDbHelper.COL_LF_BAND,
-                FeedReaderDbHelper.COL_VLF_BAND,
-                FeedReaderDbHelper.COL_VHF_BAND,
-                FeedReaderDbHelper.COL_HF_BAND,
-                FeedReaderDbHelper.COL_BPM_DATA,
-                FeedReaderDbHelper.COL_RMSSD_DATA
-        };
-
-        String sortOrder =
-                FeedReaderDbHelper.COL_ID+ " DESC";
-
-        Cursor cursor = db.query(
-                FeedReaderDbHelper.HRV_DATA_TABLE_NAME,
-                projection,
-                null,
-                null,
-                null,
-                null,
-                sortOrder
-        );
-
-        if(cursor.moveToNext()){
-            int id = cursor.getInt(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_ID));
-            Date date = Utils.getDateFromString(cursor.getString(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_DATE)));
-            int rmssd = cursor.getInt(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_RMSSD));
-            float ln_rmssd = cursor.getFloat(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_LN_RMSSD));
-            float lowest_rmssd = cursor.getFloat(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_LOWEST_RMSSD));
-            float highest_rmssd = cursor.getFloat(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_HIGHEST_RMSSD));
-            float lowest_bpm = cursor.getFloat(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_LOWEST_BPM));
-            float highest_bpm = cursor.getFloat(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_HIGHEST_BPM));
-            float average_bpm = cursor.getFloat(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_AVERAGE_BPM));
-            float LF_band = cursor.getFloat(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_LF_BAND));
-            float VLF_band = cursor.getFloat(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_VLF_BAND));
-            float VHF_band = cursor.getFloat(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_VHF_BAND));
-            float HF_band = cursor.getFloat(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_HF_BAND));
-            String bpmDataString = cursor.getString(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_BPM_DATA));
-
-            int[] bpmData = FeedReaderDbHelper.getBpmValuesFromString(bpmDataString);
-
-            String rmssdDataString = cursor.getString(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_RMSSD_DATA));
-            int[] rmssdData = FeedReaderDbHelper.getBpmValuesFromString(rmssdDataString);
-
-
-
-            Measurement measurement = new Measurement(date, rmssd, ln_rmssd, lowest_rmssd, highest_rmssd, lowest_bpm, highest_bpm, average_bpm, LF_band, VLF_band, VHF_band, HF_band, bpmData, rmssdData);
-
-            for(int i = 0; i<rmssdData.length; i++){
-                Log.i("TEST", String.valueOf(rmssdData[i]));
-            }
-
-
-
-            return measurement;
-
-        }else{
-            //no measurements were made
-            return null;
-        }
+    public Measurement getLastMeasurement(){
+        return measurements.get(0);
     }
 
-    public ArrayList<Measurement> getAllMeasurements(Context context){
+    private void getAllMeasurementsFromDb(Context context){
 
         ArrayList<Measurement> measurementList = new ArrayList<>();
 
@@ -310,7 +220,7 @@ public class User {
 
 
 
-        return measurementList;
+        measurements = measurementList;
     }
 
     public static User getUser(Context context){
@@ -410,7 +320,9 @@ public class User {
         user.setSecondLastWeekHrv(20);
         user.setSelectedSport(SPORT_JOGGING);
         user.setMaxDuration(20);
-        ArrayList<Measurement> measurements = user.getAllMeasurements(context);
+
+        user.getAllMeasurementsFromDb(context);
+        ArrayList<Measurement> measurements = user.getAllMeasurements();
 
         calendar = Calendar.getInstance();
         int today = calendar.get(Calendar.DAY_OF_YEAR);
@@ -428,7 +340,9 @@ public class User {
             }
         }
 
+        user.generateWeeklyProgram(context);
         user.generateDailyReccomendation(context);
+
 
         return user;
     }
@@ -437,6 +351,10 @@ public class User {
     private void saveProgram(Context context){
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_DURATION, workout_duration, FeedReaderDbHelper.SHARED_PREFS_SPORT);
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_PULSE_ZONE, pulse_zone, FeedReaderDbHelper.SHARED_PREFS_SPORT);
+    }
+
+    public ArrayList<Measurement> getAllMeasurements(){
+        return measurements;
     }
 
     public String generateWeeklyProgram(Context context){

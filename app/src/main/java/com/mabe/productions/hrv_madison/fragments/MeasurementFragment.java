@@ -15,7 +15,6 @@ import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.graphics.drawable.Animatable2Compat;
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
-import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -44,6 +43,7 @@ import com.mabe.productions.hrv_madison.bluetooth.LeDevicesDialog;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.measurements.BPM;
 import com.mabe.productions.hrv_madison.measurements.FrequencyMethod;
+import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.RMSSD;
 import com.shawnlin.numberpicker.NumberPicker;
 
@@ -64,6 +64,7 @@ public class MeasurementFragment extends Fragment {
     private ProgressBar progressbar_measurement;
     private ImageView img_breathing_indicator;
     private LineChart chart_hr;
+    private TextView txt_time_left;
 
     private int[] interval_values;
 
@@ -107,6 +108,7 @@ public class MeasurementFragment extends Fragment {
         animatedBreathingVector.registerAnimationCallback(new Animatable2Compat.AnimationCallback() {
             @Override
             public void onAnimationEnd(Drawable drawable) {
+                //Yes, using this method is somewhy nessecary
                 img_breathing_indicator.post(new Runnable() {
                     @Override
                     public void run() {
@@ -117,7 +119,7 @@ public class MeasurementFragment extends Fragment {
         });
         img_breathing_indicator.setImageDrawable(animatedBreathingVector);
 
-
+        txt_time_left = view.findViewById(R.id.txt_duration_left);
         txt_connection_status = view.findViewById(R.id.txt_connection_status);
         txt_hr = view.findViewById(R.id.txt_hr);
         txt_hr_value = view.findViewById(R.id.txt_hr_value);
@@ -314,7 +316,7 @@ public class MeasurementFragment extends Fragment {
         txt_duration_picker_text.setVisibility(View.GONE);
         img_breathing_indicator.setVisibility(View.VISIBLE);
 
-        //Again, a weird way to restart the animation, but it works
+        //Again, a weird way to restart the animation
         img_breathing_indicator.post(new Runnable() {
             @Override
             public void run() {
@@ -353,12 +355,21 @@ public class MeasurementFragment extends Fragment {
                                 fft.calculate_frequencies(times);
 
                             }
-
-
                         }
+
                         long duration = measurement_duration.getValue()*60000;
 
                         progressbar_measurement.setProgress((int) ( ( timePassed*1000d / (double) duration) * 100d));
+
+                        int minutes = (int) l/60000;
+                        int seconds = Math.round(l/1000 - (minutes*60));
+
+                        if(seconds < 10){
+                            txt_time_left.setText(minutes + ":0" + seconds);
+                        }else{
+                            txt_time_left.setText(minutes + ":" + seconds);
+                        }
+
 
                         //Calculating HRV
                         hrv.addIntervals(interval_values);
@@ -386,8 +397,9 @@ public class MeasurementFragment extends Fragment {
                                 "VHF : " + VHF);
 */
 
+                        Measurement measurement = new Measurement(hrv, fft, bpm);
 
-                        User.addMeasurementData(getContext(), hrv, bpm, fft, true);
+                        User.addMeasurementData(getContext(), measurement, true);
                         User user = User.getUser(getContext());
                         user.generateDailyReccomendation(getContext());
 
@@ -423,6 +435,7 @@ public class MeasurementFragment extends Fragment {
                         txt_connection_status.setText(R.string.measurement_is_over);
                         currentMeasurementState = STATE_REVIEW_DATA;
                         btn_start_measuring.setText(R.string.review_btn);
+                        txt_time_left.setText("");
 
                     }
                 }.start();
@@ -496,7 +509,7 @@ public class MeasurementFragment extends Fragment {
         txt_hrv_value.setText("-");
         timePassed = 0;
         times=0;
-
+        txt_time_left.setText("");
         measurement_duration.setVisibility(View.VISIBLE);
         img_breathing_indicator.setVisibility(View.GONE);
         txt_duration_picker_text.setVisibility(View.GONE);

@@ -56,6 +56,8 @@ public class Measurement {
         this.VLF_band = (float) frequencies.getVLF_value();
         this.VHF_band = (float) frequencies.getVHF_value();
         this.HF_band = (float) frequencies.getHF_value();
+        this.bpm_data = bpm.getBpmValues();
+        this.rmssd_data = rmssd.getRMSSDValues();
     }
 
     public Date getDate() {

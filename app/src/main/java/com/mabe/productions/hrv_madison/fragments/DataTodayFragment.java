@@ -110,7 +110,7 @@ public class DataTodayFragment extends Fragment {
         //TODO: populate cardviews with measurement data
         User user = User.getUser(getContext());
 
-        Measurement measurement = user.getLastMeasurement(getContext());
+        Measurement measurement = user.getLastMeasurement();
         if(measurement!=null){
             int bpmValues[] = measurement.getBpm_data();
             int rmssdValues[] = measurement.getRmssd_data();
