@@ -132,7 +132,11 @@ public class User {
      * todo: not sure if this returns the last, or the first measurement
      */
     public Measurement getLastMeasurement(){
-        return measurements.get(0);
+        if(measurements.size() > 0) {
+            return measurements.get(0);
+        }else{
+            return null;
+        }
     }
 
     private void getAllMeasurementsFromDb(Context context){
