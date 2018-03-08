@@ -27,6 +27,14 @@
             android:layout_height="wrap_content">
 
 
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:layout_centerInParent="true"
+                android:id="@+id/breathing_indicator"
+                android:visibility="gone"
+                android:src="@drawable/breathing_indicator_anim"/>
 
             <com.shawnlin.numberpicker.NumberPicker
                 android:layout_width="wrap_content"
@@ -57,6 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@id/number_picker"
+                android:id="@+id/duration_picker_min_txt"
                 android:text="min"
                 android:layout_marginBottom="10dp"
                 android:textSize="12dp"

@@ -6,43 +6,35 @@ import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.graphics.drawable.Animatable2Compat;
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
-import com.github.channguyen.rsv.RangeSliderView;
-import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.utils.MPPointD;
-import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.mabe.productions.hrv_madison.MainScreenActivity;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
@@ -58,12 +50,6 @@ import com.shawnlin.numberpicker.NumberPicker;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
-import static android.R.id.message;
-import static android.support.design.R.attr.layout_scrollFlags;
-import static android.support.design.R.attr.theme;
 
 
 public class MeasurementFragment extends Fragment {
@@ -76,7 +62,7 @@ public class MeasurementFragment extends Fragment {
     public TextView txt_connection_status;
     private AppCompatButton btn_start_measuring;
     private ProgressBar progressbar_measurement;
-
+    private ImageView img_breathing_indicator;
     private LineChart chart_hr;
 
     private int[] interval_values;
@@ -95,6 +81,8 @@ public class MeasurementFragment extends Fragment {
     private static final int STATE_WAITING_TO_MEASURE = 1;
     private static final int STATE_REVIEW_DATA = 2;
     private int hearRate=0;
+    private AnimatedVectorDrawableCompat animatedBreathingVector;
+    private TextView txt_duration_picker_text;
 
 
     @Nullable
@@ -111,6 +99,23 @@ public class MeasurementFragment extends Fragment {
 
 
     private void initializeViews(View view) {
+        img_breathing_indicator = view.findViewById(R.id.breathing_indicator);
+
+        //Initializing animated vector drawable only once
+        animatedBreathingVector = AnimatedVectorDrawableCompat.create(getContext(), R.drawable.breathing_indicator_anim);
+        //A weird way to make the animation loop. I could not find a better one
+        animatedBreathingVector.registerAnimationCallback(new Animatable2Compat.AnimationCallback() {
+            @Override
+            public void onAnimationEnd(Drawable drawable) {
+                img_breathing_indicator.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        animatedBreathingVector.start();
+                    }
+                });
+            }
+        });
+        img_breathing_indicator.setImageDrawable(animatedBreathingVector);
 
 
         txt_connection_status = view.findViewById(R.id.txt_connection_status);
@@ -118,6 +123,7 @@ public class MeasurementFragment extends Fragment {
         txt_hr_value = view.findViewById(R.id.txt_hr_value);
         txt_hrv = view.findViewById(R.id.txt_hrv);
         txt_hrv_value = view.findViewById(R.id.txt_hrv_value);
+        txt_duration_picker_text = view.findViewById(R.id.duration_picker_min_txt);
         chart_hr = view.findViewById(R.id.hr_chart);
         //Customizing HR chart
         chart_hr.setData(new LineData());
@@ -180,7 +186,7 @@ public class MeasurementFragment extends Fragment {
 
                                             //if device is connected
                                             if(BluetoothGattService.isGattDeviceConnected){
-                                                start_calculation();
+                                                startCalculation();
                                             }else{
                                                 autoConnectDevice();
                                             }
@@ -193,7 +199,7 @@ public class MeasurementFragment extends Fragment {
                         }else{
                             //if device is connected
                             if(BluetoothGattService.isGattDeviceConnected){
-                                start_calculation();
+                                startCalculation();
                             }else{
                                 autoConnectDevice();
                             }
@@ -298,11 +304,25 @@ public class MeasurementFragment extends Fragment {
 
     }
 
-    public void start_calculation(){
+    public void startCalculation(){
         currentMeasurementState = STATE_MEASURING;
         txt_connection_status.setText(R.string.measuring);
         btn_start_measuring.setText(R.string.cancel);
         measurement_duration.setEnabled(false);
+
+        measurement_duration.setVisibility(View.GONE);
+        txt_duration_picker_text.setVisibility(View.GONE);
+        img_breathing_indicator.setVisibility(View.VISIBLE);
+
+        //Again, a weird way to restart the animation, but it works
+        img_breathing_indicator.post(new Runnable() {
+            @Override
+            public void run() {
+                animatedBreathingVector.start();
+
+            }
+        });
+
 
 
 
@@ -476,6 +496,11 @@ public class MeasurementFragment extends Fragment {
         txt_hrv_value.setText("-");
         timePassed = 0;
         times=0;
+
+        measurement_duration.setVisibility(View.VISIBLE);
+        img_breathing_indicator.setVisibility(View.GONE);
+        txt_duration_picker_text.setVisibility(View.GONE);
+
     }
 
 

@@ -16,6 +16,8 @@ import android.graphics.drawable.Animatable2;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.graphics.drawable.Animatable2Compat;
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -62,14 +64,38 @@ public class LoginActivity extends AppCompatActivity {
         Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_WEEK_DAYS, new boolean[]{true, true, true, true, true, true, true}, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
 
 
-        //todo: this crashes on several phone models or versions
-        // if android version supports animated vector drawables. If it doesn't, regular drawable is set.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            final AnimatedVectorDrawable d = (AnimatedVectorDrawable) img_login_appicon.getDrawable();
-            d.start();
-        }else{
-            img_login_appicon.setImageResource(R.drawable.ic_appicon_rectangle);
-        }
+        //Starting the pre-loop animation for the app icon, and after it ends, starting the loop
+        AnimatedVectorDrawableCompat animatedIconVectorIntro = AnimatedVectorDrawableCompat.create(this, R.drawable.intro_screen_anim_2);
+        final AnimatedVectorDrawableCompat animatedIconVectorLoop = AnimatedVectorDrawableCompat.create(this, R.drawable.app_icon_anim_loop);
+
+        //Basically just a listener that loops the animation
+        animatedIconVectorLoop.registerAnimationCallback(new Animatable2Compat.AnimationCallback() {
+            @Override
+            public void onAnimationEnd(Drawable drawable) {
+                img_login_appicon.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        animatedIconVectorLoop.start();
+                    }
+                });
+            }
+        });
+
+        img_login_appicon.setImageDrawable(animatedIconVectorIntro);
+        animatedIconVectorIntro.registerAnimationCallback(new Animatable2Compat.AnimationCallback() {
+            @Override
+            public void onAnimationEnd(Drawable drawable) {
+                img_login_appicon.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        img_login_appicon.setImageDrawable(animatedIconVectorLoop);
+                        animatedIconVectorLoop.start();
+                    }
+                });
+            }
+        });
+        animatedIconVectorIntro.start();
+
 
         
     }

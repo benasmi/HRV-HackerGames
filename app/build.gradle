@@ -21,6 +21,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -48,5 +49,6 @@ dependencies {
     compile 'com.qindachang:ruler-view:1.0.0'
     compile 'com.github.channguyen:rsv:1.0.1'
     compile 'org.adw.library:discrete-seekbar:1.0.1'
+    compile 'com.android.support:appcompat-v7:23.2.0'
     testCompile 'junit:junit:4.12'
 }

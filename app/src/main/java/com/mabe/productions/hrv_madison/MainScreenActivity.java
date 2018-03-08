@@ -152,7 +152,7 @@ public class MainScreenActivity extends AppCompatActivity {
                     //If the measure button has already been pressed, starting the measurement automatically.
                     if(viewPagerAdapter.measurementFragment.shouldStartMeasurementImmediately){
                         Log.i("TEST", "Starting measurement immediately");
-                        viewPagerAdapter.measurementFragment.start_calculation();
+                        viewPagerAdapter.measurementFragment.startCalculation();
                         viewPagerAdapter.measurementFragment.shouldStartMeasurementImmediately = false;
                     }
                     viewPagerAdapter.measurementFragment.txt_connection_status.setText("");
