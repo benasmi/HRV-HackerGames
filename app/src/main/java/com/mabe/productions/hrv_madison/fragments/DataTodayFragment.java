@@ -106,7 +106,7 @@ public class DataTodayFragment extends Fragment {
     }
 
     public void updateData(){
-        //TODO: populate cardviews with measurement data
+
         User user = User.getUser(getContext());
 
         Measurement measurement = user.getLastMeasurement();

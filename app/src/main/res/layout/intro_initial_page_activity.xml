@@ -31,7 +31,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true">
 
-        <!--TODO: add pulse anim !-->
+
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"

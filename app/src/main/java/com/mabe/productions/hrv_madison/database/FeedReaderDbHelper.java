@@ -49,6 +49,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public final static String COL_VLF_BAND = "VLF_BAND";
     public final static String COL_VHF_BAND = "VHF_BAND";
     public final static String COL_DATE = "Date";
+    public final static String COL_MEASUREMENT_DURATION = "measurement_duration";
 
 
     //User data
@@ -100,6 +101,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
                     FeedReaderDbHelper.COL_VHF_BAND + " FLOAT," +
                     FeedReaderDbHelper.COL_BPM_DATA + " STRING," +
                     FeedReaderDbHelper.COL_RMSSD_DATA + " STRING," +
+                    FeedReaderDbHelper.COL_MEASUREMENT_DURATION + "INTEGER," +
                     FeedReaderDbHelper.COL_RMSSD + " INTEGER)";
 
 

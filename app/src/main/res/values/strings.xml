@@ -13,7 +13,7 @@
     <string name="average">Vidutinis: %s</string>
     <string name="standart">Norma: %s</string>
     <string name="HRV">HRV</string>
-    <string name="hrv_frequency_bands">Frequency-Domain data</string>
+    <string name="hrv_frequency_bands">HRV Frequency-Domain results</string>
     <string name="after_this_measurement">After this measurement</string>
     <string name="HF">HF: %s%</string>
     <string name="LF">LF: %s%</string>

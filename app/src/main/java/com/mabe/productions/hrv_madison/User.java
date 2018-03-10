@@ -64,7 +64,7 @@ public class User {
      * Saves a new measurement to the database.
      * @param overrideByDate If true, existing table row with today's date is overriden.
      */
-    //todo: save measurement duration
+
     public static void addMeasurementData(Context context, Measurement measurement, boolean overrideByDate){
         SQLiteDatabase db = new FeedReaderDbHelper(context).getWritableDatabase();
 
@@ -116,7 +116,7 @@ public class User {
             values.put(FeedReaderDbHelper.COL_HIGHEST_BPM, measurement.getHighest_bpm());
             values.put(FeedReaderDbHelper.COL_AVERAGE_BPM, measurement.getAverage_bpm());
             values.put(FeedReaderDbHelper.COL_BPM_DATA, FeedReaderDbHelper.getStringFromBpmValues(measurement.getBpm_data()));
-
+            values.put(FeedReaderDbHelper.COL_MEASUREMENT_DURATION, measurement.getDuration());
             values.put(FeedReaderDbHelper.COL_LF_BAND, measurement.getLF_band());
             values.put(FeedReaderDbHelper.COL_HF_BAND, measurement.getHF_band());
             values.put(FeedReaderDbHelper.COL_VLF_BAND, measurement.getVLF_band());
@@ -129,7 +129,7 @@ public class User {
 
     /*
      * Returns last saved measurement
-     * todo: not sure if this returns the last, or the first measurement
+     *
      */
     public Measurement getLastMeasurement(){
         if(measurements.size() > 0) {
@@ -211,12 +211,14 @@ public class User {
             Log.i("bpmdata", "bpm data string: " + bpmDataString);
             int[] bpmData = FeedReaderDbHelper.getBpmValuesFromString(bpmDataString);
 
-
             String rmssdDataString = cursor.getString(
                     cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_RMSSD_DATA));
             int[] rmssdData = FeedReaderDbHelper.getBpmValuesFromString(rmssdDataString);
 
-            Measurement measurement = new Measurement(date, rmssd, ln_rmssd, lowest_rmssd, highest_rmssd, lowest_bpm, highest_bpm, average_bpm, LF_band, VLF_band, VHF_band, HF_band, bpmData,rmssdData);
+            int measurement_duration = cursor.getInt(
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_MEASUREMENT_DURATION));
+
+            Measurement measurement = new Measurement(date, rmssd, ln_rmssd, lowest_rmssd, highest_rmssd, lowest_bpm, highest_bpm, average_bpm, LF_band, VLF_band, VHF_band, HF_band, bpmData,rmssdData, measurement_duration);
 
             measurementList.add(measurement);
 

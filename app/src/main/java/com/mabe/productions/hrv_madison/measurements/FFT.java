@@ -142,7 +142,7 @@ public class FFT {
 
     // display an array of Complex numbers to standard output
     public static void show(Complex[] x, String title) {
-        //todo: remove?
+
     }
 
 

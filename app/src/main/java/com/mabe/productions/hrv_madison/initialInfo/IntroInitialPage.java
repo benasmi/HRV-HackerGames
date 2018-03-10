@@ -3,6 +3,9 @@ package com.mabe.productions.hrv_madison.initialInfo;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.support.graphics.drawable.Animatable2Compat;
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
@@ -29,6 +32,40 @@ public class IntroInitialPage extends AppCompatActivity {
         Utils.changeNotifBarColor(Color.parseColor("#3e5266"),getWindow());
         initializeViews();
         setFonts();
+
+
+        //Starting the pre-loop animation for the app icon, and after it ends, starting the loop
+        AnimatedVectorDrawableCompat animatedIconVectorIntro = AnimatedVectorDrawableCompat.create(this, R.drawable.intro_screen_anim_2);
+        final AnimatedVectorDrawableCompat animatedIconVectorLoop = AnimatedVectorDrawableCompat.create(this, R.drawable.app_icon_anim_loop);
+
+        //Basically just a listener that loops the animation
+        animatedIconVectorLoop.registerAnimationCallback(new Animatable2Compat.AnimationCallback() {
+            @Override
+            public void onAnimationEnd(Drawable drawable) {
+                img.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        animatedIconVectorLoop.start();
+                    }
+                });
+            }
+        });
+
+        img.setImageDrawable(animatedIconVectorIntro);
+        animatedIconVectorIntro.registerAnimationCallback(new Animatable2Compat.AnimationCallback() {
+            @Override
+            public void onAnimationEnd(Drawable drawable) {
+                img.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        img.setImageDrawable(animatedIconVectorLoop);
+                        animatedIconVectorLoop.start();
+                    }
+                });
+            }
+        });
+
+        animatedIconVectorIntro.start();
     }
 
     private void setFonts(){

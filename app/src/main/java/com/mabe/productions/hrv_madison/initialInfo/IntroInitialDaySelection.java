@@ -102,7 +102,7 @@ public class IntroInitialDaySelection extends AppCompatActivity {
 
 
 
-    //todo: animations and fix design
+
     private void setFonts(){
 
         Typeface verdana = Typeface.createFromAsset(getAssets(),

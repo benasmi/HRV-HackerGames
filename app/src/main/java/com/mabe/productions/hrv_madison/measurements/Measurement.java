@@ -11,6 +11,7 @@ public class Measurement {
 
 
     private Date date;
+    private int duration;
     private int rmssd;
     private float ln_rmssd;
     private float lowest_rmssd;
@@ -25,7 +26,7 @@ public class Measurement {
     private int[] bpm_data;
     private int[] rmssd_data;
 
-    public Measurement(Date date, int rmssd, float ln_rmssd, float lowest_rmssd, float highest_rmssd, float lowest_bpm, float highest_bpm, float average_bpm, float LF_band, float VLF_band, float VHF_band, float HF_band, int[] bpm_data, int[] rmssd_data) {
+    public Measurement(Date date, int rmssd, float ln_rmssd, float lowest_rmssd, float highest_rmssd, float lowest_bpm, float highest_bpm, float average_bpm, float LF_band, float VLF_band, float VHF_band, float HF_band, int[] bpm_data, int[] rmssd_data, int duration) {
         this.date = date;
         this.rmssd = rmssd;
         this.ln_rmssd = ln_rmssd;
@@ -40,9 +41,10 @@ public class Measurement {
         this.HF_band = HF_band;
         this.bpm_data = bpm_data;
         this.rmssd_data = rmssd_data;
+        this.duration = duration;
     }
 
-    public Measurement(RMSSD rmssd, FrequencyMethod frequencies, BPM bpm){
+    public Measurement(RMSSD rmssd, FrequencyMethod frequencies, BPM bpm, int duration){
         this.rmssd = rmssd.getRmssd();
         this.ln_rmssd = rmssd.getLnRmssd();
         this.date = Calendar.getInstance().getTime();
@@ -58,6 +60,11 @@ public class Measurement {
         this.HF_band = (float) frequencies.getHF_value();
         this.bpm_data = bpm.getBpmValues();
         this.rmssd_data = rmssd.getRMSSDValues();
+        this.duration = duration;
+    }
+
+    public int getDuration() {
+        return duration;
     }
 
     public Date getDate() {
