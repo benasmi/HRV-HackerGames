@@ -11,6 +11,93 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+
+        <!-- frequency card view !-->
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            card_view:cardElevation="4dp"
+            card_view:cardMaxElevation="6dp"
+            android:layout_margin="10dp"
+            android:id="@+id/feeling_card"
+            card_view:cardCornerRadius="5dp"
+            card_view:contentPadding="5dp"
+            card_view:cardBackgroundColor="#2c3e50">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:id="@+id/txt_how_do_you_feel"
+                    android:text="@string/txt_how_do_you_feel"
+                    android:gravity="center"
+                    android:textColor="#FFFFFF" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="5">
+
+                    <ImageView
+                        android:layout_width="0px"
+                        android:padding="12dp"
+                        android:id="@+id/img_negatively_excited"
+                        android:layout_height="65dp"
+                        android:src="@drawable/ic_negatively_excited"
+                        android:layout_weight="1"/>
+                    <ImageView
+                        android:layout_width="0px"
+                        android:layout_height="65dp"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_negatively_mellow"
+                        android:id="@+id/img_negatively_mellow"
+                        android:layout_weight="1"/>
+                    <ImageView
+                        android:layout_width="0px"
+                        android:layout_height="65dp"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_neutral_selected"
+                        android:id="@+id/img_neutral"
+                        android:layout_weight="1"/>
+                    <ImageView
+                        android:layout_width="0px"
+                        android:layout_height="65dp"
+                        android:padding="12dp"
+                        android:id="@+id/img_positively_mellow"
+                        android:src="@drawable/ic_positively_mellow"
+                        android:layout_weight="1"/>
+                    <ImageView
+                        android:layout_width="0px"
+                        android:padding="12dp"
+                        android:layout_height="65dp"
+                        android:id="@+id/img_positively_excited"
+                        android:src="@drawable/ic_positively_excited"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Possitively mellow"
+                    android:gravity="center"
+                    android:id="@+id/txt_emotion_explaining"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/cardview_pink_explain_txt"
+                    />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:id="@+id/recommendation_card"
@@ -555,7 +642,7 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/ic_neutral"
+                        android:src="@drawable/ic_freq_bands"
                         android:id="@+id/frequency_bands_icon_img"
                         android:layout_alignParentTop="true"
                         android:layout_alignParentLeft="true"

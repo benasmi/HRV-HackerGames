@@ -28,6 +28,8 @@ import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 //todo: card view animations and title snaping like 'prisiuk antraste'
@@ -81,8 +83,16 @@ public class DataTodayFragment extends Fragment {
     private TextView reccomendation_txt_pulse_zone;
     private TextView reccomendation_txt_verbal_recommendation;
 
-
-
+    //How do you feel? cardview
+    private CardView feeling_cardview;
+    private TextView txt_how_do_you_feel;
+    private TextView txt_emotion_explaining;
+    private ImageView img_negatively_excited;
+    private ImageView img_negatively_mellow;
+    private ImageView img_neutral;
+    private ImageView img_positively_mellow;
+    private ImageView img_positively_excited;
+    private int STATE_FEELING = 2;
 
 
     public DataTodayFragment() {
@@ -101,6 +111,7 @@ public class DataTodayFragment extends Fragment {
         health_index_pieChart();
         bpm_lineChart();
         updateData();
+        imageViewClickers();
         return view;
 
     }
@@ -225,6 +236,15 @@ public class DataTodayFragment extends Fragment {
         reccomendation_txt_pulse_zone = view.findViewById(R.id.txt_pulse_zone_value);
         reccomendation_txt_verbal_recommendation = view.findViewById(R.id.txt_verbal_recomendation);
 
+        //Feeling cardview
+        feeling_cardview = view.findViewById(R.id.feeling_card);
+        txt_how_do_you_feel = view.findViewById(R.id.txt_how_do_you_feel);
+        txt_emotion_explaining = view.findViewById(R.id.txt_emotion_explaining);
+        img_negatively_excited = view.findViewById(R.id.img_negatively_excited);
+        img_negatively_mellow = view.findViewById(R.id.img_negatively_mellow);
+        img_neutral = view.findViewById(R.id.img_neutral);
+        img_positively_mellow = view.findViewById(R.id.img_positively_mellow);
+        img_positively_excited = view.findViewById(R.id.img_positively_excited);
 
         recommendation_card.setTranslationY( Utils.getScreenHeight(getContext()));
         recommendation_card.animate()
@@ -520,7 +540,6 @@ public class DataTodayFragment extends Fragment {
         health_index_chart.setCenterTextSize(20f);
         health_index_chart.setCenterTextColor(Color.WHITE);
 
-
         //Remove X-axis values
         health_index_chart.setDrawEntryLabels(false);
 
@@ -552,6 +571,69 @@ public class DataTodayFragment extends Fragment {
 
     }
 
+    private void imageViewClickers(){
+        img_negatively_excited.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                STATE_FEELING = 0;
+                txt_emotion_explaining.setText(R.string.negatively_excited);
+                img_negatively_excited.setImageDrawable(getResources().getDrawable(R.drawable.ic_negatively_excited_selected));
+                img_negatively_mellow.setImageDrawable(getResources().getDrawable(R.drawable.ic_negatively_mellow));
+                img_neutral.setImageDrawable(getResources().getDrawable(R.drawable.ic_neutral));
+                img_positively_mellow.setImageDrawable(getResources().getDrawable(R.drawable.ic_positively_mellow));
+                img_positively_excited.setImageDrawable(getResources().getDrawable(R.drawable.ic_positively_excited));
+
+            }
+        });
+        img_negatively_mellow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                STATE_FEELING = 1;
+                txt_emotion_explaining.setText(R.string.negatively_mellow);
+                img_negatively_excited.setImageDrawable(getResources().getDrawable(R.drawable.ic_negatively_excited));
+                img_negatively_mellow.setImageDrawable(getResources().getDrawable(R.drawable.ic_negatively_mellow_selected));
+                img_neutral.setImageDrawable(getResources().getDrawable(R.drawable.ic_neutral));
+                img_positively_mellow.setImageDrawable(getResources().getDrawable(R.drawable.ic_positively_mellow));
+                img_positively_excited.setImageDrawable(getResources().getDrawable(R.drawable.ic_positively_excited));
+            }
+        });
+        img_neutral.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                STATE_FEELING = 2;
+                txt_emotion_explaining.setText(R.string.neutral);
+                img_negatively_excited.setImageDrawable(getResources().getDrawable(R.drawable.ic_negatively_excited));
+                img_negatively_mellow.setImageDrawable(getResources().getDrawable(R.drawable.ic_negatively_mellow));
+                img_neutral.setImageDrawable(getResources().getDrawable(R.drawable.ic_neutral_selected));
+                img_positively_mellow.setImageDrawable(getResources().getDrawable(R.drawable.ic_positively_mellow));
+                img_positively_excited.setImageDrawable(getResources().getDrawable(R.drawable.ic_positively_excited));
+            }
+        });
+        img_positively_mellow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                STATE_FEELING = 3;
+                txt_emotion_explaining.setText(R.string.positively_mellow);
+                img_negatively_excited.setImageDrawable(getResources().getDrawable(R.drawable.ic_negatively_excited));
+                img_negatively_mellow.setImageDrawable(getResources().getDrawable(R.drawable.ic_negatively_mellow));
+                img_neutral.setImageDrawable(getResources().getDrawable(R.drawable.ic_neutral));
+                img_positively_mellow.setImageDrawable(getResources().getDrawable(R.drawable.ic_positively_mellow_selected));
+                img_positively_excited.setImageDrawable(getResources().getDrawable(R.drawable.ic_positively_excited));
+            }
+        });
+        img_positively_excited.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                STATE_FEELING = 4;
+                txt_emotion_explaining.setText(R.string.positively_excited);
+                img_negatively_excited.setImageDrawable(getResources().getDrawable(R.drawable.ic_negatively_excited));
+                img_negatively_mellow.setImageDrawable(getResources().getDrawable(R.drawable.ic_negatively_mellow));
+                img_neutral.setImageDrawable(getResources().getDrawable(R.drawable.ic_neutral));
+                img_positively_mellow.setImageDrawable(getResources().getDrawable(R.drawable.ic_positively_mellow));
+                img_positively_excited.setImageDrawable(getResources().getDrawable(R.drawable.ic_positively_excited_selected));
+            }
+        });
+    }
 
 
 }
