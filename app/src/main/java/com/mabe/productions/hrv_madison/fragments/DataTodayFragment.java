@@ -6,6 +6,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,8 +111,8 @@ public class DataTodayFragment extends Fragment {
         frequency_pieChart();
         health_index_pieChart();
         bpm_lineChart();
-        updateData();
         imageViewClickers();
+        updateData();
         return view;
 
     }
@@ -147,6 +148,32 @@ public class DataTodayFragment extends Fragment {
             freq_card_txt_vlf_after_measurement.setText(String.valueOf(measurement.getVHF_band()));
             bpm_card_hrv_average_value.setText(String.valueOf(measurement.getRmssd()));
             bpm_card_value_average.setText(String.valueOf((int)measurement.getAverage_bpm()));
+
+            Log.i("TEST", "mood: " + measurement.getMood());
+            boolean success = false;
+            //Setting initial mood
+            switch(measurement.getMood()){
+                case User.MOOD_NEGATIVELY_EXCITED:
+                    success = img_negatively_excited.callOnClick();
+                    break;
+                case User.MOOD_NEGATIVELY_MELLOW:
+                    success = img_negatively_mellow.callOnClick();
+                    break;
+                case User.MOOD_NEUTRAL:
+                    success = img_neutral.callOnClick();
+                    break;
+                case User.MOOD_POSITIVELY_MELLOW:
+                    success = img_positively_mellow.callOnClick();
+                    break;
+                case User.MOOD_POSITIVELY_EXCITED:
+                    success = img_positively_excited.callOnClick();
+                    break;
+                case User.MOOD_UNDEFINED:
+                    //User has not selected his mood yet. Too bad :(
+                    break;
+            }
+
+            Log.i("TEST", "success? : " + success);
 
         }
 
@@ -582,7 +609,7 @@ public class DataTodayFragment extends Fragment {
                 img_neutral.setImageDrawable(getResources().getDrawable(R.drawable.ic_neutral));
                 img_positively_mellow.setImageDrawable(getResources().getDrawable(R.drawable.ic_positively_mellow));
                 img_positively_excited.setImageDrawable(getResources().getDrawable(R.drawable.ic_positively_excited));
-
+                updateMood(User.MOOD_NEGATIVELY_EXCITED);
             }
         });
         img_negatively_mellow.setOnClickListener(new View.OnClickListener() {
@@ -595,6 +622,7 @@ public class DataTodayFragment extends Fragment {
                 img_neutral.setImageDrawable(getResources().getDrawable(R.drawable.ic_neutral));
                 img_positively_mellow.setImageDrawable(getResources().getDrawable(R.drawable.ic_positively_mellow));
                 img_positively_excited.setImageDrawable(getResources().getDrawable(R.drawable.ic_positively_excited));
+                updateMood(User.MOOD_NEGATIVELY_MELLOW);
             }
         });
         img_neutral.setOnClickListener(new View.OnClickListener() {
@@ -607,6 +635,7 @@ public class DataTodayFragment extends Fragment {
                 img_neutral.setImageDrawable(getResources().getDrawable(R.drawable.ic_neutral_selected));
                 img_positively_mellow.setImageDrawable(getResources().getDrawable(R.drawable.ic_positively_mellow));
                 img_positively_excited.setImageDrawable(getResources().getDrawable(R.drawable.ic_positively_excited));
+                updateMood(User.MOOD_NEUTRAL);
             }
         });
         img_positively_mellow.setOnClickListener(new View.OnClickListener() {
@@ -619,6 +648,7 @@ public class DataTodayFragment extends Fragment {
                 img_neutral.setImageDrawable(getResources().getDrawable(R.drawable.ic_neutral));
                 img_positively_mellow.setImageDrawable(getResources().getDrawable(R.drawable.ic_positively_mellow_selected));
                 img_positively_excited.setImageDrawable(getResources().getDrawable(R.drawable.ic_positively_excited));
+                updateMood(User.MOOD_POSITIVELY_MELLOW);
             }
         });
         img_positively_excited.setOnClickListener(new View.OnClickListener() {
@@ -631,9 +661,19 @@ public class DataTodayFragment extends Fragment {
                 img_neutral.setImageDrawable(getResources().getDrawable(R.drawable.ic_neutral));
                 img_positively_mellow.setImageDrawable(getResources().getDrawable(R.drawable.ic_positively_mellow));
                 img_positively_excited.setImageDrawable(getResources().getDrawable(R.drawable.ic_positively_excited_selected));
+                updateMood(User.MOOD_POSITIVELY_EXCITED);
             }
         });
     }
 
+    private void updateMood(final int status){
+        Measurement lastMeasurement = User.getUser(getContext()).getLastMeasurement();
+        if(lastMeasurement == null){
+            return;
+        }
+
+        lastMeasurement.setMood(status);
+        User.updateMeasurement(getContext(), lastMeasurement, User.UPDATE_TYPE_BY_ID);
+    }
 
 }

@@ -401,11 +401,10 @@ public class MeasurementFragment extends Fragment {
                                 "VHF : " + VHF);
 */
 
-                        Measurement measurement = new Measurement(hrv, fft, bpm, measurement_duration.getValue());
+                        Measurement measurement = new Measurement(hrv, fft, bpm, measurement_duration.getValue(), Calendar.getInstance().getTime());
 
                         User.addMeasurementData(getContext(), measurement, true);
                         User user = User.getUser(getContext());
-                        user.generateDailyReccomendation(getContext());
 
 
                         //Getting last measurement date

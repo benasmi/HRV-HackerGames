@@ -50,6 +50,8 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public final static String COL_VHF_BAND = "VHF_BAND";
     public final static String COL_DATE = "Date";
     public final static String COL_MEASUREMENT_DURATION = "measurement_duration";
+    public final static String COL_ID = "ID";
+    public static final String COL_MOOD = "Mood";
 
 
     //User data
@@ -101,7 +103,8 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
                     FeedReaderDbHelper.COL_VHF_BAND + " FLOAT," +
                     FeedReaderDbHelper.COL_BPM_DATA + " STRING," +
                     FeedReaderDbHelper.COL_RMSSD_DATA + " STRING," +
-                    FeedReaderDbHelper.COL_MEASUREMENT_DURATION + "INTEGER," +
+                    FeedReaderDbHelper.COL_MEASUREMENT_DURATION + " INTEGER," +
+                    FeedReaderDbHelper.COL_MOOD + " INTEGER," +
                     FeedReaderDbHelper.COL_RMSSD + " INTEGER)";
 
 
@@ -113,7 +116,6 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "HRV_Madison.db";
 
-    public final static String COL_ID = "ID";
 
 
 
@@ -122,6 +124,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     }
 
     public void onCreate(SQLiteDatabase db) {
+        Log.i("TEST", SQL_CREATE_HRV_DATA_TABLE_ENTRIES);
         db.execSQL(SQL_CREATE_HRV_DATA_TABLE_ENTRIES);
     }
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

@@ -1,5 +1,13 @@
 package com.mabe.productions.hrv_madison.measurements;
 
+import android.content.ContentValues;
+import android.support.annotation.Nullable;
+import android.util.Log;
+
+import com.mabe.productions.hrv_madison.User;
+import com.mabe.productions.hrv_madison.Utils;
+import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -25,8 +33,10 @@ public class Measurement {
     private float HF_band;
     private int[] bpm_data;
     private int[] rmssd_data;
+    private int uniqueId;
+    private int mood;
 
-    public Measurement(Date date, int rmssd, float ln_rmssd, float lowest_rmssd, float highest_rmssd, float lowest_bpm, float highest_bpm, float average_bpm, float LF_band, float VLF_band, float VHF_band, float HF_band, int[] bpm_data, int[] rmssd_data, int duration) {
+    public Measurement(Date date, int rmssd, float ln_rmssd, float lowest_rmssd, float highest_rmssd, float lowest_bpm, float highest_bpm, float average_bpm, float LF_band, float VLF_band, float VHF_band, float HF_band, int[] bpm_data, int[] rmssd_data, int duration, @Nullable int uniqueId, int mood) {
         this.date = date;
         this.rmssd = rmssd;
         this.ln_rmssd = ln_rmssd;
@@ -42,9 +52,11 @@ public class Measurement {
         this.bpm_data = bpm_data;
         this.rmssd_data = rmssd_data;
         this.duration = duration;
+        this.uniqueId = uniqueId;
+        this.mood = mood;
     }
 
-    public Measurement(RMSSD rmssd, FrequencyMethod frequencies, BPM bpm, int duration){
+    public Measurement(RMSSD rmssd, FrequencyMethod frequencies, BPM bpm, int duration, Date date){
         this.rmssd = rmssd.getRmssd();
         this.ln_rmssd = rmssd.getLnRmssd();
         this.date = Calendar.getInstance().getTime();
@@ -61,6 +73,7 @@ public class Measurement {
         this.bpm_data = bpm.getBpmValues();
         this.rmssd_data = rmssd.getRMSSDValues();
         this.duration = duration;
+        this.date = date;
     }
 
     public int getDuration() {
@@ -120,5 +133,42 @@ public class Measurement {
     }
     public int[] getRmssd_data() {
         return rmssd_data;
+    }
+
+    public void setMood(final int mood){
+        this.mood = mood;
+    }
+    public int getMood(){
+        return mood;
+    }
+
+    public int getUniqueId() {
+        return uniqueId;
+    }
+
+    /*
+    * Just a useful method, that fills in all ContentValues from a given Measurement instance
+    */
+    public ContentValues getContentValues(){
+
+        ContentValues values = new ContentValues();
+        values.put(FeedReaderDbHelper.COL_RMSSD, getRmssd());
+        values.put(FeedReaderDbHelper.COL_LN_RMSSD, getLn_rmssd());
+        values.put(FeedReaderDbHelper.COL_LOWEST_RMSSD, getLowest_rmssd());
+        values.put(FeedReaderDbHelper.COL_HIGHEST_RMSSD, getHighest_rmssd());
+        values.put(FeedReaderDbHelper.COL_RMSSD_DATA, FeedReaderDbHelper.getStringFromBpmValues(getRmssd_data()));
+        values.put(FeedReaderDbHelper.COL_LOWEST_BPM, getLowest_bpm());
+        values.put(FeedReaderDbHelper.COL_HIGHEST_BPM, getHighest_bpm());
+        values.put(FeedReaderDbHelper.COL_AVERAGE_BPM, getAverage_bpm());
+        values.put(FeedReaderDbHelper.COL_BPM_DATA, FeedReaderDbHelper.getStringFromBpmValues(getBpm_data()));
+        values.put(FeedReaderDbHelper.COL_MEASUREMENT_DURATION, getDuration());
+        values.put(FeedReaderDbHelper.COL_LF_BAND, getLF_band());
+        values.put(FeedReaderDbHelper.COL_HF_BAND, getHF_band());
+        values.put(FeedReaderDbHelper.COL_VLF_BAND, getVLF_band());
+        values.put(FeedReaderDbHelper.COL_VHF_BAND, getVHF_band());
+        values.put(FeedReaderDbHelper.COL_MOOD, getMood());
+        values.put(FeedReaderDbHelper.COL_DATE, Utils.getStringFromDate(getDate()));
+
+        return values;
     }
 }

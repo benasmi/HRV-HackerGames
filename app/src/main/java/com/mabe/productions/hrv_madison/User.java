@@ -5,14 +5,10 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
-import com.mabe.productions.hrv_madison.measurements.BPM;
-import com.mabe.productions.hrv_madison.measurements.FrequencyMethod;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
-import com.mabe.productions.hrv_madison.measurements.RMSSD;
 
 
 import java.util.ArrayList;
@@ -35,6 +31,13 @@ public class User {
     public static final int PROGRAM_STATE_UPGRADED = 0;
     public static final int PROGRAM_STATE_DOWNGRADED = 1;
     public static final int PROGRAM_STATE_UNCHANGED = 2;
+
+    public static final int MOOD_UNDEFINED = 0;
+    public static final int MOOD_NEGATIVELY_EXCITED = 1;
+    public static final int MOOD_NEGATIVELY_MELLOW = 2;
+    public static final int MOOD_NEUTRAL = 3;
+    public static final int MOOD_POSITIVELY_MELLOW = 4;
+    public static final int MOOD_POSITIVELY_EXCITED = 5;
 
     private float KMI;
     private float current_hrv;
@@ -65,7 +68,7 @@ public class User {
      * @param overrideByDate If true, existing table row with today's date is overriden.
      */
 
-    public static void addMeasurementData(Context context, Measurement measurement, boolean overrideByDate){
+    public static void addMeasurementData(Context context, Measurement measurement, boolean overrideByDate) {
         SQLiteDatabase db = new FeedReaderDbHelper(context).getWritableDatabase();
 
         //Checking if a measurement with today's date exists
@@ -78,7 +81,7 @@ public class User {
         };
 
         String sortOrder =
-                FeedReaderDbHelper.COL_ID+ " DESC";
+                FeedReaderDbHelper.COL_ID + " DESC";
 
         Cursor cursor = db.query(
                 FeedReaderDbHelper.HRV_DATA_TABLE_NAME,
@@ -91,55 +94,38 @@ public class User {
         );
 
         //Executing SELECT query if overrideByDate is true
-        if(cursor.moveToNext() && overrideByDate){
+        if (cursor.moveToNext() && overrideByDate) {
             int id = cursor.getInt(
                     cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_ID));
             String dateString = cursor.getString(
                     cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_DATE));
 
             //Removing existing row if measurement was made today
-            if(dateString.equals(todayDate)){
-                cursor.close();
+            if (dateString.equals(todayDate)) {
                 db.delete(FeedReaderDbHelper.HRV_DATA_TABLE_NAME, FeedReaderDbHelper.COL_ID + "=" + id, null);
             }
 
         }
 
         //Inserting values
-        ContentValues values = new ContentValues();
-            values.put(FeedReaderDbHelper.COL_RMSSD, measurement.getRmssd());
-            values.put(FeedReaderDbHelper.COL_LN_RMSSD, measurement.getLn_rmssd());
-            values.put(FeedReaderDbHelper.COL_LOWEST_RMSSD, measurement.getLowest_rmssd());
-            values.put(FeedReaderDbHelper.COL_HIGHEST_RMSSD, measurement.getHighest_rmssd());
-            values.put(FeedReaderDbHelper.COL_RMSSD_DATA, FeedReaderDbHelper.getStringFromBpmValues(measurement.getRmssd_data()));
-            values.put(FeedReaderDbHelper.COL_LOWEST_BPM, measurement.getLowest_bpm());
-            values.put(FeedReaderDbHelper.COL_HIGHEST_BPM, measurement.getHighest_bpm());
-            values.put(FeedReaderDbHelper.COL_AVERAGE_BPM, measurement.getAverage_bpm());
-            values.put(FeedReaderDbHelper.COL_BPM_DATA, FeedReaderDbHelper.getStringFromBpmValues(measurement.getBpm_data()));
-            values.put(FeedReaderDbHelper.COL_MEASUREMENT_DURATION, measurement.getDuration());
-            values.put(FeedReaderDbHelper.COL_LF_BAND, measurement.getLF_band());
-            values.put(FeedReaderDbHelper.COL_HF_BAND, measurement.getHF_band());
-            values.put(FeedReaderDbHelper.COL_VLF_BAND, measurement.getVLF_band());
-            values.put(FeedReaderDbHelper.COL_VHF_BAND, measurement.getVHF_band());
+        ContentValues values = measurement.getContentValues();
 
-        values.put(FeedReaderDbHelper.COL_DATE, Utils.getStringFromDate(Calendar.getInstance().getTime()));
-        db.insert(FeedReaderDbHelper.HRV_DATA_TABLE_NAME, null, values);
+        db.insertOrThrow(FeedReaderDbHelper.HRV_DATA_TABLE_NAME, null, values);
 
     }
 
     /*
      * Returns last saved measurement
-     *
      */
-    public Measurement getLastMeasurement(){
-        if(measurements.size() > 0) {
+    public Measurement getLastMeasurement() {
+        if (measurements.size() > 0) {
             return measurements.get(0);
-        }else{
+        } else {
             return null;
         }
     }
 
-    private void getAllMeasurementsFromDb(Context context){
+    private void getAllMeasurementsFromDb(Context context) {
 
         ArrayList<Measurement> measurementList = new ArrayList<>();
 
@@ -160,12 +146,14 @@ public class User {
                 FeedReaderDbHelper.COL_VHF_BAND,
                 FeedReaderDbHelper.COL_HF_BAND,
                 FeedReaderDbHelper.COL_BPM_DATA,
-                FeedReaderDbHelper.COL_RMSSD_DATA
+                FeedReaderDbHelper.COL_RMSSD_DATA,
+                FeedReaderDbHelper.COL_MEASUREMENT_DURATION,
+                FeedReaderDbHelper.COL_MOOD
 
         };
 
         String sortOrder =
-                FeedReaderDbHelper.COL_ID+ " DESC";
+                FeedReaderDbHelper.COL_ID + " DESC";
 
         Cursor cursor = db.query(
                 FeedReaderDbHelper.HRV_DATA_TABLE_NAME,
@@ -176,10 +164,8 @@ public class User {
                 null,
                 sortOrder
         );
-
-
-
-        while(cursor.moveToNext()){
+        //todo: close all davtabases after they are used
+        while (cursor.moveToNext()) {
             int id = cursor.getInt(
                     cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_ID));
             Date date = Utils.getDateFromString(cursor.getString(
@@ -208,7 +194,6 @@ public class User {
                     cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_HF_BAND));
             String bpmDataString = cursor.getString(
                     cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_BPM_DATA));
-            Log.i("bpmdata", "bpm data string: " + bpmDataString);
             int[] bpmData = FeedReaderDbHelper.getBpmValuesFromString(bpmDataString);
 
             String rmssdDataString = cursor.getString(
@@ -217,32 +202,53 @@ public class User {
 
             int measurement_duration = cursor.getInt(
                     cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_MEASUREMENT_DURATION));
+            //TODO: jei tau sita vieta crashina, perinstaliuok appsa
+            int mood = cursor.getInt(
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_MOOD));
 
-            Measurement measurement = new Measurement(date, rmssd, ln_rmssd, lowest_rmssd, highest_rmssd, lowest_bpm, highest_bpm, average_bpm, LF_band, VLF_band, VHF_band, HF_band, bpmData,rmssdData, measurement_duration);
+            Measurement measurement = new Measurement(date,
+                    rmssd,
+                    ln_rmssd,
+                    lowest_rmssd,
+                    highest_rmssd,
+                    lowest_bpm,
+                    highest_bpm,
+                    average_bpm,
+                    LF_band,
+                    VLF_band,
+                    VHF_band,
+                    HF_band,
+                    bpmData,
+                    rmssdData,
+                    measurement_duration,
+                    id,
+                    mood);
 
             measurementList.add(measurement);
+            Log.i("TEST", "rmssd: " + rmssd);
 
         }
 
 
-
         measurements = measurementList;
+
+
     }
 
-    public static User getUser(Context context){
+    public static User getUser(Context context) {
         User user = new User();
 
         //Getting initial user data from SharedPreferences
-        user.setKMI(Utils.readFromSharedPrefs_float(context, FeedReaderDbHelper.FIELD_KMI,FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
-        user.setBirthday(Utils.getDateFromString(Utils.readFromSharedPrefs_string(context, FeedReaderDbHelper.FIELD_BIRTHDAY,FeedReaderDbHelper.SHARED_PREFS_USER_DATA)));
-        user.setGender(Utils.readFromSharedPrefs_int(context, FeedReaderDbHelper.FIELD_GENDER,FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
-        user.setHeight(Utils.readFromSharedPrefs_float(context, FeedReaderDbHelper.FIELD_HEIGHT,FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
-        user.setActivityIndex(Utils.readFromSharedPrefs_int(context, FeedReaderDbHelper.FIELD_ACTIVITY_INDEX,FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
-        user.setSelectedSport(Utils.readFromSharedPrefs_int(context, FeedReaderDbHelper.FIELD_SELECTED_SPORT,FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
-        user.setWeight(Utils.readFromSharedPrefs_float(context, FeedReaderDbHelper.FIELD_WEIGHT,FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
-        user.setUserId(Utils.readFromSharedPrefs_string(context, FeedReaderDbHelper.FIELD_USER_ID,FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
-        user.setUserPassword(Utils.readFromSharedPrefs_string(context, FeedReaderDbHelper.FIELD_PASSWORD,FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
-        user.setMaxDuration(Utils.readFromSharedPrefs_float(context, FeedReaderDbHelper.FIELD_BASE_DURATION,FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
+        user.setKMI(Utils.readFromSharedPrefs_float(context, FeedReaderDbHelper.FIELD_KMI, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
+        user.setBirthday(Utils.getDateFromString(Utils.readFromSharedPrefs_string(context, FeedReaderDbHelper.FIELD_BIRTHDAY, FeedReaderDbHelper.SHARED_PREFS_USER_DATA)));
+        user.setGender(Utils.readFromSharedPrefs_int(context, FeedReaderDbHelper.FIELD_GENDER, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
+        user.setHeight(Utils.readFromSharedPrefs_float(context, FeedReaderDbHelper.FIELD_HEIGHT, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
+        user.setActivityIndex(Utils.readFromSharedPrefs_int(context, FeedReaderDbHelper.FIELD_ACTIVITY_INDEX, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
+        user.setSelectedSport(Utils.readFromSharedPrefs_int(context, FeedReaderDbHelper.FIELD_SELECTED_SPORT, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
+        user.setWeight(Utils.readFromSharedPrefs_float(context, FeedReaderDbHelper.FIELD_WEIGHT, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
+        user.setUserId(Utils.readFromSharedPrefs_string(context, FeedReaderDbHelper.FIELD_USER_ID, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
+        user.setUserPassword(Utils.readFromSharedPrefs_string(context, FeedReaderDbHelper.FIELD_PASSWORD, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
+        user.setMaxDuration(Utils.readFromSharedPrefs_float(context, FeedReaderDbHelper.FIELD_BASE_DURATION, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
         user.setWorkoutDuration(Utils.readFromSharedPrefs_float(context, FeedReaderDbHelper.FIELD_DURATION, FeedReaderDbHelper.SHARED_PREFS_SPORT));
         user.setPulseZone(Utils.readFromSharedPrefs_int(context, FeedReaderDbHelper.FIELD_PULSE_ZONE, FeedReaderDbHelper.SHARED_PREFS_SPORT));
         user.setWeekDays(Utils.readFromSharedPrefs_boolarray(context, FeedReaderDbHelper.FIELD_WEEK_DAYS, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
@@ -257,7 +263,7 @@ public class User {
         };
 
         String sortOrder =
-                FeedReaderDbHelper.COL_ID+ " DESC";
+                FeedReaderDbHelper.COL_ID + " DESC";
 
         Cursor cursor = databaseHelper.getReadableDatabase().query(
                 FeedReaderDbHelper.HRV_DATA_TABLE_NAME,
@@ -278,7 +284,7 @@ public class User {
         int rmssdCountSecondLastWeek = 0;
 
         //Getting user hrv data from SQLite
-        while (cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             long itemId = cursor.getLong(
                     cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_ID));
             int rmssd = cursor.getInt(
@@ -293,31 +299,26 @@ public class User {
             int currentWeek = calendar.get(Calendar.WEEK_OF_YEAR);
             calendar.setTime(date);
 
-            if(currentWeek-1 ==  (calendar.get(Calendar.WEEK_OF_YEAR))) {
+            if (currentWeek - 1 == (calendar.get(Calendar.WEEK_OF_YEAR))) {
                 rmssdCountLastWeek++;
-                rmssdSumLastWeek+=rmssd;
+                rmssdSumLastWeek += rmssd;
             }
 
-
-            if(currentWeek-2 == (calendar.get(Calendar.WEEK_OF_YEAR))) {
+            if (currentWeek - 2 == (calendar.get(Calendar.WEEK_OF_YEAR))) {
                 rmssdCountSecondLastWeek++;
-                rmssdSumSecondLastWeek+=rmssd;
+                rmssdSumSecondLastWeek += rmssd;
             }
 
         }
 
-        if(rmssdCountLastWeek!=0){
+        if (rmssdCountLastWeek != 0) {
             //Calculating average last week's hrv
-            user.last_week_hrv = ((float) rmssdSumLastWeek)/ ((float)rmssdCountLastWeek);
+            user.last_week_hrv = ((float) rmssdSumLastWeek) / ((float) rmssdCountLastWeek);
 
-            if(rmssdCountSecondLastWeek!=0){
-                user.second_last_week_hrv = ((float) rmssdSumSecondLastWeek)/ ((float)rmssdCountSecondLastWeek);
+            if (rmssdCountSecondLastWeek != 0) {
+                user.second_last_week_hrv = ((float) rmssdSumSecondLastWeek) / ((float) rmssdCountSecondLastWeek);
             }
         }
-
-
-
-
 
 
         //Dummy data
@@ -333,14 +334,14 @@ public class User {
         calendar = Calendar.getInstance();
         int today = calendar.get(Calendar.DAY_OF_YEAR);
 
-        for(int i = 0; i < measurements.size(); i++){
+        for (int i = 0; i < measurements.size(); i++) {
             calendar.setTime(measurements.get(i).getDate());
             int measurementDay = calendar.get(Calendar.DAY_OF_YEAR);
 
-            if(measurementDay == today){
+            if (measurementDay == today) {
                 //Today's measurement
                 user.setCurrentHrv(measurements.get(i).getRmssd());
-            }else if(measurementDay == today-1){
+            } else if (measurementDay == today - 1) {
                 //yesterday's measurement
                 user.setYesterdayHrv(measurements.get(i).getRmssd());
             }
@@ -349,31 +350,29 @@ public class User {
         user.generateWeeklyProgram(context);
         user.generateDailyReccomendation(context);
 
-
         return user;
     }
 
 
-    private void saveProgram(Context context){
+    private void saveProgram(Context context) {
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_DURATION, workout_duration, FeedReaderDbHelper.SHARED_PREFS_SPORT);
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_PULSE_ZONE, pulse_zone, FeedReaderDbHelper.SHARED_PREFS_SPORT);
     }
 
-    public ArrayList<Measurement> getAllMeasurements(){
+    public ArrayList<Measurement> getAllMeasurements() {
         return measurements;
     }
 
-    public String generateWeeklyProgram(Context context){
-
+    public String generateWeeklyProgram(Context context) {
 
 
         //First time
-        if(last_week_hrv == 0){
+        if (last_week_hrv == 0) {
 
             //Weak duration
-            if(activity_index < 30){
+            if (activity_index < 30) {
                 workout_duration = 15;
-            }else{
+            } else {
                 //Fit duration
                 workout_duration = 20;
             }
@@ -382,35 +381,35 @@ public class User {
         }
 
         //Checking if there is at least two weeks worth of data
-        if(second_last_week_hrv == 0){
+        if (second_last_week_hrv == 0) {
             return "Nepakanka duomenų programos tobulinimui. Programa nekeičiama";
         }
 
         //Not upgrading duo to poor hrv
-        if(0.5*last_week_hrv < current_hrv && current_hrv < 0.85*last_week_hrv){
+        if (0.5 * last_week_hrv < current_hrv && current_hrv < 0.85 * last_week_hrv) {
             return "Programa nepasikeitė dėl prasto HRV";
         }
 
 
         //Upgrading program due to very good hrv score
-        if(current_hrv >= last_week_hrv*0.85){
+        if (current_hrv >= last_week_hrv * 0.85) {
 
 
             //if user has reached his max available workout duration, increasing pulse_zone(intensity) and decreasing workout duration(time).
-            if(workout_duration == max_duration){
+            if (workout_duration == max_duration) {
 
                 //Decreasing to minimum workout duration based on activity index
-                if(activity_index < POOR_ACTIVITY_INDEX) {
+                if (activity_index < POOR_ACTIVITY_INDEX) {
                     //User is not active enough, hence initial workout duration is lower
                     workout_duration = LOW_INITIAL_WORKOUT_DURATION;
-                }else{
+                } else {
                     //User is active, hence initial workout duration is higher
                     workout_duration = HIGH_INITIAL_WORKOUT_DURATION;
                 }
                 pulse_zone++;
 
                 //There are only 5 pulse zones
-                if(pulse_zone > 5){
+                if (pulse_zone > 5) {
                     pulse_zone = 5;
                 }
                 saveProgram(context);
@@ -420,11 +419,11 @@ public class User {
 
             //Increasing workout duration and checking if it does not exceed maximum available duration
 
-            workout_duration*=1.1;
-            if(workout_duration<= max_duration){
+            workout_duration *= 1.1;
+            if (workout_duration <= max_duration) {
                 saveProgram(context);
                 return "Juma puikiai sekasi. Jūsų sportavimo trukmė pakilo 10%";
-            }else{
+            } else {
                 workout_duration = max_duration;
                 saveProgram(context);
                 return "Pasiekėtė max trukmę, todėl ši savaitė bus užtvirtinamoji.";
@@ -436,49 +435,49 @@ public class User {
         return "not supported";
     }
 
-    public String generateDailyReccomendation(Context context){
-            Calendar c = Calendar.getInstance();
+    public String generateDailyReccomendation(Context context) {
+        Calendar c = Calendar.getInstance();
 
-            //Returns the current week day, where 1 is Monday
-            int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+        //Returns the current week day, where 1 is Monday
+        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
 
-            if(week_days[dayOfWeek-1]){
+        if (week_days[dayOfWeek - 1]) {
 
-                final float HIGH_INCREASE = 0.3f;
-                final float MEDIOCRE_INCREASE = 0.15f;
-                final float MINIMAL_INCREASE = 0.05f;
-                final float MINIMAL_DECREASE = 0.05f;
-                final float MEDIOCRE_DECREASE = 0.15f;
-                final float HIGH_DECREASE = 0.3f;
+            final float HIGH_INCREASE = 0.3f;
+            final float MEDIOCRE_INCREASE = 0.15f;
+            final float MINIMAL_INCREASE = 0.05f;
+            final float MINIMAL_DECREASE = 0.05f;
+            final float MEDIOCRE_DECREASE = 0.15f;
+            final float HIGH_DECREASE = 0.3f;
 
-                int baselineHrv = -1;
-                int minBaselineHrv = -1;
-                int maxBaselineHrv = -1;
-                int hrvBias = -1;
+            int baselineHrv = -1;
+            int minBaselineHrv = -1;
+            int maxBaselineHrv = -1;
+            int hrvBias = -1;
 
-                Resources resources = context.getResources();
+            Resources resources = context.getResources();
 
             int age = Utils.getAgeFromDate(birthday);
 
-            if(age >= 18 && age <= 24){
+            if (age >= 18 && age <= 24) {
                 baselineHrv = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_18_24_M) : resources.getInteger(R.integer.baseline_18_24_F);
                 hrvBias = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_bias_18_24_M) : resources.getInteger(R.integer.baseline_bias_18_24_F);
-            }else if(age >=25 && age <= 34){
+            } else if (age >= 25 && age <= 34) {
                 baselineHrv = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_25_34_M) : resources.getInteger(R.integer.baseline_25_34_F);
                 hrvBias = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_bias_25_34_M) : resources.getInteger(R.integer.baseline_bias_25_34_F);
-            }else if(age >=35 && age <= 44){
+            } else if (age >= 35 && age <= 44) {
                 baselineHrv = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_35_44_M) : resources.getInteger(R.integer.baseline_35_44_F);
                 hrvBias = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_bias_35_44_M) : resources.getInteger(R.integer.baseline_bias_35_44_F);
-            }else if(age >=45 && age <= 54){
+            } else if (age >= 45 && age <= 54) {
                 baselineHrv = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_45_54_M) : resources.getInteger(R.integer.baseline_45_54_F);
                 hrvBias = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_bias_45_54_M) : resources.getInteger(R.integer.baseline_bias_45_54_F);
-            }else if(age >=55 && age <= 64){
+            } else if (age >= 55 && age <= 64) {
                 baselineHrv = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_55_64_M) : resources.getInteger(R.integer.baseline_55_64_F);
                 hrvBias = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_bias_55_64_M) : resources.getInteger(R.integer.baseline_bias_55_64_F);
-            }else if(age >=65 && age <= 74){
+            } else if (age >= 65 && age <= 74) {
                 baselineHrv = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_65_74_M) : resources.getInteger(R.integer.baseline_65_74_F);
                 hrvBias = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_bias_65_74_M) : resources.getInteger(R.integer.baseline_bias_65_74_F);
-            }else if(age >= 75){
+            } else if (age >= 75) {
                 baselineHrv = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_75_M) : resources.getInteger(R.integer.baseline_75_F);
                 hrvBias = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_bias_75_M) : resources.getInteger(R.integer.baseline_bias_75_F);
             }
@@ -487,52 +486,50 @@ public class User {
             maxBaselineHrv = baselineHrv + hrvBias;
 
             //If no yesterday data is present
-            if(yesterday_hrv == 0){
+            if (yesterday_hrv == 0) {
                 yesterday_hrv = baselineHrv;
             }
 
 
+            if (minBaselineHrv <= current_hrv /*&& current_hrv <= maxBaselineHrv*/) {
 
-
-            if(minBaselineHrv <= current_hrv /*&& current_hrv <= maxBaselineHrv*/){
-
-                float percentageChange = current_hrv/yesterday_hrv;
+                float percentageChange = current_hrv / yesterday_hrv;
 
                 //Hrv has increased
-                if(percentageChange >= 1 ){
+                if (percentageChange >= 1) {
                     program_update_state = PROGRAM_STATE_UPGRADED;
-                    float percentageIncrease = percentageChange-1;
+                    float percentageIncrease = percentageChange - 1;
 
-                    if(percentageChange >= HIGH_INCREASE){
+                    if (percentageChange >= HIGH_INCREASE) {
                         //hrv has greatly increased
                         Log.i("TEST", "hrv has greatly increased");
                         return "hrv has greatly increased";
                     }
-                    if(percentageChange >= MEDIOCRE_INCREASE){
+                    if (percentageChange >= MEDIOCRE_INCREASE) {
                         Log.i("TEST", "mediocre hrv increase");
                         return "detected mediocre hrv increase";
                     }
-                    if(percentageChange <= MINIMAL_INCREASE){
+                    if (percentageChange <= MINIMAL_INCREASE) {
                         program_update_state = PROGRAM_STATE_UNCHANGED;
                         Log.i("TEST", "detected minimal hrv increase");
                         return "detected minimal hrv increase";
                     }
 
-                }else{
+                } else {
                     //Hrv has decreased
                     program_update_state = PROGRAM_STATE_DOWNGRADED;
-                    float percentageDecrease = 1-percentageChange;
+                    float percentageDecrease = 1 - percentageChange;
 
-                    if(percentageChange >= HIGH_DECREASE){
+                    if (percentageChange >= HIGH_DECREASE) {
                         //hrv has greatly increased
                         Log.i("TEST", "detected great hrv decrease");
                         return "hrv has greatly decreased";
                     }
-                    if(percentageChange >= MEDIOCRE_DECREASE){
+                    if (percentageChange >= MEDIOCRE_DECREASE) {
                         Log.i("TEST", "detected mediocre hrv decrease");
                         return "detected mediocre hrv decrease";
                     }
-                    if(percentageChange <= MINIMAL_DECREASE){
+                    if (percentageChange <= MINIMAL_DECREASE) {
                         program_update_state = PROGRAM_STATE_UNCHANGED;
                         Log.i("TEST", "detected minimal hrv decrease");
                         return "detected minimal hrv decrese";
@@ -540,20 +537,42 @@ public class User {
                 }
 
 
-
-            }else{
+            } else {
                 Log.i("TEST", "Jusu hrv neatitinka normu");
                 return "Jūsų hrv neatitinka normų";
             }
 
 
-
-        }else{
+        } else {
             Log.i("TEST", "Šiandien jums poilsio diena");
             return "Šiandien jums poilsio diena";
         }
 
         return "not supported";
+
+    }
+
+    //Kompromisas ;)
+    public static final int UPDATE_TYPE_BY_DATE = 0;
+    public static final int UPDATE_TYPE_BY_ID = 1;
+
+    public static void updateMeasurement(Context context, Measurement measurement, final int updateType) {
+
+        SQLiteDatabase database = new FeedReaderDbHelper(context).getWritableDatabase();
+
+        //Inserting values
+        ContentValues values = measurement.getContentValues();
+
+        switch (updateType) {
+            case UPDATE_TYPE_BY_DATE:
+                int rows = database.update(FeedReaderDbHelper.HRV_DATA_TABLE_NAME, values, FeedReaderDbHelper.COL_DATE + " = " + Utils.getStringFromDate(measurement.getDate()),null);
+                break;
+
+            case UPDATE_TYPE_BY_ID:
+                database.update(FeedReaderDbHelper.HRV_DATA_TABLE_NAME, values, FeedReaderDbHelper.COL_ID + " = " + measurement.getUniqueId(),null);
+                break;
+        }
+
 
     }
 
@@ -573,7 +592,6 @@ public class User {
     public void setCurrentHrv(float current_hrv) {
         this.current_hrv = current_hrv;
     }
-
 
 
     public Date getBirthday() {
@@ -700,4 +718,6 @@ public class User {
     public int getProgramUpdateState() {
         return program_update_state;
     }
+
+
 }
