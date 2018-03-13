@@ -112,6 +112,8 @@ public class User {
 
         db.insertOrThrow(FeedReaderDbHelper.HRV_DATA_TABLE_NAME, null, values);
 
+        db.close();
+
     }
 
     /*
@@ -164,7 +166,6 @@ public class User {
                 null,
                 sortOrder
         );
-        //todo: close all davtabases after they are used
         while (cursor.moveToNext()) {
             int id = cursor.getInt(
                     cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_ID));
@@ -229,6 +230,8 @@ public class User {
 
         }
 
+        db.close();
+
 
         measurements = measurementList;
 
@@ -255,6 +258,8 @@ public class User {
 
 
         FeedReaderDbHelper databaseHelper = new FeedReaderDbHelper(context);
+        SQLiteDatabase database = databaseHelper.getReadableDatabase();
+
         String[] projection = {
                 FeedReaderDbHelper.COL_ID,
                 FeedReaderDbHelper.COL_RMSSD,
@@ -265,7 +270,7 @@ public class User {
         String sortOrder =
                 FeedReaderDbHelper.COL_ID + " DESC";
 
-        Cursor cursor = databaseHelper.getReadableDatabase().query(
+        Cursor cursor = database.query(
                 FeedReaderDbHelper.HRV_DATA_TABLE_NAME,
                 projection,
                 null,
@@ -310,6 +315,9 @@ public class User {
             }
 
         }
+
+        database.close();
+
 
         if (rmssdCountLastWeek != 0) {
             //Calculating average last week's hrv
@@ -565,13 +573,15 @@ public class User {
 
         switch (updateType) {
             case UPDATE_TYPE_BY_DATE:
-                int rows = database.update(FeedReaderDbHelper.HRV_DATA_TABLE_NAME, values, FeedReaderDbHelper.COL_DATE + " = " + Utils.getStringFromDate(measurement.getDate()),null);
+                database.update(FeedReaderDbHelper.HRV_DATA_TABLE_NAME, values, FeedReaderDbHelper.COL_DATE + " = " + Utils.getStringFromDate(measurement.getDate()),null);
                 break;
 
             case UPDATE_TYPE_BY_ID:
                 database.update(FeedReaderDbHelper.HRV_DATA_TABLE_NAME, values, FeedReaderDbHelper.COL_ID + " = " + measurement.getUniqueId(),null);
                 break;
         }
+
+        database.close();
 
 
     }

@@ -499,7 +499,6 @@ public class MeasurementFragment extends Fragment {
 
     }
 
-    //TODO: check if timer gets cancelled (it most likely does)
     private void cancelMeasurement(){
         currentMeasurementState = STATE_WAITING_TO_MEASURE;
         if(countDownTimer!=null){
