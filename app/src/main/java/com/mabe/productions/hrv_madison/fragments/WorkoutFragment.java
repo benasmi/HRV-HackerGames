@@ -203,14 +203,15 @@ public class WorkoutFragment extends Fragment {
 
             @Override
             public void onFinish() {
-                afterWorkout();
+                timeEnded();
             }
         }.start();
 
 
     }
 
-    private void afterWorkout(){
+    private void timeEnded(){
+        workout_state = STATE_TIME_ENDED;
         editText_minutes.setText("00");
         editText_seconds.setText("00");
         progressbar_duration.setProgress(100f);
