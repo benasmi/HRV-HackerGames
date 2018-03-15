@@ -11,13 +11,13 @@ public class ViewPagerAdapter extends android.support.v4.app.FragmentPagerAdapte
 
     public MeasurementFragment measurementFragment;
     public DataTodayFragment dataTodayFragment;
-    public HistoryFragment historyFragment;
+    public WorkoutFragment workoutFragment;
 
     public ViewPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
         measurementFragment = new MeasurementFragment();
         dataTodayFragment = new DataTodayFragment();
-        historyFragment = new HistoryFragment();
+        workoutFragment = new WorkoutFragment();
     }
 
     @Override
@@ -31,7 +31,7 @@ public class ViewPagerAdapter extends android.support.v4.app.FragmentPagerAdapte
                 return dataTodayFragment;
 
             case 2:
-                return historyFragment;
+                return workoutFragment;
 
         }
 

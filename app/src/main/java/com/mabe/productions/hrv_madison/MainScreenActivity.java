@@ -155,13 +155,20 @@ public class MainScreenActivity extends AppCompatActivity {
                         viewPagerAdapter.measurementFragment.startCalculation();
                         viewPagerAdapter.measurementFragment.shouldStartMeasurementImmediately = false;
                     }
+                    if(viewPagerAdapter.workoutFragment.shouldStartWorkoutImmediately){
+                        viewPagerAdapter.workoutFragment.startWorkout();
+                        viewPagerAdapter.workoutFragment.shouldStartWorkoutImmediately = false;
+                    }
+
                     viewPagerAdapter.measurementFragment.txt_connection_status.setText("");
+                    viewPagerAdapter.workoutFragment.txt_connection_status.setText("");
                     break;
 
                 case BluetoothGattService.ACTION_DISCONNECTED:
                     Log.i("TEST", "ACTION_DISCONNECTED");
                     txt_toolbar_title.setText(R.string.no_device);
                     viewPagerAdapter.measurementFragment.disconnected();
+                    viewPagerAdapter.workoutFragment.disconnected();
                     break;
 
                 case BluetoothGattService.ACTION_RECEIVING_DATA:
@@ -171,6 +178,7 @@ public class MainScreenActivity extends AppCompatActivity {
                     int intervals[] = intent.getExtras().getIntArray("RR_intervals");
                     int bpm = intent.getExtras().getInt("BPM");
                     viewPagerAdapter.measurementFragment.onMeasurement(bpm, intervals);
+                    viewPagerAdapter.workoutFragment.onMeasurement(bpm, intervals);
                     //Log.i("TEST", "ACTION_RECEIVING_DATA" + "BPM: " + bpm + " | " + "RMSSD: " + String.valueOf(hrv.calculateRMSSD()));
                     break;
 

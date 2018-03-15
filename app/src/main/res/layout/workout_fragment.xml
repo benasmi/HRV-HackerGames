@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:background="@drawable/login_background"
+                android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_marginTop="10dp">
+
+            <com.budiyev.android.circularprogressbar.CircularProgressBar
+                android:id="@+id/progress_bar_duration"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                app:animateProgress="true"
+                app:backgroundStrokeColor="#fff"
+                app:backgroundStrokeWidth="5dp"
+                app:drawBackgroundStroke="true"
+                app:foregroundStrokeCap="butt"
+                app:foregroundStrokeColor="@color/colorAccent"
+                app:foregroundStrokeWidth="5dp"
+                app:indeterminate="false"
+                app:indeterminateRotationAnimationDuration="1200"
+                app:indeterminateSweepAnimationDuration="600"
+                app:indeterminateMinimumAngle="45"
+                app:maximum="100"
+                app:progress="0"
+                app:progressAnimationDuration="100"
+                app:startAngle="270"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal">
+
+
+                <!--TODO: fix edittext behavior !-->
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:text="00"
+                    android:inputType="number"
+                    android:selectAllOnFocus="true"
+                    android:id="@+id/edittext_minutes"
+                    android:maxLength="2"
+                    android:textColor="#fff"
+                    android:textSize="30sp"
+                    android:background="@android:color/transparent"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#fff"
+                    android:textSize="30sp"
+                    android:text=":"/>
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:textColor="#fff"
+                    android:inputType="number"
+                    android:id="@+id/edittext_seconds"
+                    android:maxLength="2"
+                    android:selectAllOnFocus="true"
+                    android:textSize="30sp"
+                    android:background="@android:color/transparent"
+                    android:text="00"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_toLeftOf="@+id/progress_bar_duration"
+                android:src="@drawable/ic_pause_button"
+                android:layout_marginRight="-10dp"
+                android:id="@+id/img_pause_workout"
+                android:layout_alignBottom="@+id/progress_bar_duration"/>
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_toRightOf="@+id/progress_bar_duration"
+                android:src="@drawable/ic_stop_button"
+                android:id="@+id/img_stop_workout"
+                android:layout_marginLeft="-10dp"
+                android:layout_alignBottom="@+id/progress_bar_duration"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:id="@+id/workout_progress_layout"
+            android:weightSum="3"
+            android:visibility="gone"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:weightSum="2"
+                android:layout_marginRight="4dp"
+                android:layout_marginLeft="4dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="0px"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_fire_icon"
+                        android:layout_marginRight="5dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="Calories"
+                        android:textColor="#fff"
+                        android:textSize="@dimen/workout_progress_title_size"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0px"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="@dimen/workout_progress_number_size"
+                        android:textColor="#fff"
+                        android:gravity="bottom"
+                        android:id="@+id/calories_burned"
+                        android:text="101"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="@dimen/workout_progress_unit_size"
+                        android:gravity="bottom"
+                        android:paddingBottom="5dp"
+                        android:textColor="#fff"
+                        android:text="kcal"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:weightSum="2"
+                android:layout_marginRight="4dp"
+                android:layout_marginLeft="4dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="0px"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_speedometer"
+                        android:layout_marginRight="5dp"
+                        />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:textColor="#fff"
+                        android:textSize="@dimen/workout_progress_title_size"
+                        android:text="Pace"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0px"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="@dimen/workout_progress_number_size"
+                        android:textColor="#fff"
+                        android:gravity="bottom"
+                        android:id="@+id/running_pace"
+                        android:text="5"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="@dimen/workout_progress_unit_size"
+                        android:gravity="bottom"
+                        android:paddingBottom="5dp"
+                        android:textColor="#fff"
+                        android:text="km/min"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:weightSum="2"
+                android:layout_marginRight="4dp"
+                android:layout_marginLeft="4dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="0px"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_map_marker"
+                        android:layout_marginRight="5dp"
+                        />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:textColor="#fff"
+                        android:textSize="@dimen/workout_progress_title_size"
+                        android:text="Distance"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0px"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="@dimen/workout_progress_number_size"
+                        android:textColor="#fff"
+                        android:id="@+id/distance_run"
+                        android:gravity="bottom"
+                        android:text="5"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="@dimen/workout_progress_unit_size"
+                        android:gravity="bottom"
+                        android:paddingBottom="5dp"
+                        android:textColor="#fff"
+                        android:text="km"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <android.support.v7.widget.AppCompatButton
+            android:layout_width="180dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="10dp"
+            android:textSize="15dp"
+            android:layout_gravity="center"
+            android:onClick="startWorkout"
+            android:id="@+id/button_start_workout"
+            android:textColor="#FFF"
+            android:background="@drawable/login_button_gradient"
+            android:text="Start training"/>
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="60dp"
+                android:textColor="#fff"
+                android:id="@+id/workout_bpm"
+                android:gravity="bottom"
+                android:text="90"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="30sp"
+                android:gravity="bottom"
+                android:paddingBottom="5dp"
+                android:textColor="#fff"
+                android:text="BPM"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="asfasf"
+            android:id="@+id/txt_connection_status_workout"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:textColor="#fff"/>
+
+
+    </LinearLayout>
+
+</RelativeLayout>
