@@ -56,7 +56,7 @@ public class Utils {
      * Builds an alert dialog with a yes/no decision.
      * If a given listener is null, a default listener, which dismisses the dialog on press, is used.
      */
-    public static void buildAlertDialogPrompt(Context context, String title, String message, @Nullable DialogInterface.OnClickListener positiveButtonListener, @Nullable DialogInterface.OnClickListener negativeButtonListener){
+    public static void buildAlertDialogPrompt(Context context, String title, String message, String positiveButtonText, String negativeButtonText , @Nullable DialogInterface.OnClickListener positiveButtonListener, @Nullable DialogInterface.OnClickListener negativeButtonListener){
         AlertDialog.Builder builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder = new AlertDialog.Builder(context, R.style.AppThemeDialog);
@@ -65,12 +65,12 @@ public class Utils {
         }
         builder.setTitle(title)
                 .setMessage(message)
-                .setPositiveButton(R.string.measure, positiveButtonListener != null ? positiveButtonListener : new DialogInterface.OnClickListener() {
+                .setPositiveButton(positiveButtonText, positiveButtonListener != null ? positiveButtonListener : new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 })
-                .setNegativeButton(R.string.cancel, negativeButtonListener != null ? negativeButtonListener : new DialogInterface.OnClickListener() {
+                .setNegativeButton(negativeButtonText, negativeButtonListener != null ? negativeButtonListener : new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
@@ -191,10 +191,11 @@ public class Utils {
         return sharedPreferences.getFloat(holder, 0f);
     }
 
-    public static void Vibrate(Context context, long duration){
+    public static void vibrate(Context context, long duration){
         final Vibrator vibrate = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         vibrate.vibrate(duration);
     }
+
 
 
 

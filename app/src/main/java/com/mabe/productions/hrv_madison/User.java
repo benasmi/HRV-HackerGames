@@ -51,7 +51,7 @@ public class User {
     private float weight;
 
     private int pulse_zone;
-    private float workout_duration;
+    private float workout_duration; //in minutes
     public float second_last_week_hrv;
 
 

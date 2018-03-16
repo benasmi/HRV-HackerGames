@@ -179,7 +179,7 @@ public class MainScreenActivity extends AppCompatActivity {
                     int intervals[] = intent.getExtras().getIntArray("RR_intervals");
                     int bpm = intent.getExtras().getInt("BPM");
                     viewPagerAdapter.measurementFragment.onMeasurement(bpm, intervals);
-                    viewPagerAdapter.workoutFragment.onMeasurement(bpm, intervals);
+                    viewPagerAdapter.workoutFragment.onMeasurement(bpm);
                     //Log.i("TEST", "ACTION_RECEIVING_DATA" + "BPM: " + bpm + " | " + "RMSSD: " + String.valueOf(hrv.calculateRMSSD()));
                     break;
 

@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -17,7 +16,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +34,12 @@ import com.mabe.productions.hrv_madison.bluetooth.LeDevicesDialog;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 
 import java.util.Timer;
+import java.util.TimerTask;
 
 public class WorkoutFragment extends Fragment {
+
+    private static final long VIBRATE_DURATION_TIME_ENDED = 1000l;
+    private static final long VIBRATE_DURATION_CONNECTION_LOST = 5000l;
 
     private CircularProgressBar progressbar_duration;
     private TextView txt_calories_burned;
@@ -52,18 +54,21 @@ public class WorkoutFragment extends Fragment {
     private ImageView img_stop;
     private LinearLayout layout_workout_progress;
 
-    private CountDownTimer countDownTimer = null;
+    private Timer timer = null;
 
 
     public boolean shouldStartWorkoutImmediately = false;
+
+    private static final long TIMER_STEP = 1000;
 
     public static final int STATE_BEFORE_WORKOUT = 0;
     public static final int STATE_WORKING_OUT = 1;
     public static final int STATE_TIME_ENDED = 2;
     public static final int STATE_PAUSED = 3;
 
-    private long timeLeft = 0;
-    private long totalDuration = 0;
+    private long timePassed = 0;
+    private long userSpecifiedWorkoutDuration = 0;
+    private boolean isTimerRunning = false;
 
     int workout_state = STATE_BEFORE_WORKOUT;
 
@@ -85,6 +90,7 @@ public class WorkoutFragment extends Fragment {
         //If user is measuring, pausing the measurement
         if(workout_state != STATE_BEFORE_WORKOUT){
             txt_connection_status.setText(R.string.lost_connection);
+            Utils.vibrate(getContext(), VIBRATE_DURATION_CONNECTION_LOST);
             setState(STATE_PAUSED);
         }
     }
@@ -170,7 +176,19 @@ public class WorkoutFragment extends Fragment {
     private View.OnClickListener stopButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            setState(STATE_BEFORE_WORKOUT);
+            Utils.buildAlertDialogPrompt(getContext(),
+                                         getString(R.string.please_wait),
+                                         getString(R.string.do_you_really_want_to_stop_training_prompt),
+                                         getString(R.string.end),
+                                         getString(R.string.cancel),
+                                         new DialogInterface.OnClickListener() {
+                                             @Override
+                                             public void onClick(DialogInterface dialog, int which) {
+                                                 setState(STATE_BEFORE_WORKOUT);
+                                             }
+                                         },
+                                         null
+            );
         }
     };
 
@@ -201,7 +219,7 @@ public class WorkoutFragment extends Fragment {
     };
 
 
-
+    //Transitions the fragment from one state to another
     public void setState(int state){
         int previous_state = workout_state;
         workout_state = state;
@@ -213,6 +231,10 @@ public class WorkoutFragment extends Fragment {
                 btn_toggle.setText(R.string.start_training);
                 btn_toggle.setOnClickListener(startTrainingButtonListener);
 
+                //todo: set texts based on reccomended workout duration
+                editText_seconds.setText("00");
+                editText_minutes.setText("00");
+
                 img_pause.setVisibility(View.GONE);
                 img_stop.setVisibility(View.GONE);
                 layout_workout_progress.setVisibility(View.GONE);
@@ -222,8 +244,7 @@ public class WorkoutFragment extends Fragment {
 
                 //I suspect that disabling editTexts removes their listeners
                 setupEditTextBehavior();
-
-                stopCountDownTimer();
+                cancelTimer();
                 break;
 
             case STATE_WORKING_OUT:
@@ -242,31 +263,29 @@ public class WorkoutFragment extends Fragment {
                 int seconds = Integer.valueOf(editText_seconds.getText().toString());
 
                 if(previous_state == STATE_BEFORE_WORKOUT){
-                    totalDuration = minutes * 60000 + seconds * 1000;
-                    startCountDownTimer(totalDuration);
-                }else{
-                    resumeCountDownTimer();
+                    userSpecifiedWorkoutDuration = minutes * 60000 + seconds * 1000;
+
                 }
+
+                startTimer();
 
 
                 break;
 
             case STATE_TIME_ENDED:
 
-                editText_minutes.setText("00");
-                editText_seconds.setText("00");
 
                 progressbar_duration.setProgress(100f);
 
                 btn_toggle.setText(R.string.end_training);
                 btn_toggle.setVisibility(View.VISIBLE);
                 btn_toggle.setOnClickListener(reviewProgressButtonListener);
-
+                Utils.vibrate(getContext(), VIBRATE_DURATION_TIME_ENDED);
                 //todo: decide how to show extra time user has been working out
                 break;
 
             case STATE_PAUSED:
-                pauseCountDownTimer();
+                pauseTimer();
                 img_pause.setImageResource(R.drawable.ic_resume);
                 img_pause.setOnClickListener(resumeButtonListener);
 
@@ -278,8 +297,10 @@ public class WorkoutFragment extends Fragment {
 
 
 
-    public void onMeasurement(int bpm, int[] intervals){
-        txt_bpm.setText(bpm + "");
+    public void onMeasurement(int bpm){
+        txt_bpm.setText(String.valueOf(bpm));
+
+        //todo: calculate calories and stuff. Also, will we calculate burnt calories using bpm, or gps?
     }
 
 
@@ -289,56 +310,86 @@ public class WorkoutFragment extends Fragment {
 
     }
 
-    //Starts a timer with given duration
-    private void startCountDownTimer(final long duration){
-        if(countDownTimer != null){
-            countDownTimer.cancel();
+    //Timer gets started. It does so based on timePassed value.
+    private void startTimer(){
+        if(timer == null){
+            timer = new Timer();
+        }else{
+            timer.cancel();
+            timer = new Timer();
         }
 
-        countDownTimer = new CountDownTimer(duration,1000l){
+        isTimerRunning = true;
 
+        timer.scheduleAtFixedRate(new TimerTask() {
             @Override
-            public void onTick(long l) {
-                setProgressBarDuration((int) totalDuration, (int) l);
+            public void run() {
 
-                timeLeft = l;
+                getActivity().runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        timePassed+=TIMER_STEP;
 
-                int minutes = (int) l/60000;
-                int seconds = Math.round(l/1000 - (minutes*60));
-                if(seconds < 10){
-                    editText_minutes.setText(minutes + "");
-                    editText_seconds.setText("0" + seconds);
-                }else{
-                    editText_seconds.setText(seconds + "");
-                    editText_minutes.setText(minutes + "");
-                }
+
+
+
+                        if(timePassed == userSpecifiedWorkoutDuration){
+                            setState(STATE_TIME_ENDED);
+                        }
+
+                        //User is working out longer, than specified duration
+                        if(timePassed > userSpecifiedWorkoutDuration){
+
+                            int minutes = (int) (timePassed - userSpecifiedWorkoutDuration)/60000;
+                            int seconds = Math.round((timePassed - userSpecifiedWorkoutDuration)/1000 - (minutes*60));
+
+                            if(seconds < 10){
+                                editText_minutes.setText("+"+minutes + "");
+                                editText_seconds.setText("0" + seconds);
+                            }else{
+                                editText_seconds.setText(seconds + "");
+                                editText_minutes.setText("+"+minutes + "");
+                            }
+                        }else{ //User is within his specified time limits
+                            setProgressBarDuration((int) userSpecifiedWorkoutDuration, (int) (userSpecifiedWorkoutDuration -timePassed));
+
+                            int minutes = (int) (userSpecifiedWorkoutDuration -timePassed)/60000;
+                            int seconds = Math.round((userSpecifiedWorkoutDuration -timePassed)/1000 - (minutes*60));
+                            if(seconds < 10){
+                                editText_minutes.setText(minutes + "");
+                                editText_seconds.setText("0" + seconds);
+                            }else{
+                                editText_seconds.setText(seconds + "");
+                                editText_minutes.setText(minutes + "");
+                            }
+                        }
+                    }
+                });
             }
-
-            @Override
-            public void onFinish() {
-                setState(STATE_TIME_ENDED);
-                timeLeft = 0;
-            }
-        }.start();
+        }, 0, TIMER_STEP);
     }
 
-    private void pauseCountDownTimer(){
-        if(countDownTimer == null){
+    //Cancels the timer, but doesn't reset timepassed, so the timer can be resumed using startTimer()
+    private void pauseTimer(){
+        if(timer == null || !isTimerRunning){
             return;
         }
-        countDownTimer.cancel();
+        timer.cancel();
+        isTimerRunning = false;
+
     }
 
-    private void resumeCountDownTimer(){
-        startCountDownTimer(timeLeft);
-    }
-
-    private void stopCountDownTimer(){
-        if(countDownTimer == null){
+    //Cancels the timer, and sets timepassed to 0
+    private void cancelTimer(){
+        timePassed = 0;
+        if(timer == null || !isTimerRunning){
             return;
         }
-        countDownTimer.cancel();
-        timeLeft = 0;
+        timer.cancel();
+        isTimerRunning = false;
+
     }
 
 

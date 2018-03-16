@@ -184,6 +184,8 @@ public class MeasurementFragment extends Fragment {
                                     getContext(),
                                     getString(R.string.please_wait),
                                     getString(R.string.already_measured_today_message),
+                                    getString(R.string.measure),
+                                    getString(R.string.cancel),
                                     new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
@@ -432,7 +434,7 @@ public class MeasurementFragment extends Fragment {
 
 
 
-                        Utils.Vibrate(getContext(),1000);
+                        Utils.vibrate(getContext(), 1000);
                         Utils.saveToSharedPrefs(getContext(), FeedReaderDbHelper.FIELD_LAST_MEASUREMENT_DATE, todayInString, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
 
                         txt_connection_status.setText(R.string.measurement_is_over);
