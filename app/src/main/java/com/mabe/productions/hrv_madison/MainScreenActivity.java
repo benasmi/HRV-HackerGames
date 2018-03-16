@@ -33,6 +33,7 @@ import com.mabe.productions.hrv_madison.bluetooth.BluetoothGattService;
 import com.mabe.productions.hrv_madison.bluetooth.LeDevicesDialog;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.fragments.ViewPagerAdapter;
+import com.mabe.productions.hrv_madison.fragments.WorkoutFragment;
 
 public class MainScreenActivity extends AppCompatActivity {
 
@@ -156,7 +157,7 @@ public class MainScreenActivity extends AppCompatActivity {
                         viewPagerAdapter.measurementFragment.shouldStartMeasurementImmediately = false;
                     }
                     if(viewPagerAdapter.workoutFragment.shouldStartWorkoutImmediately){
-                        viewPagerAdapter.workoutFragment.startWorkout();
+                        viewPagerAdapter.workoutFragment.setState(WorkoutFragment.STATE_WORKING_OUT);
                         viewPagerAdapter.workoutFragment.shouldStartWorkoutImmediately = false;
                     }
 

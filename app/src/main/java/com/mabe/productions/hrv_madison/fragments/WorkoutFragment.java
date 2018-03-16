@@ -17,6 +17,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,8 @@ import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.bluetooth.BluetoothGattService;
 import com.mabe.productions.hrv_madison.bluetooth.LeDevicesDialog;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
+
+import java.util.Timer;
 
 public class WorkoutFragment extends Fragment {
 
@@ -51,11 +54,16 @@ public class WorkoutFragment extends Fragment {
 
     private CountDownTimer countDownTimer = null;
 
+
     public boolean shouldStartWorkoutImmediately = false;
 
-    private static final int STATE_BEFORE_WORKOUT = 0;
-    private static final int STATE_WORKING_OUT = 1;
-    private static final int STATE_TIME_ENDED = 2;
+    public static final int STATE_BEFORE_WORKOUT = 0;
+    public static final int STATE_WORKING_OUT = 1;
+    public static final int STATE_TIME_ENDED = 2;
+    public static final int STATE_PAUSED = 3;
+
+    private long timeLeft = 0;
+    private long totalDuration = 0;
 
     int workout_state = STATE_BEFORE_WORKOUT;
 
@@ -67,13 +75,18 @@ public class WorkoutFragment extends Fragment {
         View view = inflater.inflate(R.layout.workout_fragment, container, false);
 
         initializeViews(view);
+        setState(STATE_BEFORE_WORKOUT);
 
         return view;
     }
 
     public void disconnected(){
         txt_connection_status.setText(R.string.failed_connection_status);
-        workout_state = STATE_BEFORE_WORKOUT;
+        //If user is measuring, pausing the measurement
+        if(workout_state != STATE_BEFORE_WORKOUT){
+            txt_connection_status.setText(R.string.lost_connection);
+            setState(STATE_PAUSED);
+        }
     }
 
     private void initializeViews(View rootView){
@@ -88,44 +101,10 @@ public class WorkoutFragment extends Fragment {
         layout_workout_progress = rootView.findViewById(R.id.workout_progress_layout);
         editText_minutes = rootView.findViewById(R.id.edittext_minutes);
         editText_seconds = rootView.findViewById(R.id.edittext_seconds);
+        img_stop.setOnClickListener(stopButtonListener);
         setupEditTextBehavior();
 
         btn_toggle = rootView.findViewById(R.id.button_start_workout);
-        btn_toggle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (workout_state){
-
-                    case STATE_BEFORE_WORKOUT:
-
-                        //if device is connected
-                        if(BluetoothGattService.isGattDeviceConnected){
-                            startWorkout();
-
-                        }else{
-                            autoConnectDevice();
-                        }
-
-
-
-
-                        break;
-
-                    case STATE_TIME_ENDED:
-                        workout_state = STATE_BEFORE_WORKOUT;
-                        //TODO: Save data to db, since workout is over
-
-
-                        //todo: use static variable to switch tabs
-                        ViewPager parentViewPager = getActivity().findViewById(R.id.viewpager);
-                        ViewPagerAdapter adapter = (ViewPagerAdapter) parentViewPager.getAdapter();
-                        adapter.dataTodayFragment.updateData();
-                        parentViewPager.setCurrentItem(1);
-
-                        break;
-                }
-            }
-        });
     }
 
     private void autoConnectDevice(){
@@ -169,26 +148,160 @@ public class WorkoutFragment extends Fragment {
     }
 
 
-    public void startWorkout(){
-        workout_state = STATE_WORKING_OUT;
-        btn_toggle.setText(R.string.start_training);
-        btn_toggle.setVisibility(View.GONE);
-        img_pause.setVisibility(View.VISIBLE);
-        img_stop.setVisibility(View.VISIBLE);
-        layout_workout_progress.setVisibility(View.VISIBLE);
-        editText_minutes.setEnabled(false);
-        editText_seconds.setEnabled(false);
+    private View.OnClickListener resumeButtonListener = new View.OnClickListener(){
+        @Override
+        public void onClick(View v) {
 
-        int minutes = Integer.valueOf(editText_minutes.getText().toString());
-        int seconds = Integer.valueOf(editText_seconds.getText().toString());
-        final int duration = minutes * 60000 + seconds * 1000;
+            if(BluetoothGattService.isGattDeviceConnected){
+                setState(STATE_WORKING_OUT);
+            }else{
+                Toast.makeText(getContext(), "Please connect heart rate monitor!", Toast.LENGTH_LONG).show();
+            }
+        }
+    };
+
+    private View.OnClickListener pauseButtonListener = new View.OnClickListener(){
+        @Override
+        public void onClick(View v) {
+            setState(STATE_PAUSED);
+        }
+    };
+
+    private View.OnClickListener stopButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            setState(STATE_BEFORE_WORKOUT);
+        }
+    };
+
+    private View.OnClickListener reviewProgressButtonListener = new View.OnClickListener(){
+        @Override
+        public void onClick(View v) {
+            //todo: save data
+
+            setState(STATE_BEFORE_WORKOUT);
+            ViewPager parentViewPager = getActivity().findViewById(R.id.viewpager);
+            ViewPagerAdapter adapter = (ViewPagerAdapter) parentViewPager.getAdapter();
+            adapter.dataTodayFragment.updateData();
+            parentViewPager.setCurrentItem(1);
+        }
+    };
+
+    private View.OnClickListener startTrainingButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            //if device is connected
+            if(BluetoothGattService.isGattDeviceConnected){
+                setState(STATE_WORKING_OUT);
+
+            }else{
+                autoConnectDevice();
+            }
+        }
+    };
 
 
-        //Starting measuring
+
+    public void setState(int state){
+        int previous_state = workout_state;
+        workout_state = state;
+
+        switch(workout_state){
+
+            case STATE_BEFORE_WORKOUT:
+                btn_toggle.setVisibility(View.VISIBLE);
+                btn_toggle.setText(R.string.start_training);
+                btn_toggle.setOnClickListener(startTrainingButtonListener);
+
+                img_pause.setVisibility(View.GONE);
+                img_stop.setVisibility(View.GONE);
+                layout_workout_progress.setVisibility(View.GONE);
+                setProgressBarDuration(1,1);
+                editText_minutes.setEnabled(true);
+                editText_seconds.setEnabled(true);
+
+                //I suspect that disabling editTexts removes their listeners
+                setupEditTextBehavior();
+
+                stopCountDownTimer();
+                break;
+
+            case STATE_WORKING_OUT:
+
+
+                btn_toggle.setVisibility(View.GONE);
+                img_pause.setVisibility(View.VISIBLE);
+                img_pause.setImageResource(R.drawable.ic_pause_button);
+                img_stop.setVisibility(View.VISIBLE);
+                img_pause.setOnClickListener(pauseButtonListener);
+                layout_workout_progress.setVisibility(View.VISIBLE);
+                editText_minutes.setEnabled(false);
+                editText_seconds.setEnabled(false);
+
+                int minutes = Integer.valueOf(editText_minutes.getText().toString());
+                int seconds = Integer.valueOf(editText_seconds.getText().toString());
+
+                if(previous_state == STATE_BEFORE_WORKOUT){
+                    totalDuration = minutes * 60000 + seconds * 1000;
+                    startCountDownTimer(totalDuration);
+                }else{
+                    resumeCountDownTimer();
+                }
+
+
+                break;
+
+            case STATE_TIME_ENDED:
+
+                editText_minutes.setText("00");
+                editText_seconds.setText("00");
+
+                progressbar_duration.setProgress(100f);
+
+                btn_toggle.setText(R.string.end_training);
+                btn_toggle.setVisibility(View.VISIBLE);
+                btn_toggle.setOnClickListener(reviewProgressButtonListener);
+
+                //todo: decide how to show extra time user has been working out
+                break;
+
+            case STATE_PAUSED:
+                pauseCountDownTimer();
+                img_pause.setImageResource(R.drawable.ic_resume);
+                img_pause.setOnClickListener(resumeButtonListener);
+
+                break;
+
+        }
+    }
+
+
+
+
+    public void onMeasurement(int bpm, int[] intervals){
+        txt_bpm.setText(bpm + "");
+    }
+
+
+    private void setProgressBarDuration(int duration, int timePassed){
+        float percentage = ( (float) timePassed) / ((float) duration);
+        progressbar_duration.setProgress(100-percentage*100);
+
+    }
+
+    //Starts a timer with given duration
+    private void startCountDownTimer(final long duration){
+        if(countDownTimer != null){
+            countDownTimer.cancel();
+        }
+
         countDownTimer = new CountDownTimer(duration,1000l){
+
             @Override
             public void onTick(long l) {
-                setProgressBarDuration(duration, (int) l);
+                setProgressBarDuration((int) totalDuration, (int) l);
+
+                timeLeft = l;
 
                 int minutes = (int) l/60000;
                 int seconds = Math.round(l/1000 - (minutes*60));
@@ -203,35 +316,31 @@ public class WorkoutFragment extends Fragment {
 
             @Override
             public void onFinish() {
-                timeEnded();
+                setState(STATE_TIME_ENDED);
+                timeLeft = 0;
             }
         }.start();
-
-
     }
 
-    private void timeEnded(){
-        workout_state = STATE_TIME_ENDED;
-        editText_minutes.setText("00");
-        editText_seconds.setText("00");
-        progressbar_duration.setProgress(100f);
-
-        btn_toggle.setText(R.string.end_training);
-        btn_toggle.setVisibility(View.VISIBLE);
+    private void pauseCountDownTimer(){
+        if(countDownTimer == null){
+            return;
+        }
+        countDownTimer.cancel();
     }
 
-
-
-    public void onMeasurement(int bpm, int[] intervals){
-        txt_bpm.setText(bpm + "");
+    private void resumeCountDownTimer(){
+        startCountDownTimer(timeLeft);
     }
 
-
-    private void setProgressBarDuration(int duration, int timePassed){
-        float percentage = ( (float) timePassed) / ((float) duration);
-        progressbar_duration.setProgress(100-percentage*100);
-
+    private void stopCountDownTimer(){
+        if(countDownTimer == null){
+            return;
+        }
+        countDownTimer.cancel();
+        timeLeft = 0;
     }
+
 
 
     private void setupEditTextBehavior(){
