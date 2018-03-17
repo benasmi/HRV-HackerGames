@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import android.os.Build;
@@ -16,6 +17,9 @@ import android.view.Window;
 import android.view.WindowManager;
 
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.maps.model.LatLng;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 
 import java.text.ParseException;
@@ -196,7 +200,31 @@ public class Utils {
         vibrate.vibrate(duration);
     }
 
+    public static int[] convertIntArrayListToArray(ArrayList<Integer> arrayList){
+        int[] newArray = new int[arrayList.size()];
+        for(int i = 0; i < arrayList.size(); i++){
+            newArray[i] = arrayList.get(i);
+        }
+        return newArray;
+    }
 
+
+
+    public static float[] convertFloatArrayListToArray(ArrayList<Float> arrayList){
+        float[] newArray = new float[arrayList.size()];
+        for(int i = 0; i < arrayList.size(); i++){
+            newArray[i] = arrayList.get(i);
+        }
+        return newArray;
+    }
+
+    public static LatLng[] convertLatLngArrayListToArray(ArrayList<LatLng> arrayList){
+        LatLng[] newArray = new LatLng[arrayList.size()];
+        for(int i = 0; i < arrayList.size(); i++){
+            newArray[i] = arrayList.get(i);
+        }
+        return newArray;
+    }
 
 
 }

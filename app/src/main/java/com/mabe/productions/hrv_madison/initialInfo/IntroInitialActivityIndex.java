@@ -39,6 +39,8 @@ public class IntroInitialActivityIndex extends AppCompatActivity {
     int i_training_frequency = 0;
     int i_training_duration = 0;
 
+    //todo: change sliders
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -2,9 +2,7 @@ package com.mabe.productions.hrv_madison.measurements;
 
 import android.content.ContentValues;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
-import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 
@@ -152,22 +150,22 @@ public class Measurement {
     public ContentValues getContentValues(){
 
         ContentValues values = new ContentValues();
-        values.put(FeedReaderDbHelper.COL_RMSSD, getRmssd());
-        values.put(FeedReaderDbHelper.COL_LN_RMSSD, getLn_rmssd());
-        values.put(FeedReaderDbHelper.COL_LOWEST_RMSSD, getLowest_rmssd());
-        values.put(FeedReaderDbHelper.COL_HIGHEST_RMSSD, getHighest_rmssd());
-        values.put(FeedReaderDbHelper.COL_RMSSD_DATA, FeedReaderDbHelper.getStringFromBpmValues(getRmssd_data()));
-        values.put(FeedReaderDbHelper.COL_LOWEST_BPM, getLowest_bpm());
-        values.put(FeedReaderDbHelper.COL_HIGHEST_BPM, getHighest_bpm());
-        values.put(FeedReaderDbHelper.COL_AVERAGE_BPM, getAverage_bpm());
-        values.put(FeedReaderDbHelper.COL_BPM_DATA, FeedReaderDbHelper.getStringFromBpmValues(getBpm_data()));
-        values.put(FeedReaderDbHelper.COL_MEASUREMENT_DURATION, getDuration());
-        values.put(FeedReaderDbHelper.COL_LF_BAND, getLF_band());
-        values.put(FeedReaderDbHelper.COL_HF_BAND, getHF_band());
-        values.put(FeedReaderDbHelper.COL_VLF_BAND, getVLF_band());
-        values.put(FeedReaderDbHelper.COL_VHF_BAND, getVHF_band());
-        values.put(FeedReaderDbHelper.COL_MOOD, getMood());
-        values.put(FeedReaderDbHelper.COL_DATE, Utils.getStringFromDate(getDate()));
+        values.put(FeedReaderDbHelper.HRV_COL_RMSSD, getRmssd());
+        values.put(FeedReaderDbHelper.HRV_COL_LN_RMSSD, getLn_rmssd());
+        values.put(FeedReaderDbHelper.HRV_COL_LOWEST_RMSSD, getLowest_rmssd());
+        values.put(FeedReaderDbHelper.HRV_COL_HIGHEST_RMSSD, getHighest_rmssd());
+        values.put(FeedReaderDbHelper.HRV_COL_RMSSD_DATA, FeedReaderDbHelper.intArrayToString(getRmssd_data()));
+        values.put(FeedReaderDbHelper.HRV_COL_LOWEST_BPM, getLowest_bpm());
+        values.put(FeedReaderDbHelper.HRV_COL_HIGHEST_BPM, getHighest_bpm());
+        values.put(FeedReaderDbHelper.HRV_COL_AVERAGE_BPM, getAverage_bpm());
+        values.put(FeedReaderDbHelper.HRV_COL_BPM_DATA, FeedReaderDbHelper.intArrayToString(getBpm_data()));
+        values.put(FeedReaderDbHelper.HRV_COL_MEASUREMENT_DURATION, getDuration());
+        values.put(FeedReaderDbHelper.HRV_COL_LF_BAND, getLF_band());
+        values.put(FeedReaderDbHelper.HRV_COL_HF_BAND, getHF_band());
+        values.put(FeedReaderDbHelper.HRV_COL_VLF_BAND, getVLF_band());
+        values.put(FeedReaderDbHelper.HRV_COL_VHF_BAND, getVHF_band());
+        values.put(FeedReaderDbHelper.HRV_COL_MOOD, getMood());
+        values.put(FeedReaderDbHelper.HRV_COL_DATE, Utils.getStringFromDate(getDate()));
 
         return values;
     }

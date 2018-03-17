@@ -7,8 +7,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
+import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
 
 import java.util.ArrayList;
@@ -60,7 +62,9 @@ public class User {
 
     private boolean[] week_days = new boolean[7];
     private float max_duration; //In minutes
+
     private ArrayList<Measurement> measurements;
+    private ArrayList<WorkoutMeasurements> workouts;
 
 
     /*
@@ -75,13 +79,13 @@ public class User {
         String todayDate = Utils.getStringFromDate(Calendar.getInstance().getTime());
 
         String[] projection = {
-                FeedReaderDbHelper.COL_DATE,
-                FeedReaderDbHelper.COL_ID,
+                FeedReaderDbHelper.HRV_COL_DATE,
+                FeedReaderDbHelper.HRV_COL_ID,
 
         };
 
         String sortOrder =
-                FeedReaderDbHelper.COL_ID + " DESC";
+                FeedReaderDbHelper.HRV_COL_ID + " DESC";
 
         Cursor cursor = db.query(
                 FeedReaderDbHelper.HRV_DATA_TABLE_NAME,
@@ -96,13 +100,13 @@ public class User {
         //Executing SELECT query if overrideByDate is true
         if (cursor.moveToNext() && overrideByDate) {
             int id = cursor.getInt(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_ID));
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_ID));
             String dateString = cursor.getString(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_DATE));
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_DATE));
 
             //Removing existing row if measurement was made today
             if (dateString.equals(todayDate)) {
-                db.delete(FeedReaderDbHelper.HRV_DATA_TABLE_NAME, FeedReaderDbHelper.COL_ID + "=" + id, null);
+                db.delete(FeedReaderDbHelper.HRV_DATA_TABLE_NAME, FeedReaderDbHelper.HRV_COL_ID + "=" + id, null);
             }
 
         }
@@ -111,6 +115,59 @@ public class User {
         ContentValues values = measurement.getContentValues();
 
         db.insertOrThrow(FeedReaderDbHelper.HRV_DATA_TABLE_NAME, null, values);
+
+        db.close();
+
+    }
+
+    /*
+     * Saves a new workout to the database.
+     * @param overrideByDate If true, existing table row with today's date is overriden.
+     */
+
+    public static void addWorkoutData(Context context, WorkoutMeasurements workout, boolean overrideByDate) {
+        SQLiteDatabase db = new FeedReaderDbHelper(context).getWritableDatabase();
+
+        //Checking if a measurement with today's date exists
+        String todayDate = Utils.getStringFromDate(Calendar.getInstance().getTime());
+
+        String[] projection = {
+                FeedReaderDbHelper.WORKOUT_COL_DATE,
+                FeedReaderDbHelper.WORKOUT_COL_ID,
+
+        };
+
+        String sortOrder =
+                FeedReaderDbHelper.WORKOUT_COL_ID + " DESC";
+
+        Cursor cursor = db.query(
+                FeedReaderDbHelper.WORKOUT_DATA_TABLE_NAME,
+                projection,
+                null,
+                null,
+                null,
+                null,
+                sortOrder
+        );
+
+        //Executing SELECT query if overrideByDate is true
+        if (cursor.moveToNext() && overrideByDate) {
+            int id = cursor.getInt(
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_ID));
+            String dateString = cursor.getString(
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_DATE));
+
+            //Removing existing row if measurement was made today
+            if (dateString.equals(todayDate)) {
+                db.delete(FeedReaderDbHelper.WORKOUT_DATA_TABLE_NAME, FeedReaderDbHelper.WORKOUT_COL_ID + "=" + id, null);
+            }
+
+        }
+
+        //Inserting values
+        ContentValues values = workout.getContentValues();
+
+        db.insertOrThrow(FeedReaderDbHelper.WORKOUT_DATA_TABLE_NAME, null, values);
 
         db.close();
 
@@ -134,28 +191,28 @@ public class User {
         SQLiteDatabase db = new FeedReaderDbHelper(context).getWritableDatabase();
 
         String[] projection = {
-                FeedReaderDbHelper.COL_DATE,
-                FeedReaderDbHelper.COL_ID,
-                FeedReaderDbHelper.COL_RMSSD,
-                FeedReaderDbHelper.COL_LN_RMSSD,
-                FeedReaderDbHelper.COL_LOWEST_RMSSD,
-                FeedReaderDbHelper.COL_HIGHEST_RMSSD,
-                FeedReaderDbHelper.COL_LOWEST_BPM,
-                FeedReaderDbHelper.COL_HIGHEST_BPM,
-                FeedReaderDbHelper.COL_AVERAGE_BPM,
-                FeedReaderDbHelper.COL_LF_BAND,
-                FeedReaderDbHelper.COL_VLF_BAND,
-                FeedReaderDbHelper.COL_VHF_BAND,
-                FeedReaderDbHelper.COL_HF_BAND,
-                FeedReaderDbHelper.COL_BPM_DATA,
-                FeedReaderDbHelper.COL_RMSSD_DATA,
-                FeedReaderDbHelper.COL_MEASUREMENT_DURATION,
-                FeedReaderDbHelper.COL_MOOD
+                FeedReaderDbHelper.HRV_COL_DATE,
+                FeedReaderDbHelper.HRV_COL_ID,
+                FeedReaderDbHelper.HRV_COL_RMSSD,
+                FeedReaderDbHelper.HRV_COL_LN_RMSSD,
+                FeedReaderDbHelper.HRV_COL_LOWEST_RMSSD,
+                FeedReaderDbHelper.HRV_COL_HIGHEST_RMSSD,
+                FeedReaderDbHelper.HRV_COL_LOWEST_BPM,
+                FeedReaderDbHelper.HRV_COL_HIGHEST_BPM,
+                FeedReaderDbHelper.HRV_COL_AVERAGE_BPM,
+                FeedReaderDbHelper.HRV_COL_LF_BAND,
+                FeedReaderDbHelper.HRV_COL_VLF_BAND,
+                FeedReaderDbHelper.HRV_COL_VHF_BAND,
+                FeedReaderDbHelper.HRV_COL_HF_BAND,
+                FeedReaderDbHelper.HRV_COL_BPM_DATA,
+                FeedReaderDbHelper.HRV_COL_RMSSD_DATA,
+                FeedReaderDbHelper.HRV_COL_MEASUREMENT_DURATION,
+                FeedReaderDbHelper.HRV_COL_MOOD
 
         };
 
         String sortOrder =
-                FeedReaderDbHelper.COL_ID + " DESC";
+                FeedReaderDbHelper.HRV_COL_ID + " DESC";
 
         Cursor cursor = db.query(
                 FeedReaderDbHelper.HRV_DATA_TABLE_NAME,
@@ -168,44 +225,44 @@ public class User {
         );
         while (cursor.moveToNext()) {
             int id = cursor.getInt(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_ID));
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_ID));
             Date date = Utils.getDateFromString(cursor.getString(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_DATE)));
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_DATE)));
             int rmssd = cursor.getInt(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_RMSSD));
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_RMSSD));
             float ln_rmssd = cursor.getFloat(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_LN_RMSSD));
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_LN_RMSSD));
             float lowest_rmssd = cursor.getFloat(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_LOWEST_RMSSD));
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_LOWEST_RMSSD));
             float highest_rmssd = cursor.getFloat(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_HIGHEST_RMSSD));
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_HIGHEST_RMSSD));
             float lowest_bpm = cursor.getFloat(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_LOWEST_BPM));
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_LOWEST_BPM));
             float highest_bpm = cursor.getFloat(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_HIGHEST_BPM));
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_HIGHEST_BPM));
             float average_bpm = cursor.getFloat(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_AVERAGE_BPM));
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_AVERAGE_BPM));
             float LF_band = cursor.getFloat(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_LF_BAND));
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_LF_BAND));
             float VLF_band = cursor.getFloat(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_VLF_BAND));
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_VLF_BAND));
             float VHF_band = cursor.getFloat(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_VHF_BAND));
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_VHF_BAND));
             float HF_band = cursor.getFloat(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_HF_BAND));
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_HF_BAND));
             String bpmDataString = cursor.getString(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_BPM_DATA));
-            int[] bpmData = FeedReaderDbHelper.getBpmValuesFromString(bpmDataString);
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_BPM_DATA));
+            int[] bpmData = FeedReaderDbHelper.getIntArrayFromString(bpmDataString);
 
             String rmssdDataString = cursor.getString(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_RMSSD_DATA));
-            int[] rmssdData = FeedReaderDbHelper.getBpmValuesFromString(rmssdDataString);
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_RMSSD_DATA));
+            int[] rmssdData = FeedReaderDbHelper.getIntArrayFromString(rmssdDataString);
 
             int measurement_duration = cursor.getInt(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_MEASUREMENT_DURATION));
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_MEASUREMENT_DURATION));
             //TODO: jei tau sita vieta crashina, perinstaliuok appsa
             int mood = cursor.getInt(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_MOOD));
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_MOOD));
 
             Measurement measurement = new Measurement(date,
                     rmssd,
@@ -237,6 +294,71 @@ public class User {
 
 
     }
+    private void getAllWorkoutsFromDb(Context context) {
+
+        ArrayList<WorkoutMeasurements> workoutList = new ArrayList<>();
+
+        SQLiteDatabase db = new FeedReaderDbHelper(context).getWritableDatabase();
+
+        String[] projection = {"*"};
+
+        String sortOrder =
+                FeedReaderDbHelper.WORKOUT_COL_ID + " DESC";
+
+        Cursor cursor = db.query(
+                FeedReaderDbHelper.WORKOUT_DATA_TABLE_NAME,
+                projection,
+                null,
+                null,
+                null,
+                null,
+                sortOrder
+        );
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_ID));
+            Date date = Utils.getDateFromString(cursor.getString(
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_DATE)));
+            float duration = cursor.getFloat(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_DURATION));
+            float average_bpm = cursor.getFloat(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_AVERAGE_BPM));
+            float average_pace = cursor.getFloat(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_AVERAGE_PACE));
+            int pulse_zone = cursor.getInt(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_PULSE_ZONE));
+            float calories = cursor.getFloat(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_CALORIES));
+            int[] bpm_data = FeedReaderDbHelper.getIntArrayFromString(cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_BPM_DATA)));
+            float[] pace_data = FeedReaderDbHelper.getFloatArrayFromString(cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_PACE_DATA)));
+            LatLng[] route = FeedReaderDbHelper.getRouteFromString(cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_ROUTE)));
+
+            WorkoutMeasurements workout = new WorkoutMeasurements(
+                    id,
+                    date,
+                    duration,
+                    average_pace,
+                    average_bpm,
+                    bpm_data,
+                    pace_data,
+                    route,
+                    calories,
+                    pulse_zone
+            );
+
+
+
+            workoutList.add(workout);
+        }
+
+        db.close();
+
+        workouts = workoutList;
+
+    }
+
+    public WorkoutMeasurements getLastWorkout(){
+        if (workouts.size() > 0) {
+            return workouts.get(0);
+        } else {
+            return null;
+        }
+    }
 
     public static User getUser(Context context) {
         User user = new User();
@@ -261,14 +383,14 @@ public class User {
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
 
         String[] projection = {
-                FeedReaderDbHelper.COL_ID,
-                FeedReaderDbHelper.COL_RMSSD,
-                FeedReaderDbHelper.COL_DATE
+                FeedReaderDbHelper.HRV_COL_ID,
+                FeedReaderDbHelper.HRV_COL_RMSSD,
+                FeedReaderDbHelper.HRV_COL_DATE
 
         };
 
         String sortOrder =
-                FeedReaderDbHelper.COL_ID + " DESC";
+                FeedReaderDbHelper.HRV_COL_ID + " DESC";
 
         Cursor cursor = database.query(
                 FeedReaderDbHelper.HRV_DATA_TABLE_NAME,
@@ -291,11 +413,11 @@ public class User {
         //Getting user hrv data from SQLite
         while (cursor.moveToNext()) {
             long itemId = cursor.getLong(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_ID));
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_ID));
             int rmssd = cursor.getInt(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_RMSSD));
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_RMSSD));
             String dateString = cursor.getString(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.COL_DATE));
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_DATE));
 
 
             Date date = Utils.getDateFromString(dateString);
@@ -337,6 +459,7 @@ public class User {
         user.setMaxDuration(20);
 
         user.getAllMeasurementsFromDb(context);
+        user.getAllWorkoutsFromDb(context);
         ArrayList<Measurement> measurements = user.getAllMeasurements();
 
         calendar = Calendar.getInstance();
@@ -573,11 +696,11 @@ public class User {
 
         switch (updateType) {
             case UPDATE_TYPE_BY_DATE:
-                database.update(FeedReaderDbHelper.HRV_DATA_TABLE_NAME, values, FeedReaderDbHelper.COL_DATE + " = " + Utils.getStringFromDate(measurement.getDate()),null);
+                database.update(FeedReaderDbHelper.HRV_DATA_TABLE_NAME, values, FeedReaderDbHelper.HRV_COL_DATE + " = " + Utils.getStringFromDate(measurement.getDate()), null);
                 break;
 
             case UPDATE_TYPE_BY_ID:
-                database.update(FeedReaderDbHelper.HRV_DATA_TABLE_NAME, values, FeedReaderDbHelper.COL_ID + " = " + measurement.getUniqueId(),null);
+                database.update(FeedReaderDbHelper.HRV_DATA_TABLE_NAME, values, FeedReaderDbHelper.HRV_COL_ID + " = " + measurement.getUniqueId(), null);
                 break;
         }
 

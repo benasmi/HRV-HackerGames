@@ -21,8 +21,10 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary true
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -52,5 +54,11 @@ dependencies {
     compile 'org.adw.library:discrete-seekbar:1.0.1'
     compile 'com.android.support:appcompat-v7:23.2.0'
     compile 'com.budiyev.android:circular-progress-bar:1.1.8'
+
+    compile 'com.google.android.gms:play-services-maps:11.4.2'
+    compile ('io.nlopez.smartlocation:library:3.3.3')
+
+
+    compile 'com.android.support:multidex:1.0.0'
     testCompile 'junit:junit:4.12'
 }

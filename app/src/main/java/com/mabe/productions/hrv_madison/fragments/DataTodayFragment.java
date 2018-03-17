@@ -173,6 +173,11 @@ public class DataTodayFragment extends Fragment {
                     break;
             }
 
+
+            for(int i = 0; i < user.getLastWorkout().getPace_data().length; i++){
+                Log.i("TEST", "pace: " + String.valueOf(user.getLastWorkout().getPace_data()[i]));
+            }
+
             Log.i("TEST", "success? : " + success);
 
         }

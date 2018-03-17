@@ -7,7 +7,9 @@ import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -16,6 +18,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,15 +29,31 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.budiyev.android.circularprogressbar.CircularProgressBar;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.DetectedActivity;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 import com.mabe.productions.hrv_madison.MainScreenActivity;
 import com.mabe.productions.hrv_madison.R;
+import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.bluetooth.BluetoothGattService;
 import com.mabe.productions.hrv_madison.bluetooth.LeDevicesDialog;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
+import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import io.nlopez.smartlocation.OnActivityUpdatedListener;
+import io.nlopez.smartlocation.OnLocationUpdatedListener;
+import io.nlopez.smartlocation.SmartLocation;
+import io.nlopez.smartlocation.location.config.LocationAccuracy;
+import io.nlopez.smartlocation.location.config.LocationParams;
 
 public class WorkoutFragment extends Fragment {
 
@@ -71,6 +90,17 @@ public class WorkoutFragment extends Fragment {
     private boolean isTimerRunning = false;
 
     int workout_state = STATE_BEFORE_WORKOUT;
+    private boolean isLocationListeningEnabled= false;
+
+    private float calories_burned = 0;
+
+
+    private ArrayList<LatLng> route = new ArrayList<>();
+    private ArrayList<Integer> bpmData = new ArrayList<Integer>();
+    private ArrayList<Float> paceData = new ArrayList<Float>();
+
+    private LocationRequest mLocationRequest;
+    private GoogleApiClient mGoogleApiClient;
 
     @Nullable
     @Override
@@ -147,6 +177,7 @@ public class WorkoutFragment extends Fragment {
                     });
 
                 }else{
+                    //todo: fix to open a dialog
                     Toast.makeText(getContext(), "Please enable bluetooth!", Toast.LENGTH_LONG).show(); //TODO: add a nice dialog or something
                 }
             }
@@ -195,13 +226,29 @@ public class WorkoutFragment extends Fragment {
     private View.OnClickListener reviewProgressButtonListener = new View.OnClickListener(){
         @Override
         public void onClick(View v) {
-            //todo: save data
+
+            User user = User.getUser(getContext());
+
+            WorkoutMeasurements workout = new WorkoutMeasurements(
+                    Calendar.getInstance().getTime(),
+                    userSpecifiedWorkoutDuration,
+                    0, /*todo: calculate */
+                    0,
+                    Utils.convertIntArrayListToArray(bpmData),
+                    Utils.convertFloatArrayListToArray(paceData),
+                    Utils.convertLatLngArrayListToArray(route),
+                    calories_burned,
+                    user.getPulseZone()
+            );
 
             setState(STATE_BEFORE_WORKOUT);
             ViewPager parentViewPager = getActivity().findViewById(R.id.viewpager);
             ViewPagerAdapter adapter = (ViewPagerAdapter) parentViewPager.getAdapter();
             adapter.dataTodayFragment.updateData();
             parentViewPager.setCurrentItem(1);
+
+
+
         }
     };
 
@@ -227,10 +274,11 @@ public class WorkoutFragment extends Fragment {
         switch(workout_state){
 
             case STATE_BEFORE_WORKOUT:
+                bpmData.clear();
                 btn_toggle.setVisibility(View.VISIBLE);
                 btn_toggle.setText(R.string.start_training);
                 btn_toggle.setOnClickListener(startTrainingButtonListener);
-
+                stopLocationListener();
                 //todo: set texts based on reccomended workout duration
                 editText_seconds.setText("00");
                 editText_minutes.setText("00");
@@ -249,6 +297,7 @@ public class WorkoutFragment extends Fragment {
 
             case STATE_WORKING_OUT:
 
+                startLocationListener();
 
                 btn_toggle.setVisibility(View.GONE);
                 img_pause.setVisibility(View.VISIBLE);
@@ -274,6 +323,7 @@ public class WorkoutFragment extends Fragment {
 
             case STATE_TIME_ENDED:
 
+                startLocationListener();
 
                 progressbar_duration.setProgress(100f);
 
@@ -286,6 +336,7 @@ public class WorkoutFragment extends Fragment {
 
             case STATE_PAUSED:
                 pauseTimer();
+                pauseLocationListener();
                 img_pause.setImageResource(R.drawable.ic_resume);
                 img_pause.setOnClickListener(resumeButtonListener);
 
@@ -294,11 +345,68 @@ public class WorkoutFragment extends Fragment {
         }
     }
 
+    private GoogleApiClient.ConnectionCallbacks locationListener = new GoogleApiClient.ConnectionCallbacks() {
 
+        @Override
+        public void onConnected(@Nullable Bundle bundle) {
+            isLocationListeningEnabled = true;
+        }
 
+        @Override
+        public void onConnectionSuspended(int i) {
+            isLocationListeningEnabled = false;
+        }
+
+    };
+
+    private GoogleApiClient.OnConnectionFailedListener failedLocationListener = new GoogleApiClient.OnConnectionFailedListener() {
+        @Override
+        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+            isLocationListeningEnabled = false;
+        }
+    };
+
+    private void startLocationListener() {
+        if(isLocationListeningEnabled){
+            return;
+        }
+
+        isLocationListeningEnabled = true;
+
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(8000);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(locationListener)
+                .addOnConnectionFailedListener(failedLocationListener)
+                .build();
+    }
+
+    private void pauseLocationListener(){
+        if(!isLocationListeningEnabled){
+            return;
+        }
+        SmartLocation.with(getContext()).location().stop();
+        isLocationListeningEnabled = false;
+    }
+
+    private void stopLocationListener(){
+        if(!isLocationListeningEnabled){
+            return;
+        }
+        route.clear();
+        SmartLocation.with(getContext()).location().stop();
+        isLocationListeningEnabled = false;
+    }
 
     public void onMeasurement(int bpm){
         txt_bpm.setText(String.valueOf(bpm));
+        if(workout_state == STATE_WORKING_OUT || workout_state == STATE_TIME_ENDED){
+            bpmData.add(bpm);
+        }
 
         //todo: calculate calories and stuff. Also, will we calculate burnt calories using bpm, or gps?
     }
