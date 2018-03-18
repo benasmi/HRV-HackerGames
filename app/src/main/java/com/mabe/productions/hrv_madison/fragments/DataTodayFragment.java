@@ -151,23 +151,23 @@ public class DataTodayFragment extends Fragment {
             bpm_card_value_average.setText(String.valueOf((int)measurement.getAverage_bpm()));
 
             Log.i("TEST", "mood: " + measurement.getMood());
-            boolean success = false;
+
             //Setting initial mood
             switch(measurement.getMood()){
                 case User.MOOD_NEGATIVELY_EXCITED:
-                    success = img_negatively_excited.callOnClick();
+                    img_negatively_excited.callOnClick();
                     break;
                 case User.MOOD_NEGATIVELY_MELLOW:
-                    success = img_negatively_mellow.callOnClick();
+                    img_negatively_mellow.callOnClick();
                     break;
                 case User.MOOD_NEUTRAL:
-                    success = img_neutral.callOnClick();
+                    img_neutral.callOnClick();
                     break;
                 case User.MOOD_POSITIVELY_MELLOW:
-                    success = img_positively_mellow.callOnClick();
+                    img_positively_mellow.callOnClick();
                     break;
                 case User.MOOD_POSITIVELY_EXCITED:
-                    success = img_positively_excited.callOnClick();
+                    img_positively_excited.callOnClick();
                     break;
                 case User.MOOD_UNDEFINED:
                     //User has not selected his mood yet. Too bad :(
