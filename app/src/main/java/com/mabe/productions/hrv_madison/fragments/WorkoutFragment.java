@@ -32,7 +32,10 @@ import com.budiyev.android.circularprogressbar.CircularProgressBar;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.DetectedActivity;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.mabe.productions.hrv_madison.MainScreenActivity;
@@ -99,8 +102,8 @@ public class WorkoutFragment extends Fragment {
     private ArrayList<Integer> bpmData = new ArrayList<Integer>();
     private ArrayList<Float> paceData = new ArrayList<Float>();
 
-    private LocationRequest mLocationRequest;
-    private GoogleApiClient mGoogleApiClient;
+    private FusedLocationProviderClient mFusedLocationClient;
+
 
     @Nullable
     @Override
@@ -118,7 +121,7 @@ public class WorkoutFragment extends Fragment {
     public void disconnected(){
         txt_connection_status.setText(R.string.failed_connection_status);
         //If user is measuring, pausing the measurement
-        if(workout_state != STATE_BEFORE_WORKOUT){
+        if(workout_state == STATE_WORKING_OUT || workout_state == STATE_TIME_ENDED){
             txt_connection_status.setText(R.string.lost_connection);
             Utils.vibrate(getContext(), VIBRATE_DURATION_CONNECTION_LOST);
             setState(STATE_PAUSED);
@@ -241,6 +244,10 @@ public class WorkoutFragment extends Fragment {
                     user.getPulseZone()
             );
 
+            User.addWorkoutData(getContext(), workout, true);
+
+
+
             setState(STATE_BEFORE_WORKOUT);
             ViewPager parentViewPager = getActivity().findViewById(R.id.viewpager);
             ViewPagerAdapter adapter = (ViewPagerAdapter) parentViewPager.getAdapter();
@@ -255,6 +262,10 @@ public class WorkoutFragment extends Fragment {
     private View.OnClickListener startTrainingButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+
+            //todo: check if permission is granted and gps is on
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
+
             //if device is connected
             if(BluetoothGattService.isGattDeviceConnected){
                 setState(STATE_WORKING_OUT);
@@ -345,26 +356,16 @@ public class WorkoutFragment extends Fragment {
         }
     }
 
-    private GoogleApiClient.ConnectionCallbacks locationListener = new GoogleApiClient.ConnectionCallbacks() {
-
+    private LocationCallback mLocationCallback = new LocationCallback() {
         @Override
-        public void onConnected(@Nullable Bundle bundle) {
-            isLocationListeningEnabled = true;
-        }
-
-        @Override
-        public void onConnectionSuspended(int i) {
-            isLocationListeningEnabled = false;
-        }
-
+        public void onLocationResult(LocationResult locationResult) {
+            Location location = locationResult.getLastLocation();
+            route.add(new LatLng(location.getLatitude(), location.getLongitude()));
+            paceData.add(location.getSpeed());
+            Log.i("TEST", "latitude: " + location.getLatitude() + " longtitude: " + location.getLongitude() + " speed: " + location.getSpeed());
+        };
     };
 
-    private GoogleApiClient.OnConnectionFailedListener failedLocationListener = new GoogleApiClient.OnConnectionFailedListener() {
-        @Override
-        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-            isLocationListeningEnabled = false;
-        }
-    };
 
     private void startLocationListener() {
         if(isLocationListeningEnabled){
@@ -373,33 +374,30 @@ public class WorkoutFragment extends Fragment {
 
         isLocationListeningEnabled = true;
 
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(8000);
+        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
         mLocationRequest.setFastestInterval(5000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(locationListener)
-                .addOnConnectionFailedListener(failedLocationListener)
-                .build();
+
+        //noinspection MissingPermission
+        mFusedLocationClient.requestLocationUpdates(mLocationRequest,
+                                                    mLocationCallback,
+                                                    null /* Looper */);
+
     }
 
     private void pauseLocationListener(){
         if(!isLocationListeningEnabled){
             return;
         }
-        SmartLocation.with(getContext()).location().stop();
+        mFusedLocationClient.removeLocationUpdates(mLocationCallback);
         isLocationListeningEnabled = false;
     }
 
     private void stopLocationListener(){
-        if(!isLocationListeningEnabled){
-            return;
-        }
+        pauseLocationListener();
         route.clear();
-        SmartLocation.with(getContext()).location().stop();
-        isLocationListeningEnabled = false;
     }
 
     public void onMeasurement(int bpm){

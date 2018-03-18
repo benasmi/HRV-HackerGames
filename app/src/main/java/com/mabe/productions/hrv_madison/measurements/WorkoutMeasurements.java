@@ -22,7 +22,7 @@ public class WorkoutMeasurements {
     private float average_pace;
     private float average_bpm;
     private int[] bpm_data;
-    private float[] pace_data;
+    private float[] pace_data; //in meters/second
     private LatLng[] route;
     private float calories_burned;
     private int pulse_zone;

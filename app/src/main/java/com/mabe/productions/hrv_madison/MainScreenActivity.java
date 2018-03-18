@@ -174,7 +174,7 @@ public class MainScreenActivity extends AppCompatActivity {
 
                 case BluetoothGattService.ACTION_RECEIVING_DATA:
 
-                    Log.i("TEST", "ACTION_RECEIVING_DATA");
+                    //Log.i("TEST", "ACTION_RECEIVING_DATA");
 
                     int intervals[] = intent.getExtras().getIntArray("RR_intervals");
                     int bpm = intent.getExtras().getInt("BPM");

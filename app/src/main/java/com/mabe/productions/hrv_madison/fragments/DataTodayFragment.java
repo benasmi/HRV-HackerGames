@@ -28,6 +28,7 @@ import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
+import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
 import org.w3c.dom.Text;
 
@@ -174,12 +175,12 @@ public class DataTodayFragment extends Fragment {
             }
 
 
-            for(int i = 0; i < user.getLastWorkout().getPace_data().length; i++){
-                Log.i("TEST", "pace: " + String.valueOf(user.getLastWorkout().getPace_data()[i]));
-            }
+        }
 
-            Log.i("TEST", "success? : " + success);
+        WorkoutMeasurements workout = user.getLastWorkout();
 
+        if(workout != null){
+            //todo: populate views with data
         }
 
         bpm_line_chart.animateY(2000, Easing.EasingOption.EaseInOutSine);
