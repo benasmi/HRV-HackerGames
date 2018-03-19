@@ -29,6 +29,9 @@
             </intent-filter>
 
         </activity>
+
+
+
         <activity
             android:name=".MainScreenActivity"
             android:screenOrientation="portrait"
@@ -88,6 +91,12 @@
 
 
         </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDvZJ_zkfNX-Gg8Ep-JgpRmde7n0I54QoM"/>
+
+
     </application>
 
 </manifest>

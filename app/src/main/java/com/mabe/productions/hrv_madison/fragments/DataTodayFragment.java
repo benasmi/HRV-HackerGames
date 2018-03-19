@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,13 +25,21 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -65,7 +74,7 @@ public class DataTodayFragment extends Fragment {
     private PieChart health_index_chart;
 
 
-
+    //bpm cardview
     private LineChart bpm_line_chart;
     private CardView bpm_card;
     private TextView bpm_card_txt_bpm;
@@ -96,6 +105,10 @@ public class DataTodayFragment extends Fragment {
     private ImageView img_positively_excited;
     private int STATE_FEELING = 2;
 
+    //Workout route cardview
+    private CardView cardview_route;
+    private SupportMapFragment map_fragment;
+    private GoogleMap googlemap_route; //We may need this one in the future
 
     public DataTodayFragment() {
         // Required empty public constructor
@@ -177,68 +190,67 @@ public class DataTodayFragment extends Fragment {
 
         }
 
-        WorkoutMeasurements workout = user.getLastWorkout();
+        final WorkoutMeasurements workout = user.getLastWorkout();
 
         if(workout != null){
             //todo: populate views with data
+//            if(getArguments() == null){
+//                Log.i("TEST", "arguments null");
+//            }
+//
+//            if(map_fragment == null){
+//                Log.i("TEST", "map fragment null");
+//            }
+            map_fragment.onCreate(getArguments());
+            map_fragment.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    DataTodayFragment.this.googlemap_route = googleMap;
+                    //Instantiates a new Polyline object and adds points to define a rectangle
+                    PolylineOptions lineOptions = new PolylineOptions()
+                            .width(5)
+                            .color(getResources().getColor(R.color.colorAccent))
+                            .geodesic(false);
+
+                    //This will zoom the map to our polyline
+                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+                    for(LatLng point : workout.getRoute()){
+                        lineOptions.add(point);
+                        builder.include(point);
+                    }
+                    googleMap.addPolyline(lineOptions);
+
+                    LatLngBounds bounds = builder.build();
+                    final CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 50);
+                    googlemap_route.animateCamera(cu);
+
+                }
+            });
+
         }
 
         bpm_line_chart.animateY(2000, Easing.EasingOption.EaseInOutSine);
 
-//        reccomendation_txt_yesterday_hrv.setText(String.valueOf(user.getYesterdayHrv()));
-//        reccomendation_txt_today_hrv.setText(String.valueOf(user.getCurrentHrv()));
-//        reccomendation_cardview.setVisibility(View.VISIBLE);
-//        reccomendation_status_arrow.setVisibility(View.VISIBLE);
-//        reccomendation_status_arrow.setRotation(0);
-//
-//        switch (user.getProgramUpdateState()){
-//            case User.PROGRAM_STATE_DOWNGRADED:
-//                reccomendation_status_arrow.setRotation(180);
-//                reccomendation_status_arrow.setImageResource(R.drawable.ic_arrow_down);
-//                reccomendation_txt_explanation.setText(R.string.program_downgraded);
-//                reccomendation_status_circle.setImageResource(R.drawable.hrv_circle_downgraded);
-//                reccomendation_txt_yesterday_hrv.setTextColor(Color.parseColor("#e74c3c"));
-//                reccomendation_txt_today_hrv.setTextColor(Color.parseColor("#e74c3c"));
-//                break;
-//            case User.PROGRAM_STATE_UPGRADED:
-//
-//                reccomendation_status_arrow.setImageResource(R.drawable.ic_arrow_up);
-//                reccomendation_status_circle.setImageResource(R.drawable.hrv_circle_upgraded);
-//                reccomendation_txt_today_hrv.setTextColor(Color.parseColor("#2ecc71"));
-//                reccomendation_txt_yesterday_hrv.setTextColor(Color.parseColor("#2ecc71"));
-//                reccomendation_txt_explanation.setText(R.string.program_upgraded);
-//                break;
-//            case User.PROGRAM_STATE_UNCHANGED:
-//                reccomendation_status_arrow.setVisibility(View.GONE);
-//                reccomendation_status_circle.setImageResource(R.drawable.hrv_circle_unchanged);
-//                reccomendation_txt_today_hrv.setTextColor(Color.WHITE);
-//                reccomendation_txt_yesterday_hrv.setTextColor(Color.WHITE);
-//                reccomendation_txt_explanation.setText(R.string.program_unchanged);
-//                break;
-//
-//            default:
-//                reccomendation_cardview.setVisibility(View.GONE);
-//                break;
-//        }
-
     }
+
 
     private void initializeViews(View view){
 
         //Frequency PieChart
-        freq_card = (CardView)  view.findViewById(R.id.frequency_card);
-        freq_card_txt_freq_band = (TextView) view.findViewById(R.id.frequency_bands_text_view);
-        freq_card_txt_freq_band_date  = (TextView) view.findViewById(R.id.frequency_bands_measurement_date);
-        freq_card_txt_after_this_measure = (TextView) view.findViewById(R.id.freq_card_txt_after_this_measure);
-        freq_card_txt_hf_after_measurament = (TextView) view.findViewById(R.id.freq_card_txt_hf_after_measurement);
-        freq_card_txt_lf_after_measurement = (TextView) view.findViewById(R.id.freq_card_txt_lf_after_measurement);
-        freq_card_txt_vlf_after_measurement = (TextView) view.findViewById(R.id.freq_card_txt_vlf_after_measurement);
-        freq_card_txt_norm = (TextView) view.findViewById(R.id.freq_card_txt_norm);
-        freq_card_txt_norm_hf = (TextView) view.findViewById(R.id.freq_card_norm_hf);
-        freq_card_txt_norm_vhf = (TextView) view.findViewById(R.id.freq_card_norm_lf);
-        freq_card_txt_norm_lf = (TextView) view.findViewById(R.id.freq_card_norm_vlf);
-        frequency_chart = (PieChart) view.findViewById(R.id.chart_frequencies);
-        health_index_chart = (PieChart) view.findViewById(R.id.chart_health_index);
+        freq_card = view.findViewById(R.id.frequency_card);
+        freq_card_txt_freq_band = view.findViewById(R.id.frequency_bands_text_view);
+        freq_card_txt_freq_band_date  = view.findViewById(R.id.frequency_bands_measurement_date);
+        freq_card_txt_after_this_measure = view.findViewById(R.id.freq_card_txt_after_this_measure);
+        freq_card_txt_hf_after_measurament = view.findViewById(R.id.freq_card_txt_hf_after_measurement);
+        freq_card_txt_lf_after_measurement = view.findViewById(R.id.freq_card_txt_lf_after_measurement);
+        freq_card_txt_vlf_after_measurement = view.findViewById(R.id.freq_card_txt_vlf_after_measurement);
+        freq_card_txt_norm = view.findViewById(R.id.freq_card_txt_norm);
+        freq_card_txt_norm_hf = view.findViewById(R.id.freq_card_norm_hf);
+        freq_card_txt_norm_vhf = view.findViewById(R.id.freq_card_norm_lf);
+        freq_card_txt_norm_lf = view.findViewById(R.id.freq_card_norm_vlf);
+        frequency_chart = view.findViewById(R.id.chart_frequencies);
+        health_index_chart = view.findViewById(R.id.chart_health_index);
 
         //HRV PieChart
         hrv_card_txt_hrv = (TextView) view.findViewById(R.id.health_index_text_view);
@@ -278,6 +290,18 @@ public class DataTodayFragment extends Fragment {
         img_neutral = view.findViewById(R.id.img_neutral);
         img_positively_mellow = view.findViewById(R.id.img_positively_mellow);
         img_positively_excited = view.findViewById(R.id.img_positively_excited);
+
+        //Maps cardview
+        //todo: override onPause() onResume() and onDestroy() methods and call map_fragment.onPause(), map_fragment.onResume(), map_fragment.onDestroy() accordingly.
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        CameraPosition cp = new CameraPosition.Builder()
+                .target(new LatLng(50,50)) //Just a random starting point. Will be changed in reloadData()
+                .zoom(1f)
+                .build();
+        map_fragment = SupportMapFragment.newInstance(new GoogleMapOptions().camera(cp));
+        fm.beginTransaction().replace(R.id.workout_route, map_fragment).commit();
+
+        cardview_route = view.findViewById(R.id.cardview_route);
 
         recommendation_card.setTranslationY( Utils.getScreenHeight(getContext()));
         recommendation_card.animate()

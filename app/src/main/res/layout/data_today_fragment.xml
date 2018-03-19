@@ -867,8 +867,33 @@
 
 
 
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            card_view:cardElevation="4dp"
+            card_view:cardMaxElevation="6dp"
+            android:layout_margin="10dp"
+            android:id="@+id/cardview_route"
+            card_view:cardCornerRadius="5dp"
+            card_view:contentPadding="5dp"
+            card_view:cardBackgroundColor="#2c3e50"
+            >
+
+            <fragment
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/workout_route"
+                class="com.google.android.gms.maps.SupportMapFragment"></fragment>
+
+
+
+            </android.support.v7.widget.CardView>
+
 
     </LinearLayout>
+
+
 
 
 
