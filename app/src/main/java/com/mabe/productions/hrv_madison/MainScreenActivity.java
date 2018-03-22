@@ -72,7 +72,7 @@ public class MainScreenActivity extends AppCompatActivity {
     private void setupBottomBar(){
         AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.measure, R.drawable.ic_stopwatch,R.color.colorAccent);
         AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.today, R.drawable.ic_circle_chart, R.color.colorAccent);
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.history, R.drawable.ic_sand_clock, R.color.colorAccent);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.workout, R.drawable.ic_sand_clock, R.color.colorAccent);
 
         viewpager.setOffscreenPageLimit(4);
 

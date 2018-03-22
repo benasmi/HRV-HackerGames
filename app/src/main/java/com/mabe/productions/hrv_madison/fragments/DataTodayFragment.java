@@ -6,13 +6,18 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
@@ -38,6 +43,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
+import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
@@ -110,6 +116,13 @@ public class DataTodayFragment extends Fragment {
     private SupportMapFragment map_fragment;
     private GoogleMap googlemap_route; //We may need this one in the future
 
+    //First time layout
+    private LinearLayout first_time_layout;
+    private AppCompatButton first_time_btn;
+    private TextView first_time_greeting;
+
+    private boolean isFirstTime;
+
     public DataTodayFragment() {
         // Required empty public constructor
     }
@@ -133,10 +146,22 @@ public class DataTodayFragment extends Fragment {
 
     public void updateData(){
 
+        //Checking if it's the first time
+        isFirstTime = Utils.readFromSharedPrefs_string(getContext(), FeedReaderDbHelper.FIELD_LAST_MEASUREMENT_DATE, FeedReaderDbHelper.SHARED_PREFS_USER_DATA).equals("") ? true : false;
+
+        if(isFirstTime){
+            setMeasurementCardViewsVisibility(false);
+            setWorkoutCardViewsVisibility(false);
+        }else{
+            first_time_layout.setVisibility(View.GONE);
+        }
+
         User user = User.getUser(getContext());
 
         Measurement measurement = user.getLastMeasurement();
         if(measurement!=null){
+            setMeasurementCardViewsVisibility(true);
+
             int bpmValues[] = measurement.getBpm_data();
             int rmssdValues[] = measurement.getRmssd_data();
 
@@ -193,6 +218,7 @@ public class DataTodayFragment extends Fragment {
         final WorkoutMeasurements workout = user.getLastWorkout();
 
         if(workout != null){
+            //setWorkoutCardViewsVisibility(false);
             //todo: populate views with data
 //            if(getArguments() == null){
 //                Log.i("TEST", "arguments null");
@@ -201,37 +227,72 @@ public class DataTodayFragment extends Fragment {
 //            if(map_fragment == null){
 //                Log.i("TEST", "map fragment null");
 //            }
-            map_fragment.onCreate(getArguments());
-            map_fragment.getMapAsync(new OnMapReadyCallback() {
-                @Override
-                public void onMapReady(GoogleMap googleMap) {
-                    DataTodayFragment.this.googlemap_route = googleMap;
-                    //Instantiates a new Polyline object and adds points to define a rectangle
-                    PolylineOptions lineOptions = new PolylineOptions()
-                            .width(5)
-                            .color(getResources().getColor(R.color.colorAccent))
-                            .geodesic(false);
+            /*
+            if(googlemap_route == null){
+                map_fragment.onCreate(getArguments());
+                map_fragment.getMapAsync(new OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(GoogleMap googleMap) {
+                        DataTodayFragment.this.googlemap_route = googleMap;
+                        map_fragment.getView().setClickable(false);
+                        //Instantiates a new Polyline object and adds points to define a rectangle
+                        PolylineOptions lineOptions = new PolylineOptions()
+                                .width(5)
+                                .color(getResources().getColor(R.color.colorAccent))
+                                .geodesic(false);
 
-                    //This will zoom the map to our polyline
-                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                        //This will zoom the map to our polyline
+                        LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-                    for(LatLng point : workout.getRoute()){
-                        lineOptions.add(point);
-                        builder.include(point);
+                        for(LatLng point : workout.getRoute()){
+                            lineOptions.add(point);
+                            builder.include(point);
+                        }
+                        googlemap_route.addPolyline(lineOptions);
+
+                        LatLngBounds bounds = builder.build();
+                        final CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 50);
+                        googlemap_route.animateCamera(cu);
+
                     }
-                    googleMap.addPolyline(lineOptions);
+                });
+            }else{
+                //Instantiates a new Polyline object and adds points to define a rectangle
+                PolylineOptions lineOptions = new PolylineOptions()
+                        .width(5)
+                        .color(getResources().getColor(R.color.colorAccent))
+                        .geodesic(false);
 
-                    LatLngBounds bounds = builder.build();
-                    final CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 50);
-                    googlemap_route.animateCamera(cu);
+                //This will zoom the map to our polyline
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
+                for(LatLng point : workout.getRoute()){
+                    lineOptions.add(point);
+                    builder.include(point);
                 }
-            });
+                googlemap_route.addPolyline(lineOptions);
 
+                LatLngBounds bounds = builder.build();
+                final CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 50);
+                googlemap_route.animateCamera(cu);
+            }
+
+        */
         }
 
         bpm_line_chart.animateY(2000, Easing.EasingOption.EaseInOutSine);
 
+    }
+
+    private void setMeasurementCardViewsVisibility(boolean visibility){
+        recommendation_card.setVisibility(visibility ? View.VISIBLE : View.GONE);
+        freq_card.setVisibility(visibility ? View.VISIBLE : View.GONE);
+        bpm_card.setVisibility(visibility ? View.VISIBLE : View.GONE);
+        feeling_cardview.setVisibility(visibility ? View.VISIBLE : View.GONE);
+    }
+    private void setWorkoutCardViewsVisibility(boolean visibility){
+
+        cardview_route.setVisibility(visibility ? View.VISIBLE : View.GONE);
     }
 
 
@@ -293,15 +354,22 @@ public class DataTodayFragment extends Fragment {
 
         //Maps cardview
         //todo: override onPause() onResume() and onDestroy() methods and call map_fragment.onPause(), map_fragment.onResume(), map_fragment.onDestroy() accordingly.
-        FragmentManager fm = getActivity().getSupportFragmentManager();
+/*        FragmentManager fm = getActivity().getSupportFragmentManager();
         CameraPosition cp = new CameraPosition.Builder()
-                .target(new LatLng(50,50)) //Just a random starting point. Will be changed in reloadData()
+                .target(new LatLng(54.6,25.27)) //Just a random starting point. Will be changed in reloadData()
                 .zoom(1f)
                 .build();
-        map_fragment = SupportMapFragment.newInstance(new GoogleMapOptions().camera(cp));
-        fm.beginTransaction().replace(R.id.workout_route, map_fragment).commit();
+*/        //map_fragment = SupportMapFragment.newInstance(new GoogleMapOptions().camera(cp));
+        //fm.beginTransaction().replace(R.id.workout_route, map_fragment).commit();
 
         cardview_route = view.findViewById(R.id.cardview_route);
+
+        feeling_cardview.setTranslationY( Utils.getScreenHeight(getContext()));
+        feeling_cardview.animate()
+                .translationY(0)
+                .setInterpolator(new DecelerateInterpolator(3.f))
+                .setDuration(1500)
+                .start();
 
         recommendation_card.setTranslationY( Utils.getScreenHeight(getContext()));
         recommendation_card.animate()
@@ -310,12 +378,23 @@ public class DataTodayFragment extends Fragment {
                 .setDuration(1500)
                 .start();
 
-        bpm_card.setTranslationY( Utils.getScreenHeight(getContext()));
-        bpm_card.animate()
-                .translationY(0)
-                .setInterpolator(new DecelerateInterpolator(3.f))
-                .setDuration(1500)
-                .start();
+        //First time cardview
+        first_time_btn = view.findViewById(R.id.first_time_measure_button);
+        first_time_layout = view.findViewById(R.id.first_time_layout);
+        first_time_greeting = view.findViewById(R.id.first_time_greeting);
+        first_time_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.setViewpagerTab(getActivity(), 0);
+            }
+        });
+        Animation anim_btn = AnimationUtils.loadAnimation(getContext(), R.anim.top_to_bottom_delay);
+        Animation anim_txt = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
+        first_time_btn.startAnimation(anim_btn);
+        first_time_greeting.startAnimation(anim_txt);
+
+
+
 
     }
 
@@ -385,6 +464,9 @@ public class DataTodayFragment extends Fragment {
         reccomendation_txt_duration.setTypeface(verdana);
         reccomendation_txt_pulse_zone.setTypeface(verdana);
         reccomendation_txt_verbal_recommendation.setTypeface(verdana);
+
+        //First time cardview
+        first_time_greeting.setTypeface(verdana);
 
     }
 

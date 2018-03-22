@@ -106,6 +106,7 @@
     <string name="do_you_really_want_to_stop_training_prompt">Ar tikrai norite baigti treniruotę?</string>
     <string name="no">Ne</string>
     <string name="end">Baigti</string>
+    <string name="workout">Workout</string>
 
 </resources>
 

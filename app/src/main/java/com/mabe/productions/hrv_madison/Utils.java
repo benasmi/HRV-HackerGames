@@ -1,5 +1,6 @@
 package com.mabe.productions.hrv_madison;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,6 +13,7 @@ import java.util.GregorianCalendar;
 import android.os.Build;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.view.Window;
 import android.view.WindowManager;
@@ -21,6 +23,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.model.LatLng;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
+import com.mabe.productions.hrv_madison.fragments.ViewPagerAdapter;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -186,6 +189,7 @@ public class Utils {
         SharedPreferences sharedPreferences = context.getSharedPreferences(sharedPref,Context.MODE_PRIVATE);
         return sharedPreferences.getInt(holder, 0);
     }
+
     public static boolean readFromSharedPrefs_bool(Context context, String holder, String sharedPref){
         SharedPreferences sharedPreferences = context.getSharedPreferences(sharedPref,Context.MODE_PRIVATE);
         return sharedPreferences.getBoolean(holder, false);
@@ -224,6 +228,13 @@ public class Utils {
             newArray[i] = arrayList.get(i);
         }
         return newArray;
+    }
+
+    public static void setViewpagerTab(Activity activity, int itemIndex){
+        ViewPager parentViewPager = activity.findViewById(R.id.viewpager);
+        ViewPagerAdapter adapter = (ViewPagerAdapter) parentViewPager.getAdapter();
+        parentViewPager.setCurrentItem(itemIndex);
+
     }
 
 

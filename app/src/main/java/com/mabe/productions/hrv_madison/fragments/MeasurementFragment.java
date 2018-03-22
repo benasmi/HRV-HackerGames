@@ -220,6 +220,7 @@ public class MeasurementFragment extends Fragment {
 
                         //todo: use static viewpager variable
                         //Switching to today's tab and updating data
+
                         ViewPager parentViewPager = getActivity().findViewById(R.id.viewpager);
                         ViewPagerAdapter adapter = (ViewPagerAdapter) parentViewPager.getAdapter();
                         adapter.dataTodayFragment.updateData();

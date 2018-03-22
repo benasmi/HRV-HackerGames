@@ -11,6 +11,42 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_margin="10dp"
+            android:id="@+id/first_time_layout"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hey!\n Since you are new here, you need to make your first measurement to get started!"
+                android:gravity="center"
+                android:textSize="17dp"
+                android:id="@+id/first_time_greeting"
+                android:textColor="#FFFFFF"
+                />
+
+            <android.support.v7.widget.AppCompatButton
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:textSize="15dp"
+                android:text="Measure"
+                android:textColor="#FFF"
+                android:textAllCaps="false"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/login_button_gradient"
+                android:layout_margin="10dp"
+                android:id="@+id/first_time_measure_button"
+
+                />
+
+        </LinearLayout>
+
 
         <!-- frequency card view !-->
         <android.support.v7.widget.CardView
@@ -871,6 +907,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
+            android:visibility="gone"
             card_view:cardElevation="4dp"
             card_view:cardMaxElevation="6dp"
             android:layout_margin="10dp"

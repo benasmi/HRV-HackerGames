@@ -22,6 +22,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -104,6 +106,10 @@ public class WorkoutFragment extends Fragment {
 
     private FusedLocationProviderClient mFusedLocationClient;
 
+    private Animation anim_left_to_right;
+    private Animation anim_right_to_left;
+    private Animation anim_bottom_top_delay;
+    private Animation anim_top_to_bottom_delay;
 
     @Nullable
     @Override
@@ -113,6 +119,7 @@ public class WorkoutFragment extends Fragment {
         View view = inflater.inflate(R.layout.workout_fragment, container, false);
 
         initializeViews(view);
+        initializeAnimations();
         setState(STATE_BEFORE_WORKOUT);
 
         return view;
@@ -145,6 +152,24 @@ public class WorkoutFragment extends Fragment {
 
         btn_toggle = rootView.findViewById(R.id.button_start_workout);
     }
+
+    private void initializeAnimations(){
+        anim_left_to_right = AnimationUtils.loadAnimation(getContext(), R.anim.left_to_right);
+        anim_right_to_left = AnimationUtils.loadAnimation(getContext(), R.anim.right_to_left);
+        anim_bottom_top_delay = AnimationUtils.loadAnimation(getContext(), R.anim.bottom_to_top_delay);
+        anim_top_to_bottom_delay = AnimationUtils.loadAnimation(getContext(), R.anim.top_to_bottom_delay);
+    }
+
+    private void startedWorkoutAnimations(){
+        img_stop.startAnimation(anim_left_to_right);
+        img_pause.startAnimation(anim_right_to_left);
+        layout_workout_progress.startAnimation(anim_top_to_bottom_delay);
+    }
+
+    private void timeEndedAnimations(){
+        btn_toggle.startAnimation(anim_top_to_bottom_delay);
+    }
+
 
     private void autoConnectDevice(){
         String MAC_adress = Utils.readFromSharedPrefs_string(getContext(), FeedReaderDbHelper.BT_FIELD_MAC_ADRESS, FeedReaderDbHelper.SHARED_PREFS_DEVICES);
@@ -307,6 +332,9 @@ public class WorkoutFragment extends Fragment {
                 break;
 
             case STATE_WORKING_OUT:
+                if(previous_state == STATE_BEFORE_WORKOUT){
+                    startedWorkoutAnimations();
+                }
 
                 startLocationListener();
 
@@ -333,7 +361,9 @@ public class WorkoutFragment extends Fragment {
                 break;
 
             case STATE_TIME_ENDED:
-
+                if(previous_state == STATE_WORKING_OUT){
+                    timeEndedAnimations();
+                }
                 startLocationListener();
 
                 progressbar_duration.setProgress(100f);
