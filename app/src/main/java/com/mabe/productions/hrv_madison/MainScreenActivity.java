@@ -49,6 +49,7 @@ public class MainScreenActivity extends AppCompatActivity {
 
     private AHBottomNavigation bottomNavigation;
     private ViewPager viewpager;
+    public static User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +57,14 @@ public class MainScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_screen);
         Utils.changeNotifBarColor(Color.parseColor("#2c3e50"),getWindow());
 
+        user =  User.getUser(this);
+
         initializeViews();
         setupBottomBar();
         setFonts();
         registerReceiver();
+
+
 
         //Setting toolbar text
         String deviceName = Utils.readFromSharedPrefs_string(this, FeedReaderDbHelper.BT_FIELD_DEVICE_NAME, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);

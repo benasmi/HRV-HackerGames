@@ -50,6 +50,7 @@ public class IntroInitialInfoBirthday extends AppCompatActivity {
         btn_continue = (Button) findViewById(R.id.initial_btn_continue_birthday);
         txt_when_is_your_birthday = (TextView) findViewById(R.id.txt_when_is_your_birthday);
 
+        picker_date.updateDate(1991, 12, 26);
 
         picker_date.startAnimation(anim_picker_date);
         btn_continue.startAnimation(anim_btn_continue);

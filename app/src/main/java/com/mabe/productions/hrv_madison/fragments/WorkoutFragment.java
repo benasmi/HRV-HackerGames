@@ -47,6 +47,7 @@ import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.bluetooth.BluetoothGattService;
 import com.mabe.productions.hrv_madison.bluetooth.LeDevicesDialog;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
+import com.mabe.productions.hrv_madison.measurements.BPM;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
 import java.util.ArrayList;
@@ -79,10 +80,7 @@ public class WorkoutFragment extends Fragment {
     private LinearLayout layout_workout_progress;
 
     private Timer timer = null;
-
-
     public boolean shouldStartWorkoutImmediately = false;
-
     private static final long TIMER_STEP = 1000;
 
     public static final int STATE_BEFORE_WORKOUT = 0;
@@ -91,17 +89,18 @@ public class WorkoutFragment extends Fragment {
     public static final int STATE_PAUSED = 3;
 
     private long timePassed = 0;
+    private float calories_burned = 0;
     private long userSpecifiedWorkoutDuration = 0;
     private boolean isTimerRunning = false;
 
     int workout_state = STATE_BEFORE_WORKOUT;
     private boolean isLocationListeningEnabled= false;
 
-    private float calories_burned = 0;
+
 
 
     private ArrayList<LatLng> route = new ArrayList<>();
-    private ArrayList<Integer> bpmData = new ArrayList<Integer>();
+    private ArrayList<Integer> bpmArrayList = new ArrayList<Integer>();
     private ArrayList<Float> paceData = new ArrayList<Float>();
 
     private FusedLocationProviderClient mFusedLocationClient;
@@ -255,18 +254,18 @@ public class WorkoutFragment extends Fragment {
         @Override
         public void onClick(View v) {
 
-            User user = User.getUser(getContext());
+
 
             WorkoutMeasurements workout = new WorkoutMeasurements(
                     Calendar.getInstance().getTime(),
                     userSpecifiedWorkoutDuration,
                     0, /*todo: calculate */
                     0,
-                    Utils.convertIntArrayListToArray(bpmData),
+                    Utils.convertIntArrayListToArray(bpmArrayList),
                     Utils.convertFloatArrayListToArray(paceData),
                     Utils.convertLatLngArrayListToArray(route),
                     calories_burned,
-                    user.getPulseZone()
+                    MainScreenActivity.user.getPulseZone()
             );
 
             User.addWorkoutData(getContext(), workout, true);
@@ -310,7 +309,8 @@ public class WorkoutFragment extends Fragment {
         switch(workout_state){
 
             case STATE_BEFORE_WORKOUT:
-                bpmData.clear();
+
+                bpmArrayList.clear();
                 btn_toggle.setVisibility(View.VISIBLE);
                 btn_toggle.setText(R.string.start_training);
                 btn_toggle.setOnClickListener(startTrainingButtonListener);
@@ -392,6 +392,7 @@ public class WorkoutFragment extends Fragment {
             Location location = locationResult.getLastLocation();
             route.add(new LatLng(location.getLatitude(), location.getLongitude()));
             paceData.add(location.getSpeed());
+            txt_current_pace.setText(String.valueOf(location.getSpeed()));
             Log.i("TEST", "latitude: " + location.getLatitude() + " longtitude: " + location.getLongitude() + " speed: " + location.getSpeed());
         };
     };
@@ -433,7 +434,16 @@ public class WorkoutFragment extends Fragment {
     public void onMeasurement(int bpm){
         txt_bpm.setText(String.valueOf(bpm));
         if(workout_state == STATE_WORKING_OUT || workout_state == STATE_TIME_ENDED){
-            bpmData.add(bpm);
+            bpmArrayList.add(bpm);
+            int gender = MainScreenActivity.user.getGender();
+            int age = Utils.getAgeFromDate(MainScreenActivity.user.getBirthday());
+            //todo: change weight to int
+            int weight = (int) MainScreenActivity.user.getWeight();
+
+            calories_burned = calories_burned + calculateCalories(gender,age,weight, bpm, 1f/60f);
+
+
+            txt_calories_burned.setText(String.valueOf(calories_burned));
         }
 
         //todo: calculate calories and stuff. Also, will we calculate burnt calories using bpm, or gps?
@@ -578,6 +588,20 @@ public class WorkoutFragment extends Fragment {
             }
         });
     }
+
+
+
+    private float calculateCalories(int gender, int age, int weight, int heartRate, float timePassed){
+
+        float calories = (float) (((age* (gender == 0 ? 0.2017 : 0.074)
+                - (weight * (gender == 0 ? 0.09036 : 0.05741))
+                + (heartRate * (gender == 0 ? 0.6309 : 0.4472))
+                - (gender == 0 ? 55.0969 : 20.4022)))*timePassed/4.184);
+
+        Log.i("TEST", "gender: " + gender + "age: " + age + "weight: " + weight + "CALORIES: " + String.valueOf(calories));
+        return calories;
+    }
+
 
 
 

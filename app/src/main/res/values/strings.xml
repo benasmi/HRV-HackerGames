@@ -5,13 +5,13 @@
     <string name="log_in">Login</string>
     <string name="no_account_click_prompt">Don\'t have an account? Click here.</string>
     <string name="proceed_without_account">Continue without an account</string>
-    <string name="health_index">Savijautos indeksas</string>
-    <string name="just_now">Ką tik</string>
+    <string name="health_index">Health index</string>
+    <string name="just_now">Just now</string>
     <string name="time_ago">Just now!</string> <!--  Use this with a plural from plurals.xml!-->
-    <string name="yesterday">Vakar</string>
-    <string name="heart_rate">Širdies pulsas</string>
-    <string name="average">Vidutinis: %s</string>
-    <string name="standart">Norma: %s</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="heart_rate">Heart rate</string>
+    <string name="average">Average: %s</string>
+    <string name="standart">Baseline: %s</string>
     <string name="HRV">HRV</string>
     <string name="hrv_frequency_bands">HRV Frequency-Domain results</string>
     <string name="after_this_measurement">After this measurement</string>
@@ -27,10 +27,10 @@
     <string name="measure">Measure</string>
 
     <string name="training_intensity_0">Low (Ex. Walking)</string>
-    <string name="training_intensity_1">Nesunkus (Pvz. rytietiška mankšta)</string>
-    <string name="training_intensity_2">Vidutinis (Pvz. važiavimas dviračiu)</string>
-    <string name="training_intensity_3">Sunkus (Pvz. krepšinis)</string>
-    <string name="training_intensity_4">Labai sunkus (Pvz. plaukimas)</string>
+    <string name="training_intensity_1">Easy (Ex. Eastern excercise)</string>
+    <string name="training_intensity_2">Medium (Ex. Riding a bike)</string>
+    <string name="training_intensity_3">Hard (Ex. Basketball)</string>
+    <string name="training_intensity_4">Extremely hard (Ex. Swimming)</string>
 
     <string name="training_duration_0">Less then 10min</string>
     <string name="training_duration_1">10-20min</string>
@@ -38,20 +38,20 @@
     <string name="training_duration_3">More than 30min</string>
 
     <string name="training_frequency_0">Less than 1 time/month</string>
-    <string name="training_frequency_1">Keli kartai per mėn.</string>
-    <string name="training_frequency_2">1-2 kartai/savaitę</string>
-    <string name="training_frequency_3">3-5 kartai/savaitę</string>
-    <string name="training_frequency_4">6-7 kartai/savaitę</string>
+    <string name="training_frequency_1">Few times per month.</string>
+    <string name="training_frequency_2">1-2 times/week</string>
+    <string name="training_frequency_3">3-5 times/week</string>
+    <string name="training_frequency_4">6-7 times/week</string>
     <string name="no_device">No device</string>
-    <string name="measurement_is_over">Matavimas baigtas</string>
+    <string name="measurement_is_over">Measurement is done!</string>
     <string name="review_btn">Review</string>
     <string name="measure_btn">Measure</string>
-    <string name="failed_connection_status">Nepavyko prisijungti</string>
-    <string name="connecting_to">Jungiamasi prie</string>
-    <string name="already_measured_today_message">Jūs jau šiandien atlikote matavimus. Ankstesni šiandienos matavimai bus prarasti. Tęsti?</string>
-    <string name="please_wait">Palaukite!</string>
-    <string name="measuring">Matuojama...</string>
-    <string name="cancel">Atšaukti</string>
+    <string name="failed_connection_status">Unable to connect...</string>
+    <string name="connecting_to">Connecting to...</string>
+    <string name="already_measured_today_message">You have already measured today. Your data will be overwritten. Continue?</string>
+    <string name="please_wait">Please wait!</string>
+    <string name="measuring">Measuring...</string>
+    <string name="cancel">Cancel</string>
     <string name="title_activity_intro_initial_day_selection">IntroInitialDaySelection</string>
     <string name="choose_workout_days">Which days of the week can you do sports?</string>
     <string name="sunday">Sunday</string>
@@ -61,10 +61,10 @@
     <string name="wednesday">Wednesday</string>
     <string name="tuesday">Tuesday</string>
     <string name="monday">Monday</string>
-    <string name="please_select_gender">Prašome pasirinkti lytį!</string>
-    <string name="select_at_least_two_days">Prašome pasirinkti bent dvi dienas!</string>
+    <string name="please_select_gender">Please choose your gender!</string>
+    <string name="select_at_least_two_days">You have to select atleast two days!</string>
     <string name="how_long_can_you_work_out">How much time can you be active?</string>
-    <string name="weekly_program">Savaitės programa</string>
+    <string name="weekly_program">Weekly program</string>
 
     <!--<string name="todays_program">Šiandienos programa</string>-->
     <!--<string name="todays_program_subtext">Šiandien jums rekomenduojame</string>-->
@@ -102,10 +102,10 @@
     <string name="positively_excited">Positively excited</string>
     <string name="end_training">End training</string>
     <string name="start_training">Start training</string>
-    <string name="lost_connection">Prarastas ryšys</string>
-    <string name="do_you_really_want_to_stop_training_prompt">Ar tikrai norite baigti treniruotę?</string>
-    <string name="no">Ne</string>
-    <string name="end">Baigti</string>
+    <string name="lost_connection">Lost connection</string>
+    <string name="do_you_really_want_to_stop_training_prompt">Do you really want to finish your training?</string>
+    <string name="no">No</string>
+    <string name="end">Finish</string>
     <string name="workout">Workout</string>
 
 </resources>

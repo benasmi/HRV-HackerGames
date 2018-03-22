@@ -453,6 +453,8 @@ public class DataTodayFragment extends Fragment {
         bpm_line_chart.getAxisRight().setDrawGridLines(false);
         bpm_line_chart.setDescription(null);
         bpm_line_chart.getAxisLeft().setDrawLabels(true);
+        bpm_line_chart.getAxisLeft().setAxisMinimum(0);
+        bpm_line_chart.getAxisLeft().setAxisMaximum(200);
         bpm_line_chart.getAxisRight().setDrawLabels(false);
         bpm_line_chart.getXAxis().setDrawLabels(false);
         bpm_line_chart.setTouchEnabled(false);
