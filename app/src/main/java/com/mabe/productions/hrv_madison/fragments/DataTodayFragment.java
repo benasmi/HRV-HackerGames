@@ -5,8 +5,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -30,16 +28,8 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMapOptions;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
@@ -99,6 +89,7 @@ public class DataTodayFragment extends Fragment {
     private TextView reccomendation_txt_duration;
     private TextView reccomendation_txt_pulse_zone;
     private TextView reccomendation_txt_verbal_recommendation;
+    private ImageView reccomendation_img_arrow;
 
     //How do you feel? cardview
     private CardView feeling_cardview;
@@ -209,45 +200,16 @@ public class DataTodayFragment extends Fragment {
                     break;
             }
 
+
+            setReccomendationCardPercentage(user.getHrvChangePercentage());
             reccomendation_txt_duration.setText(String.valueOf((int) user.getWorkoutDuration()) + " " + getString(
-                                R.string.min));
-
-
-            switch(user.getProgramUpdateState()){
-
-                case User.PROGRAM_STATE_UPGRADED:
-
-                    int percentageIncrease = Math.round((user.getHrvChangePercentage() - 1)*100);
-                    reccomendation_txt_hrv_increase.setText("+ " + percentageIncrease + "%\nincrease" );
-                    reccomendation_txt_hrv_increase.setTextColor(Color.parseColor("#2ecc71"));
-                    reccomendation_txt_pulse_zone.setText(user.getPulseZone() + " pulse zone");
-
-                    break;
-
-                case User.PROGRAM_STATE_DOWNGRADED:
-
-                    int percentageDecrease = Math.round((1 - user.getHrvChangePercentage())*100);
-                    reccomendation_txt_hrv_increase.setText("+ " + percentageDecrease + "%\ndecrease" );
-                    reccomendation_txt_hrv_increase.setTextColor(Color.parseColor("#e74c3c"));
-                    reccomendation_txt_pulse_zone.setText(user.getPulseZone() + " pulse zone");
-
-                    break;
-
-                case User.PROGRAM_STATE_UNCHANGED:
-
-
-
-                    break;
-
-
-
-            }
-
-
-
-
+                    R.string.min));
+            reccomendation_txt_pulse_zone.setText(user.getPulseZone() + " pulse zone");
+            reccomendation_txt_verbal_recommendation.setText(user.getVerbalReccomendation());
+            Log.i("TEST", user.getYesterdayHrv() + " " + user.getCurrentHrv());
 
         }
+
 
         final WorkoutMeasurements workout = user.getLastWorkout();
 
@@ -318,6 +280,28 @@ public class DataTodayFragment extends Fragment {
 
     }
 
+    private void setReccomendationCardPercentage(float percentageChange){
+
+        if(percentageChange >= 1){
+            int percentageIncrease = Math.round((percentageChange - 1)*100);
+            reccomendation_txt_hrv_increase.setText("+ " + percentageIncrease + "%\nincrease" );
+            reccomendation_txt_hrv_increase.setTextColor(Color.parseColor("#2ecc71"));
+            reccomendation_img_arrow.setImageResource(R.drawable.ic_arrow_green);
+            reccomendation_img_arrow.setRotation(0f);
+            reccomendation_img_arrow.setImageResource(R.drawable.ic_arrow_green);
+            reccomendation_img_arrow.setRotation(0f);
+        }else if(percentageChange <= 1){
+            int percentageDecrease = Math.round((1 - percentageChange)*100);
+            reccomendation_txt_hrv_increase.setText("- " + percentageDecrease + "%\ndecrease" );
+            reccomendation_txt_hrv_increase.setTextColor(Color.parseColor("#e74c3c"));
+            reccomendation_img_arrow.setImageResource(R.drawable.ic_arrow_red);
+            reccomendation_img_arrow.setRotation(180f);
+            reccomendation_img_arrow.setImageResource(R.drawable.ic_arrow_red);
+            reccomendation_img_arrow.setRotation(180f);
+        }
+
+    }
+
     private void setMeasurementCardViewsVisibility(boolean visibility){
         recommendation_card.setVisibility(visibility ? View.VISIBLE : View.GONE);
         freq_card.setVisibility(visibility ? View.VISIBLE : View.GONE);
@@ -375,6 +359,7 @@ public class DataTodayFragment extends Fragment {
         reccomendation_txt_duration = view.findViewById(R.id.txt_duration_value);
         reccomendation_txt_pulse_zone = view.findViewById(R.id.txt_pulse_zone_value);
         reccomendation_txt_verbal_recommendation = view.findViewById(R.id.txt_verbal_recomendation);
+        reccomendation_img_arrow = view.findViewById(R.id.reccomendation_arrow_img);
 
         //Feeling cardview
         feeling_cardview = view.findViewById(R.id.feeling_card);
@@ -385,6 +370,7 @@ public class DataTodayFragment extends Fragment {
         img_neutral = view.findViewById(R.id.img_neutral);
         img_positively_mellow = view.findViewById(R.id.img_positively_mellow);
         img_positively_excited = view.findViewById(R.id.img_positively_excited);
+
 
         //Maps cardview
         //todo: override onPause() onResume() and onDestroy() methods and call map_fragment.onPause(), map_fragment.onResume(), map_fragment.onDestroy() accordingly.
@@ -426,6 +412,7 @@ public class DataTodayFragment extends Fragment {
         Animation anim_txt = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
         first_time_btn.startAnimation(anim_btn);
         first_time_greeting.startAnimation(anim_txt);
+
 
 
 

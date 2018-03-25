@@ -195,7 +195,8 @@
                             <ImageView
                                 android:layout_width="30dp"
                                 android:layout_height="match_parent"
-                                android:src="@drawable/ic_arrow_up"
+                                android:src="@drawable/ic_arrow_green"
+                                android:id="@+id/reccomendation_arrow_img"
                                 />
 
                             <TextView

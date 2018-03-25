@@ -40,6 +40,14 @@ public class User {
     public static final int MOOD_POSITIVELY_MELLOW = 4;
     public static final int MOOD_POSITIVELY_EXCITED = 5;
 
+    public static final float SIGNIFICANT_HRV_INCREASE = 1.3f;
+    public static final float MEDIOCRE_HRV_INCREASE = 1.15f;
+    public static final float MINIMAL_HRV_INCREASE = 1.05f;
+    public static final float MINIMAL_HRV_DECREASE = 0.95f;
+    public static final float MEDIOCRE_HRV_DECREASE = 0.85f;
+    public static final float SIGNIFICANT_HRV_DECREASE = 0.7f;
+
+
     private float KMI;
     private float current_hrv;
     private float yesterday_hrv;
@@ -50,6 +58,7 @@ public class User {
     private float activity_index;
     private int selected_sport;
     private float weight;
+    private String verbal_reccomendation;
 
     private int pulse_zone;
     private float workout_duration; //in minutes
@@ -452,8 +461,8 @@ public class User {
 
         //Dummy data
         //user.setCurrentHrv(40);
-        user.setLastWeekHrv(30);
-        user.setSecondLastWeekHrv(20);
+        //user.setLastWeekHrv(30);
+        //user.setSecondLastWeekHrv(20);
         user.setSelectedSport(SPORT_JOGGING);
         user.setMaxDuration(20);
 
@@ -477,11 +486,15 @@ public class User {
             }
         }
 
-        user.workout_duration = Utils.readFromSharedPrefs_float(context, FeedReaderDbHelper.FIELD_DURATION, FeedReaderDbHelper.SHARED_PREFS_SPORT);
-        user.pulse_zone = Utils.readFromSharedPrefs_int(context, FeedReaderDbHelper.FIELD_PULSE_ZONE, FeedReaderDbHelper.SHARED_PREFS_SPORT);
+        user.loadProgram(context);
         user.generateDailyReccomendation(context);
 
         return user;
+    }
+
+    private void loadProgram(Context context){
+        workout_duration = Utils.readFromSharedPrefs_float(context, FeedReaderDbHelper.FIELD_DURATION, FeedReaderDbHelper.SHARED_PREFS_SPORT);
+        pulse_zone = Utils.readFromSharedPrefs_int(context, FeedReaderDbHelper.FIELD_PULSE_ZONE, FeedReaderDbHelper.SHARED_PREFS_SPORT);
     }
 
 
@@ -496,6 +509,7 @@ public class User {
 
     public String generateWeeklyProgram(Context context) {
 
+        Log.i("TEST", "last week hrv: " + last_week_hrv);
 
         //First time
         if (last_week_hrv == 0) {
@@ -503,9 +517,11 @@ public class User {
             //Weak duration
             if (activity_index < 30) {
                 workout_duration = 15;
+                pulse_zone = 2; //todo: think of a reasonable pulse zone
             } else {
                 //Fit duration
                 workout_duration = 20;
+                pulse_zone = 1; //todo: think of a reasonable pulse zone
             }
             saveProgram(context);
             return "Jums sugeneruota pirmoji programa";
@@ -566,7 +582,7 @@ public class User {
         return "not supported";
     }
 
-    public String generateDailyReccomendation(Context context) {
+    public void generateDailyReccomendation(Context context) {
         Calendar c = Calendar.getInstance();
 
         //Returns the current week day, where 1 is Monday
@@ -574,12 +590,6 @@ public class User {
 
         if (week_days[dayOfWeek - 1]) {
 
-            final float HIGH_INCREASE = 0.3f;
-            final float MEDIOCRE_INCREASE = 0.15f;
-            final float MINIMAL_INCREASE = 0.05f;
-            final float MINIMAL_DECREASE = 0.05f;
-            final float MEDIOCRE_DECREASE = 0.15f;
-            final float HIGH_DECREASE = 0.3f;
 
             int baselineHrv = -1;
             int minBaselineHrv = -1;
@@ -617,8 +627,15 @@ public class User {
             maxBaselineHrv = baselineHrv + hrvBias;
 
             //If no yesterday data is present
+            //TODO: do some deciding on this one
             if (yesterday_hrv == 0) {
-                yesterday_hrv = baselineHrv;
+//                yesterday_hrv = baselineHrv;
+                yesterday_hrv = current_hrv;
+                program_update_state = PROGRAM_STATE_UNCHANGED; //we may want to change this to STATE_FIRST_TIME (which doesn't exist yet)
+                verbal_reccomendation = "Not enough data. Sorry :(";
+                pulse_zone = 1;
+                workout_duration = max_duration*0.5f;
+                return;
             }
 
 
@@ -626,64 +643,70 @@ public class User {
 
                 float percentageChange = current_hrv / yesterday_hrv;
 
-
+                workout_duration*=percentageChange;
                 //Hrv has increased
                 if (percentageChange >= 1) {
                     program_update_state = PROGRAM_STATE_UPGRADED;
-                    float percentageIncrease = percentageChange - 1;
 
-                    if (percentageChange >= HIGH_INCREASE) {
-                        //hrv has greatly increased
-                        Log.i("TEST", "hrv has greatly increased");
-                        return "hrv has greatly increased";
-                    }
-                    if (percentageChange >= MEDIOCRE_INCREASE) {
-                        Log.i("TEST", "mediocre hrv increase");
-                        return "detected mediocre hrv increase";
-                    }
-                    if (percentageChange <= MINIMAL_INCREASE) {
+
+                    if (percentageChange <= MINIMAL_HRV_INCREASE) {
                         program_update_state = PROGRAM_STATE_UNCHANGED;
                         Log.i("TEST", "detected minimal hrv increase");
-                        return "detected minimal hrv increase";
+                        verbal_reccomendation =  "detected minimal hrv increase";
+                        return;
+                    }
+                    if (percentageChange <= MEDIOCRE_HRV_INCREASE) {
+                        Log.i("TEST", "mediocre hrv increase");
+                        verbal_reccomendation =  "detected mediocre hrv increase";
+                        return;
                     }
 
-                    workout_duration*=percentageIncrease;
+                    //hrv has greatly increased
+                    Log.i("TEST", "hrv has greatly increased");
+                    verbal_reccomendation =  "hrv has greatly increased";
+                    return;
+
+
+
 
                 } else {
+
                     //Hrv has decreased
                     program_update_state = PROGRAM_STATE_DOWNGRADED;
-                    float percentageDecrease = 1 - percentageChange;
 
-                    if (percentageChange >= HIGH_DECREASE) {
-                        //hrv has greatly increased
-                        Log.i("TEST", "detected great hrv decrease");
-                        return "hrv has greatly decreased";
-                    }
-                    if (percentageChange >= MEDIOCRE_DECREASE) {
-                        Log.i("TEST", "detected mediocre hrv decrease");
-                        return "detected mediocre hrv decrease";
-                    }
-                    if (percentageChange <= MINIMAL_DECREASE) {
+                    if (percentageChange >= MINIMAL_HRV_DECREASE) {
                         program_update_state = PROGRAM_STATE_UNCHANGED;
                         Log.i("TEST", "detected minimal hrv decrease");
-                        return "detected minimal hrv decrese";
+                        verbal_reccomendation =  "detected minimal hrv decrese";
+                        return;
                     }
-                    workout_duration = 1-(workout_duration*percentageDecrease);
+
+                    if (percentageChange >= MEDIOCRE_HRV_DECREASE) {
+                        Log.i("TEST", "detected mediocre hrv decrease");
+                        verbal_reccomendation =  "detected mediocre hrv decrease";
+                        return;
+                    }
+
+
+                    Log.i("TEST", "detected great hrv decrease");
+                    verbal_reccomendation =  "hrv has greatly decreased";
+                    return;
                 }
 
 
             } else {
                 Log.i("TEST", "Jusu hrv neatitinka normu");
-                return "Jūsų hrv neatitinka normų";
+                verbal_reccomendation =  "Jūsų hrv neatitinka normų";
+                return;
             }
 
 
         } else {
             Log.i("TEST", "Šiandien jums poilsio diena");
-            return "Šiandien jums poilsio diena";
+            verbal_reccomendation =  "Šiandien jums poilsio diena";
+            return;
         }
 
-        return "not supported";
 
     }
 
@@ -858,5 +881,9 @@ public class User {
 
     public float getHrvChangePercentage() {
         return  current_hrv / yesterday_hrv;
+    }
+
+    public String getVerbalReccomendation() {
+        return verbal_reccomendation;
     }
 }
