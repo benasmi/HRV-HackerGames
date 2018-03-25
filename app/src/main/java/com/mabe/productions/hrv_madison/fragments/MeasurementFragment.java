@@ -423,9 +423,7 @@ public class MeasurementFragment extends Fragment {
                             int lastMeasurementWeek = calendar.get(Calendar.WEEK_OF_YEAR);
 
                             //Checking if user has measured this week. If not, updating user's weekly program
-                            if(thisWeek != lastMeasurementWeek){
-                                user.generateWeeklyProgram(getContext());
-                            }
+
 
                         }else{
                             //User has measured for the first time ever

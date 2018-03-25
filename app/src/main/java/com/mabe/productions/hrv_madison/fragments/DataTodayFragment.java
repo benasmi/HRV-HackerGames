@@ -207,10 +207,44 @@ public class DataTodayFragment extends Fragment {
                 case User.MOOD_POSITIVELY_EXCITED:
                     img_positively_excited.callOnClick();
                     break;
-                case User.MOOD_UNDEFINED:
-                    //User has not selected his mood yet. Too bad :(
-                    break;
             }
+
+            reccomendation_txt_duration.setText(String.valueOf((int) user.getWorkoutDuration()) + " " + getString(
+                                R.string.min));
+
+
+            switch(user.getProgramUpdateState()){
+
+                case User.PROGRAM_STATE_UPGRADED:
+
+                    int percentageIncrease = Math.round((user.getHrvChangePercentage() - 1)*100);
+                    reccomendation_txt_hrv_increase.setText("+ " + percentageIncrease + "%\nincrease" );
+                    reccomendation_txt_hrv_increase.setTextColor(Color.parseColor("#2ecc71"));
+                    reccomendation_txt_pulse_zone.setText(user.getPulseZone() + " pulse zone");
+
+                    break;
+
+                case User.PROGRAM_STATE_DOWNGRADED:
+
+                    int percentageDecrease = Math.round((1 - user.getHrvChangePercentage())*100);
+                    reccomendation_txt_hrv_increase.setText("+ " + percentageDecrease + "%\ndecrease" );
+                    reccomendation_txt_hrv_increase.setTextColor(Color.parseColor("#e74c3c"));
+                    reccomendation_txt_pulse_zone.setText(user.getPulseZone() + " pulse zone");
+
+                    break;
+
+                case User.PROGRAM_STATE_UNCHANGED:
+
+
+
+                    break;
+
+
+
+            }
+
+
+
 
 
         }

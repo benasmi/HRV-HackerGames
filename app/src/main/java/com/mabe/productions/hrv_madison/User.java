@@ -34,10 +34,9 @@ public class User {
     public static final int PROGRAM_STATE_DOWNGRADED = 1;
     public static final int PROGRAM_STATE_UNCHANGED = 2;
 
-    public static final int MOOD_UNDEFINED = 0;
+    public static final int MOOD_NEUTRAL = 0;
     public static final int MOOD_NEGATIVELY_EXCITED = 1;
     public static final int MOOD_NEGATIVELY_MELLOW = 2;
-    public static final int MOOD_NEUTRAL = 3;
     public static final int MOOD_POSITIVELY_MELLOW = 4;
     public static final int MOOD_POSITIVELY_EXCITED = 5;
 
@@ -478,7 +477,8 @@ public class User {
             }
         }
 
-        user.generateWeeklyProgram(context);
+        user.workout_duration = Utils.readFromSharedPrefs_float(context, FeedReaderDbHelper.FIELD_DURATION, FeedReaderDbHelper.SHARED_PREFS_SPORT);
+        user.pulse_zone = Utils.readFromSharedPrefs_int(context, FeedReaderDbHelper.FIELD_PULSE_ZONE, FeedReaderDbHelper.SHARED_PREFS_SPORT);
         user.generateDailyReccomendation(context);
 
         return user;
@@ -626,6 +626,7 @@ public class User {
 
                 float percentageChange = current_hrv / yesterday_hrv;
 
+
                 //Hrv has increased
                 if (percentageChange >= 1) {
                     program_update_state = PROGRAM_STATE_UPGRADED;
@@ -646,6 +647,8 @@ public class User {
                         return "detected minimal hrv increase";
                     }
 
+                    workout_duration*=percentageIncrease;
+
                 } else {
                     //Hrv has decreased
                     program_update_state = PROGRAM_STATE_DOWNGRADED;
@@ -665,6 +668,7 @@ public class User {
                         Log.i("TEST", "detected minimal hrv decrease");
                         return "detected minimal hrv decrese";
                     }
+                    workout_duration = 1-(workout_duration*percentageDecrease);
                 }
 
 
@@ -852,5 +856,7 @@ public class User {
         return program_update_state;
     }
 
-
+    public float getHrvChangePercentage() {
+        return  current_hrv / yesterday_hrv;
+    }
 }

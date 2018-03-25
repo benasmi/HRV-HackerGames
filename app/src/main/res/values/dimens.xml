@@ -15,6 +15,6 @@
     <dimen name="cardview_pink_explain_txt">15sp</dimen>
     <dimen name="cardview_value_txt">14sp</dimen>
     <dimen name="workout_progress_title_size">18sp</dimen>
-    <dimen name="workout_progress_number_size">33sp</dimen>
-    <dimen name="workout_progress_unit_size">16sp</dimen>
+    <dimen name="workout_progress_number_size">30sp</dimen>
+    <dimen name="workout_progress_unit_size">13sp</dimen>
 </resources>

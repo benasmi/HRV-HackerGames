@@ -22,9 +22,9 @@ public class WorkoutMeasurements {
     private float average_pace;
     private float average_bpm;
     private int[] bpm_data;
-    private float[] pace_data; //in meters/second
+    private float[] pace_data; //in kilometers/minute
     private LatLng[] route;
-    private float calories_burned;
+    private float calories_burned; //In KCal
     private int pulse_zone;
 
     public WorkoutMeasurements(int unique_id, Date date, float workout_duration, float average_pace, float average_bpm, int[] bpm_data, float[] pace_data, LatLng[] route, float calories_burned, int pulse_zone) {

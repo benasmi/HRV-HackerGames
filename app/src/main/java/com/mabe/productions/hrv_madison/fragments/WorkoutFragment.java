@@ -61,6 +61,7 @@ import io.nlopez.smartlocation.SmartLocation;
 import io.nlopez.smartlocation.location.config.LocationAccuracy;
 import io.nlopez.smartlocation.location.config.LocationParams;
 
+//todo: kol workoutina, reikia patikrinti ar pasibaige/nepasibaige nustatytas laikas
 public class WorkoutFragment extends Fragment {
 
     private static final long VIBRATE_DURATION_TIME_ENDED = 1000l;
@@ -96,7 +97,7 @@ public class WorkoutFragment extends Fragment {
     int workout_state = STATE_BEFORE_WORKOUT;
     private boolean isLocationListeningEnabled= false;
 
-
+    private float totalDistance = 0;
 
 
     private ArrayList<LatLng> route = new ArrayList<>();
@@ -386,13 +387,26 @@ public class WorkoutFragment extends Fragment {
         }
     }
 
+
     private LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
+
+
+
+            if(route.size() > 0){
+                if(workout_state == STATE_WORKING_OUT || workout_state == STATE_TIME_ENDED){
+                    totalDistance+=distance(route.get(route.size()-1),
+                                            new LatLng(locationResult.getLastLocation().getLatitude(),
+                                                       locationResult.getLastLocation().getLongitude()));
+                    txt_distance.setText(String.valueOf((Math.round(totalDistance * 100.0) / 100.0)));
+                }
+            }
+
             Location location = locationResult.getLastLocation();
             route.add(new LatLng(location.getLatitude(), location.getLongitude()));
-            paceData.add(location.getSpeed());
-            txt_current_pace.setText(String.valueOf(location.getSpeed()));
+            paceData.add(location.getSpeed()*0.06f); //converting to km/min
+            txt_current_pace.setText(String.valueOf(Math.round(location.getSpeed() * 100.0) / 100.0));
             Log.i("TEST", "latitude: " + location.getLatitude() + " longtitude: " + location.getLongitude() + " speed: " + location.getSpeed());
         };
     };
@@ -608,10 +622,31 @@ public class WorkoutFragment extends Fragment {
         //Log.i("TEST", "gender: " + gender + "\nage: " + age + "\nweight: " + weight + "\nheartRate " + heartRate + "\ntimePassed " + timePassed + "\nCalories burned: " + calories + "\n\n");
 
 
-        return calories;
+        return calories/1000; //Conmverting to KCal
     }
 
+    //In kilometers
+    private float distance (LatLng pointA, LatLng pointB) {
 
+        float lat_a = (float) pointA.latitude;
+        float lng_a = (float) pointA.longitude;
+
+        float lat_b = (float) pointB.latitude;
+        float lng_b = (float) pointB.longitude;
+
+        double earthRadius = 3958.75;
+        double latDiff = Math.toRadians(lat_b-lat_a);
+        double lngDiff = Math.toRadians(lng_b-lng_a);
+        double a = Math.sin(latDiff /2) * Math.sin(latDiff /2) +
+                Math.cos(Math.toRadians(lat_a)) * Math.cos(Math.toRadians(lat_b)) *
+                        Math.sin(lngDiff /2) * Math.sin(lngDiff /2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        double distance = earthRadius * c;
+
+        int meterConversion = 1609;
+
+        return new Float(distance * meterConversion).floatValue()/1000f;
+    }
 
 
 
