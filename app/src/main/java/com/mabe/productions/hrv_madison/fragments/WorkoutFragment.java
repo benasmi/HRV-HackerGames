@@ -89,7 +89,7 @@ public class WorkoutFragment extends Fragment {
     public static final int STATE_PAUSED = 3;
 
     private long timePassed = 0;
-    private float calories_burned = 0;
+    private double calories_burned = 0;
     private long userSpecifiedWorkoutDuration = 0;
     private boolean isTimerRunning = false;
 
@@ -264,7 +264,7 @@ public class WorkoutFragment extends Fragment {
                     Utils.convertIntArrayListToArray(bpmArrayList),
                     Utils.convertFloatArrayListToArray(paceData),
                     Utils.convertLatLngArrayListToArray(route),
-                    calories_burned,
+                    (float)calories_burned,
                     MainScreenActivity.user.getPulseZone()
             );
 
@@ -443,7 +443,7 @@ public class WorkoutFragment extends Fragment {
             calories_burned = calories_burned + calculateCalories(gender,age,weight, bpm, 1f/60f);
 
 
-            txt_calories_burned.setText(String.valueOf(calories_burned));
+            txt_calories_burned.setText(String.valueOf(Math.round(calories_burned * 100.0) / 100.0)); //Rounding and displaying calories
         }
 
         //todo: calculate calories and stuff. Also, will we calculate burnt calories using bpm, or gps?
@@ -591,14 +591,23 @@ public class WorkoutFragment extends Fragment {
 
 
 
-    private float calculateCalories(int gender, int age, int weight, int heartRate, float timePassed){
+    private double calculateCalories(int gender, int age, int weight, int heartRate, double timePassed){
 
-        float calories = (float) (((age* (gender == 0 ? 0.2017 : 0.074)
-                - (weight * (gender == 0 ? 0.09036 : 0.05741))
-                + (heartRate * (gender == 0 ? 0.6309 : 0.4472))
-                - (gender == 0 ? 55.0969 : 20.4022)))*timePassed/4.184);
+        double calories = 0;
 
-        Log.i("TEST", "gender: " + gender + "age: " + age + "weight: " + weight + "CALORIES: " + String.valueOf(calories));
+        switch(gender){
+            case User.GENDER_FEMALE:
+                calories = ((((double)age*0.074d)-(((double)weight)*0.05741d))+(((double) heartRate)*0.4472d) - 20.4022d)*timePassed/4.184d;
+                break;
+
+            case User.GENDER_MALE:
+                calories = ((((double)age*0.2017d)-(((double)weight)*0.09036d))+(((double) heartRate)*0.6309d) - 20.4022d)*timePassed/4.184d;
+                break;
+        }
+
+        //Log.i("TEST", "gender: " + gender + "\nage: " + age + "\nweight: " + weight + "\nheartRate " + heartRate + "\ntimePassed " + timePassed + "\nCalories burned: " + calories + "\n\n");
+
+
         return calories;
     }
 
