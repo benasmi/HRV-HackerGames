@@ -33,6 +33,8 @@ public class User {
     public static final int PROGRAM_STATE_UPGRADED = 0;
     public static final int PROGRAM_STATE_DOWNGRADED = 1;
     public static final int PROGRAM_STATE_UNCHANGED = 2;
+    public static final int PROGRAM_STATE_NO_MEASUREMENT = 3;
+
 
     public static final int MOOD_NEUTRAL = 0;
     public static final int MOOD_NEGATIVELY_EXCITED = 1;

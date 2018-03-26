@@ -84,6 +84,9 @@ public class WorkoutFragment extends Fragment {
     public boolean shouldStartWorkoutImmediately = false;
     private static final long TIMER_STEP = 1000;
 
+
+    //todo: we calculate pulse zone, need to display it;
+
     public static final int STATE_BEFORE_WORKOUT = 0;
     public static final int STATE_WORKING_OUT = 1;
     public static final int STATE_TIME_ENDED = 2;
@@ -91,6 +94,7 @@ public class WorkoutFragment extends Fragment {
 
     private long timePassed = 0;
     private double calories_burned = 0;
+    private int pulse_zone = 0;
     private long userSpecifiedWorkoutDuration = 0;
     private boolean isTimerRunning = false;
 
@@ -455,12 +459,11 @@ public class WorkoutFragment extends Fragment {
             int weight = (int) MainScreenActivity.user.getWeight();
 
             calories_burned = calories_burned + calculateCalories(gender,age,weight, bpm, 1f/60f);
-
-
+            pulse_zone = pulseZone(gender,age,bpm);
             txt_calories_burned.setText(String.valueOf(Math.round(calories_burned * 100.0) / 100.0)); //Rounding and displaying calories
         }
 
-        //todo: calculate calories and stuff. Also, will we calculate burnt calories using bpm, or gps?
+
     }
 
 
@@ -624,6 +627,29 @@ public class WorkoutFragment extends Fragment {
 
         return calories/1000; //Conmverting to KCal
     }
+
+    private int pulseZone(int gender, int age, int bpm){
+
+        int HRMax = (int) ((gender==0 ? 202 : 216) - (gender==0 ? 0.55f : 1.09f) * age);
+        int pulseZone = 0;
+
+        float hrPercentage = bpm/HRMax*100f;
+
+        if(hrPercentage>=50 && hrPercentage<=60){
+            pulseZone = 1;
+        }else if(hrPercentage>60 && hrPercentage<=70){
+            pulseZone = 2;
+        }else if(hrPercentage>70 && hrPercentage<=80){
+            pulseZone = 3;
+        }else if(hrPercentage>80 && hrPercentage<=90){
+            pulseZone = 4;
+        }else if(hrPercentage>90 && hrPercentage<=100){
+            pulseZone = 5;
+        }
+
+        return pulseZone;
+    }
+
 
     //In kilometers
     private float distance (LatLng pointA, LatLng pointB) {

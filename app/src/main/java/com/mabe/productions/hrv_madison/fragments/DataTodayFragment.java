@@ -56,6 +56,7 @@ public class DataTodayFragment extends Fragment {
     private TextView freq_card_txt_norm_lf;
     private PieChart frequency_chart;
 
+    //todo: if haven't measured today show another layout
 
     //HrvCardView
     private CardView hrv_card;
