@@ -259,7 +259,8 @@ public class WorkoutFragment extends Fragment {
         @Override
         public void onClick(View v) {
 
-
+            calories_burned = Math.round(calories_burned * 100.0) / 100.0;
+            totalDistance = (float) (Math.round(totalDistance * 100.0) / 100.0);
 
             WorkoutMeasurements workout = new WorkoutMeasurements(
                     Calendar.getInstance().getTime(),
@@ -270,7 +271,8 @@ public class WorkoutFragment extends Fragment {
                     Utils.convertFloatArrayListToArray(paceData),
                     Utils.convertLatLngArrayListToArray(route),
                     (float)calories_burned,
-                    MainScreenActivity.user.getPulseZone()
+                    MainScreenActivity.user.getPulseZone(),
+                    totalDistance
             );
 
             User.addWorkoutData(getContext(), workout, true);
@@ -455,7 +457,8 @@ public class WorkoutFragment extends Fragment {
             bpmArrayList.add(bpm);
             int gender = MainScreenActivity.user.getGender();
             int age = Utils.getAgeFromDate(MainScreenActivity.user.getBirthday());
-            //todo: change weight to int
+            //todo: ,
+            // weight to int
             int weight = (int) MainScreenActivity.user.getWeight();
 
             calories_burned = calories_burned + calculateCalories(gender,age,weight, bpm, 1f/60f);

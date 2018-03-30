@@ -81,6 +81,20 @@
                 android:textSize="12dp"
                 android:textColor="#fff"/>
 
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="15dp"
+                android:id="@+id/txt_connection_status"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:textColor="#FFF"
+
+                />
+
         </RelativeLayout>
 
         <android.support.v7.widget.AppCompatButton
@@ -95,27 +109,36 @@
             android:background="@drawable/login_button_gradient"
         android:text="@string/measure"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="15dp"
-            android:id="@+id/txt_connection_status"
-            android:gravity="center"
-            android:layout_marginTop="10dp"
-            android:textColor="#FFF"
-
-            />
-
     </LinearLayout>
 
 
 
 
-    <com.github.mikephil.charting.charts.LineChart
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:id="@+id/hr_chart"></com.github.mikephil.charting.charts.LineChart>
+        android:layout_height="wrap_content">
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:id="@+id/hr_chart">
+        </com.github.mikephil.charting.charts.LineChart>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Displaying: HR"
+            android:textSize="12dp"
+            android:textColor="#FFFFFF"
+            android:id="@+id/txt_line_chart_label"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            />
+
+    </RelativeLayout>
+
 
 
 
@@ -160,7 +183,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="HRV"
+                android:text="RMSSD"
                 android:textSize="50dp"
                 android:textColor="#fff"
                 android:id="@+id/txt_hrv"

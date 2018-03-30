@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -28,8 +29,16 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
@@ -106,6 +115,11 @@ public class DataTodayFragment extends Fragment {
     //Workout route cardview
     private CardView cardview_route;
     private SupportMapFragment map_fragment;
+    private TextView txt_workout_data;
+    private TextView txt_workout_time_ago;
+    private TextView workout_card_pace;
+    private TextView workout_card_distance;
+    private TextView workout_card_calories;
     private GoogleMap googlemap_route; //We may need this one in the future
 
     //First time layout
@@ -114,6 +128,7 @@ public class DataTodayFragment extends Fragment {
     private TextView first_time_greeting;
 
     private boolean isFirstTime;
+    private AppCompatButton reccomendation_btn_start_workout;
 
     public DataTodayFragment() {
         // Required empty public constructor
@@ -144,7 +159,10 @@ public class DataTodayFragment extends Fragment {
         if(isFirstTime){
             setMeasurementCardViewsVisibility(false);
             setWorkoutCardViewsVisibility(false);
+            first_time_layout.setVisibility(View.VISIBLE);
         }else{
+            setMeasurementCardViewsVisibility(true);
+            setWorkoutCardViewsVisibility(true);
             first_time_layout.setVisibility(View.GONE);
         }
 
@@ -174,6 +192,7 @@ public class DataTodayFragment extends Fragment {
                 }
             }
 
+
             freq_card_txt_hf_after_measurament.setText(String.valueOf(measurement.getHF_band()));
             freq_card_txt_lf_after_measurement.setText(String.valueOf(measurement.getHF_band()));
             freq_card_txt_vlf_after_measurement.setText(String.valueOf(measurement.getVHF_band()));
@@ -202,29 +221,49 @@ public class DataTodayFragment extends Fragment {
             }
 
 
-            setReccomendationCardPercentage(user.getHrvChangePercentage());
-            reccomendation_txt_duration.setText(String.valueOf((int) user.getWorkoutDuration()) + " " + getString(
-                    R.string.min));
-            reccomendation_txt_pulse_zone.setText(user.getPulseZone() + " pulse zone");
-            reccomendation_txt_verbal_recommendation.setText(user.getVerbalReccomendation());
-            Log.i("TEST", user.getYesterdayHrv() + " " + user.getCurrentHrv());
+
+
+            switch (user.getProgramUpdateState()){
+
+                case User.PROGRAM_STATE_CHANGED:
+                    setReccomendationCardPercentage(user.getHrvChangePercentage());
+                    reccomendation_txt_verbal_recommendation.setText(user.getVerbalReccomendation());
+                    reccomendation_txt_pulse_zone.setText(user.getPulseZone() + " pulse zone");
+                    reccomendation_txt_duration.setText(String.valueOf((int) user.getWorkoutDuration()) + " " + getString(
+                            R.string.min));
+                    break;
+                case User.PROGRAM_STATE_DAY_OFF:
+
+                    break;
+                case User.PROGRAM_STATE_INVALID:
+
+                    break;
+                case User.PROGRAM_STATE_NOT_ENOUGH_DATA:
+
+                    break;
+            }
+
+
+
 
         }
 
 
         final WorkoutMeasurements workout = user.getLastWorkout();
 
+
+        //todo: check cardviews visibilities
         if(workout != null){
-            //setWorkoutCardViewsVisibility(false);
-            //todo: populate views with data
-//            if(getArguments() == null){
-//                Log.i("TEST", "arguments null");
-//            }
-//
-//            if(map_fragment == null){
-//                Log.i("TEST", "map fragment null");
-//            }
-            /*
+
+            setWorkoutCardViewsVisibility(true);
+            setTrainingPlanCardViewsVisibility(false);
+
+
+            workout_card_pace.setText(String.valueOf(workout.getAverage_pace()));
+            workout_card_distance.setText(String.valueOf(workout.getDistance()));
+            workout_card_calories.setText(String.valueOf(workout.getCalories_burned()));
+
+
             if(googlemap_route == null){
                 map_fragment.onCreate(getArguments());
                 map_fragment.getMapAsync(new OnMapReadyCallback() {
@@ -274,8 +313,11 @@ public class DataTodayFragment extends Fragment {
                 googlemap_route.animateCamera(cu);
             }
 
-        */
+
+        }else{
+            setWorkoutCardViewsVisibility(false);
         }
+
 
         bpm_line_chart.animateY(2000, Easing.EasingOption.EaseInOutSine);
 
@@ -303,15 +345,19 @@ public class DataTodayFragment extends Fragment {
 
     }
 
+
     private void setMeasurementCardViewsVisibility(boolean visibility){
         recommendation_card.setVisibility(visibility ? View.VISIBLE : View.GONE);
         freq_card.setVisibility(visibility ? View.VISIBLE : View.GONE);
         bpm_card.setVisibility(visibility ? View.VISIBLE : View.GONE);
         feeling_cardview.setVisibility(visibility ? View.VISIBLE : View.GONE);
     }
-    private void setWorkoutCardViewsVisibility(boolean visibility){
 
+    private void setWorkoutCardViewsVisibility(boolean visibility){
         cardview_route.setVisibility(visibility ? View.VISIBLE : View.GONE);
+    }
+    private void setTrainingPlanCardViewsVisibility(boolean visibility){
+        recommendation_card.setVisibility(visibility ? View.VISIBLE : View.GONE);
     }
 
 
@@ -361,6 +407,13 @@ public class DataTodayFragment extends Fragment {
         reccomendation_txt_pulse_zone = view.findViewById(R.id.txt_pulse_zone_value);
         reccomendation_txt_verbal_recommendation = view.findViewById(R.id.txt_verbal_recomendation);
         reccomendation_img_arrow = view.findViewById(R.id.reccomendation_arrow_img);
+        reccomendation_btn_start_workout = view.findViewById(R.id.startWorkout);
+        reccomendation_btn_start_workout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utils.setViewpagerTab(getActivity(), 2);
+            }
+        });
 
         //Feeling cardview
         feeling_cardview = view.findViewById(R.id.feeling_card);
@@ -373,17 +426,28 @@ public class DataTodayFragment extends Fragment {
         img_positively_excited = view.findViewById(R.id.img_positively_excited);
 
 
+
+
+
         //Maps cardview
         //todo: override onPause() onResume() and onDestroy() methods and call map_fragment.onPause(), map_fragment.onResume(), map_fragment.onDestroy() accordingly.
-/*        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentManager fm = getActivity().getSupportFragmentManager();
         CameraPosition cp = new CameraPosition.Builder()
                 .target(new LatLng(54.6,25.27)) //Just a random starting point. Will be changed in reloadData()
                 .zoom(1f)
                 .build();
-*/        //map_fragment = SupportMapFragment.newInstance(new GoogleMapOptions().camera(cp));
-        //fm.beginTransaction().replace(R.id.workout_route, map_fragment).commit();
+        map_fragment = SupportMapFragment.newInstance(new GoogleMapOptions().camera(cp));
+        fm.beginTransaction().replace(R.id.workout_route, map_fragment).commit();
 
+
+        //Workout cardview
         cardview_route = view.findViewById(R.id.cardview_route);
+        workout_card_calories = view.findViewById(R.id.workout_card_calories_burned);
+        workout_card_pace = view.findViewById(R.id.workout_card_running_pace);
+        workout_card_distance = view.findViewById(R.id.workout_card_distance_run);
+        txt_workout_data = view.findViewById(R.id.workout_index_text_view);
+        txt_workout_time_ago = view.findViewById(R.id.workout_index_measurement_date);
+
 
         feeling_cardview.setTranslationY( Utils.getScreenHeight(getContext()));
         feeling_cardview.animate()
@@ -399,6 +463,30 @@ public class DataTodayFragment extends Fragment {
                 .setDuration(1500)
                 .start();
 
+        bpm_card.setTranslationY( Utils.getScreenHeight(getContext()));
+        bpm_card.animate()
+                .translationY(0)
+                .setInterpolator(new DecelerateInterpolator(3.f))
+                .setDuration(1500)
+                .start();
+
+        cardview_route.setTranslationY( Utils.getScreenHeight(getContext()));
+        cardview_route.animate()
+                .translationY(0)
+                .setInterpolator(new DecelerateInterpolator(3.f))
+                .setDuration(1500)
+                .start();
+
+        freq_card.setTranslationY( Utils.getScreenHeight(getContext()));
+        freq_card.animate()
+                .translationY(0)
+                .setInterpolator(new DecelerateInterpolator(3.f))
+                .setDuration(1500)
+                .start();
+
+
+
+
         //First time cardview
         first_time_btn = view.findViewById(R.id.first_time_measure_button);
         first_time_layout = view.findViewById(R.id.first_time_layout);
@@ -409,6 +497,7 @@ public class DataTodayFragment extends Fragment {
                 Utils.setViewpagerTab(getActivity(), 0);
             }
         });
+
         Animation anim_btn = AnimationUtils.loadAnimation(getContext(), R.anim.top_to_bottom_delay);
         Animation anim_txt = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
         first_time_btn.startAnimation(anim_btn);
@@ -488,6 +577,14 @@ public class DataTodayFragment extends Fragment {
         reccomendation_txt_duration.setTypeface(verdana);
         reccomendation_txt_pulse_zone.setTypeface(verdana);
         reccomendation_txt_verbal_recommendation.setTypeface(verdana);
+
+        //Workout cardview
+        workout_card_calories.setTypeface(verdana);
+        workout_card_pace.setTypeface(verdana);
+        workout_card_distance.setTypeface(verdana);
+        txt_workout_data.setTypeface(verdana);
+        txt_workout_time_ago.setTypeface(verdana);
+
 
         //First time cardview
         first_time_greeting.setTypeface(verdana);

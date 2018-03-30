@@ -30,10 +30,10 @@ public class User {
 
     private int program_update_state;
 
-    public static final int PROGRAM_STATE_UPGRADED = 0;
-    public static final int PROGRAM_STATE_DOWNGRADED = 1;
-    public static final int PROGRAM_STATE_UNCHANGED = 2;
-    public static final int PROGRAM_STATE_NO_MEASUREMENT = 3;
+    public static final int PROGRAM_STATE_CHANGED = 0;
+    public static final int PROGRAM_STATE_DAY_OFF = 1;
+    public static final int PROGRAM_STATE_INVALID = 2;
+    public static final int PROGRAM_STATE_NOT_ENOUGH_DATA = 3;
 
 
     public static final int MOOD_NEUTRAL = 0;
@@ -337,7 +337,7 @@ public class User {
             int[] bpm_data = FeedReaderDbHelper.getIntArrayFromString(cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_BPM_DATA)));
             float[] pace_data = FeedReaderDbHelper.getFloatArrayFromString(cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_PACE_DATA)));
             LatLng[] route = FeedReaderDbHelper.getRouteFromString(cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_ROUTE)));
-
+            float distance = cursor.getFloat(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_DISTANCE));
             WorkoutMeasurements workout = new WorkoutMeasurements(
                     id,
                     date,
@@ -348,7 +348,8 @@ public class User {
                     pace_data,
                     route,
                     calories,
-                    pulse_zone
+                    pulse_zone,
+                    distance
             );
 
 
@@ -633,8 +634,8 @@ public class User {
             if (yesterday_hrv == 0) {
 //                yesterday_hrv = baselineHrv;
                 yesterday_hrv = current_hrv;
-                program_update_state = PROGRAM_STATE_UNCHANGED; //we may want to change this to STATE_FIRST_TIME (which doesn't exist yet)
-                verbal_reccomendation = "Not enough data. Sorry :(";
+                program_update_state = PROGRAM_STATE_NOT_ENOUGH_DATA; //we may want to change this to STATE_FIRST_TIME (which doesn't exist yet)
+                verbal_reccomendation = "Not enough data to generate reasonable workout plan";
                 pulse_zone = 1;
                 workout_duration = max_duration*0.5f;
                 return;
@@ -648,24 +649,25 @@ public class User {
                 workout_duration*=percentageChange;
                 //Hrv has increased
                 if (percentageChange >= 1) {
-                    program_update_state = PROGRAM_STATE_UPGRADED;
+                    program_update_state = PROGRAM_STATE_CHANGED;
 
 
                     if (percentageChange <= MINIMAL_HRV_INCREASE) {
-                        program_update_state = PROGRAM_STATE_UNCHANGED;
+                        program_update_state = PROGRAM_STATE_CHANGED;
                         Log.i("TEST", "detected minimal hrv increase");
-                        verbal_reccomendation =  "detected minimal hrv increase";
+                        verbal_reccomendation =  "No significant change in your HRV, so your training plan is not altered";
                         return;
                     }
                     if (percentageChange <= MEDIOCRE_HRV_INCREASE) {
+
                         Log.i("TEST", "mediocre hrv increase");
-                        verbal_reccomendation =  "detected mediocre hrv increase";
+                        verbal_reccomendation =  "Your HRV has increased,in comparison to last time: Upgrading your workout!";
                         return;
                     }
 
                     //hrv has greatly increased
                     Log.i("TEST", "hrv has greatly increased");
-                    verbal_reccomendation =  "hrv has greatly increased";
+                    verbal_reccomendation =  "Incredible! Seems like you've been feeling lately: Increasing training difficulty!";
                     return;
 
 
@@ -674,29 +676,30 @@ public class User {
                 } else {
 
                     //Hrv has decreased
-                    program_update_state = PROGRAM_STATE_DOWNGRADED;
+                    program_update_state = PROGRAM_STATE_CHANGED;
 
                     if (percentageChange >= MINIMAL_HRV_DECREASE) {
-                        program_update_state = PROGRAM_STATE_UNCHANGED;
+                        program_update_state = PROGRAM_STATE_CHANGED;
                         Log.i("TEST", "detected minimal hrv decrease");
-                        verbal_reccomendation =  "detected minimal hrv decrese";
+                        verbal_reccomendation =  "No significant change in your HRV, so your training plan is not altered";
                         return;
                     }
 
                     if (percentageChange >= MEDIOCRE_HRV_DECREASE) {
                         Log.i("TEST", "detected mediocre hrv decrease");
-                        verbal_reccomendation =  "detected mediocre hrv decrease";
+                        verbal_reccomendation =  "Your HRV has decreased,in comparison to last time: Downgrading your workout!";
                         return;
                     }
 
 
                     Log.i("TEST", "detected great hrv decrease");
-                    verbal_reccomendation =  "hrv has greatly decreased";
+                    verbal_reccomendation =  "Your HRV has drastically decreased. You should take a day off.";
                     return;
                 }
 
 
             } else {
+                program_update_state = PROGRAM_STATE_INVALID;
                 Log.i("TEST", "Jusu hrv neatitinka normu");
                 verbal_reccomendation =  "Jūsų hrv neatitinka normų";
                 return;
@@ -704,6 +707,7 @@ public class User {
 
 
         } else {
+            program_update_state = PROGRAM_STATE_DAY_OFF;
             Log.i("TEST", "Šiandien jums poilsio diena");
             verbal_reccomendation =  "Šiandien jums poilsio diena";
             return;

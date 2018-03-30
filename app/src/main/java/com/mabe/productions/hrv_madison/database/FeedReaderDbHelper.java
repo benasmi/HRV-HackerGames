@@ -120,6 +120,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public static final String WORKOUT_COL_ROUTE = "route";
     public static final String WORKOUT_COL_PACE_DATA = "pace_data";
     public static final String WORKOUT_COL_BPM_DATA = "bpm_data";
+    public static final String WORKOUT_COL_DISTANCE = "distance";
 
     public static final String WORKOUT_DATA_TABLE_NAME = "workout_data";
 
@@ -131,6 +132,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
                     FeedReaderDbHelper.WORKOUT_COL_AVERAGE_PACE + " FLOAT," +
                     FeedReaderDbHelper.WORKOUT_COL_AVERAGE_BPM + " FLOAT," +
                     FeedReaderDbHelper.WORKOUT_COL_CALORIES + " FLOAT," +
+                    FeedReaderDbHelper.WORKOUT_COL_DISTANCE + " FLOAT," +
                     FeedReaderDbHelper.WORKOUT_COL_PULSE_ZONE + " INTEGER," +
                     FeedReaderDbHelper.WORKOUT_COL_BPM_DATA + " STRING," +
                     FeedReaderDbHelper.WORKOUT_COL_PACE_DATA + " STRING," +
@@ -139,6 +141,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "HRV_Madison.db";
+
 
 
     public FeedReaderDbHelper(Context context) {

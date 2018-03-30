@@ -173,6 +173,273 @@
         </android.support.v7.widget.CardView>
 
 
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:visibility="visible"
+            card_view:cardElevation="4dp"
+            card_view:cardMaxElevation="6dp"
+            android:layout_margin="10dp"
+            android:id="@+id/cardview_route"
+            card_view:cardCornerRadius="5dp"
+            card_view:contentPadding="5dp"
+            card_view:cardBackgroundColor="#2c3e50">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp">
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_appicon_heart"
+                        android:id="@+id/workout_index_icon_img"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Workout data"
+                        android:layout_toRightOf="@+id/workout_index_icon_img"
+                        android:layout_marginLeft="10dp"
+                        android:textSize="@dimen/cardview_title"
+                        android:textColor="#fff"
+                        android:layout_alignParentTop="true"
+                        android:id="@+id/workout_index_text_view"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/time_ago"
+                        android:textSize="@dimen/cardview_date"
+                        android:layout_toRightOf="@+id/workout_index_icon_img"
+                        android:layout_marginLeft="10dp"
+                        android:id="@+id/workout_index_measurement_date"
+                        android:layout_below="@+id/workout_index_text_view"
+                        android:textColor="#bdc3c7"/>
+
+                </RelativeLayout>
+
+
+                <fragment
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:id="@+id/workout_route"
+                    class="com.google.android.gms.maps.SupportMapFragment"></fragment>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    android:id="@+id/workout_progress_layout"
+                    android:weightSum="3"
+                    android:visibility="visible"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+
+                    <LinearLayout
+                        android:layout_width="0px"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_marginRight="4dp"
+                        android:layout_marginLeft="4dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="15dp"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/ic_fire_icon"
+                                android:layout_marginRight="5dp"
+                                />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:textColor="#fff"
+                                android:textSize="@dimen/workout_progress_title_size"
+                                android:text="Calories"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/workout_progress_number_size"
+                                android:textColor="#fff"
+                                android:gravity="bottom"
+                                android:id="@+id/workout_card_calories_burned"
+                                android:text="101"/>
+
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="-5dp"
+                            android:textSize="@dimen/workout_progress_unit_size"
+                            android:gravity="top"
+                            android:textStyle="italic"
+                            android:layout_gravity="center"
+                            android:textColor="#fff"
+                            android:text="KCal"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0px"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_marginRight="4dp"
+                        android:layout_marginLeft="4dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="15dp"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/ic_speedometer"
+                                android:layout_marginRight="5dp"
+                                />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:textColor="#fff"
+                                android:textSize="@dimen/workout_progress_title_size"
+                                android:text="Pace"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/workout_progress_number_size"
+                                android:textColor="#fff"
+                                android:gravity="bottom"
+                                android:id="@+id/workout_card_running_pace"
+                                android:text="101"/>
+
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="-5dp"
+                            android:textSize="@dimen/workout_progress_unit_size"
+                            android:gravity="top"
+                            android:textStyle="italic"
+                            android:layout_gravity="center"
+                            android:textColor="#fff"
+                            android:text="km/min"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0px"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_marginRight="4dp"
+                        android:layout_marginLeft="4dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="15dp"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/ic_map_marker"
+                                android:layout_marginRight="5dp"
+                                />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:textColor="#fff"
+                                android:textSize="@dimen/workout_progress_title_size"
+                                android:text="Distance"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/workout_progress_number_size"
+                                android:textColor="#fff"
+                                android:gravity="bottom"
+                                android:id="@+id/workout_card_distance_run"
+                                android:text="101"/>
+
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="-5dp"
+                            android:textSize="@dimen/workout_progress_unit_size"
+                            android:gravity="top"
+                            android:textStyle="italic"
+                            android:layout_gravity="center"
+                            android:textColor="#fff"
+                            android:text="km"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+
+
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:id="@+id/recommendation_card"
@@ -338,6 +605,9 @@
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
+
+
+
 
 
         <android.support.v7.widget.CardView
@@ -943,29 +1213,6 @@
 
 
 
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:visibility="gone"
-            card_view:cardElevation="4dp"
-            card_view:cardMaxElevation="6dp"
-            android:layout_margin="10dp"
-            android:id="@+id/cardview_route"
-            card_view:cardCornerRadius="5dp"
-            card_view:contentPadding="5dp"
-            card_view:cardBackgroundColor="#2c3e50"
-            >
-
-            <fragment
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:id="@+id/workout_route"
-                class="com.google.android.gms.maps.SupportMapFragment"></fragment>
-
-
-
-            </android.support.v7.widget.CardView>
 
 
     </LinearLayout>

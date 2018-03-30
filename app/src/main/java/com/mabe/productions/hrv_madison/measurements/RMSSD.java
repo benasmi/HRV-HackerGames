@@ -1,5 +1,7 @@
 package com.mabe.productions.hrv_madison.measurements;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 /**
@@ -53,6 +55,7 @@ public class RMSSD {
 
             for(int i = 0; i<intervals.length; i++){
                 rrList.add(intervals[i]);
+                Log.i("HRV", "HRV interval: " + String.valueOf(intervals[i]));
             }
     }
 

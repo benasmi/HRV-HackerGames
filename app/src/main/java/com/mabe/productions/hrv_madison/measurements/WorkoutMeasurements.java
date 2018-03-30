@@ -26,8 +26,9 @@ public class WorkoutMeasurements {
     private LatLng[] route;
     private float calories_burned; //In KCal
     private int pulse_zone;
+    private float distance;
 
-    public WorkoutMeasurements(int unique_id, Date date, float workout_duration, float average_pace, float average_bpm, int[] bpm_data, float[] pace_data, LatLng[] route, float calories_burned, int pulse_zone) {
+    public WorkoutMeasurements(int unique_id, Date date, float workout_duration, float average_pace, float average_bpm, int[] bpm_data, float[] pace_data, LatLng[] route, float calories_burned, int pulse_zone, float distance) {
         this.unique_id = unique_id;
         this.date = date;
         this.workout_duration = workout_duration;
@@ -38,8 +39,9 @@ public class WorkoutMeasurements {
         this.route = route;
         this.calories_burned = calories_burned;
         this.pulse_zone = pulse_zone;
+        this.distance = distance;
     }
-    public WorkoutMeasurements(Date date, float workout_duration, float average_pace, float average_bpm, int[] bpm_data, float[] pace_data, LatLng[] route, float calories_burned, int pulse_zone) {
+    public WorkoutMeasurements(Date date, float workout_duration, float average_pace, float average_bpm, int[] bpm_data, float[] pace_data, LatLng[] route, float calories_burned, int pulse_zone, float distance) {
         this.date = date;
         this.workout_duration = workout_duration;
         this.average_pace = average_pace;
@@ -49,6 +51,7 @@ public class WorkoutMeasurements {
         this.route = route;
         this.calories_burned = calories_burned;
         this.pulse_zone = pulse_zone;
+        this.distance = distance;
     }
 
 
@@ -65,7 +68,17 @@ public class WorkoutMeasurements {
         values.put(FeedReaderDbHelper.WORKOUT_COL_ROUTE, FeedReaderDbHelper.locationToString(getRoute()));
         values.put(FeedReaderDbHelper.WORKOUT_COL_PACE_DATA, FeedReaderDbHelper.floatArrayToString(getPace_data()));
         values.put(FeedReaderDbHelper.WORKOUT_COL_BPM_DATA, FeedReaderDbHelper.intArrayToString(getBpm_data()));
+        values.put(FeedReaderDbHelper.WORKOUT_COL_DISTANCE, getDistance());
         return values;
+    }
+
+
+    public float getDistance() {
+        return distance;
+    }
+
+    public void setDistance(float distance) {
+        this.distance = distance;
     }
 
     public int getUnique_id() {

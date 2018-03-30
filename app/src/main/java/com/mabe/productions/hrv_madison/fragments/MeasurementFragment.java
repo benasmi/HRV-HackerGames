@@ -67,6 +67,7 @@ public class MeasurementFragment extends Fragment {
     private ImageView img_breathing_indicator;
     private LineChart chart_hr;
     private TextView txt_time_left;
+    private TextView txt_line_chart_label;
 
     private int[] interval_values;
 
@@ -103,7 +104,8 @@ public class MeasurementFragment extends Fragment {
 
     private void initializeViews(View view) {
         img_breathing_indicator = view.findViewById(R.id.breathing_indicator);
-
+        txt_line_chart_label = view.findViewById(R.id.txt_line_chart_label);
+        txt_line_chart_label.setVisibility(View.INVISIBLE);
         //Initializing animated vector drawable only once
         animatedBreathingVector = AnimatedVectorDrawableCompat.create(getContext(), R.drawable.breathing_indicator_anim);
         //A weird way to make the animation loop. I could not find a better one
@@ -298,6 +300,7 @@ public class MeasurementFragment extends Fragment {
         txt_hrv.setTypeface(futura);
         txt_connection_status.setTypeface(futura);
         txt_hrv_value.setTypeface(futura);
+        txt_line_chart_label.setTypeface(futura);
     }
 
     //Method to receive data from GAT SERVER if connected.
@@ -323,7 +326,11 @@ public class MeasurementFragment extends Fragment {
 
         //Again, a weird way to restart the animation
         Animation top_to_bottom = AnimationUtils.loadAnimation(getContext(),R.anim.top_to_bottom);
+        Animation left_to_right = AnimationUtils.loadAnimation(getContext(),R.anim.right_to_left);
+
         img_breathing_indicator.startAnimation(top_to_bottom);
+        txt_line_chart_label.setVisibility(View.VISIBLE);
+        txt_line_chart_label.startAnimation(left_to_right);
         img_breathing_indicator.post(new Runnable() {
             @Override
             public void run() {
@@ -387,6 +394,7 @@ public class MeasurementFragment extends Fragment {
 
                     @Override
                     public void onFinish() {
+
 /*
                         rmssd_value = hrv.calculateRMSSD();
                         LF = fft.getLF_value();
