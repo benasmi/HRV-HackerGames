@@ -90,16 +90,6 @@
         android:layout_marginBottom="15dp"/>
 
 
-
-    <ImageView
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        app:srcCompat="@drawable/intro_screen_anim_2"
-        android:layout_marginTop="35dp"
-        android:id="@+id/imageView"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -142,6 +132,15 @@
         android:layout_alignStart="@+id/passwordEditText"
         android:onClick="login"
         />
+
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        app:srcCompat="@drawable/ic_appicon_rectangle"
+        android:layout_marginTop="34dp"
+        android:id="@+id/imageView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>
