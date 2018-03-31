@@ -45,6 +45,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public static final String FIELD_HEIGHT = "height";
     public static final String FIELD_WEIGHT = "weight";
     public static final String FIELD_KMI = "KMI";
+    public static final String FIELD_MAX_DURATION = "KMI";
     public static final String FIELD_GENDER = "gender";
     public static final String FIELD_BIRTHDAY = "birthday";
     public static final String FIELD_ACTIVITY_INDEX = "activity_index";
@@ -85,6 +86,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public final static String HRV_COL_MEASUREMENT_DURATION = "measurement_duration";
     public final static String HRV_COL_ID = "ID";
     public static final String HRV_COL_MOOD = "Mood";
+    public static final String HRV_COL_HRV = "hrv";
 
     public static final String HRV_DATA_TABLE_NAME = "hrv_data";
 
@@ -93,6 +95,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
                     FeedReaderDbHelper.HRV_COL_ID + " INTEGER PRIMARY KEY," +
                     FeedReaderDbHelper.HRV_COL_DATE + " STRING," +
                     FeedReaderDbHelper.HRV_COL_LN_RMSSD + " FLOAT," +
+                    FeedReaderDbHelper.HRV_COL_HRV + " INTEGER," +
                     FeedReaderDbHelper.HRV_COL_LOWEST_RMSSD + " FLOAT," +
                     FeedReaderDbHelper.HRV_COL_HIGHEST_RMSSD + " FLOAT," +
                     FeedReaderDbHelper.HRV_COL_LOWEST_BPM + " FLOAT," +

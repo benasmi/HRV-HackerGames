@@ -70,11 +70,17 @@ public class RMSSD {
     }
 
     public float getLnRmssd(){
+
         return (float) Math.log(rmssdList.get(rmssdList.size()-1));
     }
 
-    public float getPURE_HRV(){
-        return getLnRmssd()*18;
+    public int getPURE_HRV(){
+
+        int HRV = (int) (getLnRmssd()*15.5f);
+        if(HRV<=0){
+            return 0;
+        }
+        return HRV;
     }
 
     public int getHighestRmssd(){

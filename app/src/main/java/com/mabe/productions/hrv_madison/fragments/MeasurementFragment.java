@@ -72,6 +72,10 @@ public class MeasurementFragment extends Fragment {
     private int[] interval_values;
 
     private User user;
+    //Calculation objects
+    final RMSSD hrv = new RMSSD();
+    final FrequencyMethod fft = new FrequencyMethod();
+    final BPM bpm = new BPM();
 
     private int times = 0;
     private int timePassed = 0;
@@ -343,12 +347,6 @@ public class MeasurementFragment extends Fragment {
 
 
 
-                //Calculation objects
-                final RMSSD hrv = new RMSSD();
-                final FrequencyMethod fft = new FrequencyMethod();
-                final BPM bpm = new BPM();
-
-
                 //Starting measuring
                 countDownTimer = new CountDownTimer(measurement_duration.getValue()*60000,1000l){
                     @Override
@@ -389,28 +387,12 @@ public class MeasurementFragment extends Fragment {
                         hrv.addIntervals(interval_values);
                         bpm.addBPM(hearRate);
                         //Seting values
-                        txt_hrv_value.setText(String.valueOf(hrv.getRmssd()));
+                        txt_hrv_value.setText(String.valueOf(hrv.getPURE_HRV()));
                     }
 
                     @Override
                     public void onFinish() {
 
-/*
-                        rmssd_value = hrv.calculateRMSSD();
-                        LF = fft.getLF_value();
-                        HF = fft.getHF_value();
-                        VLF = fft.getVLF_value();
-                        VHF = fft.getVHF_value();
-
-                        Log.i("DATA", "Highest BPM: " + highest_bpm + "|" +
-                                "Lowest BPM: " + lowest_bpm + "|"+
-                                "Highest HRV: " + highest_rmssd + "|"+
-                                "Lowest HRV: " + lowest_rmssd + "|"+
-                                "LF: " + LF + "|"+
-                                "HF: " + HF + "|"+
-                                "VLF : " + VLF + "|"+
-                                "VHF : " + VHF);
-*/
 
                         Measurement measurement = new Measurement(hrv, fft, bpm, measurement_duration.getValue(), Calendar.getInstance().getTime());
 
@@ -516,6 +498,9 @@ public class MeasurementFragment extends Fragment {
         if(countDownTimer!=null){
             countDownTimer.cancel();
         }
+        hrv.clear();
+        bpm.clear();;
+
         measurement_duration.setEnabled(true);
         btn_start_measuring.setText(R.string.measure_btn);
         txt_connection_status.setText("");

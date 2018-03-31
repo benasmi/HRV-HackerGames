@@ -33,8 +33,9 @@ public class Measurement {
     private int[] rmssd_data;
     private int uniqueId;
     private int mood;
+    private int hrv;
 
-    public Measurement(Date date, int rmssd, float ln_rmssd, float lowest_rmssd, float highest_rmssd, float lowest_bpm, float highest_bpm, float average_bpm, float LF_band, float VLF_band, float VHF_band, float HF_band, int[] bpm_data, int[] rmssd_data, int duration, @Nullable int uniqueId, int mood) {
+    public Measurement(Date date, int rmssd, float ln_rmssd, float lowest_rmssd, float highest_rmssd, float lowest_bpm, float highest_bpm, float average_bpm, float LF_band, float VLF_band, float VHF_band, float HF_band, int[] bpm_data, int[] rmssd_data, int duration, @Nullable int uniqueId, int mood, int hrv) {
         this.date = date;
         this.rmssd = rmssd;
         this.ln_rmssd = ln_rmssd;
@@ -52,10 +53,12 @@ public class Measurement {
         this.duration = duration;
         this.uniqueId = uniqueId;
         this.mood = mood;
+        this.hrv = hrv;
     }
 
     public Measurement(RMSSD rmssd, FrequencyMethod frequencies, BPM bpm, int duration, Date date){
         this.rmssd = rmssd.getRmssd();
+        this.hrv = rmssd.getPURE_HRV();
         this.ln_rmssd = rmssd.getLnRmssd();
         this.date = Calendar.getInstance().getTime();
         this.lowest_rmssd = rmssd.getLowestRmssd();
@@ -72,6 +75,14 @@ public class Measurement {
         this.rmssd_data = rmssd.getRMSSDValues();
         this.duration = duration;
         this.date = date;
+    }
+
+    public int getHrv() {
+        return hrv;
+    }
+
+    public void setHrv(int hrv) {
+        this.hrv = hrv;
     }
 
     public int getDuration() {
@@ -165,6 +176,7 @@ public class Measurement {
         values.put(FeedReaderDbHelper.HRV_COL_VLF_BAND, getVLF_band());
         values.put(FeedReaderDbHelper.HRV_COL_VHF_BAND, getVHF_band());
         values.put(FeedReaderDbHelper.HRV_COL_MOOD, getMood());
+        values.put(FeedReaderDbHelper.HRV_COL_HRV, getHrv());
         values.put(FeedReaderDbHelper.HRV_COL_DATE, Utils.getStringFromDate(getDate()));
 
         return values;

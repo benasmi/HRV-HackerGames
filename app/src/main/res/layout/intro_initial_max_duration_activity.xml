@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/how_long_can_you_work_out"
-        android:padding="8dp"
+        android:padding="10dp"
         android:gravity="center"
         android:textColor="#FFF"
         android:textSize="25dp"
@@ -31,13 +31,41 @@
         android:layout_centerVertical="true"
         app:dsb_progressColor="@color/colorAccent"
         app:dsb_indicatorColor="@color/colorAccent"
+        android:id="@+id/max_duration_slider"
         app:dsb_thumbSize="20dp"
         app:dsb_trackHeight="10dp"
         app:dsb_scrubberHeight="10dp"
         app:dsb_value="10"
         />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_below="@+id/max_duration_slider"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
 
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="#FFF"
+            android:textSize="60dp"
+            android:id="@+id/txt_max_duration_value"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="min"
+            android:textColor="#FFF"
+            android:textSize="30dp"
+            android:id="@+id/txt_min_text"/>
+
+    </LinearLayout>
 
     <Button
         android:layout_width="368dp"
@@ -46,7 +74,7 @@
         android:layout_marginBottom="20dp"
         android:layout_alignParentBottom="true"
         android:text="Tęsti"
-        android:onClick="start"
+        android:onClick="startMain"
         android:textAllCaps="false"
         android:id="@+id/initial_btn_continue_max_duration"
         android:textSize="13dp"

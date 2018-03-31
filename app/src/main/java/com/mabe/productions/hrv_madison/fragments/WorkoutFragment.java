@@ -631,6 +631,7 @@ public class WorkoutFragment extends Fragment {
         return calories/1000; //Conmverting to KCal
     }
 
+
     private int pulseZone(int gender, int age, int bpm){
 
         int HRMax = (int) ((gender==0 ? 202 : 216) - (gender==0 ? 0.55f : 1.09f) * age);

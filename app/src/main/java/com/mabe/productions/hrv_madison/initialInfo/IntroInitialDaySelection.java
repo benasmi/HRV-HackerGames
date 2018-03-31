@@ -165,9 +165,8 @@ public class IntroInitialDaySelection extends AppCompatActivity {
             Toast.makeText(this, R.string.select_at_least_two_days, Toast.LENGTH_LONG).show();
         }else{
             Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_WEEK_DAYS, week_days, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-            startActivity(new Intent(this, MainScreenActivity.class));
-            //Saving intro progress
-            Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_DONE_INITIAL, true, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+            startActivity(new Intent(this, IntroInitialMaxDuration.class));
+
         }
 
     }

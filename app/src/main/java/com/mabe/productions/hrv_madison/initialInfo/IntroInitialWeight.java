@@ -86,7 +86,8 @@ public class IntroInitialWeight extends AppCompatActivity {
         float height = Utils.readFromSharedPrefs_float(this,FeedReaderDbHelper.FIELD_HEIGHT,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
         float KMI = height/Utils.readFromSharedPrefs_float(this,FeedReaderDbHelper.FIELD_WEIGHT,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
 
-        Utils.saveToSharedPrefs(this,"KMI",KMI,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+
+        Utils.saveToSharedPrefs(this,FeedReaderDbHelper.FIELD_KMI,KMI,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
         startActivity(new Intent(this, IntroInitialGender.class));
     }
 }

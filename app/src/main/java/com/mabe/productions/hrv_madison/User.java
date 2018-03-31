@@ -219,26 +219,7 @@ public class User {
 
         SQLiteDatabase db = new FeedReaderDbHelper(context).getWritableDatabase();
 
-        String[] projection = {
-                FeedReaderDbHelper.HRV_COL_DATE,
-                FeedReaderDbHelper.HRV_COL_ID,
-                FeedReaderDbHelper.HRV_COL_RMSSD,
-                FeedReaderDbHelper.HRV_COL_LN_RMSSD,
-                FeedReaderDbHelper.HRV_COL_LOWEST_RMSSD,
-                FeedReaderDbHelper.HRV_COL_HIGHEST_RMSSD,
-                FeedReaderDbHelper.HRV_COL_LOWEST_BPM,
-                FeedReaderDbHelper.HRV_COL_HIGHEST_BPM,
-                FeedReaderDbHelper.HRV_COL_AVERAGE_BPM,
-                FeedReaderDbHelper.HRV_COL_LF_BAND,
-                FeedReaderDbHelper.HRV_COL_VLF_BAND,
-                FeedReaderDbHelper.HRV_COL_VHF_BAND,
-                FeedReaderDbHelper.HRV_COL_HF_BAND,
-                FeedReaderDbHelper.HRV_COL_BPM_DATA,
-                FeedReaderDbHelper.HRV_COL_RMSSD_DATA,
-                FeedReaderDbHelper.HRV_COL_MEASUREMENT_DURATION,
-                FeedReaderDbHelper.HRV_COL_MOOD
-
-        };
+        String[] projection = {"*"};
 
         String sortOrder =
                 FeedReaderDbHelper.HRV_COL_ID + " DESC";
@@ -259,6 +240,8 @@ public class User {
                     cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_DATE)));
             int rmssd = cursor.getInt(
                     cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_RMSSD));
+            int hrv = cursor.getInt(
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_HRV));
             float ln_rmssd = cursor.getFloat(
                     cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_LN_RMSSD));
             float lowest_rmssd = cursor.getFloat(
@@ -309,7 +292,8 @@ public class User {
                     rmssdData,
                     measurement_duration,
                     id,
-                    mood);
+                    mood,
+                    hrv);
 
             measurementList.add(measurement);
             Log.i("TEST", "rmssd: " + rmssd);
@@ -497,11 +481,8 @@ public class User {
 
 
         //Dummy data
-        //user.setCurrentHrv(40);
-        //user.setLastWeekHrv(30);
-        //user.setSecondLastWeekHrv(20);
         user.setSelectedSport(SPORT_JOGGING);
-        user.setMaxDuration(20);
+        user.setMaxDuration(50);
 
         user.getAllMeasurementsFromDb(context);
         user.getAllWorkoutsFromDb(context);
@@ -513,13 +494,13 @@ public class User {
         for (int i = 0; i < measurements.size(); i++) {
             calendar.setTime(measurements.get(i).getDate());
             int measurementDay = calendar.get(Calendar.DAY_OF_YEAR);
-
+            //todo: change method to take hrv by date
             if (measurementDay == today) {
                 //Today's measurement
-                user.setCurrentHrv(measurements.get(i).getRmssd());
+                user.setCurrentHrv(measurements.get(i).getHrv());
             } else if (measurementDay == today - 1) {
                 //yesterday's measurement
-                user.setYesterdayHrv(measurements.get(i).getRmssd());
+                user.setYesterdayHrv(measurements.get(i).getHrv());
             }
         }
 
@@ -695,13 +676,13 @@ public class User {
                     if (percentageChange <= MEDIOCRE_HRV_INCREASE) {
 
                         Log.i("TEST", "mediocre hrv increase");
-                        verbal_reccomendation =  "Your HRV has increased,in comparison to last time: Upgrading your workout!";
+                        verbal_reccomendation =  "Your HRV has increased,in comparison to last time. Upgrading your workout!";
                         return;
                     }
 
                     //hrv has greatly increased
                     Log.i("TEST", "hrv has greatly increased");
-                    verbal_reccomendation =  "Incredible! Seems like you've been feeling lately: Increasing training difficulty!";
+                    verbal_reccomendation =  "Incredible! Seems like you've been feeling great lately. Increasing training difficulty!";
                     return;
 
 
@@ -920,9 +901,8 @@ public class User {
     }
 
     public float getHrvChangePercentage() {
-        return  current_hrv / yesterday_hrv;
+        return  current_hrv/ yesterday_hrv;
     }
-
     public String getVerbalReccomendation() {
         return verbal_reccomendation;
     }
