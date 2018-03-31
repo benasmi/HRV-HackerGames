@@ -174,11 +174,31 @@ public class WorkoutFragment extends Fragment {
         btn_toggle.startAnimation(anim_top_to_bottom_delay);
     }
 
+    private boolean checkForGPS(){
 
-    private void autoConnectDevice(){
+        if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) !=  PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    MainScreenActivity.PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
+            return false;
+        }
+
+        if(!Utils.isGPSEnabled(getContext())){
+            Toast.makeText(getContext(), "Please enable GPS!", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    //todo: clean up
+    private boolean autoConnectDevice(){
         String MAC_adress = Utils.readFromSharedPrefs_string(getContext(), FeedReaderDbHelper.BT_FIELD_MAC_ADRESS, FeedReaderDbHelper.SHARED_PREFS_DEVICES);
         String device_name = Utils.readFromSharedPrefs_string(getContext(),FeedReaderDbHelper.BT_FIELD_DEVICE_NAME,FeedReaderDbHelper.SHARED_PREFS_DEVICES);
 
+        if(BluetoothGattService.isGattDeviceConnected){
+            return true;
+        }
 
         //If there is saved device --> connect
         if(!MAC_adress.equals("") && Utils.isBluetoothEnabled()){
@@ -186,14 +206,10 @@ public class WorkoutFragment extends Fragment {
             shouldStartWorkoutImmediately = true;
             getContext().startService(new Intent(getContext(), BluetoothGattService.class).putExtra("device", device));
             txt_connection_status.setText(getString(R.string.connecting_to) + " " + device_name);
+            return false;
         }else{
 
             //If there is no saved device --> add one
-            if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) !=  PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(getActivity(),
-                                                  new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                                                  MainScreenActivity.PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
-            }else{
 
 
                 if(Utils.isBluetoothEnabled()){
@@ -211,8 +227,12 @@ public class WorkoutFragment extends Fragment {
                 }else{
                     //todo: fix to open a dialog
                     Toast.makeText(getContext(), "Please enable bluetooth!", Toast.LENGTH_LONG).show(); //TODO: add a nice dialog or something
+
+
                 }
-            }
+
+            return false;
+
         }
     }
 
@@ -298,11 +318,9 @@ public class WorkoutFragment extends Fragment {
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
 
             //if device is connected
-            if(BluetoothGattService.isGattDeviceConnected){
+            if(checkForGPS() && autoConnectDevice()){
                 setState(STATE_WORKING_OUT);
 
-            }else{
-                autoConnectDevice();
             }
         }
     };

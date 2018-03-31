@@ -10,6 +10,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
@@ -237,5 +239,11 @@ public class Utils {
 
     }
 
+
+    public static boolean isGPSEnabled(Context context){
+        final LocationManager manager = (LocationManager) context.getSystemService( Context.LOCATION_SERVICE );
+
+        return manager.isProviderEnabled( LocationManager.GPS_PROVIDER );
+    }
 
 }
