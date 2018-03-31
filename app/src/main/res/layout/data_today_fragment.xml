@@ -14,10 +14,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:visibility="visible"
             android:layout_marginTop="15dp"
             android:layout_margin="10dp"
-            android:id="@+id/first_time_layout"
+            android:id="@+id/no_measurement_today_layout"
             android:orientation="vertical"
             android:padding="5dp">
 
@@ -25,7 +25,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Hey!\n Since you are new here, you need to make your first measurement to get started!"
+                android:text="No data to show, because you haven't made any measurements today."
                 android:gravity="center"
                 android:textSize="17dp"
                 android:id="@+id/first_time_greeting"

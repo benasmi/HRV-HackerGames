@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -16,6 +17,7 @@ import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Calendar;
+import java.util.TimeZone;
 
 public class User {
 
@@ -194,6 +196,23 @@ public class User {
         }
     }
 
+    public Measurement getTodaysMeasurement(){
+
+        Calendar todaysDate = Calendar.getInstance(TimeZone.getDefault());
+        int today = todaysDate.get(Calendar.DAY_OF_YEAR);
+        for(int i = 0; i <measurements.size(); i++){
+        todaysDate.setTime(measurements.get(i).getDate());
+            int measurementDate = todaysDate.get(Calendar.DAY_OF_YEAR);
+            if(today==measurementDate){
+                Log.i("MEASUREMENTS", "MEASUREAMENT FOUND");
+                return measurements.get(i);
+            }
+        }
+        Log.i("MEASUREMENTS", "MEASUREMENT NOT FOUND");
+        return null;
+
+    }
+
     private void getAllMeasurementsFromDb(Context context) {
 
         ArrayList<Measurement> measurementList = new ArrayList<>();
@@ -369,6 +388,21 @@ public class User {
         } else {
             return null;
         }
+    }
+
+    public WorkoutMeasurements getTodaysWorkout(){
+        Calendar todaysDate = Calendar.getInstance();
+        int today = todaysDate.get(Calendar.DAY_OF_YEAR);
+        for(int i = 0; i <workouts.size(); i++){
+            todaysDate.setTime(workouts.get(i).getDate());
+            int measurementDate = todaysDate.get(Calendar.DAY_OF_YEAR);
+            if(today==measurementDate){
+                Log.i("MEASUREMENTS", "FOUND WORKOUT");
+                return workouts.get(i);
+            }
+        }
+        Log.i("MEASUREMENTS", "WORKOUT NOT FOUND");
+        return null;
     }
 
     public static User getUser(Context context) {

@@ -73,6 +73,10 @@ public class RMSSD {
         return (float) Math.log(rmssdList.get(rmssdList.size()-1));
     }
 
+    public float getPURE_HRV(){
+        return getLnRmssd()*18;
+    }
+
     public int getHighestRmssd(){
         int highest_rmssd = rmssdList.get(0);
 

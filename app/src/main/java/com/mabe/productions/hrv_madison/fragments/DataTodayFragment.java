@@ -91,7 +91,6 @@ public class DataTodayFragment extends Fragment {
     private TextView bpm_card_hrv_average_value;
 
 
-
     //Daily reccomendation cardview
     private CardView recommendation_card;
     private TextView reccomendation_txt_todays_program;
@@ -113,7 +112,7 @@ public class DataTodayFragment extends Fragment {
     private int STATE_FEELING = 2;
 
     //Workout route cardview
-    private CardView cardview_route;
+    private CardView workout_done_cardview;
     private SupportMapFragment map_fragment;
     private TextView txt_workout_data;
     private TextView txt_workout_time_ago;
@@ -123,11 +122,13 @@ public class DataTodayFragment extends Fragment {
     private GoogleMap googlemap_route; //We may need this one in the future
 
     //First time layout
-    private LinearLayout first_time_layout;
-    private AppCompatButton first_time_btn;
+    private LinearLayout no_measured_today_layout;
+    private AppCompatButton no_measured_today_button;
     private TextView first_time_greeting;
 
-    private boolean isFirstTime;
+    private boolean hasMeasuredToday;
+    private boolean hasWorkoutedToday;
+
     private AppCompatButton reccomendation_btn_start_workout;
 
     public DataTodayFragment() {
@@ -151,177 +152,193 @@ public class DataTodayFragment extends Fragment {
 
     }
 
-    public void updateData(){
+    private void setCardViewsVisibilityAndData(User user) {
 
-        //Checking if it's the first time
-        isFirstTime = Utils.readFromSharedPrefs_string(getContext(), FeedReaderDbHelper.FIELD_LAST_MEASUREMENT_DATE, FeedReaderDbHelper.SHARED_PREFS_USER_DATA).equals("") ? true : false;
+        //Today measurements and workouts
+        Measurement todayMeasurement = user.getTodaysMeasurement();
+        WorkoutMeasurements todaysWorkoutMeasurement = user.getTodaysWorkout();
+        hasMeasuredToday = todayMeasurement == null ? false : true;
+        hasWorkoutedToday = todaysWorkoutMeasurement == null ? false : true;
 
-        if(isFirstTime){
-            setMeasurementCardViewsVisibility(false);
-            setWorkoutCardViewsVisibility(false);
-            first_time_layout.setVisibility(View.VISIBLE);
-        }else{
-            setMeasurementCardViewsVisibility(true);
-            setWorkoutCardViewsVisibility(true);
-            first_time_layout.setVisibility(View.GONE);
-        }
+        if (hasMeasuredToday) {
 
-        User user = User.getUser(getContext());
+            //Show: ---> mood ; BPM ; LFHF; Training Plan
+            feeling_cardview.setVisibility(View.VISIBLE);
+            bpm_card.setVisibility(View.VISIBLE);
+            freq_card.setVisibility(View.VISIBLE);
+            recommendation_card.setVisibility(View.VISIBLE);
+            //Hide: ---> No measurement layout
+            no_measured_today_layout.setVisibility(View.GONE);
 
-        Measurement measurement = user.getLastMeasurement();
-        if(measurement!=null){
-            setMeasurementCardViewsVisibility(true);
+            /*
+               If view has visibility ---> SET DATA
+               BPM CARDVIEW
+             */
+            Measurement measurement = user.getLastMeasurement();
 
-            int bpmValues[] = measurement.getBpm_data();
-            int rmssdValues[] = measurement.getRmssd_data();
+            //Setting bpm/hrv data
+            if (measurement != null) {
+                int bpmValues[] = measurement.getBpm_data();
+                int rmssdValues[] = measurement.getRmssd_data();
 
-            int maxGraphValue = bpmValues.length > rmssdValues.length ? bpmValues.length : rmssdValues.length;
+                int maxGraphValue = bpmValues.length > rmssdValues.length ? bpmValues.length : rmssdValues.length;
 
-            for(int i = 0; i<bpmValues.length; i++){
-                if(i<=maxGraphValue){
-                    addEntryBpm(bpmValues[i],maxGraphValue);
-
-                }
-
-            }
-
-            for(int i = 0; i<rmssdValues.length; i++){
-                if(i<=maxGraphValue){
-                    addEntryRmssd(rmssdValues[i], maxGraphValue);
-
-                }
-            }
-
-
-            freq_card_txt_hf_after_measurament.setText(String.valueOf(measurement.getHF_band()));
-            freq_card_txt_lf_after_measurement.setText(String.valueOf(measurement.getHF_band()));
-            freq_card_txt_vlf_after_measurement.setText(String.valueOf(measurement.getVHF_band()));
-            bpm_card_hrv_average_value.setText(String.valueOf(measurement.getRmssd()));
-            bpm_card_value_average.setText(String.valueOf((int)measurement.getAverage_bpm()));
-
-            Log.i("TEST", "mood: " + measurement.getMood());
-
-            //Setting initial mood
-            switch(measurement.getMood()){
-                case User.MOOD_NEGATIVELY_EXCITED:
-                    img_negatively_excited.callOnClick();
-                    break;
-                case User.MOOD_NEGATIVELY_MELLOW:
-                    img_negatively_mellow.callOnClick();
-                    break;
-                case User.MOOD_NEUTRAL:
-                    img_neutral.callOnClick();
-                    break;
-                case User.MOOD_POSITIVELY_MELLOW:
-                    img_positively_mellow.callOnClick();
-                    break;
-                case User.MOOD_POSITIVELY_EXCITED:
-                    img_positively_excited.callOnClick();
-                    break;
-            }
-
-
-
-
-            switch (user.getProgramUpdateState()){
-
-                case User.PROGRAM_STATE_CHANGED:
-                    setReccomendationCardPercentage(user.getHrvChangePercentage());
-                    reccomendation_txt_verbal_recommendation.setText(user.getVerbalReccomendation());
-                    reccomendation_txt_pulse_zone.setText(user.getPulseZone() + " pulse zone");
-                    reccomendation_txt_duration.setText(String.valueOf((int) user.getWorkoutDuration()) + " " + getString(
-                            R.string.min));
-                    break;
-                case User.PROGRAM_STATE_DAY_OFF:
-
-                    break;
-                case User.PROGRAM_STATE_INVALID:
-
-                    break;
-                case User.PROGRAM_STATE_NOT_ENOUGH_DATA:
-
-                    break;
-            }
-
-
-
-
-        }
-
-
-        final WorkoutMeasurements workout = user.getLastWorkout();
-
-
-        //todo: check cardviews visibilities
-        if(workout != null){
-
-            setWorkoutCardViewsVisibility(true);
-            setTrainingPlanCardViewsVisibility(false);
-
-
-            workout_card_pace.setText(String.valueOf(workout.getAverage_pace()));
-            workout_card_distance.setText(String.valueOf(workout.getDistance()));
-            workout_card_calories.setText(String.valueOf(workout.getCalories_burned()));
-
-
-            if(googlemap_route == null){
-                map_fragment.onCreate(getArguments());
-                map_fragment.getMapAsync(new OnMapReadyCallback() {
-                    @Override
-                    public void onMapReady(GoogleMap googleMap) {
-                        DataTodayFragment.this.googlemap_route = googleMap;
-                        map_fragment.getView().setClickable(false);
-                        //Instantiates a new Polyline object and adds points to define a rectangle
-                        PolylineOptions lineOptions = new PolylineOptions()
-                                .width(5)
-                                .color(getResources().getColor(R.color.colorAccent))
-                                .geodesic(false);
-
-                        //This will zoom the map to our polyline
-                        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
-                        for(LatLng point : workout.getRoute()){
-                            lineOptions.add(point);
-                            builder.include(point);
-                        }
-                        googlemap_route.addPolyline(lineOptions);
-
-                        LatLngBounds bounds = builder.build();
-                        final CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 50);
-                        googlemap_route.animateCamera(cu);
+                for (int i = 0; i < bpmValues.length; i++) {
+                    if (i <= maxGraphValue) {
+                        addEntryBpm(bpmValues[i], maxGraphValue);
 
                     }
-                });
-            }else{
-                //Instantiates a new Polyline object and adds points to define a rectangle
-                PolylineOptions lineOptions = new PolylineOptions()
-                        .width(5)
-                        .color(getResources().getColor(R.color.colorAccent))
-                        .geodesic(false);
 
-                //This will zoom the map to our polyline
-                LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
-                for(LatLng point : workout.getRoute()){
-                    lineOptions.add(point);
-                    builder.include(point);
                 }
-                googlemap_route.addPolyline(lineOptions);
 
-                LatLngBounds bounds = builder.build();
-                final CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 50);
-                googlemap_route.animateCamera(cu);
+                for (int i = 0; i < rmssdValues.length; i++) {
+                    if (i <= maxGraphValue) {
+                        addEntryRmssd(rmssdValues[i], maxGraphValue);
+
+                    }
+                }
+            }
+                bpm_line_chart.animateY(2000,Easing.EasingOption.EaseInOutSine);
+
+                //FREQUENCY CARDVIEW
+                freq_card_txt_hf_after_measurament.setText(String.valueOf(measurement.getHF_band()));
+                freq_card_txt_lf_after_measurement.setText(String.valueOf(measurement.getHF_band()));
+                freq_card_txt_vlf_after_measurement.setText(String.valueOf(measurement.getVHF_band()));
+                bpm_card_hrv_average_value.setText(String.valueOf(measurement.getRmssd()));
+                bpm_card_value_average.setText(String.valueOf((int) measurement.getAverage_bpm()));
+
+                //INITIAL MOOD CARDVIEW
+                switch (measurement.getMood()) {
+                    case User.MOOD_NEGATIVELY_EXCITED:
+                        img_negatively_excited.callOnClick();
+                        break;
+                    case User.MOOD_NEGATIVELY_MELLOW:
+                        img_negatively_mellow.callOnClick();
+                        break;
+                    case User.MOOD_NEUTRAL:
+                        img_neutral.callOnClick();
+                        break;
+                    case User.MOOD_POSITIVELY_MELLOW:
+                        img_positively_mellow.callOnClick();
+                        break;
+                    case User.MOOD_POSITIVELY_EXCITED:
+                        img_positively_excited.callOnClick();
+                        break;
+                }
+
+
+                //RECCOMENDATION CARDVIEW
+                switch (user.getProgramUpdateState()) {
+
+                    case User.PROGRAM_STATE_CHANGED:
+                        setReccomendationCardPercentage(user.getHrvChangePercentage());
+                        reccomendation_txt_verbal_recommendation.setText(user.getVerbalReccomendation());
+                        reccomendation_txt_pulse_zone.setText(user.getPulseZone() + " pulse zone");
+                        reccomendation_txt_duration.setText(String.valueOf((int) user.getWorkoutDuration()) + " " + getString(
+                                R.string.min));
+                        break;
+                    case User.PROGRAM_STATE_DAY_OFF:
+
+                        break;
+                    case User.PROGRAM_STATE_INVALID:
+
+                        break;
+                    case User.PROGRAM_STATE_NOT_ENOUGH_DATA:
+
+                        break;
+                }
+
+            } else {
+                //Show: ---> no measurement layout
+                no_measured_today_layout.setVisibility(View.VISIBLE);
+
+                //Hide: ---> mood; BPM; LFHF; Training plan; workout results
+                feeling_cardview.setVisibility(View.GONE);
+                bpm_card.setVisibility(View.GONE);
+                freq_card.setVisibility(View.GONE);
+                recommendation_card.setVisibility(View.GONE);
+                workout_done_cardview.setVisibility(View.GONE);
             }
 
 
-        }else{
-            setWorkoutCardViewsVisibility(false);
-        }
+            if (hasWorkoutedToday) {
+                //Show: ---> workoutResults
+                workout_done_cardview.setVisibility(View.VISIBLE);
 
+                //WORKOUT DATA CARDVIEW
+                final WorkoutMeasurements workout = user.getLastWorkout();
+                if(workout!=null) {
 
-        bpm_line_chart.animateY(2000, Easing.EasingOption.EaseInOutSine);
+                    workout_card_pace.setText(String.valueOf(workout.getAverage_pace()));
+                    workout_card_distance.setText(String.valueOf(workout.getDistance()));
+                    workout_card_calories.setText(String.valueOf(workout.getCalories_burned()));
+                    settingWorkoutMap(workout);
+                }
+            }else{
+                workout_done_cardview.setVisibility(View.GONE);
+            }
 
     }
+
+
+    public void updateData() {
+
+        User user = User.getUser(getContext());
+        setCardViewsVisibilityAndData(user);
+
+        }
+
+    private void settingWorkoutMap(final WorkoutMeasurements workout){
+        if (googlemap_route == null) {
+            map_fragment.onCreate(getArguments());
+            map_fragment.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    DataTodayFragment.this.googlemap_route = googleMap;
+                    map_fragment.getView().setClickable(false);
+                    //Instantiates a new Polyline object and adds points to define a rectangle
+                    PolylineOptions lineOptions = new PolylineOptions()
+                            .width(5)
+                            .color(getResources().getColor(R.color.colorAccent))
+                            .geodesic(false);
+
+                    //This will zoom the map to our polyline
+                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+                    for (LatLng point : workout.getRoute()) {
+                        lineOptions.add(point);
+                        builder.include(point);
+                    }
+                    googlemap_route.addPolyline(lineOptions);
+
+                    LatLngBounds bounds = builder.build();
+                    final CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 50);
+                    googlemap_route.animateCamera(cu);
+
+                }
+            });
+        } else {
+            //Instantiates a new Polyline object and adds points to define a rectangle
+            PolylineOptions lineOptions = new PolylineOptions()
+                    .width(5)
+                    .color(getResources().getColor(R.color.colorAccent))
+                    .geodesic(false);
+
+            //This will zoom the map to our polyline
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+            for (LatLng point : workout.getRoute()) {
+                lineOptions.add(point);
+                builder.include(point);
+            }
+            googlemap_route.addPolyline(lineOptions);
+
+            LatLngBounds bounds = builder.build();
+            final CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 50);
+            googlemap_route.animateCamera(cu);
+        }
+    }
+
 
     private void setReccomendationCardPercentage(float percentageChange){
 
@@ -354,11 +371,13 @@ public class DataTodayFragment extends Fragment {
     }
 
     private void setWorkoutCardViewsVisibility(boolean visibility){
-        cardview_route.setVisibility(visibility ? View.VISIBLE : View.GONE);
+        workout_done_cardview.setVisibility(visibility ? View.VISIBLE : View.GONE);
     }
     private void setTrainingPlanCardViewsVisibility(boolean visibility){
         recommendation_card.setVisibility(visibility ? View.VISIBLE : View.GONE);
     }
+
+
 
 
     private void initializeViews(View view){
@@ -441,7 +460,7 @@ public class DataTodayFragment extends Fragment {
 
 
         //Workout cardview
-        cardview_route = view.findViewById(R.id.cardview_route);
+        workout_done_cardview = view.findViewById(R.id.cardview_route);
         workout_card_calories = view.findViewById(R.id.workout_card_calories_burned);
         workout_card_pace = view.findViewById(R.id.workout_card_running_pace);
         workout_card_distance = view.findViewById(R.id.workout_card_distance_run);
@@ -470,8 +489,8 @@ public class DataTodayFragment extends Fragment {
                 .setDuration(1500)
                 .start();
 
-        cardview_route.setTranslationY( Utils.getScreenHeight(getContext()));
-        cardview_route.animate()
+        workout_done_cardview.setTranslationY( Utils.getScreenHeight(getContext()));
+        workout_done_cardview.animate()
                 .translationY(0)
                 .setInterpolator(new DecelerateInterpolator(3.f))
                 .setDuration(1500)
@@ -488,10 +507,10 @@ public class DataTodayFragment extends Fragment {
 
 
         //First time cardview
-        first_time_btn = view.findViewById(R.id.first_time_measure_button);
-        first_time_layout = view.findViewById(R.id.first_time_layout);
+        no_measured_today_button = view.findViewById(R.id.first_time_measure_button);
+        no_measured_today_layout = view.findViewById(R.id.no_measurement_today_layout);
         first_time_greeting = view.findViewById(R.id.first_time_greeting);
-        first_time_btn.setOnClickListener(new View.OnClickListener() {
+        no_measured_today_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Utils.setViewpagerTab(getActivity(), 0);
@@ -500,14 +519,12 @@ public class DataTodayFragment extends Fragment {
 
         Animation anim_btn = AnimationUtils.loadAnimation(getContext(), R.anim.top_to_bottom_delay);
         Animation anim_txt = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
-        first_time_btn.startAnimation(anim_btn);
+        no_measured_today_button.startAnimation(anim_btn);
         first_time_greeting.startAnimation(anim_txt);
 
 
-
-
-
     }
+
 
 
 

@@ -117,14 +117,13 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="200dp">
 
         <com.github.mikephil.charting.charts.LineChart
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:id="@+id/hr_chart">
         </com.github.mikephil.charting.charts.LineChart>
-
 
         <TextView
             android:layout_width="wrap_content"
@@ -134,8 +133,11 @@
             android:textColor="#FFFFFF"
             android:id="@+id/txt_line_chart_label"
             android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
             android:layout_marginRight="10dp"
             />
+
+
 
     </RelativeLayout>
 
