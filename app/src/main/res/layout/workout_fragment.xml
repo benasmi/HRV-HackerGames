@@ -44,6 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
+                android:id="@+id/time_layout"
                 android:orientation="horizontal">
 
 

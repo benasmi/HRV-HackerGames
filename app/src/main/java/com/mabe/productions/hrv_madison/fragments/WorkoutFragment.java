@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -31,9 +30,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.budiyev.android.circularprogressbar.CircularProgressBar;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.DetectedActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -47,19 +43,12 @@ import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.bluetooth.BluetoothGattService;
 import com.mabe.productions.hrv_madison.bluetooth.LeDevicesDialog;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
-import com.mabe.productions.hrv_madison.measurements.BPM;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import io.nlopez.smartlocation.OnActivityUpdatedListener;
-import io.nlopez.smartlocation.OnLocationUpdatedListener;
-import io.nlopez.smartlocation.SmartLocation;
-import io.nlopez.smartlocation.location.config.LocationAccuracy;
-import io.nlopez.smartlocation.location.config.LocationParams;
 
 //todo: kol workoutina, reikia patikrinti ar pasibaige/nepasibaige nustatytas laikas
 public class WorkoutFragment extends Fragment {
@@ -79,7 +68,9 @@ public class WorkoutFragment extends Fragment {
     private ImageView img_pause;
     private ImageView img_stop;
     private LinearLayout layout_workout_progress;
+    private LinearLayout layout_time;
 
+    private Thread pauseThread;
     private Timer timer = null;
     public boolean shouldStartWorkoutImmediately = false;
     private static final long TIMER_STEP = 1000;
@@ -97,7 +88,7 @@ public class WorkoutFragment extends Fragment {
     private int pulse_zone = 0;
     private long userSpecifiedWorkoutDuration = 0;
     private boolean isTimerRunning = false;
-
+    private boolean runThread;
     int workout_state = STATE_BEFORE_WORKOUT;
     private boolean isLocationListeningEnabled= false;
 
@@ -151,6 +142,7 @@ public class WorkoutFragment extends Fragment {
         layout_workout_progress = rootView.findViewById(R.id.workout_progress_layout);
         editText_minutes = rootView.findViewById(R.id.edittext_minutes);
         editText_seconds = rootView.findViewById(R.id.edittext_seconds);
+        layout_time = rootView.findViewById(R.id.time_layout);
         img_stop.setOnClickListener(stopButtonListener);
         setupEditTextBehavior();
 
@@ -242,6 +234,7 @@ public class WorkoutFragment extends Fragment {
         public void onClick(View v) {
 
             if(BluetoothGattService.isGattDeviceConnected){
+                runThread = false;
                 setState(STATE_WORKING_OUT);
             }else{
                 Toast.makeText(getContext(), "Please connect heart rate monitor!", Toast.LENGTH_LONG).show();
@@ -252,6 +245,7 @@ public class WorkoutFragment extends Fragment {
     private View.OnClickListener pauseButtonListener = new View.OnClickListener(){
         @Override
         public void onClick(View v) {
+            timePauseFlashing();
             setState(STATE_PAUSED);
         }
     };
@@ -267,6 +261,7 @@ public class WorkoutFragment extends Fragment {
                                          new DialogInterface.OnClickListener() {
                                              @Override
                                              public void onClick(DialogInterface dialog, int which) {
+                                                 runThread = false;
                                                  setState(STATE_BEFORE_WORKOUT);
                                              }
                                          },
@@ -697,5 +692,45 @@ public class WorkoutFragment extends Fragment {
     }
 
 
+    private void timePauseFlashing(){
+        final boolean[] visibility = {true};
+        runThread = true;
+        pauseThread = new Thread() {
+            @Override
+            public void run() {
+                while (runThread) {
+                Log.i("TEST", String.valueOf(interrupted()));
+                    try {
+                        Thread.sleep(400);  //1000ms = 1 sec
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                if(runThread){
+                                    if(visibility[0]){
+                                        layout_time.setVisibility(View.INVISIBLE);
+                                    }else{
+                                        layout_time.setVisibility(View.VISIBLE);
+                                    }
+                                    visibility[0] = !visibility[0];
+                                }else{
+                                    layout_time.setVisibility(View.VISIBLE);
+                                }
+
+
+                            }
+                        });
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        };
+
+        pauseThread.start();
+
+    }
 
 }
