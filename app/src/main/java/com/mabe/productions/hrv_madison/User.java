@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -81,7 +80,7 @@ public class User {
 
     /*
      * Saves a new measurement to the database.
-     * @param overrideByDate If true, existing table row with today's date is overriden.
+     * @param overrideByDate If true, existing table row with today's date is overridden.
      */
 
     public static void addMeasurementData(Context context, Measurement measurement, boolean overrideByDate) {
@@ -134,7 +133,7 @@ public class User {
 
     /*
      * Saves a new workout to the database.
-     * @param overrideByDate If true, existing table row with today's date is overriden.
+     * @param overrideByDate If true, existing table row with today's date is overridden.
      */
 
     public static void addWorkoutData(Context context, WorkoutMeasurements workout, boolean overrideByDate) {
@@ -186,7 +185,7 @@ public class User {
     }
 
     /*
-     * Returns last saved measurement
+     * @return Last saved measurement
      */
     public Measurement getLastMeasurement() {
         if (measurements.size() > 0) {
@@ -196,6 +195,11 @@ public class User {
         }
     }
 
+
+    /*
+     * If no measurements were made today, returns null
+     * @return Today's measurement.
+     */
     public Measurement getTodaysMeasurement(){
 
         Calendar todaysDate = Calendar.getInstance(TimeZone.getDefault());
@@ -213,6 +217,10 @@ public class User {
 
     }
 
+
+    /*
+     * Fetches all measurements from the database and populates measurements list
+     */
     private void getAllMeasurementsFromDb(Context context) {
 
         ArrayList<Measurement> measurementList = new ArrayList<>();
@@ -272,7 +280,6 @@ public class User {
 
             int measurement_duration = cursor.getInt(
                     cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_MEASUREMENT_DURATION));
-            //TODO: jei tau sita vieta crashina, perinstaliuok appsa
             int mood = cursor.getInt(
                     cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_MOOD));
 
@@ -296,7 +303,6 @@ public class User {
                     hrv);
 
             measurementList.add(measurement);
-            Log.i("TEST", "rmssd: " + rmssd);
 
         }
 
@@ -307,6 +313,10 @@ public class User {
 
 
     }
+
+    /*
+    * Fetches all workouts from the database and populates workouts list
+    */
     private void getAllWorkoutsFromDb(Context context) {
 
         ArrayList<WorkoutMeasurements> workoutList = new ArrayList<>();
@@ -366,6 +376,9 @@ public class User {
 
     }
 
+    /*
+    * @return Last saved workout
+     */
     public WorkoutMeasurements getLastWorkout(){
         if (workouts.size() > 0) {
             return workouts.get(0);
@@ -374,6 +387,10 @@ public class User {
         }
     }
 
+    /*
+    * If no workouts were completed today, returns null
+    * @return Today's workout.
+    */
     public WorkoutMeasurements getTodaysWorkout(){
         Calendar todaysDate = Calendar.getInstance();
         int today = todaysDate.get(Calendar.DAY_OF_YEAR);
@@ -389,6 +406,63 @@ public class User {
         return null;
     }
 
+    /*
+     * Sets last_week_hrv, second_last_week_hrv, current_hrv, yesterday_hrv values from measurement arrayList
+     */
+    private void setHrvMeasurementsByDate(){
+
+        int hrvSumLastWeek = 0;
+        int hrvCountLastWeek = 0;
+
+        int hrvSumSecondLastWeek = 0;
+        int hrvCountSecondLastWeek = 0;
+
+        Calendar calendar = Calendar.getInstance();
+        int currentWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+        int currentDay = calendar.get(Calendar.DAY_OF_YEAR);
+
+        for(Measurement measurement : measurements){
+
+            //Summing up rmssd if date if from last week
+            calendar.setTime(measurement.getDate());
+
+            int measurementDay = calendar.get(Calendar.DAY_OF_YEAR);
+            int measurementWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+
+            if (currentWeek - 1 == measurementWeek) {
+                hrvCountLastWeek++;
+                hrvSumLastWeek += measurement.getHrv();
+            }
+
+            if (currentWeek - 2 == measurementWeek) {
+                hrvCountSecondLastWeek++;
+                hrvSumSecondLastWeek += measurement.getHrv();
+            }
+
+            if (measurementDay == currentDay) {
+                //Today's measurement
+                setCurrentHrv(measurement.getHrv());
+            } else if (measurementDay == currentDay - 1) {
+                //yesterday's measurement
+                setYesterdayHrv(measurement.getHrv());
+            }
+
+        }
+
+        //Calculating and setting last_week and second_last_week hrv values
+        if (hrvCountLastWeek != 0) {
+            setLastWeekHrv(((float) hrvSumLastWeek) / ((float) hrvCountLastWeek));
+            if (hrvCountSecondLastWeek != 0) {
+                setSecondLastWeekHrv(((float) hrvSumSecondLastWeek) / ((float) hrvCountSecondLastWeek));
+            }
+        }
+    }
+
+
+    /*
+     * Fetches data from the database and returns an instance of a user
+     * @return User instance
+     */
     public static User getUser(Context context) {
         User user = new User();
 
@@ -408,123 +482,46 @@ public class User {
         user.setWeekDays(Utils.readFromSharedPrefs_boolarray(context, FeedReaderDbHelper.FIELD_WEEK_DAYS, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
 
 
-        FeedReaderDbHelper databaseHelper = new FeedReaderDbHelper(context);
-        SQLiteDatabase database = databaseHelper.getReadableDatabase();
-
-        String[] projection = {
-                FeedReaderDbHelper.HRV_COL_ID,
-                FeedReaderDbHelper.HRV_COL_RMSSD,
-                FeedReaderDbHelper.HRV_COL_DATE
-
-        };
-
-        String sortOrder =
-                FeedReaderDbHelper.HRV_COL_ID + " DESC";
-
-        Cursor cursor = database.query(
-                FeedReaderDbHelper.HRV_DATA_TABLE_NAME,
-                projection,
-                null,
-                null,
-                null,
-                null,
-                sortOrder
-        );
-
-        Calendar calendar = Calendar.getInstance();
-
-        int rmssdSumLastWeek = 0;
-        int rmssdCountLastWeek = 0;
-
-        int rmssdSumSecondLastWeek = 0;
-        int rmssdCountSecondLastWeek = 0;
-
-        //Getting user hrv data from SQLite
-        while (cursor.moveToNext()) {
-            long itemId = cursor.getLong(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_ID));
-            int rmssd = cursor.getInt(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_RMSSD));
-            String dateString = cursor.getString(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_DATE));
-
-
-            Date date = Utils.getDateFromString(dateString);
-
-            //Summing up rmssd if date if from last week
-            int currentWeek = calendar.get(Calendar.WEEK_OF_YEAR);
-            calendar.setTime(date);
-
-            if (currentWeek - 1 == (calendar.get(Calendar.WEEK_OF_YEAR))) {
-                rmssdCountLastWeek++;
-                rmssdSumLastWeek += rmssd;
-            }
-
-            if (currentWeek - 2 == (calendar.get(Calendar.WEEK_OF_YEAR))) {
-                rmssdCountSecondLastWeek++;
-                rmssdSumSecondLastWeek += rmssd;
-            }
-
-        }
-
-        database.close();
-
-
-        if (rmssdCountLastWeek != 0) {
-            //Calculating average last week's hrv
-            user.last_week_hrv = ((float) rmssdSumLastWeek) / ((float) rmssdCountLastWeek);
-
-            if (rmssdCountSecondLastWeek != 0) {
-                user.second_last_week_hrv = ((float) rmssdSumSecondLastWeek) / ((float) rmssdCountSecondLastWeek);
-            }
-        }
-
-
         //Dummy data
         user.setSelectedSport(SPORT_JOGGING);
-        user.setMaxDuration(50);
-
         user.getAllMeasurementsFromDb(context);
         user.getAllWorkoutsFromDb(context);
-        ArrayList<Measurement> measurements = user.getAllMeasurements();
-
-        calendar = Calendar.getInstance();
-        int today = calendar.get(Calendar.DAY_OF_YEAR);
-
-        for (int i = 0; i < measurements.size(); i++) {
-            calendar.setTime(measurements.get(i).getDate());
-            int measurementDay = calendar.get(Calendar.DAY_OF_YEAR);
-            //todo: change method to take hrv by date
-            if (measurementDay == today) {
-                //Today's measurement
-                user.setCurrentHrv(measurements.get(i).getHrv());
-            } else if (measurementDay == today - 1) {
-                //yesterday's measurement
-                user.setYesterdayHrv(measurements.get(i).getHrv());
-            }
-        }
-
+        user.setHrvMeasurementsByDate();
         user.loadProgram(context);
         user.generateDailyReccomendation(context);
 
         return user;
     }
 
+    /*
+     * Sets workout_duration and pulse_zone values based on data from the database
+     */
     private void loadProgram(Context context){
-        workout_duration = Utils.readFromSharedPrefs_float(context, FeedReaderDbHelper.FIELD_DURATION, FeedReaderDbHelper.SHARED_PREFS_SPORT);
-        pulse_zone = Utils.readFromSharedPrefs_int(context, FeedReaderDbHelper.FIELD_PULSE_ZONE, FeedReaderDbHelper.SHARED_PREFS_SPORT);
+        setWorkoutDuration(Utils.readFromSharedPrefs_float(context, FeedReaderDbHelper.FIELD_DURATION, FeedReaderDbHelper.SHARED_PREFS_SPORT));
+        setPulseZone(Utils.readFromSharedPrefs_int(context, FeedReaderDbHelper.FIELD_PULSE_ZONE, FeedReaderDbHelper.SHARED_PREFS_SPORT));
     }
 
 
+    /*
+     * Saves workout duration and pulse_zone to the database
+     */
     private void saveProgram(Context context) {
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_DURATION, workout_duration, FeedReaderDbHelper.SHARED_PREFS_SPORT);
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_PULSE_ZONE, pulse_zone, FeedReaderDbHelper.SHARED_PREFS_SPORT);
     }
 
+    /*
+     * @return A list of measurements
+     */
     public ArrayList<Measurement> getAllMeasurements() {
         return measurements;
     }
 
+    /*
+     * Sets pulse_zone and workout_duration based on weekly program algorithm.
+     * The program is saved to the database.
+     * @return Weekly program verbal information
+     */
     public String generateWeeklyProgram(Context context) {
 
         Log.i("TEST", "last week hrv: " + last_week_hrv);
@@ -600,6 +597,11 @@ public class User {
         return "not supported";
     }
 
+    /*
+     * Alters the weekly program based on current_hrv and yesterday_hrv.
+     * workout_duration and pulse_zone values are changed
+     * @return Verbal reccomendation of the day
+     */
     public void generateDailyReccomendation(Context context) {
         Calendar c = Calendar.getInstance();
 
@@ -735,6 +737,12 @@ public class User {
     public static final int UPDATE_TYPE_BY_DATE = 0;
     public static final int UPDATE_TYPE_BY_ID = 1;
 
+    /*
+     * Updates the measurement in the database
+     * @param context     Current context
+     * @param measurement The measurement to update
+     * @param updateType  Type, which determines what column should be used to identify the measurement
+     */
     public static void updateMeasurement(Context context, Measurement measurement, final int updateType) {
 
         SQLiteDatabase database = new FeedReaderDbHelper(context).getWritableDatabase();
@@ -762,7 +770,7 @@ public class User {
         return KMI;
     }
 
-    public void setKMI(float KMI) {
+    private void setKMI(float KMI) {
         this.KMI = KMI;
     }
 
@@ -770,7 +778,7 @@ public class User {
         return current_hrv;
     }
 
-    public void setCurrentHrv(float current_hrv) {
+    private void setCurrentHrv(float current_hrv) {
         this.current_hrv = current_hrv;
     }
 
@@ -779,7 +787,7 @@ public class User {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    private void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
 
@@ -787,7 +795,7 @@ public class User {
         return gender;
     }
 
-    public void setGender(int gender) {
+    private void setGender(int gender) {
         this.gender = gender;
     }
 
@@ -803,7 +811,7 @@ public class User {
         return activity_index;
     }
 
-    public void setActivityIndex(float activity_index) {
+    private void setActivityIndex(float activity_index) {
         this.activity_index = activity_index;
     }
 
@@ -811,7 +819,7 @@ public class User {
         return selected_sport;
     }
 
-    public void setSelectedSport(int selected_sport) {
+    private void setSelectedSport(int selected_sport) {
         this.selected_sport = selected_sport;
     }
 
@@ -819,7 +827,7 @@ public class User {
         return weight;
     }
 
-    public void setWeight(float weight) {
+    private void setWeight(float weight) {
         this.weight = weight;
     }
 
@@ -827,7 +835,7 @@ public class User {
         return user_id;
     }
 
-    public void setUserId(String user_id) {
+    private void setUserId(String user_id) {
         this.user_id = user_id;
     }
 
@@ -835,7 +843,7 @@ public class User {
         return user_password;
     }
 
-    public void setUserPassword(String user_password) {
+    private void setUserPassword(String user_password) {
         this.user_password = user_password;
     }
 
@@ -843,7 +851,7 @@ public class User {
         return week_days;
     }
 
-    public void setWeekDays(boolean[] week_days) {
+    private void setWeekDays(boolean[] week_days) {
         this.week_days = week_days;
     }
 
@@ -851,7 +859,7 @@ public class User {
         return max_duration;
     }
 
-    public void setMaxDuration(float base_duration) {
+    private void setMaxDuration(float base_duration) {
         this.max_duration = base_duration;
     }
 
@@ -860,7 +868,7 @@ public class User {
         return yesterday_hrv;
     }
 
-    public void setYesterdayHrv(float yesterday_hrv) {
+    private void setYesterdayHrv(float yesterday_hrv) {
         this.yesterday_hrv = yesterday_hrv;
     }
 
@@ -868,7 +876,7 @@ public class User {
         return last_week_hrv;
     }
 
-    public void setLastWeekHrv(float last_week_hrv) {
+    private void setLastWeekHrv(float last_week_hrv) {
         this.last_week_hrv = last_week_hrv;
     }
 
@@ -876,7 +884,7 @@ public class User {
         return pulse_zone;
     }
 
-    public void setPulseZone(int pulse_zone) {
+    private void setPulseZone(int pulse_zone) {
         this.pulse_zone = pulse_zone;
     }
 
@@ -884,7 +892,7 @@ public class User {
         return workout_duration;
     }
 
-    public void setWorkoutDuration(float workout_duration) {
+    private void setWorkoutDuration(float workout_duration) {
         this.workout_duration = workout_duration;
     }
 
@@ -892,7 +900,7 @@ public class User {
         return second_last_week_hrv;
     }
 
-    public void setSecondLastWeekHrv(float second_last_week_hrv) {
+    private void setSecondLastWeekHrv(float second_last_week_hrv) {
         this.second_last_week_hrv = second_last_week_hrv;
     }
 
