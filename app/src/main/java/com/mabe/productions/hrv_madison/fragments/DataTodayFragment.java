@@ -1,5 +1,6 @@
 package com.mabe.productions.hrv_madison.fragments;
 
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
@@ -38,6 +39,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
@@ -47,6 +49,8 @@ import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
 import java.util.ArrayList;
+
+import static android.content.ContentValues.TAG;
 
 //todo: card view animations and title snaping like 'prisiuk antraste'
 public class DataTodayFragment extends Fragment {
@@ -295,6 +299,22 @@ public class DataTodayFragment extends Fragment {
                 @Override
                 public void onMapReady(GoogleMap googleMap) {
                     DataTodayFragment.this.googlemap_route = googleMap;
+
+                    try {
+                        // Customise the styling of the base map using a JSON object defined
+                        // in a raw resource file.
+                        boolean success = googleMap.setMapStyle(
+                                MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.dark_google_map));
+
+                        if (!success) {
+                            Log.e("GMAPS", "Style parsing failed.");
+                        }else{
+                            Log.e("GMAPS", "Style SUCCESS");
+                        }
+                    } catch (Resources.NotFoundException e) {
+                        Log.e("GMAPS", "Can't find style. Error: ", e);
+                    }
+
                     map_fragment.getView().setClickable(false);
                     //Instantiates a new Polyline object and adds points to define a rectangle
                     PolylineOptions lineOptions = new PolylineOptions()

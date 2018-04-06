@@ -79,6 +79,7 @@ public class BluetoothGattService extends Service {
     }
 
 
+
     BluetoothGattCallback gattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
@@ -92,6 +93,7 @@ public class BluetoothGattService extends Service {
 
         }
 
+        
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
 
@@ -116,6 +118,7 @@ public class BluetoothGattService extends Service {
             super.onServicesDiscovered(gatt, status);
         }
 
+
         @Override
         public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
             BluetoothGattCharacteristic characteristic =
@@ -137,6 +140,9 @@ public class BluetoothGattService extends Service {
             double contact = extractContact(characteristic);
             double energy = extractEnergyExpended(characteristic);
             int intervals[] = extractBeatToBeatInterval(characteristic);
+
+
+
 
             LocalBroadcastManager.getInstance(BluetoothGattService.this).sendBroadcast(new Intent(ACTION_RECEIVING_DATA).putExtra("RR_intervals",intervals).putExtra("BPM",heartRate));
 

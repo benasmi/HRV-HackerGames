@@ -78,6 +78,7 @@
             android:value="AIzaSyDvZJ_zkfNX-Gg8Ep-JgpRmde7n0I54QoM" />
 
         <activity android:name=".SplashScreenActivity"
+            android:noHistory="true"
             android:theme="@style/NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

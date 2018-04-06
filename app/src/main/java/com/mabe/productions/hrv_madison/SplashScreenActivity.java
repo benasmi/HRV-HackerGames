@@ -7,6 +7,7 @@ import android.support.graphics.drawable.Animatable2Compat;
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -49,7 +50,9 @@ public class SplashScreenActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                startActivity(new Intent(SplashScreenActivity.this, Utils.readFromSharedPrefs_bool(SplashScreenActivity.this, FeedReaderDbHelper.FIELD_DONE_INITIAL, FeedReaderDbHelper.SHARED_PREFS_USER_DATA) ? MainScreenActivity.class : LoginActivity.class)); //kazkada pakeisim px
+                boolean doneInitial = Utils.readFromSharedPrefs_bool(SplashScreenActivity.this, FeedReaderDbHelper.FIELD_DONE_INITIAL, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Log.i("TEST", String.valueOf(doneInitial));
+                startActivity(new Intent(SplashScreenActivity.this, doneInitial == true? MainScreenActivity.class : LoginActivity.class)); //kazkada pakeisim px
             }
 
             @Override
