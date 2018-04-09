@@ -50,6 +50,8 @@ import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import pl.droidsonroids.gif.GifImageView;
+
 //todo: kol workoutina, reikia patikrinti ar pasibaige/nepasibaige nustatytas laikas
 public class WorkoutFragment extends Fragment {
 
@@ -69,6 +71,8 @@ public class WorkoutFragment extends Fragment {
     private ImageView img_stop;
     private LinearLayout layout_workout_progress;
     private LinearLayout layout_time;
+
+    private GifImageView workout_tab_running_gif;
 
     private Thread pauseThread;
     private Timer timer = null;
@@ -105,6 +109,7 @@ public class WorkoutFragment extends Fragment {
     private Animation anim_right_to_left;
     private Animation anim_bottom_top_delay;
     private Animation anim_top_to_bottom_delay;
+    private Animation anim_running_man_left_to_right;
 
     @Nullable
     @Override
@@ -144,6 +149,7 @@ public class WorkoutFragment extends Fragment {
         editText_seconds = rootView.findViewById(R.id.edittext_seconds);
         layout_time = rootView.findViewById(R.id.time_layout);
         img_stop.setOnClickListener(stopButtonListener);
+        workout_tab_running_gif = rootView.findViewById(R.id.workout_tab_running_gif);
         setupEditTextBehavior();
 
         btn_toggle = rootView.findViewById(R.id.button_start_workout);
@@ -152,11 +158,13 @@ public class WorkoutFragment extends Fragment {
     private void initializeAnimations(){
         anim_left_to_right = AnimationUtils.loadAnimation(getContext(), R.anim.left_to_right);
         anim_right_to_left = AnimationUtils.loadAnimation(getContext(), R.anim.right_to_left);
+        anim_running_man_left_to_right = AnimationUtils.loadAnimation(getContext(), R.anim.running_man_left_to_right);
         anim_bottom_top_delay = AnimationUtils.loadAnimation(getContext(), R.anim.bottom_to_top_delay);
         anim_top_to_bottom_delay = AnimationUtils.loadAnimation(getContext(), R.anim.top_to_bottom_delay);
     }
 
     private void startedWorkoutAnimations(){
+        workout_tab_running_gif.startAnimation(anim_running_man_left_to_right);
         img_stop.startAnimation(anim_left_to_right);
         img_pause.startAnimation(anim_right_to_left);
         layout_workout_progress.startAnimation(anim_top_to_bottom_delay);
@@ -261,7 +269,9 @@ public class WorkoutFragment extends Fragment {
                                          new DialogInterface.OnClickListener() {
                                              @Override
                                              public void onClick(DialogInterface dialog, int which) {
+
                                                  runThread = false;
+
                                                  setState(STATE_BEFORE_WORKOUT);
                                              }
                                          },
@@ -329,7 +339,7 @@ public class WorkoutFragment extends Fragment {
         switch(workout_state){
 
             case STATE_BEFORE_WORKOUT:
-
+                workout_tab_running_gif.setVisibility(View.INVISIBLE);
                 bpmArrayList.clear();
                 btn_toggle.setVisibility(View.VISIBLE);
                 btn_toggle.setText(R.string.start_training);
@@ -352,6 +362,7 @@ public class WorkoutFragment extends Fragment {
                 break;
 
             case STATE_WORKING_OUT:
+                workout_tab_running_gif.setVisibility(View.VISIBLE);
                 if(previous_state == STATE_BEFORE_WORKOUT){
                     startedWorkoutAnimations();
                 }
@@ -398,6 +409,7 @@ public class WorkoutFragment extends Fragment {
             case STATE_PAUSED:
                 pauseTimer();
                 pauseLocationListener();
+                workout_tab_running_gif.setVisibility(View.INVISIBLE);
                 img_pause.setImageResource(R.drawable.ic_resume);
                 img_pause.setOnClickListener(resumeButtonListener);
 

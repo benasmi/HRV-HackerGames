@@ -15,9 +15,9 @@
     <string name="HRV">HRV</string>
     <string name="hrv_frequency_bands">HRV Frequency-Domain results</string>
     <string name="after_this_measurement">After this measurement</string>
-    <string name="HF">HF: %s%</string>
-    <string name="LF">LF: %s%</string>
-    <string name="VLF">VLF: %s%</string>
+    <string name="HF">HF: </string>
+    <string name="LF">LF: </string>
+    <string name="VLF">VLF: </string>
     <string name="standarts">Baselines</string>
     <string name="devices">Devices</string>
     <string name="scan">Scan</string>
@@ -108,6 +108,7 @@
     <string name="end">Finish</string>
     <string name="workout">Workout</string>
     <string name="min">min</string>
+    <string name="VHF">VHF: </string>
 
 </resources>
 

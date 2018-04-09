@@ -28,7 +28,7 @@
         <com.github.channguyen.rsv.RangeSliderView
             android:id="@+id/training_frequency"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="70dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             rsv:filledColor="#F62459"
@@ -60,7 +60,7 @@
         <com.github.channguyen.rsv.RangeSliderView
             android:id="@+id/training_duration"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="70dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             rsv:filledColor="#F62459"
@@ -93,7 +93,7 @@
         <com.github.channguyen.rsv.RangeSliderView
             android:id="@+id/activity_index"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="70dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             rsv:filledColor="#F62459"

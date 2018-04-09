@@ -63,10 +63,7 @@ public class DataTodayFragment extends Fragment {
     private TextView freq_card_txt_hf_after_measurament;
     private TextView freq_card_txt_lf_after_measurement;
     private TextView freq_card_txt_vlf_after_measurement;
-    private TextView freq_card_txt_norm;
-    private TextView freq_card_txt_norm_hf;
-    private TextView freq_card_txt_norm_vhf;
-    private TextView freq_card_txt_norm_lf;
+    private TextView freq_card_txt_vhf_after_measurement;
     private PieChart frequency_chart;
 
     //todo: if haven't measured today show another layout
@@ -147,7 +144,6 @@ public class DataTodayFragment extends Fragment {
 
         initializeViews(view);
         setFonts();
-        frequency_pieChart();
         health_index_pieChart();
         bpm_lineChart();
         imageViewClickers();
@@ -205,9 +201,13 @@ public class DataTodayFragment extends Fragment {
                 bpm_line_chart.animateY(2000,Easing.EasingOption.EaseInOutSine);
 
                 //FREQUENCY CARDVIEW
-                freq_card_txt_hf_after_measurament.setText(String.valueOf(measurement.getHF_band()));
-                freq_card_txt_lf_after_measurement.setText(String.valueOf(measurement.getHF_band()));
-                freq_card_txt_vlf_after_measurement.setText(String.valueOf(measurement.getVHF_band()));
+                freq_card_txt_hf_after_measurament.setText(String.valueOf("HF: " + (int) measurement.getHF_band() + "%"));
+                freq_card_txt_lf_after_measurement.setText(String.valueOf("LF: " + (int) measurement.getLF_band() + "%"));
+                freq_card_txt_vlf_after_measurement.setText(String.valueOf("VLF: " + (int) measurement.getVLF_band() + "%"));
+                freq_card_txt_vhf_after_measurement.setText(String.valueOf("VHF: " + (int) measurement.getVHF_band() + "%"));
+
+                setFrequencyChartData(measurement.getHF_band(),measurement.getLF_band(),measurement.getVLF_band(),measurement.getVHF_band());
+
                 bpm_card_hrv_average_value.setText(String.valueOf(measurement.getRmssd()));
                 bpm_card_value_average.setText(String.valueOf((int) measurement.getAverage_bpm()));
 
@@ -383,20 +383,6 @@ public class DataTodayFragment extends Fragment {
     }
 
 
-    private void setMeasurementCardViewsVisibility(boolean visibility){
-        recommendation_card.setVisibility(visibility ? View.VISIBLE : View.GONE);
-        freq_card.setVisibility(visibility ? View.VISIBLE : View.GONE);
-        bpm_card.setVisibility(visibility ? View.VISIBLE : View.GONE);
-        feeling_cardview.setVisibility(visibility ? View.VISIBLE : View.GONE);
-    }
-
-    private void setWorkoutCardViewsVisibility(boolean visibility){
-        workout_done_cardview.setVisibility(visibility ? View.VISIBLE : View.GONE);
-    }
-    private void setTrainingPlanCardViewsVisibility(boolean visibility){
-        recommendation_card.setVisibility(visibility ? View.VISIBLE : View.GONE);
-    }
-
 
 
 
@@ -410,11 +396,26 @@ public class DataTodayFragment extends Fragment {
         freq_card_txt_hf_after_measurament = view.findViewById(R.id.freq_card_txt_hf_after_measurement);
         freq_card_txt_lf_after_measurement = view.findViewById(R.id.freq_card_txt_lf_after_measurement);
         freq_card_txt_vlf_after_measurement = view.findViewById(R.id.freq_card_txt_vlf_after_measurement);
-        freq_card_txt_norm = view.findViewById(R.id.freq_card_txt_norm);
-        freq_card_txt_norm_hf = view.findViewById(R.id.freq_card_norm_hf);
-        freq_card_txt_norm_vhf = view.findViewById(R.id.freq_card_norm_lf);
-        freq_card_txt_norm_lf = view.findViewById(R.id.freq_card_norm_vlf);
+        freq_card_txt_vhf_after_measurement = view.findViewById(R.id.freq_card_txt_vhf_after_measurement);
         frequency_chart = view.findViewById(R.id.chart_frequencies);
+
+        //Casual modifications
+        frequency_chart.setUsePercentValues(true);
+        frequency_chart.setDrawSliceText(false);
+        frequency_chart.getDescription().setEnabled(false);
+
+        //Space inside chart and color
+        frequency_chart.setTransparentCircleRadius(50f);
+        frequency_chart.setHoleColor(Color.TRANSPARENT);
+        frequency_chart.setHoleRadius(80f);
+        frequency_chart.setCenterText("Frequencies");
+        frequency_chart.setCenterTextSize(20f);
+        frequency_chart.setCenterTextColor(Color.WHITE);
+        //Remove X-axis values
+        frequency_chart.setDrawEntryLabels(false);
+        //Animate pieChart
+        frequency_chart.animateY(1000, Easing.EasingOption.EaseInOutCubic);
+
         health_index_chart = view.findViewById(R.id.chart_health_index);
 
         //HRV PieChart
@@ -567,11 +568,7 @@ public class DataTodayFragment extends Fragment {
         freq_card_txt_hf_after_measurament.setTypeface(verdana);
         freq_card_txt_lf_after_measurement.setTypeface(verdana);
         freq_card_txt_vlf_after_measurement.setTypeface(verdana);
-        freq_card_txt_norm.setTypeface(verdana);
-        freq_card_txt_norm_hf.setTypeface(verdana);
-        freq_card_txt_norm_vhf.setTypeface(verdana);
-        freq_card_txt_norm_lf.setTypeface(verdana);
-
+        freq_card_txt_vhf_after_measurement.setTypeface(verdana);
 
         //HrvCardView
         hrv_card_txt_hrv.setTypeface(verdana);
@@ -628,38 +625,20 @@ public class DataTodayFragment extends Fragment {
 
     }
 
-    private void frequency_pieChart(){
 
-        //Casual modifications
-        frequency_chart.setUsePercentValues(true);
-        frequency_chart.setDrawSliceText(false);
-        frequency_chart.getDescription().setEnabled(false);
-
-        //Space inside chart and color
-        frequency_chart.setTransparentCircleRadius(50f);
-        frequency_chart.setHoleColor(Color.TRANSPARENT);
-        frequency_chart.setHoleRadius(80f);
-        frequency_chart.setCenterText("VLF/LF/HF");
-        frequency_chart.setCenterTextSize(20f);
-        frequency_chart.setCenterTextColor(Color.WHITE);
-
-
-        //Remove X-axis values
-        frequency_chart.setDrawEntryLabels(false);
-
-        //Animate pieChart
-        frequency_chart.animateY(1000, Easing.EasingOption.EaseInOutCubic);
+    private void setFrequencyChartData(float hf, float lf, float vlf, float vhf){
+        //Modify Y-axis value
 
         ArrayList<PieEntry> values = new ArrayList<>();
-        values.add(new PieEntry(65f,"BPM"));
-        values.add(new PieEntry(50f,"BPM"));
-        values.add(new PieEntry(20f,"BPM"));
+        values.add(new PieEntry(hf,"HF"));
+        values.add(new PieEntry(lf,"LF"));
+        values.add(new PieEntry(vlf,"VLF"));
+        values.add(new PieEntry(vhf,"VHF"));
 
-        //Modify Y-axis value
         final PieDataSet dataSet = new PieDataSet(values,"Frequencies");
         dataSet.setSliceSpace(2f);
         dataSet.setSelectionShift(3f);
-        dataSet.setColors(new int[]{Color.parseColor("#e74c3c"), Color.parseColor("#2980b9"), Color.parseColor("#8e44ad")});
+        dataSet.setColors(new int[]{Color.parseColor("#e74c3c"), Color.parseColor("#2980b9"), Color.parseColor("#9b59b6"), Color.parseColor("#c0392b")});
         dataSet.setDrawValues(false);
 
         //Modify Data looks
@@ -670,6 +649,8 @@ public class DataTodayFragment extends Fragment {
         //Setting data
         frequency_chart.setData(data);
 
+        data.notifyDataChanged();
+        frequency_chart.notifyDataSetChanged();
         //Modify data
         Legend legend = frequency_chart.getLegend();
         legend.setEnabled(false);
