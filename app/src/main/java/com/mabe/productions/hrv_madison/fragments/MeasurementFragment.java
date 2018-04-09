@@ -500,7 +500,7 @@ public class MeasurementFragment extends Fragment {
         }
         hrv.clear();
         bpm.clear();;
-
+        fft.clearData();
         measurement_duration.setEnabled(true);
         btn_start_measuring.setText(R.string.measure_btn);
         txt_connection_status.setText("");

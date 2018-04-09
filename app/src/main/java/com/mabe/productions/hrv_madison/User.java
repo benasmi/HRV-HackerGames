@@ -13,6 +13,7 @@ import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
 
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Calendar;
@@ -53,7 +54,7 @@ public class User {
 
     private float KMI;
     private float current_hrv;
-    private float yesterday_hrv;
+    private float yesterday_hrv = 0f;
     private float last_week_hrv;
     private Date birthday;
     private int gender;
@@ -487,25 +488,18 @@ public class User {
         user.getAllMeasurementsFromDb(context);
         user.getAllWorkoutsFromDb(context);
         user.setHrvMeasurementsByDate();
-        user.loadProgram(context);
         user.generateDailyReccomendation(context);
 
         return user;
     }
 
-    /*
-     * Sets workout_duration and pulse_zone values based on data from the database
-     */
-    private void loadProgram(Context context){
-        setWorkoutDuration(Utils.readFromSharedPrefs_float(context, FeedReaderDbHelper.FIELD_DURATION, FeedReaderDbHelper.SHARED_PREFS_SPORT));
-        setPulseZone(Utils.readFromSharedPrefs_int(context, FeedReaderDbHelper.FIELD_PULSE_ZONE, FeedReaderDbHelper.SHARED_PREFS_SPORT));
-    }
 
 
     /*
      * Saves workout duration and pulse_zone to the database
      */
     private void saveProgram(Context context) {
+        Log.i("TEST", "saving program...");
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_DURATION, workout_duration, FeedReaderDbHelper.SHARED_PREFS_SPORT);
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_PULSE_ZONE, pulse_zone, FeedReaderDbHelper.SHARED_PREFS_SPORT);
     }
@@ -527,7 +521,7 @@ public class User {
         Log.i("TEST", "last week hrv: " + last_week_hrv);
 
         //First time
-        if (last_week_hrv == 0) {
+        if (last_week_hrv == 0f) {
 
             //Weak duration
             if (activity_index < 30) {
@@ -605,10 +599,7 @@ public class User {
     public void generateDailyReccomendation(Context context) {
         Calendar c = Calendar.getInstance();
 
-        //Returns the current week day, where 1 is Monday
-        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-
-        if (week_days[dayOfWeek - 1]) {
+        int dayOfWeek = Utils.getDayOfWeek(c);
 
 
             int baselineHrv = -1;
@@ -650,20 +641,33 @@ public class User {
             //TODO: do some deciding on this one
             if (yesterday_hrv == 0) {
 //                yesterday_hrv = baselineHrv;
-                yesterday_hrv = current_hrv;
-                program_update_state = PROGRAM_STATE_NOT_ENOUGH_DATA; //we may want to change this to STATE_FIRST_TIME (which doesn't exist yet)
+                //yesterday_hrv = current_hrv;
+                program_update_state = PROGRAM_STATE_NOT_ENOUGH_DATA;
                 verbal_reccomendation = "Not enough data to generate reasonable workout plan";
-                pulse_zone = 1;
-                workout_duration = max_duration*0.5f;
                 return;
             }
 
 
+          float percentageChange = current_hrv / yesterday_hrv;
+
+            workout_duration*=percentageChange;
+
+            for(int i = 0; i < week_days.length; i++){
+                Log.i("TEST", "week day " + i + week_days[i]);
+            }
+
+
+            if (!week_days[dayOfWeek]) {
+                Log.i("TEST", "Šiandien jums poilsio diena");
+                verbal_reccomendation =  "Šiandien rekomenduojame pailsėti";
+                return;
+            }
+
             if (minBaselineHrv <= current_hrv /*&& current_hrv <= maxBaselineHrv*/) {
 
-                float percentageChange = current_hrv / yesterday_hrv;
 
-                workout_duration*=percentageChange;
+
+
                 //Hrv has increased
                 if (percentageChange >= 1) {
                     program_update_state = PROGRAM_STATE_CHANGED;
@@ -716,19 +720,18 @@ public class User {
 
 
             } else {
-                program_update_state = PROGRAM_STATE_INVALID;
+                program_update_state = PROGRAM_STATE_NOT_ENOUGH_DATA; //todo: do some deciding (hrv out of bounds)
                 Log.i("TEST", "Jusu hrv neatitinka normu");
                 verbal_reccomendation =  "Jūsų hrv neatitinka normų";
                 return;
             }
 
 
-        } else {
-            program_update_state = PROGRAM_STATE_DAY_OFF;
-            Log.i("TEST", "Šiandien jums poilsio diena");
-            verbal_reccomendation =  "Šiandien jums poilsio diena";
-            return;
-        }
+
+
+
+
+
 
 
     }
@@ -908,8 +911,15 @@ public class User {
         return program_update_state;
     }
 
-    public float getHrvChangePercentage() {
+    public float getHrvYesterdayTodayRatio() {
+
+
+        if(yesterday_hrv == 0f){
+            return 0;
+        }
+
         return  current_hrv/ yesterday_hrv;
+
     }
     public String getVerbalReccomendation() {
         return verbal_reccomendation;
