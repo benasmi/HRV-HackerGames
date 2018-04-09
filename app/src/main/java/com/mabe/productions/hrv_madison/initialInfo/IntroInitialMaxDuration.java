@@ -100,7 +100,7 @@ public class IntroInitialMaxDuration extends AppCompatActivity {
         if(maxDur<=15){
             Toast.makeText(IntroInitialMaxDuration.this,"Pasirinkite didesnį periodą, negu 15min!", Toast.LENGTH_LONG).show();
         }else{
-            Utils.saveToSharedPrefs(this,FeedReaderDbHelper.FIELD_MAX_DURATION, (float) maxDur,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+            Utils.saveToSharedPrefs(this,FeedReaderDbHelper.FIELD_BASE_DURATION, (float) maxDur,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
             Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_DONE_INITIAL, true, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
             startActivity(new Intent(this, MainScreenActivity.class));
         }

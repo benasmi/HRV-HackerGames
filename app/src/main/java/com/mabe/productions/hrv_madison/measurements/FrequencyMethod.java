@@ -119,4 +119,8 @@ public class FrequencyMethod {
         hrv_data.add(new Complex(Hz, 0));
 
     }
+
+    public void clearData(){
+        hrv_data.clear();
+    }
 }

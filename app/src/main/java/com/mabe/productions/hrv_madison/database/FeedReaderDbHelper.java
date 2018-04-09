@@ -45,7 +45,6 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public static final String FIELD_HEIGHT = "height";
     public static final String FIELD_WEIGHT = "weight";
     public static final String FIELD_KMI = "KMI";
-    public static final String FIELD_MAX_DURATION = "KMI";
     public static final String FIELD_GENDER = "gender";
     public static final String FIELD_BIRTHDAY = "birthday";
     public static final String FIELD_ACTIVITY_INDEX = "activity_index";

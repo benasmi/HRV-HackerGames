@@ -46,6 +46,29 @@ public class Utils {
         }
 
     }
+    /*
+     * Gets the day of week
+     * @return returns an index of the day of the week, where monday is 0 and sunday is 6
+     */
+    public static int getDayOfWeek(Calendar calendar){
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        if(dayOfWeek == Calendar.MONDAY){
+            return 0;
+        }else if(dayOfWeek == Calendar.TUESDAY){
+            return 1;
+        }else if(dayOfWeek == Calendar.WEDNESDAY){
+            return 2;
+        }else if(dayOfWeek == Calendar.THURSDAY){
+            return 3;
+        }else if(dayOfWeek == Calendar.FRIDAY){
+            return 4;
+        }else if(dayOfWeek == Calendar.SATURDAY){
+            return 5;
+        }else if(dayOfWeek == Calendar.SUNDAY){
+            return 6;
+        }
+        return -1;
+    }
 
     public static void changeNotifBarColor(int color, Window window){
 

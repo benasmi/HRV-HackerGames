@@ -44,13 +44,10 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
-import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
 import java.util.ArrayList;
-
-import static android.content.ContentValues.TAG;
 
 //todo: card view animations and title snaping like 'prisiuk antraste'
 public class DataTodayFragment extends Fragment {
@@ -235,7 +232,7 @@ public class DataTodayFragment extends Fragment {
                 switch (user.getProgramUpdateState()) {
 
                     case User.PROGRAM_STATE_CHANGED:
-                        setReccomendationCardPercentage(user.getHrvChangePercentage());
+                        setReccomendationCardPercentage(user.getHrvYesterdayTodayRatio());
                         reccomendation_txt_verbal_recommendation.setText(user.getVerbalReccomendation());
                         reccomendation_txt_pulse_zone.setText(user.getPulseZone() + " pulse zone");
                         reccomendation_txt_duration.setText(String.valueOf((int) user.getWorkoutDuration()) + " " + getString(
@@ -248,7 +245,13 @@ public class DataTodayFragment extends Fragment {
 
                         break;
                     case User.PROGRAM_STATE_NOT_ENOUGH_DATA:
-
+                        reccomendation_img_arrow.setImageResource(R.drawable.ic_question);
+                        reccomendation_txt_hrv_increase.setText("Not enough data");
+                        reccomendation_txt_hrv_increase.setTextColor(Color.parseColor("#ffffff"));
+                        reccomendation_txt_verbal_recommendation.setText(user.getVerbalReccomendation());
+                        reccomendation_txt_pulse_zone.setText(user.getPulseZone() + " pulse zone");
+                        reccomendation_txt_duration.setText(String.valueOf((int) user.getWorkoutDuration()) + " " + getString(
+                                R.string.min));
                         break;
                 }
 
@@ -361,21 +364,18 @@ public class DataTodayFragment extends Fragment {
 
 
     private void setReccomendationCardPercentage(float percentageChange){
+        reccomendation_img_arrow.setRotation(0f);
 
         if(percentageChange >= 1){
             int percentageIncrease = Math.round((percentageChange - 1)*100);
             reccomendation_txt_hrv_increase.setText("+ " + percentageIncrease + "%\nincrease" );
             reccomendation_txt_hrv_increase.setTextColor(Color.parseColor("#2ecc71"));
             reccomendation_img_arrow.setImageResource(R.drawable.ic_arrow_green);
-            reccomendation_img_arrow.setRotation(0f);
-            reccomendation_img_arrow.setImageResource(R.drawable.ic_arrow_green);
-            reccomendation_img_arrow.setRotation(0f);
+
         }else if(percentageChange <= 1){
             int percentageDecrease = Math.round((1 - percentageChange)*100);
             reccomendation_txt_hrv_increase.setText("- " + percentageDecrease + "%\ndecrease" );
             reccomendation_txt_hrv_increase.setTextColor(Color.parseColor("#e74c3c"));
-            reccomendation_img_arrow.setImageResource(R.drawable.ic_arrow_red);
-            reccomendation_img_arrow.setRotation(180f);
             reccomendation_img_arrow.setImageResource(R.drawable.ic_arrow_red);
             reccomendation_img_arrow.setRotation(180f);
         }
