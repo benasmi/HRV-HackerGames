@@ -115,13 +115,16 @@ public class WorkoutFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.workout_fragment, container, false);
+
+        User userInfo = User.getUser(getContext());
 
         initializeViews(view);
         initializeAnimations();
         setState(STATE_BEFORE_WORKOUT);
-
+        setupSuggestedWorkoutTime(userInfo);
         return view;
     }
 
@@ -136,6 +139,7 @@ public class WorkoutFragment extends Fragment {
     }
 
     private void initializeViews(View rootView){
+
         progressbar_duration = rootView.findViewById(R.id.progress_bar_duration);
         txt_calories_burned = rootView.findViewById(R.id.calories_burned);
         txt_current_pace = rootView.findViewById(R.id.running_pace);
@@ -153,6 +157,12 @@ public class WorkoutFragment extends Fragment {
         setupEditTextBehavior();
 
         btn_toggle = rootView.findViewById(R.id.button_start_workout);
+    }
+
+    private void setupSuggestedWorkoutTime(User user){
+        editText_minutes.setText("" + (int) user.getWorkoutDuration());
+
+
     }
 
     private void initializeAnimations(){

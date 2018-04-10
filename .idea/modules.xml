@@ -2,12 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://C:\user\Desktop\HRV-HackerGames\HRV-HG.iml" filepath="C:\user\Desktop\HRV-HackerGames\HRV-HG.iml" />
+      <module fileurl="file://C:/user/Desktop/HRV-HackerGames/HRV-HG.iml" filepath="C:/user/Desktop/HRV-HackerGames/HRV-HG.iml" />
       <module fileurl="file://$PROJECT_DIR$/HRV-HackerGames.iml" filepath="$PROJECT_DIR$/HRV-HackerGames.iml" />
-      <module fileurl="file://C:\user\Desktop\HRV-HackerGames\HRV-HackerGames.iml" filepath="C:\user\Desktop\HRV-HackerGames\HRV-HackerGames.iml" />
-      <module fileurl="file://C:\user\user\Desktop\HRV-HG\HRV-HackerGames.iml" filepath="C:\user\user\Desktop\HRV-HG\HRV-HackerGames.iml" />
+      <module fileurl="file://C:/user/Desktop/HRV-HackerGames/HRV-HackerGames.iml" filepath="C:/user/Desktop/HRV-HackerGames/HRV-HackerGames.iml" />
+      <module fileurl="file://C:/user/user/Desktop/HRV-HG/HRV-HackerGames.iml" filepath="C:/user/user/Desktop/HRV-HG/HRV-HackerGames.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\user\Desktop\HRV-HackerGames\app\app.iml" filepath="C:\user\Desktop\HRV-HackerGames\app\app.iml" />
+      <module fileurl="file://C:/user/Desktop/HRV-HackerGames/app/app.iml" filepath="C:/user/Desktop/HRV-HackerGames/app/app.iml" />
     </modules>
   </component>
 </project>

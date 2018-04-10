@@ -321,7 +321,7 @@ public class DataTodayFragment extends Fragment {
                     map_fragment.getView().setClickable(false);
                     //Instantiates a new Polyline object and adds points to define a rectangle
                     PolylineOptions lineOptions = new PolylineOptions()
-                            .width(5)
+                            .width(9)
                             .color(getResources().getColor(R.color.colorAccent))
                             .geodesic(false);
 
@@ -343,7 +343,7 @@ public class DataTodayFragment extends Fragment {
         } else {
             //Instantiates a new Polyline object and adds points to define a rectangle
             PolylineOptions lineOptions = new PolylineOptions()
-                    .width(5)
+                    .width(9)
                     .color(getResources().getColor(R.color.colorAccent))
                     .geodesic(false);
 

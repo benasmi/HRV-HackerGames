@@ -13,7 +13,7 @@ import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
 
-import java.time.DayOfWeek;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Calendar;
