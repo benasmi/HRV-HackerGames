@@ -302,7 +302,6 @@ public class WorkoutFragment extends Fragment {
             WorkoutMeasurements workout = new WorkoutMeasurements(
                     Calendar.getInstance().getTime(),
                     userSpecifiedWorkoutDuration,
-                    0, /*todo: calculate */
                     0,
                     Utils.convertIntArrayListToArray(bpmArrayList),
                     Utils.convertFloatArrayListToArray(paceData),
@@ -469,7 +468,7 @@ public class WorkoutFragment extends Fragment {
             Location location = locationResult.getLastLocation();
             route.add(new LatLng(location.getLatitude(), location.getLongitude()));
             paceData.add(location.getSpeed()*0.06f); //converting to km/min
-            txt_current_pace.setText(String.valueOf(Math.round(location.getSpeed() * 100.0) / 100.0));
+            txt_current_pace.setText(String.valueOf(Math.round(paceData.get(paceData.size()-1) * 100.0) / 100.0));
             Log.i("TEST", "latitude: " + location.getLatitude() + " longtitude: " + location.getLongitude() + " speed: " + location.getSpeed());
         };
     };

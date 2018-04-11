@@ -276,7 +276,7 @@ public class DataTodayFragment extends Fragment {
                 final WorkoutMeasurements workout = user.getLastWorkout();
                 if(workout!=null) {
 
-                    workout_card_pace.setText(String.valueOf(workout.getAverage_pace()));
+                    workout_card_pace.setText(String.valueOf(workout.getAveragePace()));
                     workout_card_distance.setText(String.valueOf(workout.getDistance()));
                     workout_card_calories.setText(String.valueOf(workout.getCalories_burned()));
                     settingWorkoutMap(workout);

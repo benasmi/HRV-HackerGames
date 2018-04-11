@@ -345,7 +345,6 @@ public class User {
                     cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_DATE)));
             float duration = cursor.getFloat(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_DURATION));
             float average_bpm = cursor.getFloat(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_AVERAGE_BPM));
-            float average_pace = cursor.getFloat(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_AVERAGE_PACE));
             int pulse_zone = cursor.getInt(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_PULSE_ZONE));
             float calories = cursor.getFloat(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_CALORIES));
             int[] bpm_data = FeedReaderDbHelper.getIntArrayFromString(cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_BPM_DATA)));
@@ -356,7 +355,6 @@ public class User {
                     id,
                     date,
                     duration,
-                    average_pace,
                     average_bpm,
                     bpm_data,
                     pace_data,

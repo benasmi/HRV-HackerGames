@@ -19,7 +19,6 @@ public class WorkoutMeasurements {
     private int unique_id;
     private Date date;
     private float workout_duration;
-    private float average_pace;
     private float average_bpm;
     private int[] bpm_data;
     private float[] pace_data; //in kilometers/minute
@@ -28,11 +27,10 @@ public class WorkoutMeasurements {
     private int pulse_zone;
     private float distance;
 
-    public WorkoutMeasurements(int unique_id, Date date, float workout_duration, float average_pace, float average_bpm, int[] bpm_data, float[] pace_data, LatLng[] route, float calories_burned, int pulse_zone, float distance) {
+    public WorkoutMeasurements(int unique_id, Date date, float workout_duration, float average_bpm, int[] bpm_data, float[] pace_data, LatLng[] route, float calories_burned, int pulse_zone, float distance) {
         this.unique_id = unique_id;
         this.date = date;
         this.workout_duration = workout_duration;
-        this.average_pace = average_pace;
         this.average_bpm = average_bpm;
         this.bpm_data = bpm_data;
         this.pace_data = pace_data;
@@ -41,10 +39,9 @@ public class WorkoutMeasurements {
         this.pulse_zone = pulse_zone;
         this.distance = distance;
     }
-    public WorkoutMeasurements(Date date, float workout_duration, float average_pace, float average_bpm, int[] bpm_data, float[] pace_data, LatLng[] route, float calories_burned, int pulse_zone, float distance) {
+    public WorkoutMeasurements(Date date, float workout_duration,  float average_bpm, int[] bpm_data, float[] pace_data, LatLng[] route, float calories_burned, int pulse_zone, float distance) {
         this.date = date;
         this.workout_duration = workout_duration;
-        this.average_pace = average_pace;
         this.average_bpm = average_bpm;
         this.bpm_data = bpm_data;
         this.pace_data = pace_data;
@@ -60,7 +57,6 @@ public class WorkoutMeasurements {
         ContentValues values = new ContentValues();
         values.put(FeedReaderDbHelper.WORKOUT_COL_AVERAGE_BPM, getAverage_bpm());
         values.put(FeedReaderDbHelper.WORKOUT_COL_DATE, Utils.getStringFromDate(getDate()));
-        values.put(FeedReaderDbHelper.WORKOUT_COL_AVERAGE_PACE, getAverage_pace());
         values.put(FeedReaderDbHelper.WORKOUT_COL_DURATION, getWorkout_duration());
         values.put(FeedReaderDbHelper.WORKOUT_COL_AVERAGE_BPM, getAverage_bpm());
         values.put(FeedReaderDbHelper.WORKOUT_COL_CALORIES, getCalories_burned());
@@ -105,13 +101,20 @@ public class WorkoutMeasurements {
         this.workout_duration = workout_duration;
     }
 
-    public float getAverage_pace() {
-        return average_pace;
+    public float getAveragePace() {
+
+        if(pace_data.length == 0){
+            return 0;
+        }
+
+        float totalPace = 0;
+        for(float pace : pace_data){
+            totalPace+=pace;
+        }
+
+        return Math.round(totalPace*100f/(float) pace_data.length)/100f;
     }
 
-    public void setAverage_pace(float average_pace) {
-        this.average_pace = average_pace;
-    }
 
     public float getAverage_bpm() {
         return average_bpm;

@@ -115,7 +115,6 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public static final String WORKOUT_COL_ID = "id";
     public static final String WORKOUT_COL_DATE = "date";
     public static final String WORKOUT_COL_DURATION = "duration";
-    public static final String WORKOUT_COL_AVERAGE_PACE = "pace";
     public static final String WORKOUT_COL_AVERAGE_BPM = "average_bpm";
     public static final String WORKOUT_COL_CALORIES = "calories";
     public static final String WORKOUT_COL_PULSE_ZONE = "pulse_zone";
@@ -131,7 +130,6 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
                     FeedReaderDbHelper.WORKOUT_COL_ID + " INTEGER PRIMARY KEY," +
                     FeedReaderDbHelper.WORKOUT_COL_DATE + " STRING," +
                     FeedReaderDbHelper.WORKOUT_COL_DURATION + " FLOAT," +
-                    FeedReaderDbHelper.WORKOUT_COL_AVERAGE_PACE + " FLOAT," +
                     FeedReaderDbHelper.WORKOUT_COL_AVERAGE_BPM + " FLOAT," +
                     FeedReaderDbHelper.WORKOUT_COL_CALORIES + " FLOAT," +
                     FeedReaderDbHelper.WORKOUT_COL_DISTANCE + " FLOAT," +
