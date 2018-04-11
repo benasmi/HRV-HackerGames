@@ -638,7 +638,7 @@ public class DataTodayFragment extends Fragment {
         final PieDataSet dataSet = new PieDataSet(values,"Frequencies");
         dataSet.setSliceSpace(2f);
         dataSet.setSelectionShift(3f);
-        dataSet.setColors(new int[]{Color.parseColor("#e74c3c"), Color.parseColor("#2980b9"), Color.parseColor("#9b59b6"), Color.parseColor("#c0392b")});
+        dataSet.setColors(new int[]{Color.parseColor("#e74c3c"), Color.parseColor("#2980b9"), Color.parseColor("#9b59b6"), Color.parseColor("#f1c40f")});
         dataSet.setDrawValues(false);
 
         //Modify Data looks

@@ -67,7 +67,8 @@
         "elementType": "geometry",
         "stylers": [
             {
-                "color": "#3e5266"
+
+                "color": "#2c3e50"
             }
         ]
     },
@@ -127,7 +128,7 @@
         "elementType": "geometry",
         "stylers": [
             {
-                "color": "#2c3e50"
+                 "color": "#3e5266"
             }
         ]
     },
