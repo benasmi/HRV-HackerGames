@@ -338,7 +338,7 @@ public class DataTodayFragment extends Fragment {
                     final CameraUpdate cu;
                     if(workout.getRoute().length == 0){
                         //If no points are present for some reason
-                        cu = CameraUpdateFactory.newLatLngZoom(new LatLng(55.19f, 23.4f), 7f); //Geographical centre of lithuania
+                        cu = CameraUpdateFactory.newLatLngZoom(new LatLng(55.19f, 23.4f), 6f); //Geographical centre of lithuania
                     }else{
                         LatLngBounds bounds = builder.build();
                         cu = CameraUpdateFactory.newLatLngBounds(bounds, 50);
@@ -367,7 +367,7 @@ public class DataTodayFragment extends Fragment {
             final CameraUpdate cu;
             if(workout.getRoute().length == 0){
                 //If no points are present for some reason
-                cu = CameraUpdateFactory.newLatLngZoom(new LatLng(55.19f, 23.4f), 7f); //Geographical centre of lithuania
+                cu = CameraUpdateFactory.newLatLngZoom(new LatLng(55.19f, 23.4f), 6f); //Geographical centre of lithuania
             }else{
                 LatLngBounds bounds = builder.build();
                 cu = CameraUpdateFactory.newLatLngBounds(bounds, 50);

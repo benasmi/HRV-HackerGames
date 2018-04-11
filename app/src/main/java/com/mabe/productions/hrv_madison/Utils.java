@@ -67,6 +67,9 @@ public class Utils {
         }
 
     }
+
+
+
     /*
      * Gets the day of week
      * @return returns an index of the day of the week, where monday is 0 and sunday is 6

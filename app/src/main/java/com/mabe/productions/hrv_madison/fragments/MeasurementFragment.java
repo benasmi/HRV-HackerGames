@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
@@ -67,6 +68,7 @@ public class MeasurementFragment extends Fragment {
     private ImageView img_breathing_indicator;
     private LineChart chart_hr;
     private TextView txt_time_left;
+    private MediaPlayer mediaPlayer;
     private TextView txt_line_chart_label;
 
     private int[] interval_values;
@@ -99,6 +101,8 @@ public class MeasurementFragment extends Fragment {
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.measurement_fragment, container, false);
+        //Initializing the mediaplayer in this method, so that we don't need to reload the sound later
+        mediaPlayer = MediaPlayer.create(getContext(), R.raw.measurement_notification);
         initializeViews(view);
         setFonts();
         return view;
@@ -392,7 +396,8 @@ public class MeasurementFragment extends Fragment {
 
                     @Override
                     public void onFinish() {
-
+                        //Playing the ending sound
+                        mediaPlayer.start();
 
                         Measurement measurement = new Measurement(hrv, fft, bpm, measurement_duration.getValue(), Calendar.getInstance().getTime());
 
