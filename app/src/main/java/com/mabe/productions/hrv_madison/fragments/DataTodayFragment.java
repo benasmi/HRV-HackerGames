@@ -47,6 +47,7 @@ import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
+import java.security.acl.LastOwnerException;
 import java.util.ArrayList;
 
 //todo: card view animations and title snaping like 'prisiuk antraste'
@@ -234,7 +235,7 @@ public class DataTodayFragment extends Fragment {
                     case User.PROGRAM_STATE_CHANGED:
                         setReccomendationCardPercentage(user.getHrvYesterdayTodayRatio());
                         reccomendation_txt_verbal_recommendation.setText(user.getVerbalReccomendation());
-                        reccomendation_txt_pulse_zone.setText(user.getPulseZone() + " pulse zone");
+                        reccomendation_txt_pulse_zone.setText(user.getPulseZone() + Utils.getNumberSuffix(user.getPulseZone()) + " pulse zone");
                         reccomendation_txt_duration.setText(String.valueOf((int) user.getWorkoutDuration()) + " " + getString(
                                 R.string.min));
                         break;
@@ -249,7 +250,7 @@ public class DataTodayFragment extends Fragment {
                         reccomendation_txt_hrv_increase.setText("Not enough data");
                         reccomendation_txt_hrv_increase.setTextColor(Color.parseColor("#ffffff"));
                         reccomendation_txt_verbal_recommendation.setText(user.getVerbalReccomendation());
-                        reccomendation_txt_pulse_zone.setText(user.getPulseZone() + " pulse zone");
+                        reccomendation_txt_pulse_zone.setText(user.getPulseZone() + Utils.getNumberSuffix(user.getPulseZone()) + " pulse zone");
                         reccomendation_txt_duration.setText(String.valueOf((int) user.getWorkoutDuration()) + " " + getString(
                                 R.string.min));
                         break;

@@ -37,6 +37,27 @@ import java.util.UUID;
 
 public class Utils {
 
+    /*
+     * Gets the integer number suffix
+     * @param number Number to get the suffix of
+     * @return suffix of the number
+     */
+    public static String getNumberSuffix(int number){
+        String numberSuffix = "th";
+        String numString = String.valueOf(number);
+        int lastNum = Integer.valueOf(numString.substring(numString.length()-1, numString.length()));
+        if(lastNum == 1){
+            numberSuffix = "st";
+        }
+        if(lastNum == 2){
+            numberSuffix = "nd";
+        }
+        if(lastNum == 3){
+            numberSuffix = "rd";
+        }
+        return numberSuffix;
+    }
+
     public static void changeNotifBarColor(String color, Window window){
 
         if (Build.VERSION.SDK_INT >= 21) {
