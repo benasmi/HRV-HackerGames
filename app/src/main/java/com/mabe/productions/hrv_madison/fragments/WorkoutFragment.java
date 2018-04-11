@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
@@ -114,6 +115,7 @@ public class WorkoutFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
 
 
         // Inflate the layout for this fragment
@@ -332,10 +334,30 @@ public class WorkoutFragment extends Fragment {
             //todo: check if permission is granted and gps is on
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
 
-            //if device is connected
-            if(checkForGPS() && autoConnectDevice()){
-                setState(STATE_WORKING_OUT);
 
+
+            if(!checkForGPS()){
+                return;
+            }
+
+            if(BluetoothGattService.isGattDeviceConnected){
+                 setState(STATE_WORKING_OUT);
+
+            }else{
+                Utils.buildAlertDialogPrompt(
+                        getContext(),
+                        "Please wait!",
+                        "Do you want to proceed to workout without HR monitor?",
+                        "Yes",
+                        "Cancel",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                setState(STATE_WORKING_OUT);
+                            }
+                        },
+                        null
+                );
             }
         }
     };
