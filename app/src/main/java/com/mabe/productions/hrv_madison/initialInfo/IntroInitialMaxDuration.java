@@ -25,7 +25,7 @@ public class IntroInitialMaxDuration extends AppCompatActivity {
     private Button btn_continue;
     private TextView max_duration_value;
     private TextView txt_min;
-
+    private boolean clickedOnce = false;
     private TextView txt_question;
     private DiscreteSeekBar duration_slider;
     private int maxDur = 0;
@@ -96,14 +96,18 @@ public class IntroInitialMaxDuration extends AppCompatActivity {
     }
 
     public void startMain(View view) {
-
+    if(!clickedOnce){
+        clickedOnce=true;
         if(maxDur<=15){
+            clickedOnce = false;
             Toast.makeText(IntroInitialMaxDuration.this,"Pasirinkite didesnį periodą, negu 15min!", Toast.LENGTH_LONG).show();
         }else{
             Utils.saveToSharedPrefs(this,FeedReaderDbHelper.FIELD_BASE_DURATION, (float) maxDur,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
             Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_DONE_INITIAL, true, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
             startActivity(new Intent(this, MainScreenActivity.class));
         }
+    }
+
 
 
     }
