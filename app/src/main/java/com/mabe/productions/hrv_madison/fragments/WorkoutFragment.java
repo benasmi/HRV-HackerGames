@@ -17,7 +17,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.KeyListener;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -372,6 +374,8 @@ public class WorkoutFragment extends Fragment {
             case STATE_BEFORE_WORKOUT:
                 workout_tab_running_gif.setVisibility(View.INVISIBLE);
                 bpmArrayList.clear();
+                paceData.clear();
+                route.clear();
                 btn_toggle.setVisibility(View.VISIBLE);
                 btn_toggle.setText(R.string.start_training);
                 btn_toggle.setOnClickListener(startTrainingButtonListener);
@@ -552,7 +556,6 @@ public class WorkoutFragment extends Fragment {
                     @Override
                     public void run()
                     {
-                        timePassed+=TIMER_STEP;
 
 
 
@@ -587,6 +590,9 @@ public class WorkoutFragment extends Fragment {
                                 editText_minutes.setText(minutes + "");
                             }
                         }
+
+                        timePassed+=TIMER_STEP;
+
                     }
                 });
             }
@@ -609,14 +615,59 @@ public class WorkoutFragment extends Fragment {
         if(timer == null || !isTimerRunning){
             return;
         }
+
         timer.cancel();
-        isTimerRunning = false;
+    isTimerRunning = false;
 
-    }
-
+}
 
 
     private void setupEditTextBehavior(){
+        View.OnClickListener editTextClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText textView = ((EditText) view);
+                textView.setSelection(0, textView.getText().length());
+            }
+        };
+
+        KeyListener keyListener = new KeyListener(){
+
+            @Override
+            public int getInputType() {
+                return 0;
+            }
+
+            @Override
+            public boolean onKeyDown(View view, Editable editable, int i, KeyEvent keyEvent) {
+                if(keyEvent.getKeyCode() == KeyEvent.KEYCODE_DEL){
+                    return true;
+                }
+
+                return false;
+            }
+
+            @Override
+            public boolean onKeyUp(View view, Editable editable, int i, KeyEvent keyEvent) {
+                return false;
+            }
+
+            @Override
+            public boolean onKeyOther(View view, Editable editable, KeyEvent keyEvent) {
+                return false;
+            }
+
+            @Override
+            public void clearMetaKeyState(View view, Editable editable, int i) {
+
+            }
+        };
+
+        editText_minutes.setOnClickListener(editTextClickListener);
+        editText_seconds.setOnClickListener(editTextClickListener);
+        //editText_minutes.setKeyListener(keyListener);
+        //editText_seconds.setKeyListener(keyListener);
+
         editText_minutes.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
