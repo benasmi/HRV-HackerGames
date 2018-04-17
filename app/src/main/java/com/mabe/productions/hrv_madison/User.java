@@ -65,6 +65,11 @@ public class User {
     private String verbal_reccomendation;
 
     private int pulse_zone;
+
+
+
+
+    private Date last_generated_weekly_date;
     private float workout_duration; //in minutes
     public float second_last_week_hrv;
 
@@ -479,14 +484,23 @@ public class User {
         user.setWorkoutDuration(Utils.readFromSharedPrefs_float(context, FeedReaderDbHelper.FIELD_DURATION, FeedReaderDbHelper.SHARED_PREFS_SPORT));
         user.setPulseZone(Utils.readFromSharedPrefs_int(context, FeedReaderDbHelper.FIELD_PULSE_ZONE, FeedReaderDbHelper.SHARED_PREFS_SPORT));
         user.setWeekDays(Utils.readFromSharedPrefs_boolarray(context, FeedReaderDbHelper.FIELD_WEEK_DAYS, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
-
+        user.setLastGeneratedWeeklyDate(Utils.getDateFromString(Utils.readFromSharedPrefs_string(context, FeedReaderDbHelper.FIELD_LAST_TIME_GENERATED_WEEKLY, FeedReaderDbHelper.SHARED_PREFS_SPORT)));
 
         //Dummy data
         user.setSelectedSport(SPORT_JOGGING);
         user.getAllMeasurementsFromDb(context);
         user.getAllWorkoutsFromDb(context);
         user.setHrvMeasurementsByDate();
+
+        if(user.checkWeeklyProgramDate(context)){
+            user.generateWeeklyProgram(context);
+        }
+
         user.generateDailyReccomendation(context);
+
+
+
+
 
         return user;
     }
@@ -498,8 +512,10 @@ public class User {
      */
     private void saveProgram(Context context) {
         Log.i("TEST", "saving program...");
+
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_DURATION, workout_duration, FeedReaderDbHelper.SHARED_PREFS_SPORT);
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_PULSE_ZONE, pulse_zone, FeedReaderDbHelper.SHARED_PREFS_SPORT);
+        Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_LAST_TIME_GENERATED_WEEKLY, Utils.getStringFromDate(Calendar.getInstance().getTime()), FeedReaderDbHelper.SHARED_PREFS_SPORT);
     }
 
     /*
@@ -509,11 +525,39 @@ public class User {
         return measurements;
     }
 
+
+    private boolean checkWeeklyProgramDate(Context context) {
+
+
+
+        Calendar calendar = Calendar.getInstance();
+        int thisWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+        if(getLastGeneratedWeeklyDate() != null){
+
+            calendar.setTime(getLastGeneratedWeeklyDate());
+            int lastMeasurementWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+
+            //Checking if user has measured this week. If not, updating user's weekly program
+            if(lastMeasurementWeek -1 == thisWeek){
+                return true;
+            }
+
+
+        }else{
+            //User has measured for the first time ever
+            return true;
+        }
+        return false;
+
+    }
+
+
     /*
      * Sets pulse_zone and workout_duration based on weekly program algorithm.
      * The program is saved to the database.
      * @return Weekly program verbal information
      */
+
     public String generateWeeklyProgram(Context context) {
 
         Log.i("TEST", "last week hrv: " + last_week_hrv);
@@ -922,4 +966,13 @@ public class User {
     public String getVerbalReccomendation() {
         return verbal_reccomendation;
     }
+
+    public Date getLastGeneratedWeeklyDate() {
+        return last_generated_weekly_date;
+    }
+
+    public void setLastGeneratedWeeklyDate(Date last_generated_weekly_date) {
+        this.last_generated_weekly_date = last_generated_weekly_date;
+    }
+
 }

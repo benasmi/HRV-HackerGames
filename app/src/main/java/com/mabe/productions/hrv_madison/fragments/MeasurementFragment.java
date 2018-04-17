@@ -234,6 +234,7 @@ public class MeasurementFragment extends Fragment {
                         ViewPager parentViewPager = getActivity().findViewById(R.id.viewpager);
                         ViewPagerAdapter adapter = (ViewPagerAdapter) parentViewPager.getAdapter();
                         adapter.dataTodayFragment.updateData();
+                        adapter.workoutFragment.updateData();
                         parentViewPager.setCurrentItem(1);
                         break;
                 }
@@ -402,34 +403,10 @@ public class MeasurementFragment extends Fragment {
                         Measurement measurement = new Measurement(hrv, fft, bpm, measurement_duration.getValue(), Calendar.getInstance().getTime());
 
                         User.addMeasurementData(getContext(), measurement, true);
-                        User user = User.getUser(getContext());
-
-
-                        //Getting last measurement date
-                        Date lastMeasurementDate = Utils.getDateFromString(Utils.readFromSharedPrefs_string(getContext(), FeedReaderDbHelper.FIELD_LAST_MEASUREMENT_DATE, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
+                        
 
                         Calendar calendar = Calendar.getInstance();
-                        int thisWeek = calendar.get(Calendar.WEEK_OF_YEAR);
                         String todayInString = Utils.getStringFromDate(calendar.getTime());
-
-                        if(lastMeasurementDate != null){
-
-                            calendar.setTime(lastMeasurementDate);
-                            int lastMeasurementWeek = calendar.get(Calendar.WEEK_OF_YEAR);
-
-                            //Checking if user has measured this week. If not, updating user's weekly program
-                            if(lastMeasurementWeek -1 == thisWeek){
-                                user.generateWeeklyProgram(getContext());
-                            }
-
-
-                        }else{
-                            //User has measured for the first time ever
-                            Log.i("TEST", "generating weekly program: " + user.generateWeeklyProgram(getContext()));
-                        }
-
-
-
 
                         Utils.vibrate(getContext(), 1000);
                         Utils.saveToSharedPrefs(getContext(), FeedReaderDbHelper.FIELD_LAST_MEASUREMENT_DATE, todayInString, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);

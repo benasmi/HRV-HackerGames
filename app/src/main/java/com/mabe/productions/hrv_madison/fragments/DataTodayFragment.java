@@ -44,11 +44,14 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
+import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
 import java.security.acl.LastOwnerException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 //todo: card view animations and title snaping like 'prisiuk antraste'
 public class DataTodayFragment extends Fragment {
@@ -149,6 +152,7 @@ public class DataTodayFragment extends Fragment {
         return view;
 
     }
+
 
     private void setCardViewsVisibilityAndData(User user) {
 

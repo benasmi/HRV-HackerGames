@@ -7,7 +7,6 @@
                 android:layout_height="match_parent">
 
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -130,7 +129,7 @@
             android:layout_height="90dp"
             android:id="@+id/workout_progress_layout"
             android:weightSum="3"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_marginTop="30dp"
             android:gravity="center"
             android:orientation="horizontal">
@@ -324,9 +323,156 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/layout_reccomended_workout"
+            android:padding="30dp"
+
+            >
+
+            <RelativeLayout
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/layout_duration">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="Duration"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:textSize="25dp"
+                    android:id="@+id/txt_reccomended_duration"
+                    />
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_clock"
+                    android:id="@+id/workout_clock_icon"
+                    android:layout_below="@+id/txt_reccomended_duration"
+                    android:layout_alignStart="@+id/txt_reccomended_duration"
+                    />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="5dp"
+                    android:orientation="vertical"
+                    android:layout_toEndOf="@+id/workout_clock_icon"
+                    android:layout_below="@+id/txt_reccomended_duration">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0px"
+                        android:text="15"
+                        android:textSize="25dp"
+                        android:id="@+id/reccomended_duration"
+                        android:textColor="#FFFFFF"
+                        android:layout_weight="4"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0px"
+                        android:layout_weight="3"
+                        android:textSize="14dp"
+                        android:text="minutes"
+                        android:id="@+id/txt_minutes"
+
+                        android:textColor="#FFFFFF"
+                        />
+                </LinearLayout>
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/layout_pulse">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="Intensity"
+
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:textSize="25dp"
+                    android:id="@+id/txt_reccomended_pulse"
+                    />
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_workout_pulse_icon"
+                    android:id="@+id/workout_pulse_icon"
+                    android:layout_below="@+id/txt_reccomended_pulse"
+                    android:layout_alignStart="@+id/txt_reccomended_pulse"
+                    />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="5dp"
+                    android:orientation="vertical"
+                    android:layout_toEndOf="@+id/workout_pulse_icon"
+                    android:layout_below="@+id/txt_reccomended_pulse">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0px"
+                        android:text="2nd"
+                        android:id="@+id/reccomended_pulse_zone"
+                        android:textColor="#FFFFFF"
+                        android:textSize="25dp"
+                        android:layout_weight="4"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0px"
+                        android:layout_weight="3"
+                        android:text="zone"
+                        android:gravity="top"
+                        android:id="@+id/txt_pulse_zone"
+                        android:textColor="#FFFFFF"
+
+                        android:textSize="14dp"
+                        />
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
         <android.support.v7.widget.AppCompatButton
-            android:layout_width="180dp"
+            android:layout_width="200dp"
             android:layout_height="35dp"
+            android:layout_marginTop="10dp"
+            android:textSize="15dp"
+            android:layout_gravity="center"
+            android:onClick="personalisedInfo"
+            android:id="@+id/button_personalised_workout"
+            android:textColor="#FFF"
+            android:textAllCaps="false"
+            android:background="@drawable/login_socialmedia"
+            android:text="Personalize"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Your workout is personolized"
+            android:visibility="gone"
+            android:id="@+id/txt_personolized_workout"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp"
+            />
+        <android.support.v7.widget.AppCompatButton
+            android:layout_width="200dp"
+            android:layout_height="35dp"
+            android:textAllCaps="false"
             android:layout_marginTop="10dp"
             android:textSize="15dp"
             android:layout_gravity="center"
@@ -344,12 +490,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:id="@+id/layout_bpm"
         android:layout_alignParentBottom="true"
         android:gravity="bottom">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:visibility="visible"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -369,6 +517,7 @@
                 android:gravity="bottom"
                 android:paddingBottom="5dp"
                 android:textColor="#fff"
+
                 android:text="BPM"/>
         </LinearLayout>
 

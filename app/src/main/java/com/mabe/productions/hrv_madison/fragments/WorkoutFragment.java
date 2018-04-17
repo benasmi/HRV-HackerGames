@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -70,10 +71,23 @@ public class WorkoutFragment extends Fragment {
     private EditText editText_minutes;
     public TextView txt_connection_status;
     private AppCompatButton btn_toggle;
+    private AppCompatButton button_personalised_workout;
     private ImageView img_pause;
     private ImageView img_stop;
     private LinearLayout layout_workout_progress;
     private LinearLayout layout_time;
+    private LinearLayout layout_reccomended_workout;
+    private LinearLayout layout_bpm;
+
+
+    private TextView txt_reccomended_duration;
+    private TextView txt_reccomended_pulse;
+    private TextView reccomended_pulse;
+    private TextView reccomended_duration;
+    private TextView txt_minutes;
+    private TextView txt_pulse_zone;
+    private TextView txt_personolized_workout;
+
 
     private GifImageView workout_tab_running_gif;
 
@@ -113,6 +127,8 @@ public class WorkoutFragment extends Fragment {
     private Animation anim_bottom_top_delay;
     private Animation anim_top_to_bottom_delay;
     private Animation anim_running_man_left_to_right;
+    private Animation anim_top_to_bottom;
+    private Animation anim_fade_out;
 
     @Nullable
     @Override
@@ -128,7 +144,8 @@ public class WorkoutFragment extends Fragment {
         initializeViews(view);
         initializeAnimations();
         setState(STATE_BEFORE_WORKOUT);
-        setupSuggestedWorkoutTime(userInfo);
+        setFonts();
+        updateData();
         return view;
     }
 
@@ -143,7 +160,16 @@ public class WorkoutFragment extends Fragment {
     }
 
     private void initializeViews(View rootView){
-
+        layout_bpm = rootView.findViewById(R.id.layout_bpm);
+        txt_personolized_workout = rootView.findViewById(R.id.txt_personolized_workout);
+        button_personalised_workout = rootView.findViewById(R.id.button_personalised_workout);
+        layout_reccomended_workout = rootView.findViewById(R.id.layout_reccomended_workout);
+        txt_reccomended_duration = rootView.findViewById(R.id.txt_reccomended_duration);
+        txt_reccomended_pulse = rootView.findViewById(R.id.txt_reccomended_pulse);
+        reccomended_pulse = rootView.findViewById(R.id.reccomended_pulse_zone);
+        reccomended_duration = rootView.findViewById(R.id.reccomended_duration);
+        txt_minutes = rootView.findViewById(R.id.txt_minutes);
+        txt_pulse_zone = rootView.findViewById(R.id.txt_pulse_zone);
         progressbar_duration = rootView.findViewById(R.id.progress_bar_duration);
         txt_calories_burned = rootView.findViewById(R.id.calories_burned);
         txt_current_pace = rootView.findViewById(R.id.running_pace);
@@ -163,10 +189,13 @@ public class WorkoutFragment extends Fragment {
         btn_toggle = rootView.findViewById(R.id.button_start_workout);
     }
 
-    private void setupSuggestedWorkoutTime(User user){
+
+
+    public void updateData(){
+        User user = User.getUser(getContext());
         editText_minutes.setText("" + (int) user.getWorkoutDuration());
-
-
+        reccomended_duration.setText("" + (int) user.getWorkoutDuration());
+        reccomended_pulse.setText( user.getPulseZone()+""+Utils.getNumberSuffix(user.getPulseZone()));
     }
 
     private void initializeAnimations(){
@@ -175,9 +204,13 @@ public class WorkoutFragment extends Fragment {
         anim_running_man_left_to_right = AnimationUtils.loadAnimation(getContext(), R.anim.running_man_left_to_right);
         anim_bottom_top_delay = AnimationUtils.loadAnimation(getContext(), R.anim.bottom_to_top_delay);
         anim_top_to_bottom_delay = AnimationUtils.loadAnimation(getContext(), R.anim.top_to_bottom_delay);
+        anim_top_to_bottom = AnimationUtils.loadAnimation(getContext(), R.anim.top_to_bottom);
+        anim_fade_out = AnimationUtils.loadAnimation(getContext(), R.anim.fade_out);
+
     }
 
     private void startedWorkoutAnimations(){
+
         workout_tab_running_gif.startAnimation(anim_running_man_left_to_right);
         img_stop.startAnimation(anim_left_to_right);
         img_pause.startAnimation(anim_right_to_left);
@@ -383,7 +416,8 @@ public class WorkoutFragment extends Fragment {
                 //todo: set texts based on reccomended workout duration
                 editText_seconds.setText("00");
                 editText_minutes.setText("00");
-
+                layout_bpm.setVisibility(View.GONE);
+                layout_reccomended_workout.setVisibility(View.VISIBLE);
                 img_pause.setVisibility(View.GONE);
                 img_stop.setVisibility(View.GONE);
                 layout_workout_progress.setVisibility(View.GONE);
@@ -391,6 +425,15 @@ public class WorkoutFragment extends Fragment {
                 editText_minutes.setEnabled(true);
                 editText_seconds.setEnabled(true);
 
+                //Todo: fix that, it's ugly now :(
+                User user = User.getUser(getContext());
+                if(user.getTodaysMeasurement()==null){
+                    button_personalised_workout.setVisibility(View.VISIBLE);
+                    txt_personolized_workout.setVisibility(View.GONE);
+                }else{
+                    button_personalised_workout.setVisibility(View.GONE);
+                    txt_personolized_workout.setVisibility(View.VISIBLE);
+                }
                 //I suspect that disabling editTexts removes their listeners
                 setupEditTextBehavior();
                 cancelTimer();
@@ -403,7 +446,9 @@ public class WorkoutFragment extends Fragment {
                 }
 
                 startLocationListener();
-
+                layout_reccomended_workout.setVisibility(View.GONE);
+                txt_personolized_workout.setVisibility(View.GONE);
+                button_personalised_workout.setVisibility(View.GONE);
                 btn_toggle.setVisibility(View.GONE);
                 img_pause.setVisibility(View.VISIBLE);
                 img_pause.setImageResource(R.drawable.ic_pause_button);
@@ -786,6 +831,7 @@ public class WorkoutFragment extends Fragment {
     }
 
 
+
     private void timePauseFlashing(){
         final boolean[] visibility = {true};
         runThread = true;
@@ -826,5 +872,23 @@ public class WorkoutFragment extends Fragment {
         pauseThread.start();
 
     }
+
+    private void setFonts(){
+
+        Typeface futura = Typeface.createFromAsset(getActivity().getAssets(),
+                "fonts/futura_light.ttf");
+
+        txt_reccomended_duration.setTypeface(futura);
+        txt_reccomended_pulse.setTypeface(futura);
+        reccomended_pulse.setTypeface(futura);
+        reccomended_duration.setTypeface(futura);
+        txt_minutes.setTypeface(futura);
+        txt_pulse_zone.setTypeface(futura);
+
+    }
+
+
+
+
 
 }

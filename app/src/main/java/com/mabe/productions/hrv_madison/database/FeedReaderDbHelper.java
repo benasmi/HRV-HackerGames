@@ -54,7 +54,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public static final String FIELD_SELECTED_SPORT = "selected_sport";
     public static final String FIELD_DONE_INITIAL = "first_time";
     public static final String FIELD_WEEK_DAYS = "week_days";
-    public static final String FIELD_LAST_MEASUREMENT_DATE = "week_days";
+    public static final String FIELD_LAST_MEASUREMENT_DATE = "last_measurement_date";
 
 
     //User BT prefs.
@@ -66,6 +66,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public static final String SHARED_PREFS_SPORT = "Sport";
     public static final String FIELD_DURATION = "duration";
     public static final String FIELD_PULSE_ZONE = "pulse_zone";
+    public static final String FIELD_LAST_TIME_GENERATED_WEEKLY = "last_weekly_generated_date";
 
 
     public final static String HRV_COL_RMSSD = "RMSSD";
