@@ -403,7 +403,7 @@ public class MeasurementFragment extends Fragment {
                         Measurement measurement = new Measurement(hrv, fft, bpm, measurement_duration.getValue(), Calendar.getInstance().getTime());
 
                         User.addMeasurementData(getContext(), measurement, true);
-                        
+
 
                         Calendar calendar = Calendar.getInstance();
                         String todayInString = Utils.getStringFromDate(calendar.getTime());

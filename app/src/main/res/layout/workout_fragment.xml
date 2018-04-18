@@ -348,6 +348,20 @@
                     android:textSize="25dp"
                     android:id="@+id/txt_reccomended_duration"
                     />
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@color/transparent"
+                    android:scaleType="fitCenter"
+                    android:id="@+id/imgButton_view_duration_info"
+                    android:src="@drawable/ic_info_icon"
+                    android:layout_toEndOf="@+id/txt_reccomended_duration"
+                    android:layout_alignBottom="@+id/txt_reccomended_duration"
+                    android:layout_alignTop="@+id/txt_reccomended_duration"
+                    android:layout_marginLeft="5dp"
+                    />
+
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
@@ -398,12 +412,26 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:text="Intensity"
-
                     android:textStyle="bold"
                     android:textColor="@color/white"
                     android:textSize="25dp"
                     android:id="@+id/txt_reccomended_pulse"
                     />
+
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@color/transparent"
+                    android:scaleType="fitCenter"
+                    android:id="@+id/imgButton_view_pulse_info"
+                    android:src="@drawable/ic_info_icon"
+                    android:layout_toEndOf="@+id/txt_reccomended_pulse"
+                    android:layout_alignBottom="@+id/txt_reccomended_pulse"
+                    android:layout_alignTop="@+id/txt_reccomended_pulse"
+                    android:layout_marginLeft="5dp"
+                    />
+
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
@@ -451,13 +479,11 @@
             android:layout_marginTop="10dp"
             android:textSize="15dp"
             android:layout_gravity="center"
-            android:onClick="personalisedInfo"
             android:id="@+id/button_personalised_workout"
             android:textColor="#FFF"
             android:textAllCaps="false"
             android:background="@drawable/login_socialmedia"
             android:text="Personalize"/>
-
 
         <TextView
             android:layout_width="match_parent"

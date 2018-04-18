@@ -114,8 +114,14 @@ public class MainScreenActivity extends AppCompatActivity {
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+                if(viewPagerAdapter.workoutFragment.infoDuration !=null && viewPagerAdapter.workoutFragment.infoDuration.isShowing()){
+                    viewPagerAdapter.workoutFragment.infoDuration.dismiss();
+                }
+                if(viewPagerAdapter.workoutFragment.infoPulse !=null && viewPagerAdapter.workoutFragment.infoPulse.isShowing()){
+                    viewPagerAdapter.workoutFragment.infoPulse.dismiss();
+                }
             }
+
 
             @Override
             public void onPageSelected(int position) {

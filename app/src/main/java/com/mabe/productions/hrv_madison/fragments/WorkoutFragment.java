@@ -16,15 +16,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatImageButton;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.KeyListener;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
@@ -48,11 +49,13 @@ import com.mabe.productions.hrv_madison.bluetooth.BluetoothGattService;
 import com.mabe.productions.hrv_madison.bluetooth.LeDevicesDialog;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
+import com.tooltip.Tooltip;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
+
 
 import pl.droidsonroids.gif.GifImageView;
 
@@ -87,8 +90,11 @@ public class WorkoutFragment extends Fragment {
     private TextView txt_minutes;
     private TextView txt_pulse_zone;
     private TextView txt_personolized_workout;
+    private AppCompatImageButton imgButton_view_duration_info;
+    private AppCompatImageButton imgButton_view_pulse_info;
 
-
+    public Tooltip infoDuration =null;
+    public Tooltip infoPulse =null;
     private GifImageView workout_tab_running_gif;
 
     private Thread pauseThread;
@@ -130,6 +136,9 @@ public class WorkoutFragment extends Fragment {
     private Animation anim_top_to_bottom;
     private Animation anim_fade_out;
 
+
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -160,6 +169,9 @@ public class WorkoutFragment extends Fragment {
     }
 
     private void initializeViews(View rootView){
+
+        imgButton_view_pulse_info = rootView.findViewById(R.id.imgButton_view_pulse_info);
+        imgButton_view_duration_info = rootView.findViewById(R.id.imgButton_view_duration_info);
         layout_bpm = rootView.findViewById(R.id.layout_bpm);
         txt_personolized_workout = rootView.findViewById(R.id.txt_personolized_workout);
         button_personalised_workout = rootView.findViewById(R.id.button_personalised_workout);
@@ -186,6 +198,9 @@ public class WorkoutFragment extends Fragment {
         workout_tab_running_gif = rootView.findViewById(R.id.workout_tab_running_gif);
         setupEditTextBehavior();
 
+
+        imgButton_view_duration_info.setOnClickListener(durationInfoListener);
+        imgButton_view_pulse_info.setOnClickListener(durationPulseListener);
         btn_toggle = rootView.findViewById(R.id.button_start_workout);
     }
 
@@ -283,6 +298,62 @@ public class WorkoutFragment extends Fragment {
         }
     }
 
+
+    private View.OnClickListener durationInfoListener = new View.OnClickListener(){
+
+        @Override
+        public void onClick(View view) {
+
+            if(infoPulse!=null){
+                infoPulse.dismiss();
+            }
+
+            if(infoDuration ==null){
+                infoDuration = new Tooltip.Builder(view)
+                        .setText("This is reccomended duration of your workout")
+                        .setDismissOnClick(true)
+                        .setBackgroundColor(getActivity().getResources().getColor(R.color.colorAccent))
+                        .setTextColor(getActivity().getResources().getColor(R.color.white))
+                        .setCornerRadius(7f)
+                        .setGravity(Gravity.TOP)
+                        .show();
+
+            }
+
+            if(!infoDuration.isShowing()){
+                infoDuration.show();
+            }
+
+        }
+    };
+
+    private View.OnClickListener durationPulseListener = new View.OnClickListener(){
+
+        @Override
+        public void onClick(View view) {
+
+            if(infoDuration!=null){
+                infoDuration.dismiss();
+            }
+
+            if(infoPulse ==null){
+                infoPulse = new Tooltip.Builder(view)
+                        .setText("This is reccomended pulse zone of your workout")
+                        .setDismissOnClick(true)
+                        .setBackgroundColor(getActivity().getResources().getColor(R.color.colorAccent))
+                        .setTextColor(getActivity().getResources().getColor(R.color.white))
+                        .setCornerRadius(7f)
+                        .setGravity(Gravity.TOP)
+                        .show();
+
+            }
+
+            if(!infoPulse.isShowing()){
+                infoPulse.show();
+            }
+
+        }
+    };
 
     private View.OnClickListener resumeButtonListener = new View.OnClickListener(){
         @Override
@@ -440,6 +511,12 @@ public class WorkoutFragment extends Fragment {
                 break;
 
             case STATE_WORKING_OUT:
+                if(infoDuration!=null){
+                    infoDuration.dismiss();
+                }
+                if(infoPulse!=null){
+                    infoPulse.dismiss();
+                }
                 workout_tab_running_gif.setVisibility(View.VISIBLE);
                 if(previous_state == STATE_BEFORE_WORKOUT){
                     startedWorkoutAnimations();
