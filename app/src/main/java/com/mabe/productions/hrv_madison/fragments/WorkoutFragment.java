@@ -660,7 +660,7 @@ public class WorkoutFragment extends Fragment {
             calories_burned = calories_burned + calculateCalories(gender,age,weight, bpm, 1f/60f);
             pulse_zone = pulseZone(gender,age,bpm);
             float realPercentage = calculateUIPercentage(HRMax*0.5f,HRMax,bpm);
-            pulseZoneView.setProgressPercentage(realPercentage);
+            pulseZoneView.setProgressPercentageWithAnim(realPercentage);
             setIntensityStatus(txt_intensity_status,required_pulse_zone,pulse_zone);
             Log.i("TEST", "REALPRCTG: " + realPercentage);
             txt_calories_burned.setText(String.valueOf(Math.round(calories_burned * 100.0) / 100.0)); //Rounding and displaying calories
