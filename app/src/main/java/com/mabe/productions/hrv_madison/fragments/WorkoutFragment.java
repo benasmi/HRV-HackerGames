@@ -42,6 +42,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.mabe.productions.hrv_madison.MainScreenActivity;
+import com.mabe.productions.hrv_madison.PulseZoneView;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
@@ -50,6 +51,8 @@ import com.mabe.productions.hrv_madison.bluetooth.LeDevicesDialog;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 import com.tooltip.Tooltip;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -81,7 +84,9 @@ public class WorkoutFragment extends Fragment {
     private LinearLayout layout_time;
     private LinearLayout layout_reccomended_workout;
     private LinearLayout layout_bpm;
+    private LinearLayout layout_pulse_zone;
 
+    private PulseZoneView pulseZoneView;
 
     private TextView txt_reccomended_duration;
     private TextView txt_reccomended_pulse;
@@ -93,6 +98,8 @@ public class WorkoutFragment extends Fragment {
     private AppCompatImageButton imgButton_view_duration_info;
     private AppCompatImageButton imgButton_view_pulse_info;
 
+    private TextView txt_intensity;
+    private TextView txt_intensity_status;
     public Tooltip infoDuration =null;
     public Tooltip infoPulse =null;
     private GifImageView workout_tab_running_gif;
@@ -135,8 +142,8 @@ public class WorkoutFragment extends Fragment {
     private Animation anim_running_man_left_to_right;
     private Animation anim_top_to_bottom;
     private Animation anim_fade_out;
-
-
+    private int required_pulse_zone;
+    private float HRMax;
 
 
     @Nullable
@@ -169,7 +176,10 @@ public class WorkoutFragment extends Fragment {
     }
 
     private void initializeViews(View rootView){
-
+        txt_intensity = rootView.findViewById(R.id.txt_intensity);
+        txt_intensity_status = rootView.findViewById(R.id.txt_intensity_status);
+        pulseZoneView = rootView.findViewById(R.id.pulse_zone_progress);
+        layout_pulse_zone = rootView.findViewById(R.id.layout_pulse_zone);
         imgButton_view_pulse_info = rootView.findViewById(R.id.imgButton_view_pulse_info);
         imgButton_view_duration_info = rootView.findViewById(R.id.imgButton_view_duration_info);
         layout_bpm = rootView.findViewById(R.id.layout_bpm);
@@ -208,6 +218,8 @@ public class WorkoutFragment extends Fragment {
 
     public void updateData(){
         User user = User.getUser(getContext());
+        required_pulse_zone = user.getPulseZone();
+        pulseZoneView.setRequiredPulseZone(required_pulse_zone);
         editText_minutes.setText("" + (int) user.getWorkoutDuration());
         reccomended_duration.setText("" + (int) user.getWorkoutDuration());
         reccomended_pulse.setText( user.getPulseZone()+""+Utils.getNumberSuffix(user.getPulseZone()));
@@ -338,7 +350,7 @@ public class WorkoutFragment extends Fragment {
 
             if(infoPulse ==null){
                 infoPulse = new Tooltip.Builder(view)
-                        .setText("This is reccomended pulse zone of your workout")
+                        .setText("This is recommended pulse zone of your workout")
                         .setDismissOnClick(true)
                         .setBackgroundColor(getActivity().getResources().getColor(R.color.colorAccent))
                         .setTextColor(getActivity().getResources().getColor(R.color.white))
@@ -477,6 +489,7 @@ public class WorkoutFragment extends Fragment {
 
             case STATE_BEFORE_WORKOUT:
                 workout_tab_running_gif.setVisibility(View.INVISIBLE);
+                layout_pulse_zone.setVisibility(View.GONE);
                 bpmArrayList.clear();
                 paceData.clear();
                 route.clear();
@@ -523,6 +536,7 @@ public class WorkoutFragment extends Fragment {
                 }
 
                 startLocationListener();
+                layout_bpm.setVisibility(View.VISIBLE);
                 layout_reccomended_workout.setVisibility(View.GONE);
                 txt_personolized_workout.setVisibility(View.GONE);
                 button_personalised_workout.setVisibility(View.GONE);
@@ -534,7 +548,7 @@ public class WorkoutFragment extends Fragment {
                 layout_workout_progress.setVisibility(View.VISIBLE);
                 editText_minutes.setEnabled(false);
                 editText_seconds.setEnabled(false);
-
+                layout_pulse_zone.setVisibility(View.VISIBLE);
                 int minutes = Integer.valueOf(editText_minutes.getText().toString());
                 int seconds = Integer.valueOf(editText_seconds.getText().toString());
 
@@ -645,7 +659,12 @@ public class WorkoutFragment extends Fragment {
 
             calories_burned = calories_burned + calculateCalories(gender,age,weight, bpm, 1f/60f);
             pulse_zone = pulseZone(gender,age,bpm);
+            float realPercentage = calculateUIPercentage(HRMax*0.5f,HRMax,bpm);
+            pulseZoneView.setProgressPercentage(realPercentage);
+            setIntensityStatus(txt_intensity_status,required_pulse_zone,pulse_zone);
+            Log.i("TEST", "REALPRCTG: " + realPercentage);
             txt_calories_burned.setText(String.valueOf(Math.round(calories_burned * 100.0) / 100.0)); //Rounding and displaying calories
+
         }
 
 
@@ -863,10 +882,11 @@ public class WorkoutFragment extends Fragment {
 
     private int pulseZone(int gender, int age, int bpm){
 
-        int HRMax = (int) ((gender==0 ? 202 : 216) - (gender==0 ? 0.55f : 1.09f) * age);
+        HRMax =  ((gender==0 ? 202 : 216) - (gender==0 ? 0.55f : 1.09f) * age);
         int pulseZone = 0;
 
-        float hrPercentage = bpm/HRMax*100f;
+        float hrPercentage = ((float) bpm)/HRMax*100f;
+
 
         if(hrPercentage>=50 && hrPercentage<=60){
             pulseZone = 1;
@@ -879,8 +899,16 @@ public class WorkoutFragment extends Fragment {
         }else if(hrPercentage>90 && hrPercentage<=100){
             pulseZone = 5;
         }
-
+        Log.i("TEST", "HRMAX: " + HRMax + " | " + "BPM: " + bpm + " | " + "hrPercentage: " + hrPercentage + " | " + "pulseZone: " + pulseZone);
         return pulseZone;
+    }
+
+
+    private float calculateUIPercentage(float minimumHR, float maximumHR, int currentHR){
+        if(currentHR<minimumHR){
+            return 0.05f;
+        }
+        return ((currentHR-minimumHR)/(maximumHR-minimumHR));
     }
 
 
@@ -961,6 +989,19 @@ public class WorkoutFragment extends Fragment {
         reccomended_duration.setTypeface(futura);
         txt_minutes.setTypeface(futura);
         txt_pulse_zone.setTypeface(futura);
+        txt_intensity_status.setTypeface(futura);
+        txt_intensity.setTypeface(futura);
+
+    }
+
+    private void setIntensityStatus(TextView intensityStatusView, int requiredPulseZone, int currentPulseZone){
+        if(currentPulseZone == requiredPulseZone){
+            intensityStatusView.setText("Optimal intensity!");
+        }else if(currentPulseZone<requiredPulseZone){
+            intensityStatusView.setText("Intensity too low!");
+        }else if(currentPulseZone>requiredPulseZone){
+            intensityStatusView.setText("Intensity too high!");
+        }
 
     }
 

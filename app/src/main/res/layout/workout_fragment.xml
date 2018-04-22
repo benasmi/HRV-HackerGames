@@ -514,6 +514,48 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:id="@+id/layout_pulse_zone"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Intensity"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:textSize="25dp"
+            android:layout_margin="5dp"
+            android:id="@+id/txt_intensity"
+            />
+
+        <com.mabe.productions.hrv_madison.PulseZoneView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="5dp"
+            android:visibility="visible"
+            android:id="@+id/pulse_zone_progress"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pulse is too low!"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:textSize="18dp"
+            android:id="@+id/txt_intensity_status"
+            />
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/layout_bpm"
