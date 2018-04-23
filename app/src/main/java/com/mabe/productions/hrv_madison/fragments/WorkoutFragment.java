@@ -690,7 +690,9 @@ public class WorkoutFragment extends Fragment {
 
     /**
      * Starts a timer that vibrates the phone based on given pulse data
-     * @param required_pulse_zone The pulse zone user has to be in
+     * If a timer is currently running, it is cancelled, and the new one with updaed data is started.
+     * Timer is stored in vibrationTimer field.
+     * @param required_pulse_zone The pulse zone user has to be in. Can be an integer from 1 to 5.
      * @param HRMax The maximum BPM user can withstand. Can be calculated from age and gender.
      * @param heartRate The current user's heart rate in BPM
      */
