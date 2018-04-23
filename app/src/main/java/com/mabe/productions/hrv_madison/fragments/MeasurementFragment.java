@@ -184,7 +184,7 @@ public class MeasurementFragment extends Fragment {
                             hasMeasuredToday = today == measurementDay ? true : false;
 
                         }else{
-                            //TODO: user is about to measure for the first time. We may want to add a tutorial or something
+                            //user is about to measure for the first time. We may want to add a tutorial or something
                         }
 
 
@@ -249,8 +249,6 @@ public class MeasurementFragment extends Fragment {
     }
 
     private void addEntry(int hr) {
-
-        //TODO: bubbles
         LineData data = chart_hr.getData();
         LineDataSet set = (LineDataSet) data.getDataSetByIndex(0);
         if (set == null) {
@@ -421,7 +419,7 @@ public class MeasurementFragment extends Fragment {
     }
 
 
-//TODO: change text to measuring.... while measuring
+    //TODO: change text to measuring.... while measuring
     public void disconnected(){
         currentMeasurementState = STATE_WAITING_TO_MEASURE;
         cancelMeasurement();

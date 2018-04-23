@@ -51,6 +51,8 @@ public class User {
     public static final float MEDIOCRE_HRV_DECREASE = 0.85f;
     public static final float SIGNIFICANT_HRV_DECREASE = 0.7f;
 
+    public static final int UPDATE_TYPE_BY_DATE = 0;
+    public static final int UPDATE_TYPE_BY_ID = 1;
 
     private float KMI;
     private float current_hrv;
@@ -63,7 +65,6 @@ public class User {
     private int selected_sport;
     private float weight;
     private String verbal_reccomendation;
-
     private int pulse_zone;
 
 
@@ -84,7 +85,7 @@ public class User {
     private ArrayList<WorkoutMeasurements> workouts;
 
 
-    /*
+    /**
      * Saves a new measurement to the database.
      * @param overrideByDate If true, existing table row with today's date is overridden.
      */
@@ -137,7 +138,7 @@ public class User {
 
     }
 
-    /*
+    /**
      * Saves a new workout to the database.
      * @param overrideByDate If true, existing table row with today's date is overridden.
      */
@@ -190,7 +191,7 @@ public class User {
 
     }
 
-    /*
+    /**
      * @return Last saved measurement
      */
     public Measurement getLastMeasurement() {
@@ -202,7 +203,7 @@ public class User {
     }
 
 
-    /*
+    /**
      * If no measurements were made today, returns null
      * @return Today's measurement.
      */
@@ -224,7 +225,7 @@ public class User {
     }
 
 
-    /*
+    /**
      * Fetches all measurements from the database and populates measurements list
      */
     private void getAllMeasurementsFromDb(Context context) {
@@ -320,7 +321,7 @@ public class User {
 
     }
 
-    /*
+    /**
     * Fetches all workouts from the database and populates workouts list
     */
     private void getAllWorkoutsFromDb(Context context) {
@@ -380,7 +381,7 @@ public class User {
 
     }
 
-    /*
+    /**
     * @return Last saved workout
      */
     public WorkoutMeasurements getLastWorkout(){
@@ -391,7 +392,7 @@ public class User {
         }
     }
 
-    /*
+    /**
     * If no workouts were completed today, returns null
     * @return Today's workout.
     */
@@ -410,7 +411,7 @@ public class User {
         return null;
     }
 
-    /*
+    /**
      * Sets last_week_hrv, second_last_week_hrv, current_hrv, yesterday_hrv values from measurement arrayList
      */
     private void setHrvMeasurementsByDate(){
@@ -463,7 +464,7 @@ public class User {
     }
 
 
-    /*
+    /**
      * Fetches data from the database and returns an instance of a user
      * @return User instance
      */
@@ -507,7 +508,7 @@ public class User {
 
 
 
-    /*
+    /**
      * Saves workout duration and pulse_zone to the database
      */
     private void saveProgram(Context context) {
@@ -518,7 +519,8 @@ public class User {
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_LAST_TIME_GENERATED_WEEKLY, Utils.getStringFromDate(Calendar.getInstance().getTime()), FeedReaderDbHelper.SHARED_PREFS_SPORT);
     }
 
-    /*
+    /**
+     * Gets all measurements that the user has made.
      * @return A list of measurements
      */
     public ArrayList<Measurement> getAllMeasurements() {
@@ -552,7 +554,7 @@ public class User {
     }
 
 
-    /*
+    /**
      * Sets pulse_zone and workout_duration based on weekly program algorithm.
      * The program is saved to the database.
      * @return Weekly program verbal information
@@ -633,10 +635,9 @@ public class User {
         return "not supported";
     }
 
-    /*
+    /**
      * Alters the weekly program based on current_hrv and yesterday_hrv.
-     * workout_duration and pulse_zone values are changed
-     * @return Verbal reccomendation of the day
+     * workout_duration, verbal_reccomendation and pulse_zone values are changed
      */
     public void generateDailyReccomendation(Context context) {
         Calendar c = Calendar.getInstance();
@@ -778,11 +779,9 @@ public class User {
 
     }
 
-    //Kompromisas ;)
-    public static final int UPDATE_TYPE_BY_DATE = 0;
-    public static final int UPDATE_TYPE_BY_ID = 1;
 
-    /*
+
+    /**
      * Updates the measurement in the database
      * @param context     Current context
      * @param measurement The measurement to update

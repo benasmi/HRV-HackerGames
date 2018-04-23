@@ -61,7 +61,7 @@ public class WorkoutMeasurements {
         values.put(FeedReaderDbHelper.WORKOUT_COL_AVERAGE_BPM, getAverage_bpm());
         values.put(FeedReaderDbHelper.WORKOUT_COL_CALORIES, getCalories_burned());
         values.put(FeedReaderDbHelper.WORKOUT_COL_PULSE_ZONE, getPulse_zone());
-        values.put(FeedReaderDbHelper.WORKOUT_COL_ROUTE, FeedReaderDbHelper.locationToString(getRoute()));
+        values.put(FeedReaderDbHelper.WORKOUT_COL_ROUTE, FeedReaderDbHelper.routeToString(getRoute()));
         values.put(FeedReaderDbHelper.WORKOUT_COL_PACE_DATA, FeedReaderDbHelper.floatArrayToString(getPace_data()));
         values.put(FeedReaderDbHelper.WORKOUT_COL_BPM_DATA, FeedReaderDbHelper.intArrayToString(getBpm_data()));
         values.put(FeedReaderDbHelper.WORKOUT_COL_DISTANCE, getDistance());

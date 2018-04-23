@@ -37,7 +37,7 @@ import java.util.UUID;
 
 public class Utils {
 
-    /*
+    /**
      * Gets the integer number suffix
      * @param number Number to get the suffix of
      * @return suffix of the number
@@ -70,7 +70,7 @@ public class Utils {
 
 
 
-    /*
+    /**
      * Gets the day of week
      * @return returns an index of the day of the week, where monday is 0 and sunday is 6
      */
@@ -108,7 +108,7 @@ public class Utils {
     }
 
 
-    /*
+    /**
      * Builds an alert dialog with a yes/no decision.
      * If a given listener is null, a default listener, which dismisses the dialog on press, is used.
      */

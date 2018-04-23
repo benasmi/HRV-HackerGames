@@ -200,32 +200,19 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         return null;
     }
 
-
-    public static String intArrayToString(int[] bpmValues){
-
-        JSONArray array = new JSONArray();
-
-        try{
-            for(int i = 0; i < bpmValues.length; i++){
-                array.put(i, bpmValues[i]);
-            }
-            return array.toString();
-        }catch(JSONException e){
-            e.printStackTrace();
-        }
-
-        return null;
-
-
-    }
-    //todo: change names
-    public static String floatArrayToString(float[] bpmValues){
+    /**
+     * Converts a integer array to a JSON array and returns it as string.
+     * Intended to be used to store arrays in the database.
+     * @param values The values to convert to string array.
+     * @return A JSONArray as string containing given values.
+     */
+    public static String intArrayToString(int[] values){
 
         JSONArray array = new JSONArray();
 
         try{
-            for(int i = 0; i < bpmValues.length; i++){
-                array.put(i, (double) bpmValues[i]);
+            for(int i = 0; i < values.length; i++){
+                array.put(i, values[i]);
             }
             return array.toString();
         }catch(JSONException e){
@@ -237,7 +224,38 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
     }
 
+    /**
+     * Converts a float array to a JSON array and returns it as string.
+     * Intended to be used to store arrays in the database.
+     * @param values The values to convert to string array.
+     * @return A JSONArray as string containing given values.
+     */
+    public static String floatArrayToString(float[] values){
 
+        JSONArray array = new JSONArray();
+
+        try{
+            for(int i = 0; i < values.length; i++){
+                array.put(i, (double) values[i]);
+            }
+            return array.toString();
+        }catch(JSONException e){
+            e.printStackTrace();
+        }
+
+        return null;
+
+
+    }
+
+    /**
+     * Returns an array of LatLng points, extracted from a given string of
+     * JSONArray with JSONObjects that contain longtitude and latitude data.
+     * Intended to be used with {@link #routeToString(LatLng[])}
+     *
+     * @param data The string JSONArrray to extract data from
+     * @return An array of LatLng points extracted from the string.
+     */
     public static LatLng[] getRouteFromString(String data){
         try {
             JSONArray array = new JSONArray(data);
@@ -260,8 +278,15 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         return null;
     }
 
-
-    public static String locationToString(LatLng[] points){
+    /**
+     * Converts given LatLng points to JSONArrray, containing JSONObjects with latitude and longtitude.
+     * For example, a LatLng point with a longtitude of 5 and latitude of 6 would be converted to [{"longtitude":5,"latitude":6}]
+     * Intended to be used with {@link #getRouteFromString(String)}
+     *
+     * @param points The points to convert to string.
+     * @return A JSONArray, that is converted to string, with JSONObjects that contain longtitude and latitude values.
+     */
+    public static String routeToString(LatLng[] points){
 
         JSONArray array = new JSONArray();
 
