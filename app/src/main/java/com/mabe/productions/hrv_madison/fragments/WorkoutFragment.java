@@ -510,7 +510,9 @@ public class WorkoutFragment extends Fragment {
         switch(workout_state){
 
             case STATE_BEFORE_WORKOUT:
-                vibrationTimer.cancel();
+                if(vibrationTimer != null){
+                    vibrationTimer.cancel();
+                }
                 workout_tab_running_gif.setVisibility(View.INVISIBLE);
                 layout_pulse_zone.setVisibility(View.GONE);
                 bpmArrayList.clear();
@@ -600,7 +602,9 @@ public class WorkoutFragment extends Fragment {
 
             case STATE_PAUSED:
                 pauseTimer();
-                vibrationTimer.cancel();
+                if(vibrationTimer != null){
+                    vibrationTimer.cancel();
+                }
                 pauseLocationListener();
                 workout_tab_running_gif.setVisibility(View.INVISIBLE);
                 img_pause.setImageResource(R.drawable.ic_resume);
@@ -728,7 +732,10 @@ public class WorkoutFragment extends Fragment {
             int difference = Math.min(min_pulse - heartRate, MAX_PULSE_DIFFERENCE_TO_ALTER_VIBRATION);
             vibrationPeriod = (long) ((MIN_VIBRATION_COOLDOWN * (float) MAX_PULSE_DIFFERENCE_TO_ALTER_VIBRATION)/difference);
         }else{
-            vibrationTimer.cancel();
+
+            if(vibrationTimer != null)
+                vibrationTimer.cancel();
+
             vibrationTimer = new Timer();
             return;
         }
