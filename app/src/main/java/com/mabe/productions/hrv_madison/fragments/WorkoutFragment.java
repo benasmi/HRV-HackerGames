@@ -255,6 +255,8 @@ public class WorkoutFragment extends Fragment {
         img_stop.startAnimation(anim_left_to_right);
         img_pause.startAnimation(anim_right_to_left);
         layout_workout_progress.startAnimation(anim_top_to_bottom_delay);
+        layout_pulse_zone.startAnimation(anim_right_to_left);
+        layout_bpm.startAnimation(anim_left_to_right);
     }
 
     private void timeEndedAnimations(){
@@ -391,13 +393,8 @@ public class WorkoutFragment extends Fragment {
     private View.OnClickListener resumeButtonListener = new View.OnClickListener(){
         @Override
         public void onClick(View v) {
-
-            if(BluetoothGattService.isGattDeviceConnected){
-                runThread = false;
-                setState(STATE_WORKING_OUT);
-            }else{
-                Toast.makeText(getContext(), "Please connect heart rate monitor!", Toast.LENGTH_LONG).show();
-            }
+            runThread = false;
+            setState(STATE_WORKING_OUT);
         }
     };
 
@@ -513,11 +510,14 @@ public class WorkoutFragment extends Fragment {
                 if(vibrationTimer != null){
                     vibrationTimer.cancel();
                 }
+                cancelTimer();
                 workout_tab_running_gif.setVisibility(View.INVISIBLE);
                 layout_pulse_zone.setVisibility(View.GONE);
                 bpmArrayList.clear();
                 paceData.clear();
                 route.clear();
+                totalDistance = 0f;
+                txt_distance.setText(String.valueOf(0f));
                 btn_toggle.setVisibility(View.VISIBLE);
                 btn_toggle.setText(R.string.start_training);
                 btn_toggle.setOnClickListener(startTrainingButtonListener);
@@ -533,6 +533,7 @@ public class WorkoutFragment extends Fragment {
                 editText_minutes.setEnabled(true);
                 editText_seconds.setEnabled(true);
 
+
                 //Todo: fix that, it's ugly now :(
                 User user = User.getUser(getContext());
                 if(user.getTodaysMeasurement()==null){
@@ -544,7 +545,7 @@ public class WorkoutFragment extends Fragment {
                 }
                 //I suspect that disabling editTexts removes their listeners
                 setupEditTextBehavior();
-                cancelTimer();
+
                 break;
 
             case STATE_WORKING_OUT:
@@ -626,6 +627,7 @@ public class WorkoutFragment extends Fragment {
                                             new LatLng(locationResult.getLastLocation().getLatitude(),
                                                        locationResult.getLastLocation().getLongitude()));
                     txt_distance.setText(String.valueOf((Math.round(totalDistance * 100.0) / 100.0)));
+
                 }
             }
 
@@ -669,6 +671,7 @@ public class WorkoutFragment extends Fragment {
     private void stopLocationListener(){
         pauseLocationListener();
         route.clear();
+        totalDistance = 0f;
     }
 
     public void onMeasurement(int bpm){
@@ -685,7 +688,7 @@ public class WorkoutFragment extends Fragment {
             pulse_zone = pulseZone(gender,age,bpm);
             float realPercentage = calculateUIMultiplier(HRMax*0.5f, HRMax, bpm);
             pulseZoneView.setProgressPercentageWithAnim(realPercentage);
-            setIntensityStatus(txt_intensity_status,required_pulse_zone,pulse_zone);
+            setIntensityStatus(txt_intensity,required_pulse_zone,pulse_zone);
             txt_calories_burned.setText(String.valueOf(Math.round(calories_burned * 100.0) / 100.0)); //Rounding and displaying calories
 
             vibrateByPulseZone(required_pulse_zone, HRMax, bpm);
@@ -1024,7 +1027,7 @@ public class WorkoutFragment extends Fragment {
         if(currentHR<minimumHR){
             return 0.05f;
         }
-        return ((currentHR-minimumHR)/(maximumHR-minimumHR));
+        return Math.max(((currentHR-minimumHR)/(maximumHR-minimumHR)), 0.05f);
     }
 
 
@@ -1118,11 +1121,11 @@ public class WorkoutFragment extends Fragment {
 
     private void setIntensityStatus(TextView intensityStatusView, int requiredPulseZone, int currentPulseZone){
         if(currentPulseZone == requiredPulseZone){
-            intensityStatusView.setText("Optimal intensity!");
+            intensityStatusView.setText("Intensity: Optimal");
         }else if(currentPulseZone<requiredPulseZone){
-            intensityStatusView.setText("Intensity too low!");
+            intensityStatusView.setText("Intensity: Too low!");
         }else if(currentPulseZone>requiredPulseZone){
-            intensityStatusView.setText("Intensity too high!");
+            intensityStatusView.setText("Intensity: Too high!");
         }
 
     }

@@ -516,7 +516,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone"
+        android:layout_marginTop="5dp"
+        android:visibility="visible"
         android:id="@+id/layout_pulse_zone"
         >
 
@@ -548,60 +549,58 @@
             android:textColor="@color/white"
             android:gravity="center"
             android:textSize="18dp"
+            android:visibility="gone"
             android:id="@+id/txt_intensity_status"
             />
     </LinearLayout>
 
 
-
     <LinearLayout
+        android:id="@+id/layout_bpm"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/layout_bpm"
         android:layout_alignParentBottom="true"
-        android:gravity="bottom">
+        android:gravity="bottom"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="visible">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textSize="60dp"
-                android:textColor="#fff"
                 android:id="@+id/workout_bpm"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:gravity="bottom"
-                android:text=" - "/>
+                android:text=" - "
+                android:textColor="#fff"
+                android:textSize="60dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:textSize="30sp"
                 android:gravity="bottom"
                 android:paddingBottom="5dp"
+                android:text="BPM"
                 android:textColor="#fff"
 
-                android:text="BPM"/>
+                android:textSize="30sp"/>
         </LinearLayout>
 
         <TextView
+            android:id="@+id/txt_connection_status_workout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text=""
-            android:id="@+id/txt_connection_status_workout"
-            android:textSize="15sp"
             android:gravity="center"
-            android:textColor="#fff"/>
+            android:text=""
+            android:textColor="#fff"
+            android:textSize="15sp"/>
 
 
     </LinearLayout>
-
-
 
 
 </LinearLayout>

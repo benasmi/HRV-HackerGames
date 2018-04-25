@@ -570,11 +570,11 @@ public class User {
             //Weak duration
             if (activity_index < 30) {
                 workout_duration = 15;
-                pulse_zone = 2; //todo: think of a reasonable pulse zone
+                pulse_zone = 1;
             } else {
                 //Fit duration
                 workout_duration = 20;
-                pulse_zone = 1; //todo: think of a reasonable pulse zone
+                pulse_zone = 1 ;
             }
             saveProgram(context);
             return "Jums sugeneruota pirmoji programa";
@@ -589,6 +589,7 @@ public class User {
         if (0.5 * last_week_hrv < current_hrv && current_hrv < 0.85 * last_week_hrv) {
             return "Programa nepasikeitė dėl prasto HRV";
         }
+
 
 
         //Upgrading program due to very good hrv score
@@ -689,7 +690,6 @@ public class User {
                 verbal_reccomendation = "Not enough data to generate reasonable workout plan";
                 return;
             }
-
 
           float percentageChange = current_hrv / yesterday_hrv;
 
