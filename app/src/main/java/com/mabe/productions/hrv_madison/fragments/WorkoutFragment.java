@@ -118,6 +118,9 @@ public class WorkoutFragment extends Fragment {
     public static final int STATE_TIME_ENDED = 2;
     public static final int STATE_PAUSED = 3;
 
+    public static final double MAX_REASONABLE_SPEED = 35; //in km/h
+    public static final double MIN_REASONABLE_SPEED = 4; //in km/h
+
     private long timePassed = 0;
     private double calories_burned = 0;
     private int pulse_zone = 0;
@@ -515,8 +518,7 @@ public class WorkoutFragment extends Fragment {
                 layout_pulse_zone.setVisibility(View.GONE);
                 bpmArrayList.clear();
                 paceData.clear();
-                route.clear();
-                totalDistance = 0f;
+                stopLocationListener();
                 txt_distance.setText(String.valueOf(0f));
                 btn_toggle.setVisibility(View.VISIBLE);
                 btn_toggle.setText(R.string.start_training);
@@ -616,25 +618,51 @@ public class WorkoutFragment extends Fragment {
         }
     }
 
-
+    private int locationResultCount = 0;
+    private long lastLocationUpdate = 0;
     //The location callback that stores paceData and distance.
     private LocationCallback mLocationCallback = new LocationCallback() {
+
         @Override
         public void onLocationResult(LocationResult locationResult) {
-            if(route.size() > 0){
+
+
                 if(workout_state == STATE_WORKING_OUT || workout_state == STATE_TIME_ENDED){
-                    totalDistance+=distance(route.get(route.size()-1),
-                                            new LatLng(locationResult.getLastLocation().getLatitude(),
-                                                       locationResult.getLastLocation().getLongitude()));
-                    txt_distance.setText(String.valueOf((Math.round(totalDistance * 100.0) / 100.0)));
+
+                    double latitude = locationResult.getLastLocation().getLatitude();
+                    double longitude = locationResult.getLastLocation().getLongitude();
+                    LatLng lastLocation = new LatLng(latitude, longitude); //you already have this
+
+                    locationResultCount++;
+
+                    if(locationResultCount > 2){
+
+                        if(route.size() > 0){
+                            double distance = distance(lastLocation, route.get(route.size()-1));
+                            double speed = ((System.currentTimeMillis()-lastLocationUpdate) / (1000d*60d*60d))/distance;
+
+                            if((speed <= MAX_REASONABLE_SPEED) && (speed >= MIN_REASONABLE_SPEED)){
+                                lastLocationUpdate = System.currentTimeMillis();
+                                route.add(lastLocation);
+                                totalDistance+=distance;
+                                Log.i("TEST", "total distance: " + totalDistance);
+                                txt_distance.setText(String.valueOf(Math.round(totalDistance*100d)/100d));
+                            }
+                        }else{
+                            route.add(lastLocation);
+                            lastLocationUpdate = System.currentTimeMillis();
+                        }
+
+
+                    }
+
+                    Log.i("TEST", "latitude: " + latitude + " longtitude: " + longitude);
 
                 }
-            }
 
-            Location location = locationResult.getLastLocation();
-            route.add(new LatLng(location.getLatitude(), location.getLongitude()));
-            paceData.add(location.getSpeed()*0.06f); //converting to km/min
-            txt_current_pace.setText(String.valueOf(Math.round(paceData.get(paceData.size()-1) * 100.0) / 100.0));
+
+
+
 
         };
     };
@@ -672,6 +700,8 @@ public class WorkoutFragment extends Fragment {
         pauseLocationListener();
         route.clear();
         totalDistance = 0f;
+        lastLocationUpdate = 0;
+        locationResultCount = 0;
     }
 
     public void onMeasurement(int bpm){

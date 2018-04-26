@@ -785,7 +785,7 @@ public class User {
      * Updates the measurement in the database
      * @param context     Current context
      * @param measurement The measurement to update
-     * @param updateType  Type, which determines what column should be used to identify the measurement
+     * @param updateType  Type, which determines which column should be used to identify the measurement
      */
     public static void updateMeasurement(Context context, Measurement measurement, final int updateType) {
 
