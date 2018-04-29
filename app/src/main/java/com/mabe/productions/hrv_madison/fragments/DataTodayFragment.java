@@ -44,14 +44,10 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
-import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
-import java.security.acl.LastOwnerException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 //todo: card view animations and title snaping like 'prisiuk antraste'
 public class DataTodayFragment extends Fragment {
@@ -119,7 +115,7 @@ public class DataTodayFragment extends Fragment {
     private TextView workout_card_pace;
     private TextView workout_card_distance;
     private TextView workout_card_calories;
-    private GoogleMap googlemap_route; //We may need this one in the future
+    private GoogleMap route_display_googlemap; //We may need this one in the future
 
     //First time layout
     private LinearLayout no_measured_today_layout;
@@ -198,95 +194,95 @@ public class DataTodayFragment extends Fragment {
                     }
                 }
             }
-                bpm_line_chart.animateY(2000,Easing.EasingOption.EaseInOutSine);
+            bpm_line_chart.animateY(2000, Easing.EasingOption.EaseInOutSine);
 
-                //FREQUENCY CARDVIEW
-                freq_card_txt_hf_after_measurament.setText(String.valueOf("HF: " + (int) measurement.getHF_band() + "%"));
-                freq_card_txt_lf_after_measurement.setText(String.valueOf("LF: " + (int) measurement.getLF_band() + "%"));
-                freq_card_txt_vlf_after_measurement.setText(String.valueOf("VLF: " + (int) measurement.getVLF_band() + "%"));
-                freq_card_txt_vhf_after_measurement.setText(String.valueOf("VHF: " + (int) measurement.getVHF_band() + "%"));
+            //FREQUENCY CARDVIEW
+            freq_card_txt_hf_after_measurament.setText(String.valueOf("HF: " + (int) measurement.getHF_band() + "%"));
+            freq_card_txt_lf_after_measurement.setText(String.valueOf("LF: " + (int) measurement.getLF_band() + "%"));
+            freq_card_txt_vlf_after_measurement.setText(String.valueOf("VLF: " + (int) measurement.getVLF_band() + "%"));
+            freq_card_txt_vhf_after_measurement.setText(String.valueOf("VHF: " + (int) measurement.getVHF_band() + "%"));
 
-                setFrequencyChartData(measurement.getHF_band(),measurement.getLF_band(),measurement.getVLF_band(),measurement.getVHF_band());
+            setFrequencyChartData(measurement.getHF_band(), measurement.getLF_band(), measurement.getVLF_band(), measurement.getVHF_band());
 
-                bpm_card_hrv_average_value.setText(String.valueOf(measurement.getRmssd()));
-                bpm_card_value_average.setText(String.valueOf((int) measurement.getAverage_bpm()));
+            bpm_card_hrv_average_value.setText(String.valueOf(measurement.getRmssd()));
+            bpm_card_value_average.setText(String.valueOf((int) measurement.getAverage_bpm()));
 
-                //INITIAL MOOD CARDVIEW
-                switch (measurement.getMood()) {
-                    case User.MOOD_NEGATIVELY_EXCITED:
-                        img_negatively_excited.callOnClick();
-                        break;
-                    case User.MOOD_NEGATIVELY_MELLOW:
-                        img_negatively_mellow.callOnClick();
-                        break;
-                    case User.MOOD_NEUTRAL:
-                        img_neutral.callOnClick();
-                        break;
-                    case User.MOOD_POSITIVELY_MELLOW:
-                        img_positively_mellow.callOnClick();
-                        break;
-                    case User.MOOD_POSITIVELY_EXCITED:
-                        img_positively_excited.callOnClick();
-                        break;
-                }
-
-
-                //RECCOMENDATION CARDVIEW
-                switch (user.getProgramUpdateState()) {
-
-                    case User.PROGRAM_STATE_CHANGED:
-                        setReccomendationCardPercentage(user.getHrvYesterdayTodayRatio());
-                        reccomendation_txt_verbal_recommendation.setText(user.getVerbalReccomendation());
-                        reccomendation_txt_pulse_zone.setText(user.getPulseZone() + Utils.getNumberSuffix(user.getPulseZone()) + " pulse zone");
-                        reccomendation_txt_duration.setText(String.valueOf((int) user.getWorkoutDuration()) + " " + getString(
-                                R.string.min));
-                        break;
-                    case User.PROGRAM_STATE_DAY_OFF:
-
-                        break;
-                    case User.PROGRAM_STATE_INVALID:
-
-                        break;
-                    case User.PROGRAM_STATE_NOT_ENOUGH_DATA:
-                        reccomendation_img_arrow.setImageResource(R.drawable.ic_question);
-                        reccomendation_txt_hrv_increase.setText("Not enough data");
-                        reccomendation_txt_hrv_increase.setTextColor(Color.parseColor("#ffffff"));
-                        reccomendation_txt_verbal_recommendation.setText(user.getVerbalReccomendation());
-                        reccomendation_txt_pulse_zone.setText(user.getPulseZone() + Utils.getNumberSuffix(user.getPulseZone()) + " pulse zone");
-                        reccomendation_txt_duration.setText(String.valueOf((int) user.getWorkoutDuration()) + " " + getString(
-                                R.string.min));
-                        break;
-                }
-
-            } else {
-                //Show: ---> no measurement layout
-                no_measured_today_layout.setVisibility(View.VISIBLE);
-
-                //Hide: ---> mood; BPM; LFHF; Training plan; workout results
-                feeling_cardview.setVisibility(View.GONE);
-                bpm_card.setVisibility(View.GONE);
-                freq_card.setVisibility(View.GONE);
-                recommendation_card.setVisibility(View.GONE);
-                workout_done_cardview.setVisibility(View.GONE);
+            //INITIAL MOOD CARDVIEW
+            switch (measurement.getMood()) {
+                case User.MOOD_NEGATIVELY_EXCITED:
+                    img_negatively_excited.callOnClick();
+                    break;
+                case User.MOOD_NEGATIVELY_MELLOW:
+                    img_negatively_mellow.callOnClick();
+                    break;
+                case User.MOOD_NEUTRAL:
+                    img_neutral.callOnClick();
+                    break;
+                case User.MOOD_POSITIVELY_MELLOW:
+                    img_positively_mellow.callOnClick();
+                    break;
+                case User.MOOD_POSITIVELY_EXCITED:
+                    img_positively_excited.callOnClick();
+                    break;
             }
 
 
-            if (hasWorkoutedToday) {
-                //Show: ---> workoutResults
-                workout_done_cardview.setVisibility(View.VISIBLE);
+            //RECCOMENDATION CARDVIEW
+            switch (user.getProgramUpdateState()) {
 
-                //WORKOUT DATA CARDVIEW
-                final WorkoutMeasurements workout = user.getLastWorkout();
-                if(workout!=null) {
+                case User.PROGRAM_STATE_CHANGED:
+                    setReccomendationCardPercentage(user.getHrvYesterdayTodayRatio());
+                    reccomendation_txt_verbal_recommendation.setText(user.getVerbalReccomendation());
+                    reccomendation_txt_pulse_zone.setText(user.getPulseZone() + Utils.getNumberSuffix(user.getPulseZone()) + " pulse zone");
+                    reccomendation_txt_duration.setText(String.valueOf((int) user.getWorkoutDuration()) + " " + getString(
+                            R.string.min));
+                    break;
+                case User.PROGRAM_STATE_DAY_OFF:
 
-                    workout_card_pace.setText(String.valueOf(workout.getAveragePace()));
-                    workout_card_distance.setText(String.valueOf(workout.getDistance()));
-                    workout_card_calories.setText(String.valueOf(workout.getCalories_burned()));
-                    settingWorkoutMap(workout);
-                }
-            }else{
-                workout_done_cardview.setVisibility(View.GONE);
+                    break;
+                case User.PROGRAM_STATE_INVALID:
+
+                    break;
+                case User.PROGRAM_STATE_NOT_ENOUGH_DATA:
+                    reccomendation_img_arrow.setImageResource(R.drawable.ic_question);
+                    reccomendation_txt_hrv_increase.setText("Not enough data");
+                    reccomendation_txt_hrv_increase.setTextColor(Color.parseColor("#ffffff"));
+                    reccomendation_txt_verbal_recommendation.setText(user.getVerbalReccomendation());
+                    reccomendation_txt_pulse_zone.setText(user.getPulseZone() + Utils.getNumberSuffix(user.getPulseZone()) + " pulse zone");
+                    reccomendation_txt_duration.setText(String.valueOf((int) user.getWorkoutDuration()) + " " + getString(
+                            R.string.min));
+                    break;
             }
+
+        } else {
+            //Show: ---> no measurement layout
+            no_measured_today_layout.setVisibility(View.VISIBLE);
+
+            //Hide: ---> mood; BPM; LFHF; Training plan; workout results
+            feeling_cardview.setVisibility(View.GONE);
+            bpm_card.setVisibility(View.GONE);
+            freq_card.setVisibility(View.GONE);
+            recommendation_card.setVisibility(View.GONE);
+            workout_done_cardview.setVisibility(View.GONE);
+        }
+
+
+        if (hasWorkoutedToday) {
+            //Show: ---> workoutResults
+            workout_done_cardview.setVisibility(View.VISIBLE);
+
+            //WORKOUT DATA CARDVIEW
+            final WorkoutMeasurements workout = user.getLastWorkout();
+            if (workout != null) {
+
+                workout_card_pace.setText(String.valueOf(workout.getAveragePace()));
+                workout_card_distance.setText(String.valueOf(workout.getDistance()));
+                workout_card_calories.setText(String.valueOf(workout.getCalories_burned()));
+                settingWorkoutMap(workout);
+            }
+        } else {
+            workout_done_cardview.setVisibility(View.GONE);
+        }
 
     }
 
@@ -296,15 +292,16 @@ public class DataTodayFragment extends Fragment {
         User user = User.getUser(getContext());
         setCardViewsVisibilityAndData(user);
 
-        }
+    }
 
-    private void settingWorkoutMap(final WorkoutMeasurements workout){
-        if (googlemap_route == null) {
+    private void settingWorkoutMap(final WorkoutMeasurements workout) {
+        if (route_display_googlemap == null) {
+
             map_fragment.onCreate(getArguments());
             map_fragment.getMapAsync(new OnMapReadyCallback() {
                 @Override
                 public void onMapReady(GoogleMap googleMap) {
-                    DataTodayFragment.this.googlemap_route = googleMap;
+                    DataTodayFragment.this.route_display_googlemap = googleMap;
 
                     try {
                         // Customise the styling of the base map using a JSON object defined
@@ -314,7 +311,7 @@ public class DataTodayFragment extends Fragment {
 
                         if (!success) {
                             Log.e("GMAPS", "Style parsing failed.");
-                        }else{
+                        } else {
                             Log.e("GMAPS", "Style SUCCESS");
                         }
                     } catch (Resources.NotFoundException e) {
@@ -322,76 +319,56 @@ public class DataTodayFragment extends Fragment {
                     }
 
                     map_fragment.getView().setClickable(false);
-                    //Instantiates a new Polyline object and adds points to define a rectangle
-                    PolylineOptions lineOptions = new PolylineOptions()
-                            .width(9)
-                            .color(getResources().getColor(R.color.colorAccent))
-                            .geodesic(false);
-
-                    //This will zoom the map to our polyline
-                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
-                    for (LatLng point : workout.getRoute()) {
-                        lineOptions.add(point);
-                        builder.include(point);
-                    }
-                    googlemap_route.addPolyline(lineOptions);
-
-                    final CameraUpdate cu;
-                    if(workout.getRoute().length == 0){
-                        //If no points are present for some reason
-                        cu = CameraUpdateFactory.newLatLngZoom(new LatLng(55.19f, 23.4f), 6f); //Geographical centre of lithuania
-                    }else{
-                        LatLngBounds bounds = builder.build();
-                        cu = CameraUpdateFactory.newLatLngBounds(bounds, 50);
-                    }
-
-                    googlemap_route.animateCamera(cu);
+                    displayMapRoute(workout.getRoute());
 
                 }
             });
         } else {
-            //Instantiates a new Polyline object and adds points to define a rectangle
-            PolylineOptions lineOptions = new PolylineOptions()
-                    .width(9)
-                    .color(getResources().getColor(R.color.colorAccent))
-                    .geodesic(false);
-
-            //This will zoom the map to our polyline
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
-            for (LatLng point : workout.getRoute()) {
-                lineOptions.add(point);
-                builder.include(point);
-            }
-            googlemap_route.addPolyline(lineOptions);
-
-            final CameraUpdate cu;
-            if(workout.getRoute().length == 0){
-                //If no points are present for some reason
-                cu = CameraUpdateFactory.newLatLngZoom(new LatLng(55.19f, 23.4f), 6f); //Geographical centre of lithuania
-            }else{
-                LatLngBounds bounds = builder.build();
-                cu = CameraUpdateFactory.newLatLngBounds(bounds, 50);
-            }
-
-            googlemap_route.animateCamera(cu);
+            displayMapRoute(workout.getRoute());
         }
     }
 
+    private void displayMapRoute(LatLng[] route) {
+        //Instantiates a new Polyline object and adds points to define a rectangle
+        PolylineOptions lineOptions = new PolylineOptions()
+                .width(9)
+                .color(getResources().getColor(R.color.colorAccent))
+                .geodesic(false);
 
-    private void setReccomendationCardPercentage(float percentageChange){
+        //This will zoom the map to our polyline
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+        for (LatLng point : route) {
+            lineOptions.add(point);
+            builder.include(point);
+        }
+        route_display_googlemap.addPolyline(lineOptions);
+
+        final CameraUpdate cu;
+        if (route.length == 0) {
+            //If no points are present for some reason
+            cu = CameraUpdateFactory.newLatLngZoom(new LatLng(55.19f, 23.4f), 6f); //Geographical centre of lithuania
+        } else {
+            LatLngBounds bounds = builder.build();
+            cu = CameraUpdateFactory.newLatLngBounds(bounds, 50);
+        }
+
+        route_display_googlemap.animateCamera(cu);
+    }
+
+
+    private void setReccomendationCardPercentage(float percentageChange) {
         reccomendation_img_arrow.setRotation(0f);
 
-        if(percentageChange >= 1){
-            int percentageIncrease = Math.round((percentageChange - 1)*100);
-            reccomendation_txt_hrv_increase.setText("+ " + percentageIncrease + "%\nincrease" );
+        if (percentageChange >= 1) {
+            int percentageIncrease = Math.round((percentageChange - 1) * 100);
+            reccomendation_txt_hrv_increase.setText("+ " + percentageIncrease + "%\nincrease");
             reccomendation_txt_hrv_increase.setTextColor(Color.parseColor("#2ecc71"));
             reccomendation_img_arrow.setImageResource(R.drawable.ic_arrow_green);
 
-        }else if(percentageChange <= 1){
-            int percentageDecrease = Math.round((1 - percentageChange)*100);
-            reccomendation_txt_hrv_increase.setText("- " + percentageDecrease + "%\ndecrease" );
+        } else if (percentageChange <= 1) {
+            int percentageDecrease = Math.round((1 - percentageChange) * 100);
+            reccomendation_txt_hrv_increase.setText("- " + percentageDecrease + "%\ndecrease");
             reccomendation_txt_hrv_increase.setTextColor(Color.parseColor("#e74c3c"));
             reccomendation_img_arrow.setImageResource(R.drawable.ic_arrow_red);
             reccomendation_img_arrow.setRotation(180f);
@@ -400,15 +377,12 @@ public class DataTodayFragment extends Fragment {
     }
 
 
-
-
-
-    private void initializeViews(View view){
+    private void initializeViews(View view) {
 
         //Frequency PieChart
         freq_card = view.findViewById(R.id.frequency_card);
         freq_card_txt_freq_band = view.findViewById(R.id.frequency_bands_text_view);
-        freq_card_txt_freq_band_date  = view.findViewById(R.id.frequency_bands_measurement_date);
+        freq_card_txt_freq_band_date = view.findViewById(R.id.frequency_bands_measurement_date);
         freq_card_txt_after_this_measure = view.findViewById(R.id.freq_card_txt_after_this_measure);
         freq_card_txt_hf_after_measurament = view.findViewById(R.id.freq_card_txt_hf_after_measurement);
         freq_card_txt_lf_after_measurement = view.findViewById(R.id.freq_card_txt_lf_after_measurement);
@@ -438,12 +412,12 @@ public class DataTodayFragment extends Fragment {
         //HRV PieChart
         hrv_card_txt_hrv = (TextView) view.findViewById(R.id.health_index_text_view);
         hrv_card_txt_hrv_band_date = (TextView) view.findViewById(R.id.health_index_measurement_date);
-        hrv_card_txt_bpm= (TextView)view. findViewById(R.id.hrc_card_txt_bpm);
-        hrv_card_txt_bpm_after_measurament= (TextView) view.findViewById(R.id.hrc_card_txt_average_bpm);
-        hrv_card_txt_bpm_norm_after_measurement= (TextView) view.findViewById(R.id.hrc_card_txt_norm_bpm);
-        hrv_card_txt_hrv_after= (TextView) view.findViewById(R.id.hrc_card_txt_hrv);
-        hrv_card_txt_average_hrv= (TextView)view.findViewById(R.id.hrc_card_txt_average_hrv);
-        hrv_card_txt_average_norm_hrv= (TextView) view.findViewById(R.id.hrc_card_txt_norm_hrv);
+        hrv_card_txt_bpm = (TextView) view.findViewById(R.id.hrc_card_txt_bpm);
+        hrv_card_txt_bpm_after_measurament = (TextView) view.findViewById(R.id.hrc_card_txt_average_bpm);
+        hrv_card_txt_bpm_norm_after_measurement = (TextView) view.findViewById(R.id.hrc_card_txt_norm_bpm);
+        hrv_card_txt_hrv_after = (TextView) view.findViewById(R.id.hrc_card_txt_hrv);
+        hrv_card_txt_average_hrv = (TextView) view.findViewById(R.id.hrc_card_txt_average_hrv);
+        hrv_card_txt_average_norm_hrv = (TextView) view.findViewById(R.id.hrc_card_txt_norm_hrv);
 
         //BPM PieChart
         bpm_card = (CardView) view.findViewById(R.id.bpm_card);
@@ -483,14 +457,11 @@ public class DataTodayFragment extends Fragment {
         img_positively_excited = view.findViewById(R.id.img_positively_excited);
 
 
-
-
-
         //Maps cardview
         //todo: override onPause() onResume() and onDestroy() methods and call map_fragment.onPause(), map_fragment.onResume(), map_fragment.onDestroy() accordingly.
         FragmentManager fm = getActivity().getSupportFragmentManager();
         CameraPosition cp = new CameraPosition.Builder()
-                .target(new LatLng(54.6,25.27)) //Just a random starting point. Will be changed in reloadData()
+                .target(new LatLng(54.6, 25.27)) //Just a random starting point. Will be changed in reloadData()
                 .zoom(1f)
                 .build();
         map_fragment = SupportMapFragment.newInstance(new GoogleMapOptions().camera(cp));
@@ -506,42 +477,40 @@ public class DataTodayFragment extends Fragment {
         txt_workout_time_ago = view.findViewById(R.id.workout_index_measurement_date);
 
 
-        feeling_cardview.setTranslationY( Utils.getScreenHeight(getContext()));
+        feeling_cardview.setTranslationY(Utils.getScreenHeight(getContext()));
         feeling_cardview.animate()
                 .translationY(0)
                 .setInterpolator(new DecelerateInterpolator(3.f))
                 .setDuration(1500)
                 .start();
 
-        recommendation_card.setTranslationY( Utils.getScreenHeight(getContext()));
+        recommendation_card.setTranslationY(Utils.getScreenHeight(getContext()));
         recommendation_card.animate()
                 .translationY(0)
                 .setInterpolator(new DecelerateInterpolator(3.f))
                 .setDuration(1500)
                 .start();
 
-        bpm_card.setTranslationY( Utils.getScreenHeight(getContext()));
+        bpm_card.setTranslationY(Utils.getScreenHeight(getContext()));
         bpm_card.animate()
                 .translationY(0)
                 .setInterpolator(new DecelerateInterpolator(3.f))
                 .setDuration(1500)
                 .start();
 
-        workout_done_cardview.setTranslationY( Utils.getScreenHeight(getContext()));
+        workout_done_cardview.setTranslationY(Utils.getScreenHeight(getContext()));
         workout_done_cardview.animate()
                 .translationY(0)
                 .setInterpolator(new DecelerateInterpolator(3.f))
                 .setDuration(1500)
                 .start();
 
-        freq_card.setTranslationY( Utils.getScreenHeight(getContext()));
+        freq_card.setTranslationY(Utils.getScreenHeight(getContext()));
         freq_card.animate()
                 .translationY(0)
                 .setInterpolator(new DecelerateInterpolator(3.f))
                 .setDuration(1500)
                 .start();
-
-
 
 
         //First time cardview
@@ -564,9 +533,7 @@ public class DataTodayFragment extends Fragment {
     }
 
 
-
-
-    private void setFonts(){
+    private void setFonts() {
         Typeface futura = Typeface.createFromAsset(getContext().getAssets(),
                 "fonts/futura_light.ttf");
         Typeface verdana = Typeface.createFromAsset(getContext().getAssets(),
@@ -643,16 +610,16 @@ public class DataTodayFragment extends Fragment {
     }
 
 
-    private void setFrequencyChartData(float hf, float lf, float vlf, float vhf){
+    private void setFrequencyChartData(float hf, float lf, float vlf, float vhf) {
         //Modify Y-axis value
 
         ArrayList<PieEntry> values = new ArrayList<>();
-        values.add(new PieEntry(hf,"HF"));
-        values.add(new PieEntry(lf,"LF"));
-        values.add(new PieEntry(vlf,"VLF"));
-        values.add(new PieEntry(vhf,"VHF"));
+        values.add(new PieEntry(hf, "HF"));
+        values.add(new PieEntry(lf, "LF"));
+        values.add(new PieEntry(vlf, "VLF"));
+        values.add(new PieEntry(vhf, "VHF"));
 
-        final PieDataSet dataSet = new PieDataSet(values,"Frequencies");
+        final PieDataSet dataSet = new PieDataSet(values, "Frequencies");
         dataSet.setSliceSpace(2f);
         dataSet.setSelectionShift(3f);
         dataSet.setColors(new int[]{Color.parseColor("#e74c3c"), Color.parseColor("#2980b9"), Color.parseColor("#9b59b6"), Color.parseColor("#f1c40f")});
@@ -763,39 +730,39 @@ public class DataTodayFragment extends Fragment {
 
     }
 
-    private void bpm_lineChart(){
-            LineData data = new LineData();
+    private void bpm_lineChart() {
+        LineData data = new LineData();
         //Creating a line with single hr value
 
-            //BPM DATA SET
-            ArrayList<Entry> singleValueList = new ArrayList<>();
-            singleValueList.add(new Entry(0, 16));
-            singleValueList.add(new Entry(1, 24));
-            singleValueList.add(new Entry(2, 64));
-            singleValueList.add(new Entry(3, 35));
-            LineDataSet set = new LineDataSet(singleValueList, "HR");
-            set.setLineWidth(1);
-            set.setDrawValues(false);
-            set.setDrawCircleHole(false);
-            set.setDrawCircles(false);
-            set.setCircleRadius(getContext().getResources().getDimension(R.dimen.circle_radius));
-            set.setCircleColor(Color.parseColor("#FFFFFF"));
-            set.setColor(Color.parseColor("#F62459"));
-            set.setDrawFilled(false);
+        //BPM DATA SET
+        ArrayList<Entry> singleValueList = new ArrayList<>();
+        singleValueList.add(new Entry(0, 16));
+        singleValueList.add(new Entry(1, 24));
+        singleValueList.add(new Entry(2, 64));
+        singleValueList.add(new Entry(3, 35));
+        LineDataSet set = new LineDataSet(singleValueList, "HR");
+        set.setLineWidth(1);
+        set.setDrawValues(false);
+        set.setDrawCircleHole(false);
+        set.setDrawCircles(false);
+        set.setCircleRadius(getContext().getResources().getDimension(R.dimen.circle_radius));
+        set.setCircleColor(Color.parseColor("#FFFFFF"));
+        set.setColor(Color.parseColor("#F62459"));
+        set.setDrawFilled(false);
 
-            GradientDrawable drawable = new GradientDrawable();
-            drawable.setColors(new int[]{
-                    Color.parseColor("#a6f62459"),
-                    Color.TRANSPARENT
-            });
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setColors(new int[]{
+                Color.parseColor("#a6f62459"),
+                Color.TRANSPARENT
+        });
 
-            drawable.setGradientType(GradientDrawable.LINEAR_GRADIENT);
-            drawable.setShape(GradientDrawable.RECTANGLE);
-            drawable.setSize(240, 160);
-            set.setFillDrawable(drawable);
-            data.addDataSet(set);
+        drawable.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+        drawable.setShape(GradientDrawable.RECTANGLE);
+        drawable.setSize(240, 160);
+        set.setFillDrawable(drawable);
+        data.addDataSet(set);
 
-            //RMSSD DATA SET
+        //RMSSD DATA SET
         ArrayList<Entry> secondValueList = new ArrayList<>();
         secondValueList.add(new Entry(0, 35));
         secondValueList.add(new Entry(1, 65));
@@ -817,10 +784,9 @@ public class DataTodayFragment extends Fragment {
         bpm_line_chart.setData(data);
 
 
-
     }
 
-    private void health_index_pieChart(){
+    private void health_index_pieChart() {
 
         //Casual modifications
         health_index_chart.setUsePercentValues(true);
@@ -842,11 +808,11 @@ public class DataTodayFragment extends Fragment {
         health_index_chart.animateY(1000, Easing.EasingOption.EaseInOutCubic);
 
         ArrayList<PieEntry> values = new ArrayList<>();
-        values.add(new PieEntry(30f,"BPM"));
-        values.add(new PieEntry(70f,"asfBPM"));
+        values.add(new PieEntry(30f, "BPM"));
+        values.add(new PieEntry(70f, "asfBPM"));
 
         //Modify Y-axis value
-        final PieDataSet dataSet = new PieDataSet(values,"Frequencies");
+        final PieDataSet dataSet = new PieDataSet(values, "Frequencies");
         dataSet.setSliceSpace(0f);
         dataSet.setSelectionShift(3f);
         dataSet.setColors(new int[]{Color.parseColor("#20bf6b"), Color.parseColor("#26de81")});
@@ -866,7 +832,7 @@ public class DataTodayFragment extends Fragment {
 
     }
 
-    private void imageViewClickers(){
+    private void imageViewClickers() {
         img_negatively_excited.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -934,14 +900,40 @@ public class DataTodayFragment extends Fragment {
         });
     }
 
-    private void updateMood(final int status){
+    private void updateMood(final int status) {
         Measurement lastMeasurement = User.getUser(getContext()).getLastMeasurement();
-        if(lastMeasurement == null){
+        if (lastMeasurement == null) {
             return;
         }
 
         lastMeasurement.setMood(status);
         User.updateMeasurement(getContext(), lastMeasurement, User.UPDATE_TYPE_BY_ID);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (route_display_googlemap != null) {
+            map_fragment.onResume();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (map_fragment != null) {
+            map_fragment.onDestroy();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (map_fragment != null) {
+            map_fragment.onPause();
+        }
     }
 
 }

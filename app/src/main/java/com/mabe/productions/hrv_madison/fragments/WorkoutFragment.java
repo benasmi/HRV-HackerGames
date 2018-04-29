@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.VibrationEffect;
@@ -62,6 +63,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
+import io.nlopez.smartlocation.location.config.LocationAccuracy;
 import pl.droidsonroids.gif.GifImageView;
 
 public class WorkoutFragment extends Fragment {
@@ -101,8 +103,8 @@ public class WorkoutFragment extends Fragment {
 
     private TextView txt_intensity;
     private TextView txt_intensity_status;
-    public Tooltip infoDuration =null;
-    public Tooltip infoPulse =null;
+    public Tooltip infoDuration = null;
+    public Tooltip infoPulse = null;
     private GifImageView workout_tab_running_gif;
 
     private Thread pauseThread;
@@ -119,16 +121,17 @@ public class WorkoutFragment extends Fragment {
     public static final int STATE_PAUSED = 3;
 
     public static final double MAX_REASONABLE_SPEED = 35; //in km/h
-    public static final double MIN_REASONABLE_SPEED = 4; //in km/h
+    public static final double MIN_REASONABLE_SPEED = 1; //in km/h
 
     private long timePassed = 0;
+
     private double calories_burned = 0;
     private int pulse_zone = 0;
     private long userSpecifiedWorkoutDuration = 0;
     private boolean isTimerRunning = false;
     private boolean runThread;
     int workout_state = STATE_BEFORE_WORKOUT;
-    private boolean isLocationListeningEnabled= false;
+    private boolean isLocationListeningEnabled = false;
 
     private float totalDistance = 0;
 
@@ -142,7 +145,6 @@ public class WorkoutFragment extends Fragment {
     private static final int MAX_PULSE_DIFFERENCE_TO_ALTER_VIBRATION = 20;
 
     private Timer vibrationTimer;
-
 
 
     private ArrayList<LatLng> route = new ArrayList<>();
@@ -170,7 +172,7 @@ public class WorkoutFragment extends Fragment {
         View view = inflater.inflate(R.layout.workout_fragment, container, false);
 
         User userInfo = User.getUser(getContext());
-        mVibrator =  (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+        mVibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
 
         initializeViews(view);
         initializeAnimations();
@@ -181,17 +183,17 @@ public class WorkoutFragment extends Fragment {
         return view;
     }
 
-    public void disconnected(){
+    public void disconnected() {
         txt_connection_status.setText(R.string.failed_connection_status);
         //If user is measuring, pausing the measurement
-        if(workout_state == STATE_WORKING_OUT || workout_state == STATE_TIME_ENDED){
+        if (workout_state == STATE_WORKING_OUT || workout_state == STATE_TIME_ENDED) {
             txt_connection_status.setText(R.string.lost_connection);
             Utils.vibrate(getContext(), VIBRATE_DURATION_CONNECTION_LOST);
             setState(STATE_PAUSED);
         }
     }
 
-    private void initializeViews(View rootView){
+    private void initializeViews(View rootView) {
         txt_intensity = rootView.findViewById(R.id.txt_intensity);
         txt_intensity_status = rootView.findViewById(R.id.txt_intensity_status);
         pulseZoneView = rootView.findViewById(R.id.pulse_zone_progress);
@@ -231,17 +233,16 @@ public class WorkoutFragment extends Fragment {
     }
 
 
-
-    public void updateData(){
+    public void updateData() {
         User user = User.getUser(getContext());
         required_pulse_zone = user.getPulseZone();
         pulseZoneView.setRequiredPulseZone(required_pulse_zone);
         editText_minutes.setText("" + (int) user.getWorkoutDuration());
         reccomended_duration.setText("" + (int) user.getWorkoutDuration());
-        reccomended_pulse.setText( user.getPulseZone()+""+Utils.getNumberSuffix(user.getPulseZone()));
+        reccomended_pulse.setText(user.getPulseZone() + "" + Utils.getNumberSuffix(user.getPulseZone()));
     }
 
-    private void initializeAnimations(){
+    private void initializeAnimations() {
         anim_left_to_right = AnimationUtils.loadAnimation(getContext(), R.anim.left_to_right);
         anim_right_to_left = AnimationUtils.loadAnimation(getContext(), R.anim.right_to_left);
         anim_running_man_left_to_right = AnimationUtils.loadAnimation(getContext(), R.anim.running_man_left_to_right);
@@ -252,7 +253,7 @@ public class WorkoutFragment extends Fragment {
 
     }
 
-    private void startedWorkoutAnimations(){
+    private void startedWorkoutAnimations() {
 
         workout_tab_running_gif.startAnimation(anim_running_man_left_to_right);
         img_stop.startAnimation(anim_left_to_right);
@@ -262,7 +263,7 @@ public class WorkoutFragment extends Fragment {
         layout_bpm.startAnimation(anim_left_to_right);
     }
 
-    private void timeEndedAnimations(){
+    private void timeEndedAnimations() {
         btn_toggle.startAnimation(anim_top_to_bottom_delay);
     }
 
@@ -271,11 +272,12 @@ public class WorkoutFragment extends Fragment {
      * Checks if gps enabled and gps permission is granted.
      * If gps is not enabled, user is notified via a toast.
      * If user has not granted gps permission yet, a permission request is shown.
+     *
      * @return returns true if gps is enabled and ready to use
      */
-    private boolean checkForGPS(){
+    private boolean checkForGPS() {
 
-        if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) !=  PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                     MainScreenActivity.PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
@@ -283,7 +285,7 @@ public class WorkoutFragment extends Fragment {
             return false;
         }
 
-        if(!Utils.isGPSEnabled(getContext())){
+        if (!Utils.isGPSEnabled(getContext())) {
             Toast.makeText(getContext(), "Please enable GPS!", Toast.LENGTH_LONG).show();
             return false;
         }
@@ -292,44 +294,44 @@ public class WorkoutFragment extends Fragment {
     }
 
     //todo: clean up
-    private boolean autoConnectDevice(){
+    private boolean autoConnectDevice() {
         String MAC_adress = Utils.readFromSharedPrefs_string(getContext(), FeedReaderDbHelper.BT_FIELD_MAC_ADRESS, FeedReaderDbHelper.SHARED_PREFS_DEVICES);
-        String device_name = Utils.readFromSharedPrefs_string(getContext(),FeedReaderDbHelper.BT_FIELD_DEVICE_NAME,FeedReaderDbHelper.SHARED_PREFS_DEVICES);
+        String device_name = Utils.readFromSharedPrefs_string(getContext(), FeedReaderDbHelper.BT_FIELD_DEVICE_NAME, FeedReaderDbHelper.SHARED_PREFS_DEVICES);
 
-        if(BluetoothGattService.isGattDeviceConnected){
+        if (BluetoothGattService.isGattDeviceConnected) {
             return true;
         }
 
         //If there is saved device --> connect
-        if(!MAC_adress.equals("") && Utils.isBluetoothEnabled()){
+        if (!MAC_adress.equals("") && Utils.isBluetoothEnabled()) {
             BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(MAC_adress);
             shouldStartWorkoutImmediately = true;
             getContext().startService(new Intent(getContext(), BluetoothGattService.class).putExtra("device", device));
             txt_connection_status.setText(getString(R.string.connecting_to) + " " + device_name);
             return false;
-        }else{
+        } else {
 
             //If there is no saved device --> add one
 
 
-                if(Utils.isBluetoothEnabled()){
-                    shouldStartWorkoutImmediately = true;
-                    LeDevicesDialog dialog = new LeDevicesDialog(getContext());
-                    dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialog) {
-                            if(!BluetoothGattService.isGattDeviceConnected){
-                                shouldStartWorkoutImmediately = false;
-                            }
+            if (Utils.isBluetoothEnabled()) {
+                shouldStartWorkoutImmediately = true;
+                LeDevicesDialog dialog = new LeDevicesDialog(getContext());
+                dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        if (!BluetoothGattService.isGattDeviceConnected) {
+                            shouldStartWorkoutImmediately = false;
                         }
-                    });
+                    }
+                });
 
-                }else{
-                    //todo: fix to open a dialog
-                    Toast.makeText(getContext(), "Please enable bluetooth!", Toast.LENGTH_LONG).show(); //TODO: add a nice dialog or something
+            } else {
+                //todo: fix to open a dialog
+                Toast.makeText(getContext(), "Please enable bluetooth!", Toast.LENGTH_LONG).show(); //TODO: add a nice dialog or something
 
 
-                }
+            }
 
             return false;
 
@@ -337,16 +339,16 @@ public class WorkoutFragment extends Fragment {
     }
 
 
-    private View.OnClickListener durationInfoListener = new View.OnClickListener(){
+    private View.OnClickListener durationInfoListener = new View.OnClickListener() {
 
         @Override
         public void onClick(View view) {
 
-            if(infoPulse!=null){
+            if (infoPulse != null) {
                 infoPulse.dismiss();
             }
 
-            if(infoDuration ==null){
+            if (infoDuration == null) {
                 infoDuration = new Tooltip.Builder(view)
                         .setText("This is reccomended duration of your workout")
                         .setDismissOnClick(true)
@@ -358,23 +360,23 @@ public class WorkoutFragment extends Fragment {
 
             }
 
-            if(!infoDuration.isShowing()){
+            if (!infoDuration.isShowing()) {
                 infoDuration.show();
             }
 
         }
     };
 
-    private View.OnClickListener durationPulseListener = new View.OnClickListener(){
+    private View.OnClickListener durationPulseListener = new View.OnClickListener() {
 
         @Override
         public void onClick(View view) {
 
-            if(infoDuration!=null){
+            if (infoDuration != null) {
                 infoDuration.dismiss();
             }
 
-            if(infoPulse ==null){
+            if (infoPulse == null) {
                 infoPulse = new Tooltip.Builder(view)
                         .setText("This is recommended pulse zone of your workout")
                         .setDismissOnClick(true)
@@ -386,14 +388,14 @@ public class WorkoutFragment extends Fragment {
 
             }
 
-            if(!infoPulse.isShowing()){
+            if (!infoPulse.isShowing()) {
                 infoPulse.show();
             }
 
         }
     };
 
-    private View.OnClickListener resumeButtonListener = new View.OnClickListener(){
+    private View.OnClickListener resumeButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             runThread = false;
@@ -401,7 +403,7 @@ public class WorkoutFragment extends Fragment {
         }
     };
 
-    private View.OnClickListener pauseButtonListener = new View.OnClickListener(){
+    private View.OnClickListener pauseButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             timePauseFlashing();
@@ -413,25 +415,25 @@ public class WorkoutFragment extends Fragment {
         @Override
         public void onClick(View v) {
             Utils.buildAlertDialogPrompt(getContext(),
-                                         getString(R.string.please_wait),
-                                         getString(R.string.do_you_really_want_to_stop_training_prompt),
-                                         getString(R.string.end),
-                                         getString(R.string.cancel),
-                                         new DialogInterface.OnClickListener() {
-                                             @Override
-                                             public void onClick(DialogInterface dialog, int which) {
+                    getString(R.string.please_wait),
+                    getString(R.string.do_you_really_want_to_stop_training_prompt),
+                    getString(R.string.end),
+                    getString(R.string.cancel),
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
-                                                 runThread = false;
+                            runThread = false;
 
-                                                 setState(STATE_BEFORE_WORKOUT);
-                                             }
-                                         },
-                                         null
+                            setState(STATE_BEFORE_WORKOUT);
+                        }
+                    },
+                    null
             );
         }
     };
 
-    private View.OnClickListener reviewProgressButtonListener = new View.OnClickListener(){
+    private View.OnClickListener reviewProgressButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
@@ -445,13 +447,12 @@ public class WorkoutFragment extends Fragment {
                     Utils.convertIntArrayListToArray(bpmArrayList),
                     Utils.convertFloatArrayListToArray(paceData),
                     Utils.convertLatLngArrayListToArray(route),
-                    (float)calories_burned,
+                    (float) calories_burned,
                     MainScreenActivity.user.getPulseZone(),
                     totalDistance
             );
 
             User.addWorkoutData(getContext(), workout, true);
-
 
 
             setState(STATE_BEFORE_WORKOUT);
@@ -461,7 +462,6 @@ public class WorkoutFragment extends Fragment {
             parentViewPager.setCurrentItem(1);
 
 
-
         }
     };
 
@@ -469,17 +469,17 @@ public class WorkoutFragment extends Fragment {
         @Override
         public void onClick(View v) {
 
-            if(!checkForGPS()){
+            if (!checkForGPS()) {
                 return;
             }
             //Since we know that gps is on and permission is granted, creating an instance of location client
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
 
 
-            if(BluetoothGattService.isGattDeviceConnected){
-                 setState(STATE_WORKING_OUT);
+            if (BluetoothGattService.isGattDeviceConnected) {
+                setState(STATE_WORKING_OUT);
 
-            }else{
+            } else {
                 Utils.buildAlertDialogPrompt(
                         getContext(),
                         "Please wait!",
@@ -501,16 +501,17 @@ public class WorkoutFragment extends Fragment {
 
     /**
      * Transitions the fragment from one state to another.
+     *
      * @param state the state to change to.
      */
-    public void setState(final int state){
+    public void setState(final int state) {
         int previous_state = workout_state;
         workout_state = state;
 
-        switch(workout_state){
+        switch (workout_state) {
 
             case STATE_BEFORE_WORKOUT:
-                if(vibrationTimer != null){
+                if (vibrationTimer != null) {
                     vibrationTimer.cancel();
                 }
                 cancelTimer();
@@ -531,17 +532,17 @@ public class WorkoutFragment extends Fragment {
                 img_pause.setVisibility(View.GONE);
                 img_stop.setVisibility(View.GONE);
                 layout_workout_progress.setVisibility(View.GONE);
-                setProgressBarDuration(1,1);
+                setProgressBarDuration(1, 1);
                 editText_minutes.setEnabled(true);
                 editText_seconds.setEnabled(true);
 
 
                 //Todo: fix that, it's ugly now :(
                 User user = User.getUser(getContext());
-                if(user.getTodaysMeasurement()==null){
+                if (user.getTodaysMeasurement() == null) {
                     button_personalised_workout.setVisibility(View.VISIBLE);
                     txt_personolized_workout.setVisibility(View.GONE);
-                }else{
+                } else {
                     button_personalised_workout.setVisibility(View.GONE);
                     txt_personolized_workout.setVisibility(View.VISIBLE);
                 }
@@ -551,14 +552,14 @@ public class WorkoutFragment extends Fragment {
                 break;
 
             case STATE_WORKING_OUT:
-                if(infoDuration!=null){
+                if (infoDuration != null) {
                     infoDuration.dismiss();
                 }
-                if(infoPulse!=null){
+                if (infoPulse != null) {
                     infoPulse.dismiss();
                 }
                 workout_tab_running_gif.setVisibility(View.VISIBLE);
-                if(previous_state == STATE_BEFORE_WORKOUT){
+                if (previous_state == STATE_BEFORE_WORKOUT) {
                     startedWorkoutAnimations();
                 }
 
@@ -579,7 +580,7 @@ public class WorkoutFragment extends Fragment {
                 int minutes = Integer.valueOf(editText_minutes.getText().toString());
                 int seconds = Integer.valueOf(editText_seconds.getText().toString());
 
-                if(previous_state == STATE_BEFORE_WORKOUT){
+                if (previous_state == STATE_BEFORE_WORKOUT) {
                     userSpecifiedWorkoutDuration = minutes * 60000 + seconds * 1000;
 
                 }
@@ -590,7 +591,7 @@ public class WorkoutFragment extends Fragment {
                 break;
 
             case STATE_TIME_ENDED:
-                if(previous_state == STATE_WORKING_OUT){
+                if (previous_state == STATE_WORKING_OUT) {
                     timeEndedAnimations();
                 }
                 startLocationListener();
@@ -605,7 +606,7 @@ public class WorkoutFragment extends Fragment {
 
             case STATE_PAUSED:
                 pauseTimer();
-                if(vibrationTimer != null){
+                if (vibrationTimer != null) {
                     vibrationTimer.cancel();
                 }
                 pauseLocationListener();
@@ -618,8 +619,6 @@ public class WorkoutFragment extends Fragment {
         }
     }
 
-    private int locationResultCount = 0;
-    private long lastLocationUpdate = 0;
     //The location callback that stores paceData and distance.
     private LocationCallback mLocationCallback = new LocationCallback() {
 
@@ -627,49 +626,45 @@ public class WorkoutFragment extends Fragment {
         public void onLocationResult(LocationResult locationResult) {
 
 
-                if(workout_state == STATE_WORKING_OUT || workout_state == STATE_TIME_ENDED){
+            if (workout_state == STATE_WORKING_OUT || workout_state == STATE_TIME_ENDED) {
 
-                    double latitude = locationResult.getLastLocation().getLatitude();
-                    double longitude = locationResult.getLastLocation().getLongitude();
-                    LatLng lastLocation = new LatLng(latitude, longitude); //you already have this
+                double latitude = locationResult.getLastLocation().getLatitude();
+                double longitude = locationResult.getLastLocation().getLongitude();
+                LatLng lastLocation = new LatLng(latitude, longitude);
 
-                    locationResultCount++;
-
-                    if(locationResultCount > 2){
-
-                        if(route.size() > 0){
-                            double distance = distance(lastLocation, route.get(route.size()-1));
-                            double speed = ((System.currentTimeMillis()-lastLocationUpdate) / (1000d*60d*60d))/distance;
-
-                            if((speed <= MAX_REASONABLE_SPEED) && (speed >= MIN_REASONABLE_SPEED)){
-                                lastLocationUpdate = System.currentTimeMillis();
-                                route.add(lastLocation);
-                                totalDistance+=distance;
-                                Log.i("TEST", "total distance: " + totalDistance);
-                                txt_distance.setText(String.valueOf(Math.round(totalDistance*100d)/100d));
-                            }
-                        }else{
-                            route.add(lastLocation);
-                            lastLocationUpdate = System.currentTimeMillis();
-                        }
-
-
-                    }
-
-                    Log.i("TEST", "latitude: " + latitude + " longtitude: " + longitude);
-
+                if(locationResult.getLastLocation().getAccuracy() > 50){
+                    Log.i("TEST", "Location not accurate enough: " + locationResult.getLastLocation().getAccuracy() + "m");
+                    return;
                 }
+                Log.i("TEST", "Location accuracy is reasonable: " + locationResult.getLastLocation().getAccuracy() + "m");
+
+                if (route.size() > 0) {
+                    double distance = distance(lastLocation, route.get(route.size() - 1));
+                    //double speed = ((System.currentTimeMillis() - lastLocationUpdate) / (1000d * 60d * 60d)) / distance;
+                    double speed = locationResult.getLastLocation().getSpeed()*3.6d; //in km/h
+                    txt_current_pace.setText(String.valueOf( Math.round(locationResult.getLastLocation().getSpeed()*100d)/100d));
+                    //Log.i("TEST", "Estimated movement speed: " + speed + "km/h\nGiven movement speed: " + locationResult.getLastLocation().getSpeed()*3.6d + "km/h");
+                    if (speed <= MAX_REASONABLE_SPEED && speed >= MIN_REASONABLE_SPEED) {
+                        route.add(lastLocation);
+                        paceData.add(locationResult.getLastLocation().getSpeed());
+                        totalDistance += distance;
+                        Log.i("TEST", "total distance: " + totalDistance);
+                        txt_distance.setText(String.valueOf(Math.round(totalDistance * 100d) / 100d));
+                    }
+                } else {
+                    route.add(lastLocation);
+                }
+           }
 
 
+        }
 
-
-
-        };
+        ;
     };
 
 
     private void startLocationListener() {
-        if(isLocationListeningEnabled){
+        if (isLocationListeningEnabled) {
             return;
         }
 
@@ -683,30 +678,28 @@ public class WorkoutFragment extends Fragment {
 
         //noinspection MissingPermission
         mFusedLocationClient.requestLocationUpdates(mLocationRequest,
-                                                    mLocationCallback,
-                                                    null /* Looper */);
+                mLocationCallback,
+                null /* Looper */);
 
     }
 
-    private void pauseLocationListener(){
-        if(!isLocationListeningEnabled){
+    private void pauseLocationListener() {
+        if (!isLocationListeningEnabled) {
             return;
         }
         mFusedLocationClient.removeLocationUpdates(mLocationCallback);
         isLocationListeningEnabled = false;
     }
 
-    private void stopLocationListener(){
+    private void stopLocationListener() {
         pauseLocationListener();
         route.clear();
         totalDistance = 0f;
-        lastLocationUpdate = 0;
-        locationResultCount = 0;
     }
 
-    public void onMeasurement(int bpm){
+    public void onMeasurement(int bpm) {
         txt_bpm.setText(String.valueOf(bpm));
-        if(workout_state == STATE_WORKING_OUT || workout_state == STATE_TIME_ENDED){
+        if (workout_state == STATE_WORKING_OUT || workout_state == STATE_TIME_ENDED) {
             bpmArrayList.add(bpm);
             int gender = MainScreenActivity.user.getGender();
             int age = Utils.getAgeFromDate(MainScreenActivity.user.getBirthday());
@@ -714,11 +707,11 @@ public class WorkoutFragment extends Fragment {
             // weight to int
             int weight = (int) MainScreenActivity.user.getWeight();
 
-            calories_burned = calories_burned + calculateCalories(gender,age,weight, bpm, 1f/60f);
-            pulse_zone = pulseZone(gender,age,bpm);
-            float realPercentage = calculateUIMultiplier(HRMax*0.5f, HRMax, bpm);
+            calories_burned = calories_burned + calculateCalories(gender, age, weight, bpm, 1f / 60f);
+            pulse_zone = pulseZone(gender, age, bpm);
+            float realPercentage = calculateUIMultiplier(HRMax * 0.5f, HRMax, bpm);
             pulseZoneView.setProgressPercentageWithAnim(realPercentage);
-            setIntensityStatus(txt_intensity,required_pulse_zone,pulse_zone);
+            setIntensityStatus(txt_intensity, required_pulse_zone, pulse_zone);
             txt_calories_burned.setText(String.valueOf(Math.round(calories_burned * 100.0) / 100.0)); //Rounding and displaying calories
 
             vibrateByPulseZone(required_pulse_zone, HRMax, bpm);
@@ -729,53 +722,54 @@ public class WorkoutFragment extends Fragment {
      * Starts a timer that vibrates the phone based on given pulse data
      * If a timer is currently running, it is cancelled, and the new one with updaed data is started.
      * Timer is stored in vibrationTimer field.
+     *
      * @param required_pulse_zone The pulse zone user has to be in. Can be an integer from 1 to 5.
-     * @param HRMax The maximum BPM user can withstand. Can be calculated from age and gender.
-     * @param heartRate The current user's heart rate in BPM
+     * @param HRMax               The maximum BPM user can withstand. Can be calculated from age and gender.
+     * @param heartRate           The current user's heart rate in BPM
      */
-    private void vibrateByPulseZone(int required_pulse_zone, float HRMax, int heartRate){
+    private void vibrateByPulseZone(int required_pulse_zone, float HRMax, int heartRate) {
 
         int min_pulse = 0;
         int max_pulse = 0;
 
-        if(required_pulse_zone == 1){
-            min_pulse = (int) (HRMax*0.5f);
-            max_pulse = (int) (HRMax*0.6f);
-        }else if(required_pulse_zone == 2){
-            min_pulse = (int) (HRMax*0.6f);
-            max_pulse = (int) (HRMax*0.7f);
-        }else if(required_pulse_zone == 3){
-            min_pulse = (int) (HRMax*0.7f);
-            max_pulse = (int) (HRMax*0.8f);
-        }else if(required_pulse_zone == 4){
-            min_pulse = (int) (HRMax*0.8f);
-            max_pulse = (int) (HRMax*0.9f);
-        }else if(required_pulse_zone == 5){
-            min_pulse = (int) (HRMax*0.9f);
-            max_pulse = (int) (HRMax*1f);
+        if (required_pulse_zone == 1) {
+            min_pulse = (int) (HRMax * 0.5f);
+            max_pulse = (int) (HRMax * 0.6f);
+        } else if (required_pulse_zone == 2) {
+            min_pulse = (int) (HRMax * 0.6f);
+            max_pulse = (int) (HRMax * 0.7f);
+        } else if (required_pulse_zone == 3) {
+            min_pulse = (int) (HRMax * 0.7f);
+            max_pulse = (int) (HRMax * 0.8f);
+        } else if (required_pulse_zone == 4) {
+            min_pulse = (int) (HRMax * 0.8f);
+            max_pulse = (int) (HRMax * 0.9f);
+        } else if (required_pulse_zone == 5) {
+            min_pulse = (int) (HRMax * 0.9f);
+            max_pulse = (int) (HRMax * 1f);
         }
 
         final long vibrationPeriod;
 
         //TODO: I made some changes that have not been tested. sorry :(
-        if(heartRate > max_pulse){
+        if (heartRate > max_pulse) {
             float difference = Math.min(heartRate - max_pulse, MAX_PULSE_DIFFERENCE_TO_ALTER_VIBRATION);
-            vibrationPeriod = (long) ((MIN_VIBRATION_COOLDOWN * (float) MAX_PULSE_DIFFERENCE_TO_ALTER_VIBRATION)/difference);
-        }else if(heartRate < min_pulse){
+            vibrationPeriod = (long) ((MIN_VIBRATION_COOLDOWN * (float) MAX_PULSE_DIFFERENCE_TO_ALTER_VIBRATION) / difference);
+        } else if (heartRate < min_pulse) {
             int difference = Math.min(min_pulse - heartRate, MAX_PULSE_DIFFERENCE_TO_ALTER_VIBRATION);
-            vibrationPeriod = (long) ((MIN_VIBRATION_COOLDOWN * (float) MAX_PULSE_DIFFERENCE_TO_ALTER_VIBRATION)/difference);
-        }else{
+            vibrationPeriod = (long) ((MIN_VIBRATION_COOLDOWN * (float) MAX_PULSE_DIFFERENCE_TO_ALTER_VIBRATION) / difference);
+        } else {
 
-            if(vibrationTimer != null)
+            if (vibrationTimer != null)
                 vibrationTimer.cancel();
 
             vibrationTimer = new Timer();
             return;
         }
 
-        if(vibrationTimer == null){
+        if (vibrationTimer == null) {
             vibrationTimer = new Timer();
-        }else{
+        } else {
             vibrationTimer.cancel();
             vibrationTimer = new Timer();
         }
@@ -786,7 +780,7 @@ public class WorkoutFragment extends Fragment {
                 if (android.os.Build.VERSION.SDK_INT >= 26) {
                     VibrationEffect effect = VibrationEffect.createOneShot(VIBRATION_DURATION, VibrationEffect.DEFAULT_AMPLITUDE);
                     mVibrator.vibrate(effect);
-                }else{
+                } else {
                     mVibrator.vibrate(50);
                 }
             }
@@ -796,23 +790,23 @@ public class WorkoutFragment extends Fragment {
     }
 
 
-
     /**
      * Sets the time circle progress.
-     * @param timeTotal the time workout is going to last
+     *
+     * @param timeTotal  the time workout is going to last
      * @param timePassed time, that has already passed
      */
-    private void setProgressBarDuration(int timeTotal, int timePassed){
-        float percentage = ( (float) timePassed) / ((float) timeTotal);
-        progressbar_duration.setProgress(100-percentage*100);
+    private void setProgressBarDuration(int timeTotal, int timePassed) {
+        float percentage = ((float) timePassed) / ((float) timeTotal);
+        progressbar_duration.setProgress(100 - percentage * 100);
 
     }
 
     //Timer gets started. It does so based on timePassed value.
-    private void startTimer(){
-        if(timer == null){
+    private void startTimer() {
+        if (timer == null) {
             timer = new Timer();
-        }else{
+        } else {
             timer.cancel();
             timer = new Timer();
         }
@@ -823,47 +817,43 @@ public class WorkoutFragment extends Fragment {
             @Override
             public void run() {
 
-                getActivity().runOnUiThread(new Runnable()
-                {
+                getActivity().runOnUiThread(new Runnable() {
                     @Override
-                    public void run()
-                    {
+                    public void run() {
 
 
-
-
-                        if(timePassed == userSpecifiedWorkoutDuration){
+                        if (timePassed == userSpecifiedWorkoutDuration) {
                             setState(STATE_TIME_ENDED);
                         }
 
                         //User is working out longer, than specified duration
-                        if(timePassed > userSpecifiedWorkoutDuration){
+                        if (timePassed > userSpecifiedWorkoutDuration) {
 
-                            int minutes = (int) (timePassed - userSpecifiedWorkoutDuration)/60000;
-                            int seconds = Math.round((timePassed - userSpecifiedWorkoutDuration)/1000 - (minutes*60));
+                            int minutes = (int) (timePassed - userSpecifiedWorkoutDuration) / 60000;
+                            int seconds = Math.round((timePassed - userSpecifiedWorkoutDuration) / 1000 - (minutes * 60));
 
-                            if(seconds < 10){
-                                editText_minutes.setText("+"+minutes + "");
+                            if (seconds < 10) {
+                                editText_minutes.setText("+" + minutes + "");
                                 editText_seconds.setText("0" + seconds);
-                            }else{
+                            } else {
                                 editText_seconds.setText(seconds + "");
-                                editText_minutes.setText("+"+minutes + "");
+                                editText_minutes.setText("+" + minutes + "");
                             }
-                        }else{ //User is within his specified time limits
-                            setProgressBarDuration((int) userSpecifiedWorkoutDuration, (int) (userSpecifiedWorkoutDuration -timePassed));
+                        } else { //User is within his specified time limits
+                            setProgressBarDuration((int) userSpecifiedWorkoutDuration, (int) (userSpecifiedWorkoutDuration - timePassed));
 
-                            int minutes = (int) (userSpecifiedWorkoutDuration -timePassed)/60000;
-                            int seconds = Math.round((userSpecifiedWorkoutDuration -timePassed)/1000 - (minutes*60));
-                            if(seconds < 10){
+                            int minutes = (int) (userSpecifiedWorkoutDuration - timePassed) / 60000;
+                            int seconds = Math.round((userSpecifiedWorkoutDuration - timePassed) / 1000 - (minutes * 60));
+                            if (seconds < 10) {
                                 editText_minutes.setText(minutes + "");
                                 editText_seconds.setText("0" + seconds);
-                            }else{
+                            } else {
                                 editText_seconds.setText(seconds + "");
                                 editText_minutes.setText(minutes + "");
                             }
                         }
 
-                        timePassed+=TIMER_STEP;
+                        timePassed += TIMER_STEP;
 
                     }
                 });
@@ -872,8 +862,8 @@ public class WorkoutFragment extends Fragment {
     }
 
     //Cancels the timer, but doesn't reset timepassed, so the timer can be resumed using startTimer()
-    private void pauseTimer(){
-        if(timer == null || !isTimerRunning){
+    private void pauseTimer() {
+        if (timer == null || !isTimerRunning) {
             return;
         }
         timer.cancel();
@@ -882,18 +872,18 @@ public class WorkoutFragment extends Fragment {
     }
 
     //Cancels the timer, and sets timepassed to 0
-    private void cancelTimer(){
+    private void cancelTimer() {
         timePassed = 0;
-        if(timer == null || !isTimerRunning){
+        if (timer == null || !isTimerRunning) {
             return;
         }
 
         timer.cancel();
-    isTimerRunning = false;
+        isTimerRunning = false;
 
-}
+    }
 
-    private void setupEditTextBehavior(){
+    private void setupEditTextBehavior() {
         View.OnClickListener editTextClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -902,7 +892,7 @@ public class WorkoutFragment extends Fragment {
             }
         };
 
-        KeyListener keyListener = new KeyListener(){
+        KeyListener keyListener = new KeyListener() {
 
             @Override
             public int getInputType() {
@@ -911,7 +901,7 @@ public class WorkoutFragment extends Fragment {
 
             @Override
             public boolean onKeyDown(View view, Editable editable, int i, KeyEvent keyEvent) {
-                if(keyEvent.getKeyCode() == KeyEvent.KEYCODE_DEL){
+                if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_DEL) {
                     return true;
                 }
 
@@ -947,7 +937,7 @@ public class WorkoutFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(editText_minutes.getSelectionStart() == 2){
+                if (editText_minutes.getSelectionStart() == 2) {
                     editText_seconds.requestFocus();
                 }
             }
@@ -966,15 +956,15 @@ public class WorkoutFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                if(s.length() == 0){
+                if (s.length() == 0) {
                     return;
                 }
 
-                if(Integer.parseInt(s.subSequence(0, 1).toString()) >= 6){
+                if (Integer.parseInt(s.subSequence(0, 1).toString()) >= 6) {
                     editText_seconds.setText("00");
                 }
 
-                if(editText_seconds.getSelectionStart() == 2){
+                if (editText_seconds.getSelectionStart() == 2) {
                     editText_seconds.clearFocus();
                     editText_minutes.clearFocus();
                 }
@@ -990,54 +980,56 @@ public class WorkoutFragment extends Fragment {
 
     /**
      * Calculates the calories burned.
-     * @return Calories burned (in KCal)
-     * @param gender The gender of the user. Either User.GENDER_MALE or User.GENDER_FEMALE
-     * @param weight The weight of the user in kilograms.
-     * @param heartRate The current heartRate in BPM.
+     *
+     * @param gender     The gender of the user. Either User.GENDER_MALE or User.GENDER_FEMALE
+     * @param weight     The weight of the user in kilograms.
+     * @param heartRate  The current heartRate in BPM.
      * @param timePassed The amount of time that has passed since last heart rate measurement.
+     * @return Calories burned (in KCal)
      */
-    private double calculateCalories(int gender, int age, int weight, int heartRate, double timePassed){
+    private double calculateCalories(int gender, int age, int weight, int heartRate, double timePassed) {
 
         double calories = 0;
 
-        switch(gender){
+        switch (gender) {
             case User.GENDER_FEMALE:
-                calories = ((((double)age*0.074d)-(((double)weight)*0.05741d))+(((double) heartRate)*0.4472d) - 20.4022d)*timePassed/4.184d;
+                calories = ((((double) age * 0.074d) - (((double) weight) * 0.05741d)) + (((double) heartRate) * 0.4472d) - 20.4022d) * timePassed / 4.184d;
                 break;
 
             case User.GENDER_MALE:
-                calories = ((((double)age*0.2017d)-(((double)weight)*0.09036d))+(((double) heartRate)*0.6309d) - 20.4022d)*timePassed/4.184d;
+                calories = ((((double) age * 0.2017d) - (((double) weight) * 0.09036d)) + (((double) heartRate) * 0.6309d) - 20.4022d) * timePassed / 4.184d;
                 break;
         }
 
-        return calories/1000; //Conmverting to KCal
+        return calories / 1000; //Conmverting to KCal
     }
 
 
     /**
      * Gets the current pulse zone user is in
-     * @return The pulse zone user is in. If user does not fit pulse zone bounds, returns 0.
+     *
      * @param gender The gender of the user. Either User.GENDER_MALE or User.GENDER_FEMALE
-     * @param age The age of the user.
+     * @param age    The age of the user.
+     * @return The pulse zone user is in. If user does not fit pulse zone bounds, returns 0.
      * @heartRate The heart rate of the user in BPM.
      */
-    private int pulseZone(int gender, int age, int heartRate){
+    private int pulseZone(int gender, int age, int heartRate) {
 
-        HRMax =  ((gender==0 ? 202 : 216) - (gender==0 ? 0.55f : 1.09f) * age);
+        HRMax = ((gender == 0 ? 202 : 216) - (gender == 0 ? 0.55f : 1.09f) * age);
         int pulseZone = 0;
 
-        float hrPercentage = ((float) heartRate)/HRMax*100f;
+        float hrPercentage = ((float) heartRate) / HRMax * 100f;
 
 
-        if(hrPercentage>=50 && hrPercentage<=60){
+        if (hrPercentage >= 50 && hrPercentage <= 60) {
             pulseZone = 1;
-        }else if(hrPercentage>60 && hrPercentage<=70){
+        } else if (hrPercentage > 60 && hrPercentage <= 70) {
             pulseZone = 2;
-        }else if(hrPercentage>70 && hrPercentage<=80){
+        } else if (hrPercentage > 70 && hrPercentage <= 80) {
             pulseZone = 3;
-        }else if(hrPercentage>80 && hrPercentage<=90){
+        } else if (hrPercentage > 80 && hrPercentage <= 90) {
             pulseZone = 4;
-        }else if(hrPercentage>90 && hrPercentage<=100){
+        } else if (hrPercentage > 90 && hrPercentage <= 100) {
             pulseZone = 5;
         }
         Log.i("TEST", "HRMAX: " + HRMax + " | " + "BPM: " + heartRate + " | " + "hrPercentage: " + hrPercentage + " | " + "pulseZone: " + pulseZone);
@@ -1049,25 +1041,26 @@ public class WorkoutFragment extends Fragment {
      * Calculates the proportional position of user's heart rate in the given HR bounds.
      * This is intended to be used with the {@link PulseZoneView} to set progress.
      *
-     * @return A number from 0 to 1. If User's HR is not in the min/max HR bounds, returns 0.05f
      * @param minimumHR The lower bounds of the lowest pulse zone.
      * @param maximumHR The upper bounds of the highest pulse zone.
+     * @return A number from 0 to 1. If User's HR is not in the min/max HR bounds, returns 0.05f
      */
-    private float calculateUIMultiplier(float minimumHR, float maximumHR, int currentHR){
-        if(currentHR<minimumHR){
+    private float calculateUIMultiplier(float minimumHR, float maximumHR, int currentHR) {
+        if (currentHR < minimumHR) {
             return 0.05f;
         }
-        return Math.max(((currentHR-minimumHR)/(maximumHR-minimumHR)), 0.05f);
+        return Math.max(((currentHR - minimumHR) / (maximumHR - minimumHR)), 0.05f);
     }
 
 
     /**
      * Calculates the distance between two given LatLng points.
+     *
      * @param pointA The first point.
      * @param pointB The second point.
      * @return Distance between point A and point B in kilometers.
      */
-    private float distance (LatLng pointA, LatLng pointB) {
+    private float distance(LatLng pointA, LatLng pointB) {
 
         float lat_a = (float) pointA.latitude;
         float lng_a = (float) pointA.longitude;
@@ -1076,24 +1069,24 @@ public class WorkoutFragment extends Fragment {
         float lng_b = (float) pointB.longitude;
 
         double earthRadius = 3958.75;
-        double latDiff = Math.toRadians(lat_b-lat_a);
-        double lngDiff = Math.toRadians(lng_b-lng_a);
-        double a = Math.sin(latDiff /2) * Math.sin(latDiff /2) +
+        double latDiff = Math.toRadians(lat_b - lat_a);
+        double lngDiff = Math.toRadians(lng_b - lng_a);
+        double a = Math.sin(latDiff / 2) * Math.sin(latDiff / 2) +
                 Math.cos(Math.toRadians(lat_a)) * Math.cos(Math.toRadians(lat_b)) *
-                        Math.sin(lngDiff /2) * Math.sin(lngDiff /2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                        Math.sin(lngDiff / 2) * Math.sin(lngDiff / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         double distance = earthRadius * c;
 
         int meterConversion = 1609;
 
-        return new Float(distance * meterConversion).floatValue()/1000f;
+        return new Float(distance * meterConversion).floatValue() / 1000f;
     }
 
 
     /**
      * Starts the thread that flashes duration textviews when paused.
      */
-    private void timePauseFlashing(){
+    private void timePauseFlashing() {
         final boolean[] visibility = {true};
         runThread = true;
         pauseThread = new Thread() {
@@ -1106,14 +1099,14 @@ public class WorkoutFragment extends Fragment {
                             @Override
                             public void run() {
 
-                                if(runThread){
-                                    if(visibility[0]){
+                                if (runThread) {
+                                    if (visibility[0]) {
                                         layout_time.setVisibility(View.INVISIBLE);
-                                    }else{
+                                    } else {
                                         layout_time.setVisibility(View.VISIBLE);
                                     }
                                     visibility[0] = !visibility[0];
-                                }else{
+                                } else {
                                     layout_time.setVisibility(View.VISIBLE);
                                 }
 
@@ -1133,7 +1126,7 @@ public class WorkoutFragment extends Fragment {
 
     }
 
-    private void setFonts(){
+    private void setFonts() {
 
         Typeface futura = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/futura_light.ttf");
@@ -1149,19 +1142,16 @@ public class WorkoutFragment extends Fragment {
 
     }
 
-    private void setIntensityStatus(TextView intensityStatusView, int requiredPulseZone, int currentPulseZone){
-        if(currentPulseZone == requiredPulseZone){
+    private void setIntensityStatus(TextView intensityStatusView, int requiredPulseZone, int currentPulseZone) {
+        if (currentPulseZone == requiredPulseZone) {
             intensityStatusView.setText("Intensity: Optimal");
-        }else if(currentPulseZone<requiredPulseZone){
+        } else if (currentPulseZone < requiredPulseZone) {
             intensityStatusView.setText("Intensity: Too low!");
-        }else if(currentPulseZone>requiredPulseZone){
+        } else if (currentPulseZone > requiredPulseZone) {
             intensityStatusView.setText("Intensity: Too high!");
         }
 
     }
-
-
-
 
 
 }

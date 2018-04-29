@@ -255,7 +255,7 @@
                     android:textStyle="italic"
                     android:layout_gravity="center"
                     android:textColor="#fff"
-                    android:text="km/min"/>
+                    android:text="m/s"/>
 
             </LinearLayout>
 
