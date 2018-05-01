@@ -28,7 +28,12 @@
             android:theme="@style/NoActionBar" />
 
         <service
-            android:name=".bluetooth.BluetoothGattService"
+        android:name=".bluetooth.BluetoothGattService"
+        android:enabled="true"
+        android:exported="true" />
+
+        <service
+            android:name=".GoogleMapService"
             android:enabled="true"
             android:exported="true" />
 

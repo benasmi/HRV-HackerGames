@@ -142,8 +142,6 @@ public class BluetoothGattService extends Service {
             int intervals[] = extractBeatToBeatInterval(characteristic);
 
 
-
-
             LocalBroadcastManager.getInstance(BluetoothGattService.this).sendBroadcast(new Intent(ACTION_RECEIVING_DATA).putExtra("RR_intervals",intervals).putExtra("BPM",heartRate));
 
 

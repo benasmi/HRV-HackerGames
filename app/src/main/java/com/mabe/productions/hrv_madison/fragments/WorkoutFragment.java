@@ -4,9 +4,11 @@ package com.mabe.productions.hrv_madison.fragments;
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.location.Location;
@@ -19,6 +21,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatImageButton;
@@ -46,6 +49,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.mabe.productions.hrv_madison.GoogleMapService;
 import com.mabe.productions.hrv_madison.MainScreenActivity;
 import com.mabe.productions.hrv_madison.PulseZoneView;
 import com.mabe.productions.hrv_madison.R;
@@ -57,6 +61,7 @@ import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 import com.tooltip.Tooltip;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Timer;
@@ -90,6 +95,7 @@ public class WorkoutFragment extends Fragment {
     private LinearLayout layout_pulse_zone;
 
     private PulseZoneView pulseZoneView;
+    private ArrayList<LocationResult> arrayLocationResults = new ArrayList<>();
 
     private TextView txt_reccomended_duration;
     private TextView txt_reccomended_pulse;
@@ -131,7 +137,7 @@ public class WorkoutFragment extends Fragment {
     private boolean isTimerRunning = false;
     private boolean runThread;
     int workout_state = STATE_BEFORE_WORKOUT;
-    private boolean isLocationListeningEnabled = false;
+
 
     private float totalDistance = 0;
 
@@ -164,6 +170,7 @@ public class WorkoutFragment extends Fragment {
     private float HRMax;
 
     private Vibrator mVibrator;
+    private boolean isReceiverRegistered = false;
 
     @Nullable
     @Override
@@ -178,6 +185,7 @@ public class WorkoutFragment extends Fragment {
         initializeAnimations();
         setState(STATE_BEFORE_WORKOUT);
         setFonts();
+        registerReceiver();
         updateData();
 
         return view;
@@ -266,6 +274,22 @@ public class WorkoutFragment extends Fragment {
     private void timeEndedAnimations() {
         btn_toggle.startAnimation(anim_top_to_bottom_delay);
     }
+
+
+    //REGISTERS RECEIVER
+    private void registerReceiver(){
+        if(!isReceiverRegistered) {
+
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(GoogleMapService.ACTION_SEND_GPS_DATA);
+            LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver, filter);
+
+            isReceiverRegistered = true;
+        }
+    }
+
+
+
 
 
     /**
@@ -609,7 +633,7 @@ public class WorkoutFragment extends Fragment {
                 if (vibrationTimer != null) {
                     vibrationTimer.cancel();
                 }
-                pauseLocationListener();
+
                 workout_tab_running_gif.setVisibility(View.INVISIBLE);
                 img_pause.setImageResource(R.drawable.ic_resume);
                 img_pause.setOnClickListener(resumeButtonListener);
@@ -619,81 +643,61 @@ public class WorkoutFragment extends Fragment {
         }
     }
 
-    //The location callback that stores paceData and distance.
-    private LocationCallback mLocationCallback = new LocationCallback() {
 
+    BroadcastReceiver  broadcastReceiver = new BroadcastReceiver() {
         @Override
-        public void onLocationResult(LocationResult locationResult) {
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getAction()){
+                case GoogleMapService.ACTION_SEND_GPS_DATA:
+                    arrayLocationResults = intent.getParcelableExtra(GoogleMapService.GPS_DATA);
+                    if (workout_state == STATE_WORKING_OUT || workout_state == STATE_TIME_ENDED) {
+
+                        for(int i = 0; i<arrayLocationResults.size(); i++){
+                            double latitude = arrayLocationResults.get(i).getLastLocation().getLatitude();
+                            double longitude = arrayLocationResults.get(i).getLastLocation().getLongitude();
+                            LatLng lastLocation = new LatLng(latitude, longitude);
+
+                            if (route.size() > 0) {
+                                double distance = distance(lastLocation, route.get(route.size() - 1));
+                                //double speed = ((System.currentTimeMillis() - lastLocationUpdate) / (1000d * 60d * 60d)) / distance;
+                                double speed = arrayLocationResults.get(i).getLastLocation().getSpeed()*3.6d; //in km/h
+                                txt_current_pace.setText(String.valueOf( Math.round(arrayLocationResults.get(i).getLastLocation().getSpeed()*100d)/100d));
+                                //Log.i("TEST", "Estimated movement speed: " + speed + "km/h\nGiven movement speed: " + locationResult.getLastLocation().getSpeed()*3.6d + "km/h");
+                                if (speed <= MAX_REASONABLE_SPEED && speed >= MIN_REASONABLE_SPEED) {
+                                    route.add(lastLocation);
+                                    paceData.add(arrayLocationResults.get(i).getLastLocation().getSpeed());
+                                    totalDistance += distance;
+                                    Log.i("TEST", "total distance: " + totalDistance);
+                                    txt_distance.setText(String.valueOf(Math.round(totalDistance * 100d) / 100d));
+                                }
+                            } else {
+                                route.add(lastLocation);
+                            }
+                        }
+                        }
+                    break;
 
 
-            if (workout_state == STATE_WORKING_OUT || workout_state == STATE_TIME_ENDED) {
-
-                double latitude = locationResult.getLastLocation().getLatitude();
-                double longitude = locationResult.getLastLocation().getLongitude();
-                LatLng lastLocation = new LatLng(latitude, longitude);
-
-                if(locationResult.getLastLocation().getAccuracy() > 50){
-                    Log.i("TEST", "Location not accurate enough: " + locationResult.getLastLocation().getAccuracy() + "m");
-                    return;
-                }
-                Log.i("TEST", "Location accuracy is reasonable: " + locationResult.getLastLocation().getAccuracy() + "m");
-
-                if (route.size() > 0) {
-                    double distance = distance(lastLocation, route.get(route.size() - 1));
-                    //double speed = ((System.currentTimeMillis() - lastLocationUpdate) / (1000d * 60d * 60d)) / distance;
-                    double speed = locationResult.getLastLocation().getSpeed()*3.6d; //in km/h
-                    txt_current_pace.setText(String.valueOf( Math.round(locationResult.getLastLocation().getSpeed()*100d)/100d));
-                    //Log.i("TEST", "Estimated movement speed: " + speed + "km/h\nGiven movement speed: " + locationResult.getLastLocation().getSpeed()*3.6d + "km/h");
-                    if (speed <= MAX_REASONABLE_SPEED && speed >= MIN_REASONABLE_SPEED) {
-                        route.add(lastLocation);
-                        paceData.add(locationResult.getLastLocation().getSpeed());
-                        totalDistance += distance;
-                        Log.i("TEST", "total distance: " + totalDistance);
-                        txt_distance.setText(String.valueOf(Math.round(totalDistance * 100d) / 100d));
-                    }
-                } else {
-                    route.add(lastLocation);
-                }
-           }
-
-
+            }
         }
-
-        ;
     };
 
-
     private void startLocationListener() {
-        if (isLocationListeningEnabled) {
+        if (GoogleMapService.isLocationListeningEnabled) {
             return;
         }
 
-        isLocationListeningEnabled = true;
+        getActivity().startService(new Intent(getActivity(),GoogleMapService.class));
 
-        LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000);
-        mLocationRequest.setFastestInterval(5000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-
-        //noinspection MissingPermission
-        mFusedLocationClient.requestLocationUpdates(mLocationRequest,
-                mLocationCallback,
-                null /* Looper */);
-
+        GoogleMapService.isLocationListeningEnabled = true;
     }
 
-    private void pauseLocationListener() {
-        if (!isLocationListeningEnabled) {
-            return;
-        }
-        mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-        isLocationListeningEnabled = false;
-    }
+
 
     private void stopLocationListener() {
-        pauseLocationListener();
+        getActivity().stopService(new Intent(getActivity(),GoogleMapService.class));
         route.clear();
+        paceData.clear();
         totalDistance = 0f;
     }
 
