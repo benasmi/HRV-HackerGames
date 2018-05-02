@@ -923,9 +923,9 @@ public class DataTodayFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (map_fragment != null) {
-            map_fragment.onDestroy();
-        }
+//        if (map_fragment != null) {
+//            map_fragment.onDestroy();
+//        }
     }
 
     @Override

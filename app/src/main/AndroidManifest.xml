@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:name="android.support.multidex.MultiDexApplication"
-    package="com.mabe.productions.hrv_madison">
+          xmlns:tools="http://schemas.android.com/tools"
+          android:name="android.support.multidex.MultiDexApplication"
+          package="com.mabe.productions.hrv_madison">
 
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:allowBackup="true"
@@ -25,17 +26,16 @@
         <activity
             android:name=".MainScreenActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
+            android:theme="@style/NoActionBar"/>
 
         <service
-        android:name=".bluetooth.BluetoothGattService"
-        android:enabled="true"
-        android:exported="true" />
-
+            android:name=".bluetooth.BluetoothGattService"
+            android:enabled="true"
+            android:exported="true"/>
         <service
             android:name=".GoogleMapService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"/>
 
         <activity
             android:name=".initialInfo.IntroInitialPage"
@@ -80,18 +80,20 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDvZJ_zkfNX-Gg8Ep-JgpRmde7n0I54QoM" />
+            android:value="AIzaSyDvZJ_zkfNX-Gg8Ep-JgpRmde7n0I54QoM"/>
 
-        <activity android:name=".SplashScreenActivity"
+        <activity
+            android:name=".SplashScreenActivity"
             android:noHistory="true"
             android:theme="@style/NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-
         </activity>
+
+
     </application>
 
 </manifest>

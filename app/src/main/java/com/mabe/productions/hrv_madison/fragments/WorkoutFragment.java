@@ -2,6 +2,7 @@ package com.mabe.productions.hrv_madison.fragments;
 
 
 import android.Manifest;
+import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -95,7 +96,7 @@ public class WorkoutFragment extends Fragment {
     private LinearLayout layout_pulse_zone;
 
     private PulseZoneView pulseZoneView;
-    private ArrayList<LocationResult> arrayLocationResults = new ArrayList<>();
+
 
     private TextView txt_reccomended_duration;
     private TextView txt_reccomended_pulse;
@@ -117,9 +118,6 @@ public class WorkoutFragment extends Fragment {
     private Timer timer = null;
     public boolean shouldStartWorkoutImmediately = false;
     private static final long TIMER_STEP = 1000;
-
-
-    //todo: we calculate pulse zone, need to display it;
 
     public static final int STATE_BEFORE_WORKOUT = 0;
     public static final int STATE_WORKING_OUT = 1;
@@ -649,23 +647,27 @@ public class WorkoutFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()){
                 case GoogleMapService.ACTION_SEND_GPS_DATA:
-                    arrayLocationResults = intent.getParcelableExtra(GoogleMapService.GPS_DATA);
+
+                    LocationResult[] arrayLocationResults = (LocationResult[]) intent.getParcelableArrayExtra(GoogleMapService.GPS_DATA);
                     if (workout_state == STATE_WORKING_OUT || workout_state == STATE_TIME_ENDED) {
 
-                        for(int i = 0; i<arrayLocationResults.size(); i++){
-                            double latitude = arrayLocationResults.get(i).getLastLocation().getLatitude();
-                            double longitude = arrayLocationResults.get(i).getLastLocation().getLongitude();
+                        for(int i = 0; i<arrayLocationResults.length; i++){
+
+                            LocationResult currentResult = arrayLocationResults[i];
+
+                            double latitude = currentResult.getLastLocation().getLatitude();
+                            double longitude = currentResult.getLastLocation().getLongitude();
                             LatLng lastLocation = new LatLng(latitude, longitude);
 
                             if (route.size() > 0) {
                                 double distance = distance(lastLocation, route.get(route.size() - 1));
                                 //double speed = ((System.currentTimeMillis() - lastLocationUpdate) / (1000d * 60d * 60d)) / distance;
-                                double speed = arrayLocationResults.get(i).getLastLocation().getSpeed()*3.6d; //in km/h
-                                txt_current_pace.setText(String.valueOf( Math.round(arrayLocationResults.get(i).getLastLocation().getSpeed()*100d)/100d));
+                                double speed = currentResult.getLastLocation().getSpeed()*3.6d; //in km/h
+                                txt_current_pace.setText(String.valueOf( Math.round(currentResult.getLastLocation().getSpeed()*100d)/100d));
                                 //Log.i("TEST", "Estimated movement speed: " + speed + "km/h\nGiven movement speed: " + locationResult.getLastLocation().getSpeed()*3.6d + "km/h");
                                 if (speed <= MAX_REASONABLE_SPEED && speed >= MIN_REASONABLE_SPEED) {
                                     route.add(lastLocation);
-                                    paceData.add(arrayLocationResults.get(i).getLastLocation().getSpeed());
+                                    paceData.add(currentResult.getLastLocation().getSpeed());
                                     totalDistance += distance;
                                     Log.i("TEST", "total distance: " + totalDistance);
                                     txt_distance.setText(String.valueOf(Math.round(totalDistance * 100d) / 100d));
@@ -688,6 +690,7 @@ public class WorkoutFragment extends Fragment {
         }
 
         getActivity().startService(new Intent(getActivity(),GoogleMapService.class));
+
 
         GoogleMapService.isLocationListeningEnabled = true;
     }

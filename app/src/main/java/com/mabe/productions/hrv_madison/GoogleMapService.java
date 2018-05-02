@@ -1,10 +1,13 @@
 package com.mabe.productions.hrv_madison;
 
 import android.app.KeyguardManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.os.Parcelable;
+import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -26,9 +29,11 @@ public class GoogleMapService extends Service {
     public static boolean isLocationListeningEnabled = false;
     public static final String ACTION_SEND_GPS_DATA = "SEND_GPS_DATA";
     public static final String GPS_DATA = "LOCATION_RESULT";
+    public static final String GPS_WAKELOCK_TAG = "HRV_MADISON_GPS";
     private FusedLocationProviderClient mFusedLocationClient;
     private KeyguardManager myKM;
     private ArrayList<LocationResult> locationArrayList = new ArrayList<>();
+    private PowerManager.WakeLock wakeLock;
 
     @Nullable
     @Override
@@ -38,11 +43,12 @@ public class GoogleMapService extends Service {
 
     @Override
     public void onCreate() {
+        super.onCreate();
 
         Log.i("TEST", "Creating service...");
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        LocationRequest mLocationRequest = new LocationRequest();
+        LocationRequest mLocationRequest = LocationRequest.create();
         mLocationRequest.setInterval(10000);
         mLocationRequest.setFastestInterval(5000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -52,15 +58,34 @@ public class GoogleMapService extends Service {
                 mLocationCallback,
                 null /* Looper */);
 
+        //noinspection MissingPermission
+//        mFusedLocationClient.requestLocationUpdates(mLocationRequest,
+//                                                    locationPendingIntent);
+
+
+
         myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
 
 
-        super.onCreate();
+    }
+
+    private void aquireWakelock(){
+        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                                                                  GPS_WAKELOCK_TAG);
+        wakeLock.acquire();
+    }
+
+    private void releaseWakelock(){
+        if(wakeLock.isHeld()){
+            wakeLock.release();
+        }
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
+        aquireWakelock();
+        return START_NOT_STICKY;
     }
 
     //The location callback that stores paceData and distance.
@@ -85,7 +110,7 @@ public class GoogleMapService extends Service {
             }
 
             //When screen is not locked anymore - send data chunk to workoutFragment.class
-            LocalBroadcastManager.getInstance(GoogleMapService.this).sendBroadcast(new Intent(ACTION_SEND_GPS_DATA).putExtra(GPS_DATA, locationArrayList));
+            LocalBroadcastManager.getInstance(GoogleMapService.this).sendBroadcast(new Intent(ACTION_SEND_GPS_DATA).putExtra(GPS_DATA, locationArrayList.toArray(new LocationResult[0])));
 
             //Clear arrayList after sending, to start adding new data
             locationArrayList.clear();
@@ -98,9 +123,9 @@ public class GoogleMapService extends Service {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
+        releaseWakelock();
         Log.i("TEST", "Stopping service...");
-
+        super.onDestroy();
     }
 
 
