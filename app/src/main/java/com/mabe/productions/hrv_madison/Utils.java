@@ -13,6 +13,7 @@ import java.util.GregorianCalendar;
 
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.PowerManager;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -141,6 +142,14 @@ public class Utils {
     }
 
 
+    public static final boolean isDeviceInPowerSavingMode(Context context){
+        PowerManager powerManager = (PowerManager)
+                context.getSystemService(Context.POWER_SERVICE);
+
+        return (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                && powerManager.isPowerSaveMode();
+    }
+
 
     public static int getAgeFromDate(Date date){
         Calendar calendar = new GregorianCalendar();
@@ -158,6 +167,7 @@ public class Utils {
             return null;
         }
     }
+
 
     public static String getStringFromDate(Date date){
         SimpleDateFormat format = new SimpleDateFormat(FeedReaderDbHelper.DATE_FORMAT);

@@ -24,7 +24,9 @@
     <string name="already_scanning">Scanning...</string>
     <string name="today">Today</string>
     <string name="history">History</string>
+    <string name="hrv">Hrv</string>
     <string name="measure">Measure</string>
+    <string name="got_it">Got it!</string>
 
     <string name="training_intensity_0">Low (Ex. Walking)</string>
     <string name="training_intensity_1">Easy (Ex. Eastern excercise)</string>

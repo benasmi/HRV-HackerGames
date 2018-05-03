@@ -4,7 +4,7 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:id="@+id/device_list_root_layout"
-              android:background="#2c3e50">
+              android:background="@drawable/alert_dialog_background">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

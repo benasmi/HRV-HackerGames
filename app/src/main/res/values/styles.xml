@@ -11,8 +11,9 @@
 
     <style name="AppThemeDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:textColorPrimary">#ffffff</item>
-        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:background">@drawable/alert_dialog_background</item>
         <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/transparent</item>
     </style>
 
     <!-- No action bar. -->

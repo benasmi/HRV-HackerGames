@@ -170,10 +170,6 @@ public class MainScreenActivity extends AppCompatActivity {
                         viewPagerAdapter.measurementFragment.startCalculation();
                         viewPagerAdapter.measurementFragment.shouldStartMeasurementImmediately = false;
                     }
-                    if(viewPagerAdapter.workoutFragment.shouldStartWorkoutImmediately){
-                        viewPagerAdapter.workoutFragment.setState(WorkoutFragment.STATE_WORKING_OUT);
-                        viewPagerAdapter.workoutFragment.shouldStartWorkoutImmediately = false;
-                    }
 
                     viewPagerAdapter.measurementFragment.txt_connection_status.setText("");
                     viewPagerAdapter.workoutFragment.txt_connection_status.setText("");

@@ -2,7 +2,6 @@ package com.mabe.productions.hrv_madison.fragments;
 
 
 import android.Manifest;
-import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -12,18 +11,18 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
-import android.location.Location;
-import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatImageButton;
 import android.text.Editable;
@@ -45,11 +44,10 @@ import android.widget.Toast;
 
 import com.budiyev.android.circularprogressbar.CircularProgressBar;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.mabe.productions.hrv_madison.FrequentlyAskedActivity;
 import com.mabe.productions.hrv_madison.GoogleMapService;
 import com.mabe.productions.hrv_madison.MainScreenActivity;
 import com.mabe.productions.hrv_madison.PulseZoneView;
@@ -62,20 +60,19 @@ import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 import com.tooltip.Tooltip;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
 
-import io.nlopez.smartlocation.location.config.LocationAccuracy;
 import pl.droidsonroids.gif.GifImageView;
 
 public class WorkoutFragment extends Fragment {
 
     private static final long VIBRATE_DURATION_TIME_ENDED = 1000l;
     private static final long VIBRATE_DURATION_CONNECTION_LOST = 5000l;
+    private static final int PERMISSION_GPS_REQUEST = 0;
 
     private CircularProgressBar progressbar_duration;
     private TextView txt_calories_burned;
@@ -116,7 +113,6 @@ public class WorkoutFragment extends Fragment {
 
     private Thread pauseThread;
     private Timer timer = null;
-    public boolean shouldStartWorkoutImmediately = false;
     private static final long TIMER_STEP = 1000;
 
     public static final int STATE_BEFORE_WORKOUT = 0;
@@ -154,8 +150,6 @@ public class WorkoutFragment extends Fragment {
     private ArrayList<LatLng> route = new ArrayList<>();
     private ArrayList<Integer> bpmArrayList = new ArrayList<Integer>();
     private ArrayList<Float> paceData = new ArrayList<Float>();
-
-    private FusedLocationProviderClient mFusedLocationClient;
 
     private Animation anim_left_to_right;
     private Animation anim_right_to_left;
@@ -236,6 +230,7 @@ public class WorkoutFragment extends Fragment {
         imgButton_view_duration_info.setOnClickListener(durationInfoListener);
         imgButton_view_pulse_info.setOnClickListener(durationPulseListener);
         btn_toggle = rootView.findViewById(R.id.button_start_workout);
+        button_personalised_workout.setOnClickListener(personaliseInfo);
     }
 
 
@@ -287,13 +282,21 @@ public class WorkoutFragment extends Fragment {
     }
 
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-
+        if(requestCode == PERMISSION_GPS_REQUEST && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED){
+            startWorkout();
+        }
+    }
 
     /**
      * Checks if gps enabled and gps permission is granted.
      * If gps is not enabled, user is notified via a toast.
-     * If user has not granted gps permission yet, a permission request is shown.
+     * If user has not granted gps permission yet, a permission is requested.
+     * After the User has granted a permission, {@link #startWorkout()} is called;
      *
      * @return returns true if gps is enabled and ready to use
      */
@@ -302,8 +305,7 @@ public class WorkoutFragment extends Fragment {
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                    MainScreenActivity.PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
-            Toast.makeText(getContext(), "Please enable GPS!", Toast.LENGTH_LONG).show();
+                    WorkoutFragment.PERMISSION_GPS_REQUEST);
             return false;
         }
 
@@ -311,53 +313,50 @@ public class WorkoutFragment extends Fragment {
             Toast.makeText(getContext(), "Please enable GPS!", Toast.LENGTH_LONG).show();
             return false;
         }
-
         return true;
     }
 
-    //todo: clean up
-    private boolean autoConnectDevice() {
-        String MAC_adress = Utils.readFromSharedPrefs_string(getContext(), FeedReaderDbHelper.BT_FIELD_MAC_ADRESS, FeedReaderDbHelper.SHARED_PREFS_DEVICES);
-        String device_name = Utils.readFromSharedPrefs_string(getContext(), FeedReaderDbHelper.BT_FIELD_DEVICE_NAME, FeedReaderDbHelper.SHARED_PREFS_DEVICES);
+
+    /**
+     * Checks if:
+     *   User has granted a GPS permission
+     *   GPS is on
+     *   Pulsometer is connected
+     *     If pulsometer is not connected, prompting user with a dialog.
+     *
+     *   If all conditions are met, workout is started via {@link #setState(int)}
+     */
+    private void startWorkout(){
+
+        if(!checkForGPS()){
+            return;
+        }
+
+        if(Utils.isDeviceInPowerSavingMode(getContext())){
+            Toast.makeText(getContext(), "Please disable power saving mode!", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         if (BluetoothGattService.isGattDeviceConnected) {
-            return true;
-        }
+            setState(STATE_WORKING_OUT);
 
-        //If there is saved device --> connect
-        if (!MAC_adress.equals("") && Utils.isBluetoothEnabled()) {
-            BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(MAC_adress);
-            shouldStartWorkoutImmediately = true;
-            getContext().startService(new Intent(getContext(), BluetoothGattService.class).putExtra("device", device));
-            txt_connection_status.setText(getString(R.string.connecting_to) + " " + device_name);
-            return false;
         } else {
-
-            //If there is no saved device --> add one
-
-
-            if (Utils.isBluetoothEnabled()) {
-                shouldStartWorkoutImmediately = true;
-                LeDevicesDialog dialog = new LeDevicesDialog(getContext());
-                dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        if (!BluetoothGattService.isGattDeviceConnected) {
-                            shouldStartWorkoutImmediately = false;
+            Utils.buildAlertDialogPrompt(
+                    getContext(),
+                    "Please wait!",
+                    "Do you want to proceed to workout without HR monitor?",
+                    "Yes",
+                    "Cancel",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            setState(STATE_WORKING_OUT);
                         }
-                    }
-                });
-
-            } else {
-                //todo: fix to open a dialog
-                Toast.makeText(getContext(), "Please enable bluetooth!", Toast.LENGTH_LONG).show(); //TODO: add a nice dialog or something
-
-
-            }
-
-            return false;
-
+                    },
+                    null
+            );
         }
+
     }
 
 
@@ -388,6 +387,51 @@ public class WorkoutFragment extends Fragment {
 
         }
     };
+
+    private View.OnClickListener personaliseInfo = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View view) {
+
+            //todo: nejudinti mapso
+            //todo: paspaudus back griztama i intro
+
+            AlertDialog.Builder builder;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                builder = new AlertDialog.Builder(getContext(), R.style.AppThemeDialog);
+            } else {
+                builder = new AlertDialog.Builder(getContext());
+            }
+            builder.setTitle("What is personalized workout?")
+                    .setMessage("Right now your workout is generated based on Classical Aerobics Theory. If you want unique workout plan generated for you, please measure your 'HRV' and comeback!")
+                    .setPositiveButton(R.string.got_it, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //Got it!
+                            dialog.dismiss();
+
+                        }
+                    })
+                    .setNegativeButton(R.string.measure, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //goes to measure fragment
+
+                            Utils.setViewpagerTab(getActivity(),0);
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNeutralButton(R.string.hrv, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            getActivity().startActivity(new Intent(getActivity(),FrequentlyAskedActivity.class));
+                            dialog.dismiss();
+
+                        }
+                    })
+                    .show();
+        }
+    };
+
 
     private View.OnClickListener durationPulseListener = new View.OnClickListener() {
 
@@ -490,33 +534,7 @@ public class WorkoutFragment extends Fragment {
     private View.OnClickListener startTrainingButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
-            if (!checkForGPS()) {
-                return;
-            }
-            //Since we know that gps is on and permission is granted, creating an instance of location client
-            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
-
-
-            if (BluetoothGattService.isGattDeviceConnected) {
-                setState(STATE_WORKING_OUT);
-
-            } else {
-                Utils.buildAlertDialogPrompt(
-                        getContext(),
-                        "Please wait!",
-                        "Do you want to proceed to workout without HR monitor?",
-                        "Yes",
-                        "Cancel",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                setState(STATE_WORKING_OUT);
-                            }
-                        },
-                        null
-                );
-            }
+           startWorkout();
         }
     };
 
@@ -554,6 +572,7 @@ public class WorkoutFragment extends Fragment {
                 img_pause.setVisibility(View.GONE);
                 img_stop.setVisibility(View.GONE);
                 layout_workout_progress.setVisibility(View.GONE);
+                Log.i("TEST", "Setting progressBar duration in setState()...");
                 setProgressBarDuration(1, 1);
                 editText_minutes.setEnabled(true);
                 editText_seconds.setEnabled(true);
@@ -758,7 +777,6 @@ public class WorkoutFragment extends Fragment {
 
         final long vibrationPeriod;
 
-        //TODO: I made some changes that have not been tested. sorry :(
         if (heartRate > max_pulse) {
             float difference = Math.min(heartRate - max_pulse, MAX_PULSE_DIFFERENCE_TO_ALTER_VIBRATION);
             vibrationPeriod = (long) ((MIN_VIBRATION_COOLDOWN * (float) MAX_PULSE_DIFFERENCE_TO_ALTER_VIBRATION) / difference);
@@ -793,19 +811,20 @@ public class WorkoutFragment extends Fragment {
             }
         }, 0, vibrationPeriod + VIBRATION_DURATION);
 
-
     }
+
 
 
     /**
      * Sets the time circle progress.
      *
      * @param timeTotal  the time workout is going to last
-     * @param timePassed time, that has already passed
+     * @param timeProgress time, that has already passed
      */
-    private void setProgressBarDuration(int timeTotal, int timePassed) {
-        float percentage = ((float) timePassed) / ((float) timeTotal);
-        progressbar_duration.setProgress(100 - percentage * 100);
+    private void setProgressBarDuration(int timeTotal, int timeProgress) {
+        float multiplier = ((float) timeProgress) / ((float) timeTotal);
+        progressbar_duration.setProgress(100 - multiplier * 100);
+
 
     }
 
@@ -828,14 +847,13 @@ public class WorkoutFragment extends Fragment {
                     @Override
                     public void run() {
 
-
-                        if (timePassed == userSpecifiedWorkoutDuration) {
-                            setState(STATE_TIME_ENDED);
+                        if(workout_state != STATE_WORKING_OUT && workout_state != STATE_TIME_ENDED){
+                            return;
                         }
 
                         //User is working out longer, than specified duration
                         if (timePassed > userSpecifiedWorkoutDuration) {
-
+                            Log.i("TEST", "Setting progressBar duration 1st if...");
                             int minutes = (int) (timePassed - userSpecifiedWorkoutDuration) / 60000;
                             int seconds = Math.round((timePassed - userSpecifiedWorkoutDuration) / 1000 - (minutes * 60));
 
@@ -846,7 +864,8 @@ public class WorkoutFragment extends Fragment {
                                 editText_seconds.setText(seconds + "");
                                 editText_minutes.setText("+" + minutes + "");
                             }
-                        } else { //User is within his specified time limits
+                        } else if(timePassed < userSpecifiedWorkoutDuration){ //User is within his specified time limits
+                            Log.i("TEST", "Setting progressBar duration 2nd if...");
                             setProgressBarDuration((int) userSpecifiedWorkoutDuration, (int) (userSpecifiedWorkoutDuration - timePassed));
 
                             int minutes = (int) (userSpecifiedWorkoutDuration - timePassed) / 60000;
@@ -858,6 +877,9 @@ public class WorkoutFragment extends Fragment {
                                 editText_seconds.setText(seconds + "");
                                 editText_minutes.setText(minutes + "");
                             }
+                        }else{
+                            setState(STATE_TIME_ENDED);
+                            Log.i("TEST", "Setting progressBar duration in timer...");
                         }
 
                         timePassed += TIMER_STEP;
@@ -889,7 +911,7 @@ public class WorkoutFragment extends Fragment {
         isTimerRunning = false;
 
     }
-
+    //TODO: destroy location service after measurement
     private void setupEditTextBehavior() {
         View.OnClickListener editTextClickListener = new View.OnClickListener() {
             @Override
@@ -1045,7 +1067,7 @@ public class WorkoutFragment extends Fragment {
 
 
     /**
-     * Calculates the proportional position of user's heart rate in the given HR bounds.
+     * Calculates the ortional position of user's heart rate in the given HR bounds.
      * This is intended to be used with the {@link PulseZoneView} to set progress.
      *
      * @param minimumHR The lower bounds of the lowest pulse zone.
