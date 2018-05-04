@@ -124,6 +124,7 @@ public class GoogleMapService extends Service {
     @Override
     public void onDestroy() {
         releaseWakelock();
+        mFusedLocationClient.removeLocationUpdates(mLocationCallback);
         Log.i("TEST", "Stopping service...");
         super.onDestroy();
     }

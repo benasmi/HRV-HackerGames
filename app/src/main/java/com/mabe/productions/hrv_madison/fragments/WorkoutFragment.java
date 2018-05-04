@@ -564,7 +564,7 @@ public class WorkoutFragment extends Fragment {
                 btn_toggle.setVisibility(View.VISIBLE);
                 btn_toggle.setText(R.string.start_training);
                 btn_toggle.setOnClickListener(startTrainingButtonListener);
-                stopLocationListener();
+
                 editText_seconds.setText("00");
                 editText_minutes.setText("00");
                 layout_bpm.setVisibility(View.GONE);
