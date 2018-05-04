@@ -62,7 +62,7 @@
                         android:inputType="number"
                         android:selectAllOnFocus="true"
                         android:id="@+id/edittext_minutes"
-                        android:maxLength="2"
+                        android:maxLength="3"
                         android:textColor="#fff"
                         android:textSize="30sp"
                         android:background="@android:color/transparent"
