@@ -531,18 +531,23 @@ public class User {
     private boolean checkWeeklyProgramDate(Context context) {
 
 
-
         Calendar calendar = Calendar.getInstance();
         int thisWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+
+
+
         if(getLastGeneratedWeeklyDate() != null){
 
             calendar.setTime(getLastGeneratedWeeklyDate());
             int lastMeasurementWeek = calendar.get(Calendar.WEEK_OF_YEAR);
 
+            Log.i("WORKOUT", "THIS WEEK: " + String.valueOf(thisWeek) + " | " + "LAST WEEK: " + String.valueOf(lastMeasurementWeek));
+
             //Checking if user has measured this week. If not, updating user's weekly program
-            if(lastMeasurementWeek -1 == thisWeek){
+            if(lastMeasurementWeek != thisWeek){
                 return true;
             }
+
 
 
         }else{
@@ -562,19 +567,19 @@ public class User {
 
     public String generateWeeklyProgram(Context context) {
 
-        Log.i("TEST", "last week hrv: " + last_week_hrv);
+        Log.i("WORKOUT", "last week hrv: " + last_week_hrv + " | " + "current hrv: " + current_hrv + " | " + "pulse_zone: " + pulse_zone + " | " + "workout_duration: " + workout_duration);
 
         //First time
         if (last_week_hrv == 0f) {
 
             //Weak duration
             if (activity_index < 30) {
-                workout_duration = 15;
+                workout_duration = 20;
                 pulse_zone = 1;
             } else {
                 //Fit duration
-                workout_duration = 20;
-                pulse_zone = 1 ;
+                workout_duration = 25;
+                pulse_zone = 2 ;
             }
             saveProgram(context);
             return "Jums sugeneruota pirmoji programa";

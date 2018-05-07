@@ -17,6 +17,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -43,6 +44,7 @@ public class MainScreenActivity extends AppCompatActivity {
     private ImageView img_toolbar_login;
     private ImageView img_toolbar_ask;
     private ImageView img_toolbar_add_device;
+
     private Toolbar toolbar;
     private boolean isReceiverRegistered = false;
 
@@ -119,6 +121,9 @@ public class MainScreenActivity extends AppCompatActivity {
                 }
                 if(viewPagerAdapter.workoutFragment.infoPulse !=null && viewPagerAdapter.workoutFragment.infoPulse.isShowing()){
                     viewPagerAdapter.workoutFragment.infoPulse.dismiss();
+                }
+                if(viewPagerAdapter.workoutFragment.infoVibration !=null && viewPagerAdapter.workoutFragment.infoVibration.isShowing()){
+                    viewPagerAdapter.workoutFragment.infoVibration.dismiss();
                 }
             }
 
@@ -216,6 +221,7 @@ public class MainScreenActivity extends AppCompatActivity {
 
         //Toolbar
         toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+
         setSupportActionBar(toolbar);
         txt_toolbar_title = toolbar.findViewById(R.id.toolbar_title);
         img_toolbar_login =  toolbar.findViewById(R.id.img_login);

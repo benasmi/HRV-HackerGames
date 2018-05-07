@@ -55,6 +55,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public static final String FIELD_DONE_INITIAL = "first_time";
     public static final String FIELD_WEEK_DAYS = "week_days";
     public static final String FIELD_LAST_MEASUREMENT_DATE = "last_measurement_date";
+    public static final String FIELD_VIBRATION_INDICATION = "vibration_indication";
 
 
     //User BT prefs.

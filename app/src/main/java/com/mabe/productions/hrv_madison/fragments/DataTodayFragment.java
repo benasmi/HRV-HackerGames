@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -48,6 +49,7 @@ import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 //todo: card view animations and title snaping like 'prisiuk antraste'
 public class DataTodayFragment extends Fragment {
@@ -106,7 +108,8 @@ public class DataTodayFragment extends Fragment {
     private ImageView img_positively_mellow;
     private ImageView img_positively_excited;
     private int STATE_FEELING = 2;
-
+    private AppCompatButton test_button;
+    private EditText test_edittext;
     //Workout route cardview
     private CardView workout_done_cardview;
     private SupportMapFragment map_fragment;
@@ -529,7 +532,15 @@ public class DataTodayFragment extends Fragment {
         no_measured_today_button.startAnimation(anim_btn);
         first_time_greeting.startAnimation(anim_txt);
 
+        test_button = view.findViewById(R.id.test_button);
+        test_edittext = view.findViewById(R.id.text_editText);
 
+        test_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                User.addMeasurementData(getContext(),new Measurement(Calendar.getInstance().getTime(),50,50,50,50,50,50,50,50,50,50,50,new int[]{5,4,3},new int[]{5,4,3},2,0,4,Integer.valueOf(test_edittext.getText().toString())),true);
+            }
+        });
     }
 
 

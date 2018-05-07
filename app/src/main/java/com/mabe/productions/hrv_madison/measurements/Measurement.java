@@ -77,6 +77,8 @@ public class Measurement {
         this.date = date;
     }
 
+
+
     public int getHrv() {
         return hrv;
     }

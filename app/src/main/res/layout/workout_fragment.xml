@@ -471,6 +471,41 @@
 
             </RelativeLayout>
 
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/layout_pulse_by_vibration_switch"
+            android:layout_gravity="center">
+
+            <android.support.v7.widget.SwitchCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/switch_pulse_zone"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Indicate pulse zone by vibrating"
+                android:layout_marginLeft="5dp"
+                android:textColor="#FFFFFF"
+                android:id="@+id/txt_vibrate_or_not"
+                />
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@color/transparent"
+                android:scaleType="fitCenter"
+                android:id="@+id/imgButton_info_about_vibration"
+                android:src="@drawable/ic_info_icon"
+                android:layout_marginLeft="5dp"
+                />
         </LinearLayout>
 
         <android.support.v7.widget.AppCompatButton

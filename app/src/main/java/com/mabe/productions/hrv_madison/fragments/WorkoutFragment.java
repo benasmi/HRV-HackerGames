@@ -25,6 +25,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatImageButton;
+import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.KeyListener;
@@ -36,6 +37,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -91,9 +93,9 @@ public class WorkoutFragment extends Fragment {
     private LinearLayout layout_reccomended_workout;
     private LinearLayout layout_bpm;
     private LinearLayout layout_pulse_zone;
-
+    private LinearLayout layout_pulse_by_vibration_switch;
     private PulseZoneView pulseZoneView;
-
+    private SwitchCompat pulseZone_switch;
 
     private TextView txt_reccomended_duration;
     private TextView txt_reccomended_pulse;
@@ -104,11 +106,15 @@ public class WorkoutFragment extends Fragment {
     private TextView txt_personolized_workout;
     private AppCompatImageButton imgButton_view_duration_info;
     private AppCompatImageButton imgButton_view_pulse_info;
+    private AppCompatImageButton imgButton_info_about_vibration;
 
     private TextView txt_intensity;
     private TextView txt_intensity_status;
+    private TextView txt_vibrate_or_not;
+
     public Tooltip infoDuration = null;
     public Tooltip infoPulse = null;
+    public Tooltip infoVibration = null;
     private GifImageView workout_tab_running_gif;
 
     private Thread pauseThread;
@@ -160,7 +166,7 @@ public class WorkoutFragment extends Fragment {
     private Animation anim_fade_out;
     private int required_pulse_zone;
     private float HRMax;
-
+    public static boolean vibrateState = true;
     private Vibrator mVibrator;
     private boolean isReceiverRegistered = false;
 
@@ -194,11 +200,14 @@ public class WorkoutFragment extends Fragment {
     }
 
     private void initializeViews(View rootView) {
+        txt_vibrate_or_not = rootView.findViewById(R.id.txt_vibrate_or_not);
+        layout_pulse_by_vibration_switch = rootView.findViewById(R.id.layout_pulse_by_vibration_switch);
         txt_intensity = rootView.findViewById(R.id.txt_intensity);
         txt_intensity_status = rootView.findViewById(R.id.txt_intensity_status);
         pulseZoneView = rootView.findViewById(R.id.pulse_zone_progress);
         layout_pulse_zone = rootView.findViewById(R.id.layout_pulse_zone);
         imgButton_view_pulse_info = rootView.findViewById(R.id.imgButton_view_pulse_info);
+        imgButton_info_about_vibration = rootView.findViewById(R.id.imgButton_info_about_vibration);
         imgButton_view_duration_info = rootView.findViewById(R.id.imgButton_view_duration_info);
         layout_bpm = rootView.findViewById(R.id.layout_bpm);
         txt_personolized_workout = rootView.findViewById(R.id.txt_personolized_workout);
@@ -222,15 +231,19 @@ public class WorkoutFragment extends Fragment {
         editText_minutes = rootView.findViewById(R.id.edittext_minutes);
         editText_seconds = rootView.findViewById(R.id.edittext_seconds);
         layout_time = rootView.findViewById(R.id.time_layout);
+        pulseZone_switch = rootView.findViewById(R.id.switch_pulse_zone);
         img_stop.setOnClickListener(stopButtonListener);
         workout_tab_running_gif = rootView.findViewById(R.id.workout_tab_running_gif);
         setupEditTextBehavior();
-
-
         imgButton_view_duration_info.setOnClickListener(durationInfoListener);
         imgButton_view_pulse_info.setOnClickListener(durationPulseListener);
+        imgButton_info_about_vibration.setOnClickListener(vibrationInfoListener);
+
         btn_toggle = rootView.findViewById(R.id.button_start_workout);
         button_personalised_workout.setOnClickListener(personaliseInfo);
+        pulseZone_switch.setOnCheckedChangeListener(selectVibrationListener);
+        pulseZone_switch.setChecked(Utils.readFromSharedPrefs_bool(getContext(),FeedReaderDbHelper.FIELD_VIBRATION_INDICATION,FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
+        vibrateState = pulseZone_switch.isChecked();
     }
 
 
@@ -368,6 +381,9 @@ public class WorkoutFragment extends Fragment {
             if (infoPulse != null) {
                 infoPulse.dismiss();
             }
+            if (infoVibration != null) {
+                infoVibration.dismiss();
+            }
 
             if (infoDuration == null) {
                 infoDuration = new Tooltip.Builder(view)
@@ -383,6 +399,38 @@ public class WorkoutFragment extends Fragment {
 
             if (!infoDuration.isShowing()) {
                 infoDuration.show();
+            }
+
+        }
+    };
+
+
+    private View.OnClickListener vibrationInfoListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View view) {
+
+            if (infoDuration != null) {
+                infoDuration.dismiss();
+            }
+            if (infoPulse != null) {
+                infoPulse.dismiss();
+            }
+
+            if (infoVibration == null) {
+                infoVibration = new Tooltip.Builder(view)
+                        .setText("If you turn this feature on, throughout your workout we will help you to stay in reccommended pulse zone by vibration indications!")
+                        .setDismissOnClick(true)
+                        .setBackgroundColor(getActivity().getResources().getColor(R.color.colorAccent))
+                        .setTextColor(getActivity().getResources().getColor(R.color.white))
+                        .setCornerRadius(7f)
+                        .setGravity(Gravity.TOP)
+                        .show();
+
+            }
+
+            if (!infoVibration.isShowing()) {
+                infoVibration.show();
             }
 
         }
@@ -432,6 +480,13 @@ public class WorkoutFragment extends Fragment {
         }
     };
 
+    private CompoundButton.OnCheckedChangeListener selectVibrationListener = new CompoundButton.OnCheckedChangeListener() {
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            vibrateState = isChecked;
+            Utils.saveToSharedPrefs(getContext(),FeedReaderDbHelper.FIELD_VIBRATION_INDICATION,vibrateState,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+            Log.i("TEST", "VIBRATE_STATE: " + vibrateState);
+        }
+    };
 
     private View.OnClickListener durationPulseListener = new View.OnClickListener() {
 
@@ -441,6 +496,10 @@ public class WorkoutFragment extends Fragment {
             if (infoDuration != null) {
                 infoDuration.dismiss();
             }
+            if (infoVibration != null) {
+                infoVibration.dismiss();
+            }
+
 
             if (infoPulse == null) {
                 infoPulse = new Tooltip.Builder(view)
@@ -562,6 +621,7 @@ public class WorkoutFragment extends Fragment {
                 stopLocationListener();
                 txt_distance.setText(String.valueOf(0f));
                 btn_toggle.setVisibility(View.VISIBLE);
+                layout_pulse_by_vibration_switch.setVisibility(View.VISIBLE);
                 btn_toggle.setText(R.string.start_training);
                 btn_toggle.setOnClickListener(startTrainingButtonListener);
 
@@ -609,6 +669,7 @@ public class WorkoutFragment extends Fragment {
                 layout_reccomended_workout.setVisibility(View.GONE);
                 txt_personolized_workout.setVisibility(View.GONE);
                 button_personalised_workout.setVisibility(View.GONE);
+                layout_pulse_by_vibration_switch.setVisibility(View.GONE);
                 btn_toggle.setVisibility(View.GONE);
                 img_pause.setVisibility(View.VISIBLE);
                 img_pause.setImageResource(R.drawable.ic_pause_button);
@@ -740,7 +801,9 @@ public class WorkoutFragment extends Fragment {
             setIntensityStatus(txt_intensity, required_pulse_zone, pulse_zone);
             txt_calories_burned.setText(String.valueOf(Math.round(calories_burned * 100.0) / 100.0)); //Rounding and displaying calories
 
+            if(vibrateState){
             vibrateByPulseZone(required_pulse_zone, HRMax, bpm);
+            }
         }
     }
 
@@ -1166,6 +1229,7 @@ public class WorkoutFragment extends Fragment {
         reccomended_duration.setTypeface(futura);
         txt_minutes.setTypeface(futura);
         txt_pulse_zone.setTypeface(futura);
+        txt_vibrate_or_not.setTypeface(futura);
         txt_intensity_status.setTypeface(futura);
         txt_intensity.setTypeface(futura);
 
