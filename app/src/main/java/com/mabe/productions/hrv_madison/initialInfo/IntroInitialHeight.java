@@ -70,7 +70,7 @@ public class IntroInitialHeight extends AppCompatActivity {
 
 
         Typeface verdana = Typeface.createFromAsset(getAssets(),
-                "fonts/Verdana.ttf");
+                "fonts/futura_light.ttf");
 
         txt_text_cm.setTypeface(verdana);
         txt_how_tall.setTypeface(verdana);

@@ -71,7 +71,7 @@ public class IntroInitialPage extends AppCompatActivity {
     private void setFonts(){
 
         Typeface verdana = Typeface.createFromAsset(getAssets(),
-                "fonts/Verdana.ttf");
+                "fonts/futura_light.ttf");
 
 
         txt_request_info_explanation.setTypeface(verdana);

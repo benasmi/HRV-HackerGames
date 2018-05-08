@@ -61,7 +61,7 @@ public class IntroInitialInfoBirthday extends AppCompatActivity {
     private void setFonts(){
 
         Typeface verdana = Typeface.createFromAsset(getAssets(),
-                "fonts/Verdana.ttf");
+                "fonts/futura_light.ttf");
 
         txt_when_is_your_birthday.setTypeface(verdana);
     }
@@ -77,7 +77,7 @@ public class IntroInitialInfoBirthday extends AppCompatActivity {
 
         Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_BIRTHDAY,Utils.getStringFromDate(calendar.getTime()),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
 
-        startActivity(new Intent(this, IntroInitialDaySelection.class));
+        startActivity(new Intent(this, IntroInitialBaseProgram.class));
     }
 
 }

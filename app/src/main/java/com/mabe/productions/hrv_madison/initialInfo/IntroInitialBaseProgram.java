@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.github.channguyen.rsv.RangeSliderView;
 import com.mabe.productions.hrv_madison.R;
+import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 
@@ -60,6 +61,7 @@ public class IntroInitialBaseProgram extends AppCompatActivity {
 
                         break;
                 }
+
             }
         });
 
@@ -102,8 +104,8 @@ public class IntroInitialBaseProgram extends AppCompatActivity {
 
 
     public void next(View view) {
-
-        startActivity(new Intent(this, IntroInitialInfoBirthday.class));
+        User.saveProgram(this, 30f, 2);
+        startActivity(new Intent(this, IntroInitialDaySelection.class));
     }
 
 

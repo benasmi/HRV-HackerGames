@@ -27,8 +27,8 @@ public class User {
     public final static int SPORT_JOGGING = 0;
 
     private static final float POOR_ACTIVITY_INDEX = 30;
-    private static final float LOW_INITIAL_WORKOUT_DURATION = 15;
-    private static final float HIGH_INITIAL_WORKOUT_DURATION = 20;
+    private static final float LOW_INITIAL_WORKOUT_DURATION = 20;
+    private static final float HIGH_INITIAL_WORKOUT_DURATION = 25;
 
     private int program_update_state;
 
@@ -495,6 +495,7 @@ public class User {
 
         if(user.checkWeeklyProgramDate(context)){
             user.generateWeeklyProgram(context);
+            user.saveProgram(context, user.getWorkoutDuration(), user.getPulseZone());
         }
 
         user.generateDailyReccomendation(context);
@@ -511,7 +512,7 @@ public class User {
     /**
      * Saves workout duration and pulse_zone to the database
      */
-    private void saveProgram(Context context) {
+    public static void saveProgram(Context context, float workout_duration, int pulse_zone) {
         Log.i("TEST", "saving program...");
 
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_DURATION, workout_duration, FeedReaderDbHelper.SHARED_PREFS_SPORT);
@@ -567,21 +568,20 @@ public class User {
 
     public String generateWeeklyProgram(Context context) {
 
-        Log.i("WORKOUT", "last week hrv: " + last_week_hrv + " | " + "current hrv: " + current_hrv + " | " + "pulse_zone: " + pulse_zone + " | " + "workout_duration: " + workout_duration);
+        Log.i("WORKOUT", "last week hrv: " + last_week_hrv + " | " + "second last week : " + second_last_week_hrv + " | " + "pulse_zone: " + pulse_zone + " | " + "workout_duration: " + workout_duration);
 
         //First time
         if (last_week_hrv == 0f) {
 
             //Weak duration
             if (activity_index < 30) {
-                workout_duration = 20;
+                workout_duration = LOW_INITIAL_WORKOUT_DURATION;
                 pulse_zone = 1;
             } else {
                 //Fit duration
-                workout_duration = 25;
+                workout_duration = HIGH_INITIAL_WORKOUT_DURATION;
                 pulse_zone = 2 ;
             }
-            saveProgram(context);
             return "Jums sugeneruota pirmoji programa";
         }
 
@@ -590,15 +590,18 @@ public class User {
             return "Nepakanka duomenų programos tobulinimui. Programa nekeičiama";
         }
 
+
+
+
         //Not upgrading duo to poor hrv
-        if (0.5 * last_week_hrv < current_hrv && current_hrv < 0.85 * last_week_hrv) {
+        if (0.5 * second_last_week_hrv < last_week_hrv && last_week_hrv < 0.85 * second_last_week_hrv) {
             return "Programa nepasikeitė dėl prasto HRV";
         }
 
 
 
         //Upgrading program due to very good hrv score
-        if (current_hrv >= last_week_hrv * 0.85) {
+        if (last_week_hrv >= second_last_week_hrv * 0.85) {
 
 
             //if user has reached his max available workout duration, increasing pulse_zone(intensity) and decreasing workout duration(time).
@@ -618,7 +621,6 @@ public class User {
                 if (pulse_zone > 5) {
                     pulse_zone = 5;
                 }
-                saveProgram(context);
 
                 return "Jūs pasekėte savo max trukmę, todėl padidinsime jūsų intensyvumą";
             }
@@ -626,12 +628,11 @@ public class User {
             //Increasing workout duration and checking if it does not exceed maximum available duration
 
             workout_duration *= 1.1;
+
             if (workout_duration <= max_duration) {
-                saveProgram(context);
                 return "Juma puikiai sekasi. Jūsų sportavimo trukmė pakilo 10%";
             } else {
                 workout_duration = max_duration;
-                saveProgram(context);
                 return "Pasiekėtė max trukmę, todėl ši savaitė bus užtvirtinamoji.";
             }
 
@@ -937,8 +938,8 @@ public class User {
         this.pulse_zone = pulse_zone;
     }
 
-    public double getWorkoutDuration() {
-        return workout_duration;
+    public float getWorkoutDuration() {
+        return Math.round(workout_duration);
     }
 
     private void setWorkoutDuration(float workout_duration) {

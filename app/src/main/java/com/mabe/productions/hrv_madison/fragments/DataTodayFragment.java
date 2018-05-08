@@ -237,7 +237,7 @@ public class DataTodayFragment extends Fragment {
                     setReccomendationCardPercentage(user.getHrvYesterdayTodayRatio());
                     reccomendation_txt_verbal_recommendation.setText(user.getVerbalReccomendation());
                     reccomendation_txt_pulse_zone.setText(user.getPulseZone() + Utils.getNumberSuffix(user.getPulseZone()) + " pulse zone");
-                    reccomendation_txt_duration.setText(String.valueOf((int) user.getWorkoutDuration()) + " " + getString(
+                    reccomendation_txt_duration.setText(String.valueOf(user.getWorkoutDuration()) + " " + getString(
                             R.string.min));
                     break;
                 case User.PROGRAM_STATE_DAY_OFF:
@@ -252,7 +252,7 @@ public class DataTodayFragment extends Fragment {
                     reccomendation_txt_hrv_increase.setTextColor(Color.parseColor("#ffffff"));
                     reccomendation_txt_verbal_recommendation.setText(user.getVerbalReccomendation());
                     reccomendation_txt_pulse_zone.setText(user.getPulseZone() + Utils.getNumberSuffix(user.getPulseZone()) + " pulse zone");
-                    reccomendation_txt_duration.setText(String.valueOf((int) user.getWorkoutDuration()) + " " + getString(
+                    reccomendation_txt_duration.setText(String.valueOf(user.getWorkoutDuration()) + " " + getString(
                             R.string.min));
                     break;
             }

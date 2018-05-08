@@ -87,7 +87,7 @@ public class IntroInitialMaxDuration extends AppCompatActivity {
     private void setFonts(){
 
         Typeface verdana = Typeface.createFromAsset(getAssets(),
-                "fonts/Verdana.ttf");
+                "fonts/futura_light.ttf");
 
         max_duration_value.setTypeface(verdana);
         txt_min.setTypeface(verdana);

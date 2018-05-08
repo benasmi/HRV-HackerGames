@@ -106,7 +106,7 @@ public class IntroInitialDaySelection extends AppCompatActivity {
     private void setFonts(){
 
         Typeface verdana = Typeface.createFromAsset(getAssets(),
-                "fonts/Verdana.ttf");
+                "fonts/futura_light.ttf");
         btn_monday.setTypeface(verdana);
         btn_tuesday.setTypeface(verdana);
         btn_wednesday.setTypeface(verdana);

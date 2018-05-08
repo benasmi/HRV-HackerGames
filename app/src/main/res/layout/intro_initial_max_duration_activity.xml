@@ -34,7 +34,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
+            android:text="30"
             android:textColor="#FFF"
             android:textSize="60dp"
             android:id="@+id/txt_max_duration_value"/>
@@ -67,8 +67,8 @@
     <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        app:dsb_min="15"
-        app:dsb_max="70"
+        app:dsb_min="25"
+        app:dsb_max="60"
         app:dsb_trackColor="#fff"
         app:dsb_progressColor="@color/colorAccent"
         app:dsb_indicatorColor="@color/colorAccent"
@@ -76,7 +76,7 @@
         app:dsb_thumbSize="20dp"
         app:dsb_trackHeight="10dp"
         app:dsb_scrubberHeight="10dp"
-        app:dsb_value="10"
+        app:dsb_value="30"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 

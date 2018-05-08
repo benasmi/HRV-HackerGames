@@ -41,7 +41,7 @@ public class IntroInitialWeight extends AppCompatActivity {
 
 
         Typeface verdana = Typeface.createFromAsset(getAssets(),
-                "fonts/Verdana.ttf");
+                "fonts/futura_light.ttf");
   ;
 
         txt_value.setTypeface(verdana);

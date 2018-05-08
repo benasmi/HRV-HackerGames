@@ -38,10 +38,7 @@ public class IntroInitialGender extends AppCompatActivity {
         setFonts();
 
 
-        Typeface verdana = Typeface.createFromAsset(getAssets(),
-                "fonts/Verdana.ttf");
 
-        txt_question.setTypeface(verdana);
 
 
 
@@ -90,7 +87,7 @@ public class IntroInitialGender extends AppCompatActivity {
     private void setFonts(){
 
         Typeface verdana = Typeface.createFromAsset(getAssets(),
-                "fonts/Verdana.ttf");
+                "fonts/futura_light.ttf");
 
         txt_question.setTypeface(verdana);
 

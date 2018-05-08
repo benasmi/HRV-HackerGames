@@ -2,6 +2,7 @@ package com.mabe.productions.hrv_madison.initialInfo;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,7 +48,7 @@ public class IntroInitialActivityIndex extends AppCompatActivity {
         Utils.changeNotifBarColor(Color.parseColor("#3e5266"),getWindow());
 
         initializeViews();
-
+        setFonts();
 
         rng_activity_index.setOnSlideListener(new RangeSliderView.OnSlideListener() {
             @Override
@@ -159,6 +160,22 @@ public class IntroInitialActivityIndex extends AppCompatActivity {
 
 
         btn_next.startAnimation(anim_next);
+
+    }
+
+    private void setFonts(){
+
+
+        Typeface futura = Typeface.createFromAsset(getAssets(),
+                                                   "fonts/futura_light.ttf");
+        txt_training_duration_question.setTypeface(futura);
+        txt_training_duration_explanation.setTypeface(futura);
+
+        txt_training_frequency_question.setTypeface(futura);
+        txt_training_frequency_explanation.setTypeface(futura);
+
+        txt_training_intensity_question.setTypeface(futura);
+        txt_training_intensity_explanation.setTypeface(futura);
 
     }
 
