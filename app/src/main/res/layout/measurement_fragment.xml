@@ -103,6 +103,7 @@
             android:layout_height="35dp"
             android:layout_marginTop="10dp"
             android:textSize="15dp"
+            android:textAllCaps="false"
             android:layout_gravity="center"
             android:onClick="startMeasuring"
             android:id="@+id/button_start_measuring"

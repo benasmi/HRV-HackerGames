@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:rsv="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@drawable/login_background"
+    android:layout_height="match_parent"
+    tools:context="com.mabe.productions.hrv_madison.initialInfo.IntroInitialActivityIndex">
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="#003e5266"
+        android:layout_alignParentBottom="true"
+        android:text="@string/initial_continue_btn"
+        android:onClick="next"
+        android:textAllCaps="false"
+        android:textSize="13dp"
+        android:id="@+id/initial_continue_base_program"
+        android:textColor="#F62459"
+        android:layout_centerHorizontal="true"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/choose_workout_days"
+            android:padding="8dp"
+            android:gravity="center"
+            android:textColor="#FFF"
+            android:textSize="25dp"
+            android:layout_marginTop="40dp"
+            android:id="@+id/txt_what_is_your_base_workout"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Intermediate"
+            android:textColor="@color/colorAccent"
+            android:gravity="center"
+            android:id="@+id/txt_workout_level"
+            android:layout_gravity="center"
+            android:textSize="40dp"
+            android:layout_marginTop="80dp"
+
+            />
+
+        <com.github.channguyen.rsv.RangeSliderView
+            android:id="@+id/workout_level_slider"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            rsv:filledColor="#F62459"
+            rsv:emptyColor="#fff"
+            rsv:rangeCount="4"
+            rsv:barHeightPercent="0.1"
+            />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Heavy breathing, high tempo"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:id="@+id/txt_info_about_workout"
+                android:textSize="20dp"
+                />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reccomended workout plan"
+            android:textColor="@color/white"
+            android:layout_marginTop="40dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textSize="25dp"
+            android:id="@+id/txt_rec_workout_plan" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="time: 40min"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:id="@+id/txt_reccomended_base_workout_time"
+            android:layout_gravity="center"
+            android:textSize="25dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="pulse zone: 2nd"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_toEndOf="@+id/txt_reccomended_base_workout_time"
+            android:textSize="25dp"
+            android:id="@+id/txt_reccomended_base_workout_pulse_zone"
+            android:layout_marginLeft="20dp"
+            />
+
+
+    </RelativeLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>
