@@ -689,7 +689,7 @@ public class User {
 
             //If no yesterday data is present
             //TODO: do some deciding on this one
-            if (yesterday_hrv == 0) {
+            if (yesterday_hrv == 0 || current_hrv == 0) {
 //                yesterday_hrv = baselineHrv;
                 //yesterday_hrv = current_hrv;
                 program_update_state = PROGRAM_STATE_NOT_ENOUGH_DATA;

@@ -625,8 +625,8 @@ public class WorkoutFragment extends Fragment {
                 btn_toggle.setText(R.string.start_training);
                 btn_toggle.setOnClickListener(startTrainingButtonListener);
 
-                editText_seconds.setText("00");
-                editText_minutes.setText("00");
+//                editText_seconds.setText("00");
+//                editText_minutes.setText("00");
                 layout_bpm.setVisibility(View.GONE);
                 layout_reccomended_workout.setVisibility(View.VISIBLE);
                 img_pause.setVisibility(View.GONE);
@@ -636,6 +636,8 @@ public class WorkoutFragment extends Fragment {
                 setProgressBarDuration(1, 1);
                 editText_minutes.setEnabled(true);
                 editText_seconds.setEnabled(true);
+
+                updateData();
 
 
                 //Todo: fix that, it's ugly now :(
