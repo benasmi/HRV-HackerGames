@@ -252,6 +252,7 @@ public class WorkoutFragment extends Fragment {
         required_pulse_zone = user.getPulseZone();
         pulseZoneView.setRequiredPulseZone(required_pulse_zone);
         editText_minutes.setText("" + (int) user.getWorkoutDuration());
+        editText_seconds.setText("00");
         reccomended_duration.setText("" + (int) user.getWorkoutDuration());
         reccomended_pulse.setText(user.getPulseZone() + "" + Utils.getNumberSuffix(user.getPulseZone()));
     }
