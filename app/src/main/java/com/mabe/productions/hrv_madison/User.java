@@ -65,13 +65,28 @@ public class User {
     private int selected_sport;
     private float weight;
     private String verbal_reccomendation;
+
     private int pulse_zone;
+    private float workout_duration; //in minutes
+    private Date firstWeeklyDate;
+    private Date lastWeeklyDate;
 
+    /*
+     * The intervals of workout's walk/run ratio.
+     * Every second element of the array represents running duration.
+     * {walking_duration, running_duration, walking_duration, running_duration...}
+     * Specified in seconds
+     */
+    private long[] walkRunIntervals = {};
 
+    public static final long[][] WEEKLY_INTERVAL_PROGRAM = {
+            {60L, 60L}, /*1st week*/
+            {50L, 70L}, /*2nd week*/
+            {35L, 85L}  /*3rd week*/
+    };
 
 
     private Date last_generated_weekly_date;
-    private float workout_duration; //in minutes
     public float second_last_week_hrv;
 
 
@@ -486,6 +501,7 @@ public class User {
         user.setPulseZone(Utils.readFromSharedPrefs_int(context, FeedReaderDbHelper.FIELD_PULSE_ZONE, FeedReaderDbHelper.SHARED_PREFS_SPORT));
         user.setWeekDays(Utils.readFromSharedPrefs_boolarray(context, FeedReaderDbHelper.FIELD_WEEK_DAYS, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
         user.setLastGeneratedWeeklyDate(Utils.getDateFromString(Utils.readFromSharedPrefs_string(context, FeedReaderDbHelper.FIELD_LAST_TIME_GENERATED_WEEKLY, FeedReaderDbHelper.SHARED_PREFS_SPORT)));
+        user.setWalkRunIntervals(Utils.readFromSharedPrefs_longarray(context, FeedReaderDbHelper.FIELD_WORKOUT_INTERVALS, FeedReaderDbHelper.SHARED_PREFS_SPORT));
 
         //Dummy data
         user.setSelectedSport(SPORT_JOGGING);
@@ -493,9 +509,10 @@ public class User {
         user.getAllWorkoutsFromDb(context);
         user.setHrvMeasurementsByDate();
 
+
         if(user.checkWeeklyProgramDate(context)){
             user.generateWeeklyProgram(context);
-            user.saveProgram(context, user.getWorkoutDuration(), user.getPulseZone());
+            User.saveProgram(context, user.getWorkoutDuration(), user.getPulseZone(), user.getWalkRunIntervals());
         }
 
         user.generateDailyReccomendation(context);
@@ -511,13 +528,13 @@ public class User {
 
     /**
      * Saves workout duration and pulse_zone to the database
+     * @param walkRunIntervals Walk/Run intervals of the workout. Can be null.
      */
-    public static void saveProgram(Context context, float workout_duration, int pulse_zone) {
+    public static void saveProgram(Context context, float workout_duration, int pulse_zone, long[] walkRunIntervals) {
         Log.i("TEST", "saving program...");
-
+        Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_WORKOUT_INTERVALS, walkRunIntervals == null ? new long[0] : walkRunIntervals, FeedReaderDbHelper.SHARED_PREFS_SPORT);
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_DURATION, workout_duration, FeedReaderDbHelper.SHARED_PREFS_SPORT);
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_PULSE_ZONE, pulse_zone, FeedReaderDbHelper.SHARED_PREFS_SPORT);
-        Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_LAST_TIME_GENERATED_WEEKLY, Utils.getStringFromDate(Calendar.getInstance().getTime()), FeedReaderDbHelper.SHARED_PREFS_SPORT);
     }
 
     /**
@@ -529,33 +546,54 @@ public class User {
     }
 
 
+    /**
+     * Determines whether a weekly program should be generated or not and sets @firstWeeklyDate and @lastWeeklyDate.
+     *
+     * True will be returned and @lastWeeklyDate will be set to today if either of these conditions are met:
+     *    There is no saved lastWeeklyDate.
+     *    lastWeeklyDate is at least one week behind current date.
+     *
+     * The variable @firstWeeklyDate will be set to today if any of the following conditions are met:
+     *     There is no saved firstWeeklyDate
+     *     firstWeeklyDate is at least two weeks behind
+     *
+     * @return Returns true, if weekly program should be generated.
+     */
     private boolean checkWeeklyProgramDate(Context context) {
 
-
+        //todo: calculate calendoric difference in weeks
         Calendar calendar = Calendar.getInstance();
-        int thisWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+        firstWeeklyDate = Utils.getDateFromString(Utils.readFromSharedPrefs_string(context, FeedReaderDbHelper.FIELD_FIRST_TIME_GENERATED_WEEKLY, FeedReaderDbHelper.SHARED_PREFS_SPORT));
+        lastWeeklyDate = Utils.getDateFromString(Utils.readFromSharedPrefs_string(context, FeedReaderDbHelper.FIELD_LAST_TIME_GENERATED_WEEKLY, FeedReaderDbHelper.SHARED_PREFS_SPORT));
+        boolean generateWeekly = false;
 
-
-
-        if(getLastGeneratedWeeklyDate() != null){
-
-            calendar.setTime(getLastGeneratedWeeklyDate());
-            int lastMeasurementWeek = calendar.get(Calendar.WEEK_OF_YEAR);
-
-            Log.i("WORKOUT", "THIS WEEK: " + String.valueOf(thisWeek) + " | " + "LAST WEEK: " + String.valueOf(lastMeasurementWeek));
-
-            //Checking if user has measured this week. If not, updating user's weekly program
-            if(lastMeasurementWeek != thisWeek){
-                return true;
-            }
-
-
-
-        }else{
-            //User has measured for the first time ever
-            return true;
+        if(lastWeeklyDate == null){
+            generateWeekly = true;
+            lastWeeklyDate = calendar.getTime();
         }
-        return false;
+
+        if(firstWeeklyDate == null){
+            firstWeeklyDate = calendar.getTime();
+        }
+        int weekDiff = Utils.weekDifference(lastWeeklyDate, calendar.getTime());
+        if(weekDiff > 2){
+            firstWeeklyDate = calendar.getTime();
+        }
+        int dif = Utils.weekDifference(lastWeeklyDate, calendar.getTime());
+        if((int)(Utils.weekDifference(lastWeeklyDate, calendar.getTime())) > 0){
+            generateWeekly = true;
+        }
+
+        if(generateWeekly){
+            lastWeeklyDate = calendar.getTime();
+        }
+
+        Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_LAST_TIME_GENERATED_WEEKLY, Utils.getStringFromDate(lastWeeklyDate), FeedReaderDbHelper.SHARED_PREFS_SPORT);
+        Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_FIRST_TIME_GENERATED_WEEKLY, Utils.getStringFromDate(firstWeeklyDate), FeedReaderDbHelper.SHARED_PREFS_SPORT);
+
+
+        return generateWeekly;
+
 
     }
 
@@ -569,6 +607,16 @@ public class User {
     public String generateWeeklyProgram(Context context) {
 
         Log.i("WORKOUT", "last week hrv: " + last_week_hrv + " | " + "second last week : " + second_last_week_hrv + " | " + "pulse_zone: " + pulse_zone + " | " + "workout_duration: " + workout_duration);
+
+        //Setting walk/run intervals based on weekly program progress
+        int programWeekProgress = Utils.weekDifference(firstWeeklyDate, Calendar.getInstance().getTime());
+        Log.i("TEST", "week diff: " + programWeekProgress);
+        if(programWeekProgress < WEEKLY_INTERVAL_PROGRAM.length){
+
+            setWalkRunIntervals(WEEKLY_INTERVAL_PROGRAM[programWeekProgress]);
+        }else{
+            setWalkRunIntervals(new long[]{1});
+        }
 
         //First time
         if (last_week_hrv == 0f) {
@@ -853,7 +901,7 @@ public class User {
         return height;
     }
 
-    public void setHeight(float height) {
+    private void setHeight(float height) {
         this.height = height;
     }
 
@@ -976,8 +1024,15 @@ public class User {
         return last_generated_weekly_date;
     }
 
-    public void setLastGeneratedWeeklyDate(Date last_generated_weekly_date) {
+    private void setLastGeneratedWeeklyDate(Date last_generated_weekly_date) {
         this.last_generated_weekly_date = last_generated_weekly_date;
     }
 
+    private void setWalkRunIntervals(long[] walkRunIntervals) {
+        this.walkRunIntervals = walkRunIntervals;
+    }
+
+    public long[] getWalkRunIntervals() {
+        return walkRunIntervals;
+    }
 }

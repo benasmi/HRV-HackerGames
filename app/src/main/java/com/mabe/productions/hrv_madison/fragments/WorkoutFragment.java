@@ -2,8 +2,6 @@ package com.mabe.productions.hrv_madison.fragments;
 
 
 import android.Manifest;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -45,9 +44,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.budiyev.android.circularprogressbar.CircularProgressBar;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.mabe.productions.hrv_madison.FrequentlyAskedActivity;
 import com.mabe.productions.hrv_madison.GoogleMapService;
@@ -57,7 +54,6 @@ import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.bluetooth.BluetoothGattService;
-import com.mabe.productions.hrv_madison.bluetooth.LeDevicesDialog;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 import com.tooltip.Tooltip;
@@ -170,21 +166,22 @@ public class WorkoutFragment extends Fragment {
     private Vibrator mVibrator;
     private boolean isReceiverRegistered = false;
 
+    private long[] walkRunIntervals;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.workout_fragment, container, false);
 
-        User userInfo = User.getUser(getContext());
         mVibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
 
         initializeViews(view);
+        updateData();
         initializeAnimations();
         setState(STATE_BEFORE_WORKOUT);
         setFonts();
         registerReceiver();
-        updateData();
 
         return view;
     }
@@ -255,6 +252,7 @@ public class WorkoutFragment extends Fragment {
         editText_seconds.setText("00");
         reccomended_duration.setText("" + (int) user.getWorkoutDuration());
         reccomended_pulse.setText(user.getPulseZone() + "" + Utils.getNumberSuffix(user.getPulseZone()));
+        walkRunIntervals = user.getWalkRunIntervals();
     }
 
     private void initializeAnimations() {
@@ -812,7 +810,7 @@ public class WorkoutFragment extends Fragment {
 
     /**
      * Starts a timer that vibrates the phone based on given pulse data
-     * If a timer is currently running, it is cancelled, and the new one with updaed data is started.
+     * If a timer is currently running, it is cancelled, and the new one with updated data is started.
      * Timer is stored in vibrationTimer field.
      *
      * @param required_pulse_zone The pulse zone user has to be in. Can be an integer from 1 to 5.
@@ -916,6 +914,8 @@ public class WorkoutFragment extends Fragment {
                         if(workout_state != STATE_WORKING_OUT && workout_state != STATE_TIME_ENDED){
                             return;
                         }
+
+                        setWalkingRunningState(timePassed);
 
                         //User is working out longer, than specified duration
                         if (timePassed > userSpecifiedWorkoutDuration) {
@@ -1247,6 +1247,66 @@ public class WorkoutFragment extends Fragment {
             intensityStatusView.setText("Intensity: Too high!");
         }
 
+    }
+
+    public static final int EXERCISE_WALKING = 0;
+    public static final int EXERCISE_JOGGING = 1;
+    private int current_exercise = EXERCISE_WALKING;
+
+    /**
+     * Sets the current exercise state based on the amount of time that has passed.
+     * Intended to be used in a timer.
+     * @param timePassed The amount of time that has passed from the start of workout.
+     */
+    private void setWalkingRunningState(long timePassed){
+        if(walkRunIntervals.length == 0){
+            setExercise(EXERCISE_WALKING);
+            return;
+        }
+
+
+        //Calculating the total duraiton of a cycle
+        long cycleDuration = 0;
+        for(long interval : walkRunIntervals){
+            cycleDuration+=interval*1000L;
+        }
+        int timesCycleCompleted = (int) (timePassed/cycleDuration);
+        long currentCycleProgress = timePassed - cycleDuration*timesCycleCompleted;
+
+        long intervalSum = 0;
+        for(int i = 0; i < walkRunIntervals.length; i++){
+            long lowerBound = intervalSum;
+            intervalSum+=walkRunIntervals[i]*1000L;
+            long upperBound = intervalSum;
+            if(currentCycleProgress <= upperBound && currentCycleProgress >= lowerBound){
+
+                if(i % 2 == 0){
+                    if(current_exercise != EXERCISE_WALKING){
+                        setExercise(EXERCISE_WALKING);
+                    }
+                }else{
+                    if(current_exercise != EXERCISE_JOGGING){
+                        setExercise(EXERCISE_JOGGING);
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+
+    public void setExercise(final int exercise){
+        final int icon_resource;
+
+        if(exercise == EXERCISE_JOGGING){
+            icon_resource = R.drawable.human;
+        }else if(exercise == EXERCISE_JOGGING){
+            icon_resource = R.drawable.ic_appicon_rectangle;
+        }else{
+            icon_resource = R.drawable.ic_stopwatch;
+        }
+        workout_tab_running_gif.setImageResource(icon_resource);
+        current_exercise = exercise;
     }
 
 

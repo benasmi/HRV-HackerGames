@@ -207,6 +207,15 @@ public class Utils {
         return array;
     }
 
+    public static long[] readFromSharedPrefs_longarray(Context context, String holder, String sharedPref){
+        SharedPreferences prefs = context.getSharedPreferences(sharedPref, Context.MODE_PRIVATE);
+        int size = prefs.getInt(holder + "_size", 0);
+        long array[] = new long[size];
+        for(int i=0;i<size;i++)
+            array[i] = prefs.getLong(holder + "_" + i, 0);
+        return array;
+    }
+
     public static void saveToSharedPrefs(Context context, String holder, boolean[] array, String sharedPref) {
         SharedPreferences prefs = context.getSharedPreferences(sharedPref, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
@@ -214,6 +223,32 @@ public class Utils {
         for(int i=0;i<array.length;i++)
             editor.putBoolean(holder + "_" + i, array[i]);
         editor.commit();
+    }
+    public static void saveToSharedPrefs(Context context, String holder, long[] array, String sharedPref) {
+        SharedPreferences prefs = context.getSharedPreferences(sharedPref, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(holder +"_size", array.length);
+        for(int i=0;i<array.length;i++)
+            editor.putLong(holder + "_" + i, array[i]);
+        editor.commit();
+    }
+
+    /**
+     * Returns a number of weeks between two given dates.
+     * @param date1 The first date
+     * @param date2 The second date
+     * @return A number of weeks between the two given dates
+     */
+    public static int weekDifference(Date date1, Date date2){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date1);
+        long milliSeconds1 = calendar.getTimeInMillis();
+        calendar.setTime(date2);
+        long milliSeconds2 = calendar.getTimeInMillis();
+        long periodSeconds = Math.abs((milliSeconds2 - milliSeconds1)) / 1000;
+        long elapsedDays = periodSeconds / 60 / 60 / 24;
+
+        return (int) (elapsedDays/7);
     }
 
     public static void saveToSharedPrefs(Context context, String holder, String value, String sharedPref){

@@ -104,7 +104,8 @@ public class IntroInitialBaseProgram extends AppCompatActivity {
 
 
     public void next(View view) {
-        User.saveProgram(this, 30f, 2);
+
+        User.saveProgram(this, 30f, 2, null);
         startActivity(new Intent(this, IntroInitialDaySelection.class));
     }
 
