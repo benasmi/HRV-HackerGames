@@ -251,6 +251,26 @@ public class Utils {
         return (int) (elapsedDays/7);
     }
 
+    public static int calendoricWeekDifference(Date date1, Date date2){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date1);
+        int month1 = calendar.get(Calendar.MONTH);
+        int day1 = calendar.get(Calendar.DATE)-getDayOfWeek(calendar);
+        int year1 = calendar.get(Calendar.YEAR);
+        calendar.setTime(date2);
+        int month2 = calendar.get(Calendar.MONTH);
+        int day2 = calendar.get(Calendar.DATE)-getDayOfWeek(calendar);
+        int year2 = calendar.get(Calendar.YEAR);
+
+        calendar.set(year1, month1, day1);
+        Date first = calendar.getTime();
+
+        calendar.set(year2, month2, day2);
+        Date second = calendar.getTime();
+
+        return weekDifference(first, second);
+    }
+
     public static void saveToSharedPrefs(Context context, String holder, String value, String sharedPref){
         SharedPreferences sharedPreferences = context.getApplicationContext().getSharedPreferences(sharedPref,Context.MODE_PRIVATE);
         sharedPreferences.edit().putString(holder, value).commit();

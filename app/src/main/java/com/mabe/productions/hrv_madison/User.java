@@ -80,9 +80,12 @@ public class User {
     private long[] walkRunIntervals = {};
 
     public static final long[][] WEEKLY_INTERVAL_PROGRAM = {
-            {60L, 60L}, /*1st week*/
-            {50L, 70L}, /*2nd week*/
-            {35L, 85L}  /*3rd week*/
+            {0L}, /* Walking (No intervals) */
+            {60L, 30L, 10L},
+            {60L, 50L},
+            {30L, 20L, 30L, 20L},
+            {60L, 60L, 10L, 15L},
+            {}, /* Jogging (No intervals) */
     };
 
 
@@ -438,6 +441,7 @@ public class User {
         int hrvCountSecondLastWeek = 0;
 
         Calendar calendar = Calendar.getInstance();
+        //TODO: user Utils.calendoricWeekDifference() since this is invalid.
         int currentWeek = calendar.get(Calendar.WEEK_OF_YEAR);
         int currentDay = calendar.get(Calendar.DAY_OF_YEAR);
 
@@ -532,9 +536,39 @@ public class User {
      */
     public static void saveProgram(Context context, float workout_duration, int pulse_zone, long[] walkRunIntervals) {
         Log.i("TEST", "saving program...");
-        Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_WORKOUT_INTERVALS, walkRunIntervals == null ? new long[0] : walkRunIntervals, FeedReaderDbHelper.SHARED_PREFS_SPORT);
+        Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_WORKOUT_INTERVALS, User.parseWorkoutIntervals(walkRunIntervals), FeedReaderDbHelper.SHARED_PREFS_SPORT);
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_DURATION, workout_duration, FeedReaderDbHelper.SHARED_PREFS_SPORT);
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_PULSE_ZONE, pulse_zone, FeedReaderDbHelper.SHARED_PREFS_SPORT);
+    }
+
+    /**
+     * Fixes the workout interval array in case it contains an uneven number of elements.
+     * For example, it doesn't make sense to have this array of intervals:
+     * {10L, 5L, 10L}
+     * Since it is the same as the following:
+     * {20L, 5L}
+     *
+     * The main reason this method exists is because workout interval arrays with uneven length
+     * cause problems in WorkoutFragment
+     * @param intervals The intervals to be fixed
+     * @return A fixed array
+     */
+    public static long[] parseWorkoutIntervals(long[] intervals){
+        if(intervals == null){
+            return new long[0];
+        }
+        if(intervals.length % 2 != 0 && intervals.length > 1){
+            long[] fixedIntervals = new long[intervals.length-1];
+            for(int i = 0; i < intervals.length-1; i++){
+                if(i == 0){
+                    fixedIntervals[i] = intervals[i] + intervals[intervals.length-1];
+                }else{
+                    fixedIntervals[i] = intervals[i];
+                }
+            }
+            return fixedIntervals;
+        }
+        return intervals;
     }
 
     /**
@@ -575,12 +609,12 @@ public class User {
         if(firstWeeklyDate == null){
             firstWeeklyDate = calendar.getTime();
         }
-        int weekDiff = Utils.weekDifference(lastWeeklyDate, calendar.getTime());
+        int weekDiff = Utils.calendoricWeekDifference(lastWeeklyDate, calendar.getTime());
         if(weekDiff > 2){
             firstWeeklyDate = calendar.getTime();
         }
-        int dif = Utils.weekDifference(lastWeeklyDate, calendar.getTime());
-        if((int)(Utils.weekDifference(lastWeeklyDate, calendar.getTime())) > 0){
+        int dif = Utils.calendoricWeekDifference(lastWeeklyDate, calendar.getTime());
+        if((int)(Utils.calendoricWeekDifference(lastWeeklyDate, calendar.getTime())) > 0){
             generateWeekly = true;
         }
 
@@ -609,7 +643,7 @@ public class User {
         Log.i("WORKOUT", "last week hrv: " + last_week_hrv + " | " + "second last week : " + second_last_week_hrv + " | " + "pulse_zone: " + pulse_zone + " | " + "workout_duration: " + workout_duration);
 
         //Setting walk/run intervals based on weekly program progress
-        int programWeekProgress = Utils.weekDifference(firstWeeklyDate, Calendar.getInstance().getTime());
+        int programWeekProgress = Utils.calendoricWeekDifference(firstWeeklyDate, Calendar.getInstance().getTime());
         Log.i("TEST", "week diff: " + programWeekProgress);
         if(programWeekProgress < WEEKLY_INTERVAL_PROGRAM.length){
 

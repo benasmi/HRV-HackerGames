@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
@@ -166,6 +167,8 @@ public class WorkoutFragment extends Fragment {
     private Vibrator mVibrator;
     private boolean isReceiverRegistered = false;
 
+    private MediaPlayer mediaPlayer;
+
     private long[] walkRunIntervals;
 
     @Nullable
@@ -182,6 +185,10 @@ public class WorkoutFragment extends Fragment {
         setState(STATE_BEFORE_WORKOUT);
         setFonts();
         registerReceiver();
+
+        //TODO: change sound resource
+        mediaPlayer = MediaPlayer.create(getContext(), R.raw.measurement_notification);
+
 
         return view;
     }
@@ -632,7 +639,7 @@ public class WorkoutFragment extends Fragment {
                 img_stop.setVisibility(View.GONE);
                 layout_workout_progress.setVisibility(View.GONE);
                 Log.i("TEST", "Setting progressBar duration in setState()...");
-                setProgressBarDuration(1, 1);
+                setProgressBarDuration(1, 1, true);
                 editText_minutes.setEnabled(true);
                 editText_seconds.setEnabled(true);
 
@@ -699,7 +706,7 @@ public class WorkoutFragment extends Fragment {
                 }
                 startLocationListener();
 
-                progressbar_duration.setProgress(100f);
+                //progressbar_duration.setProgress(100f);
 
                 btn_toggle.setText(R.string.end_training);
                 btn_toggle.setVisibility(View.VISIBLE);
@@ -884,12 +891,16 @@ public class WorkoutFragment extends Fragment {
      *
      * @param timeTotal  the time workout is going to last
      * @param timeProgress time, that has already passed
+     * @param reverse If true, progress is displayed in opposite colors
      */
-    private void setProgressBarDuration(int timeTotal, int timeProgress) {
+    private void setProgressBarDuration(int timeTotal, int timeProgress, boolean reverse) {
         float multiplier = ((float) timeProgress) / ((float) timeTotal);
-        progressbar_duration.setProgress(100 - multiplier * 100);
 
-
+        if(reverse){
+            progressbar_duration.setProgress(100 - multiplier * 100);
+        }else{
+            progressbar_duration.setProgress(multiplier * 100);
+        }
     }
 
     //Timer gets started. It does so based on timePassed value.
@@ -915,7 +926,7 @@ public class WorkoutFragment extends Fragment {
                             return;
                         }
 
-                        setWalkingRunningState(timePassed);
+                        setWalkingRunningState(timePassed, true);
 
                         //User is working out longer, than specified duration
                         if (timePassed > userSpecifiedWorkoutDuration) {
@@ -932,7 +943,11 @@ public class WorkoutFragment extends Fragment {
                             }
                         } else if(timePassed < userSpecifiedWorkoutDuration){ //User is within his specified time limits
                             Log.i("TEST", "Setting progressBar duration 2nd if...");
-                            setProgressBarDuration((int) userSpecifiedWorkoutDuration, (int) (userSpecifiedWorkoutDuration - timePassed));
+
+                            //Checking if intervals are enabled.
+                            if(walkRunIntervals.length <= 1){
+                                setProgressBarDuration((int) userSpecifiedWorkoutDuration, (int) (userSpecifiedWorkoutDuration - timePassed), true);
+                            }
 
                             int minutes = (int) (userSpecifiedWorkoutDuration - timePassed) / 60000;
                             int seconds = Math.round((userSpecifiedWorkoutDuration - timePassed) / 1000 - (minutes * 60));
@@ -944,8 +959,11 @@ public class WorkoutFragment extends Fragment {
                                 editText_minutes.setText(minutes + "");
                             }
                         }else{
+                            //Checking if intervals are enabled.
+                            if(walkRunIntervals.length <= 1){
+                                setProgressBarDuration(1,1, false);
+                            }
                             setState(STATE_TIME_ENDED);
-                            Log.i("TEST", "Setting progressBar duration in timer...");
                         }
 
                         timePassed += TIMER_STEP;
@@ -1251,25 +1269,36 @@ public class WorkoutFragment extends Fragment {
 
     public static final int EXERCISE_WALKING = 0;
     public static final int EXERCISE_JOGGING = 1;
-    private int current_exercise = EXERCISE_WALKING;
+    private int current_exercise = EXERCISE_JOGGING;
 
     /**
      * Sets the current exercise state based on the amount of time that has passed.
+     *
      * Intended to be used in a timer.
+     * @param indicateViaProgressBar If true, current exercise duration is indicated in {@Link #progress_bar_duration}
      * @param timePassed The amount of time that has passed from the start of workout.
      */
-    private void setWalkingRunningState(long timePassed){
-        if(walkRunIntervals.length == 0){
-            setExercise(EXERCISE_WALKING);
-            return;
-        }
+    private void setWalkingRunningState(long timePassed, boolean indicateViaProgressBar){
 
-
-        //Calculating the total duraiton of a cycle
+        //Calculating the total duration of a cycle
         long cycleDuration = 0;
         for(long interval : walkRunIntervals){
             cycleDuration+=interval*1000L;
         }
+
+        if(cycleDuration == 0){
+            if(walkRunIntervals.length % 2 == 0){
+                if(current_exercise != EXERCISE_JOGGING){
+                    setExercise(EXERCISE_JOGGING);
+                }
+            }else {
+                if(current_exercise != EXERCISE_WALKING){
+                    setExercise(EXERCISE_WALKING);
+                }
+            }
+            return;
+        }
+
         int timesCycleCompleted = (int) (timePassed/cycleDuration);
         long currentCycleProgress = timePassed - cycleDuration*timesCycleCompleted;
 
@@ -1284,27 +1313,34 @@ public class WorkoutFragment extends Fragment {
                     if(current_exercise != EXERCISE_WALKING){
                         setExercise(EXERCISE_WALKING);
                     }
+                    setProgressBarDuration((int) (upperBound-lowerBound), (int) (currentCycleProgress-lowerBound), false);
                 }else{
                     if(current_exercise != EXERCISE_JOGGING){
                         setExercise(EXERCISE_JOGGING);
                     }
+                    setProgressBarDuration((int) (upperBound-lowerBound), (int) (currentCycleProgress-lowerBound), true);
+
                 }
                 break;
             }
         }
+
+
     }
 
 
     public void setExercise(final int exercise){
         final int icon_resource;
-
+        //TODO: find appropriate walking gif
         if(exercise == EXERCISE_JOGGING){
             icon_resource = R.drawable.human;
-        }else if(exercise == EXERCISE_JOGGING){
+        }else if(exercise == EXERCISE_WALKING){
             icon_resource = R.drawable.ic_appicon_rectangle;
         }else{
             icon_resource = R.drawable.ic_stopwatch;
+
         }
+        mediaPlayer.start();
         workout_tab_running_gif.setImageResource(icon_resource);
         current_exercise = exercise;
     }
