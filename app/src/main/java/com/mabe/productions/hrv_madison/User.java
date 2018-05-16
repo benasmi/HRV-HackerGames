@@ -82,9 +82,11 @@ public class User {
 
     public static final long[][] WEEKLY_INTERVAL_PROGRAM = {
             {0L}, /* Walking (No intervals) */
-            {60L, 30L},
-            {60L, 50L},
-            {30L, 20L},
+            {0L},
+            {0L},
+            {120L, 60L},
+            {120L, 60L},
+            {120L, 60L},
             {60L, 60L},
             {}, /* Jogging (No intervals) */
     };
@@ -92,11 +94,13 @@ public class User {
     //Paskui galesim padaryti su klase
     public static final int[][] WEEKLY_PULSE_ZONE_PROGRAM = {
             {2},
-            {1, 2},
+            {2},
+            {2},
             {2, 3},
-            {1, 3},
-            {1, 2},
-            {3},
+            {2, 3},
+            {2, 3},
+            {2, 3},
+            {2},
     };
 
 
