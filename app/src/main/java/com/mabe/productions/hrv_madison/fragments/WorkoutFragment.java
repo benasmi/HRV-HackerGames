@@ -77,6 +77,7 @@ public class WorkoutFragment extends Fragment {
     private TextView txt_calories_burned;
     private TextView txt_current_pace;
     private TextView txt_distance;
+    private TextView txt_exercise_indicator;
     private TextView txt_bpm;
     private EditText editText_seconds;
     private EditText editText_minutes;
@@ -238,11 +239,12 @@ public class WorkoutFragment extends Fragment {
         pulseZone_switch = rootView.findViewById(R.id.switch_pulse_zone);
         img_stop.setOnClickListener(stopButtonListener);
         workout_tab_running_gif = rootView.findViewById(R.id.workout_tab_running_gif);
+        txt_exercise_indicator = rootView.findViewById(R.id.exercise_textview);
+
         setupEditTextBehavior();
         imgButton_view_duration_info.setOnClickListener(durationInfoListener);
         imgButton_view_pulse_info.setOnClickListener(durationPulseListener);
         imgButton_info_about_vibration.setOnClickListener(vibrationInfoListener);
-
         btn_toggle = rootView.findViewById(R.id.button_start_workout);
         button_personalised_workout.setOnClickListener(personaliseInfo);
         pulseZone_switch.setOnCheckedChangeListener(selectVibrationListener);
@@ -620,6 +622,7 @@ public class WorkoutFragment extends Fragment {
                     vibrationTimer.cancel();
                 }
                 cancelTimer();
+                txt_exercise_indicator.setVisibility(View.GONE);
                 workout_tab_running_gif.setVisibility(View.INVISIBLE);
                 layout_pulse_zone.setVisibility(View.GONE);
                 bpmArrayList.clear();
@@ -631,8 +634,6 @@ public class WorkoutFragment extends Fragment {
                 btn_toggle.setText(R.string.start_training);
                 btn_toggle.setOnClickListener(startTrainingButtonListener);
 
-//                editText_seconds.setText("00");
-//                editText_minutes.setText("00");
                 layout_bpm.setVisibility(View.GONE);
                 layout_reccomended_workout.setVisibility(View.VISIBLE);
                 img_pause.setVisibility(View.GONE);
@@ -642,7 +643,6 @@ public class WorkoutFragment extends Fragment {
                 setProgressBarDuration(1, 1, true);
                 editText_minutes.setEnabled(true);
                 editText_seconds.setEnabled(true);
-
                 updateData();
 
 
@@ -672,6 +672,8 @@ public class WorkoutFragment extends Fragment {
                     startedWorkoutAnimations();
                 }
 
+                setWalkingRunningState(0L);
+                txt_exercise_indicator.setVisibility(View.VISIBLE);
                 startLocationListener();
                 layout_bpm.setVisibility(View.VISIBLE);
                 layout_reccomended_workout.setVisibility(View.GONE);
@@ -926,7 +928,7 @@ public class WorkoutFragment extends Fragment {
                             return;
                         }
 
-                        setWalkingRunningState(timePassed, true);
+                        setWalkingRunningState(timePassed);
 
                         //User is working out longer, than specified duration
                         if (timePassed > userSpecifiedWorkoutDuration) {
@@ -1275,10 +1277,9 @@ public class WorkoutFragment extends Fragment {
      * Sets the current exercise state based on the amount of time that has passed.
      *
      * Intended to be used in a timer.
-     * @param indicateViaProgressBar If true, current exercise duration is indicated in {@Link #progress_bar_duration}
      * @param timePassed The amount of time that has passed from the start of workout.
      */
-    private void setWalkingRunningState(long timePassed, boolean indicateViaProgressBar){
+    private void setWalkingRunningState(long timePassed){
 
         //Calculating the total duration of a cycle
         long cycleDuration = 0;
@@ -1331,16 +1332,22 @@ public class WorkoutFragment extends Fragment {
 
     public void setExercise(final int exercise){
         final int icon_resource;
+        final int textResource;
+
         //TODO: find appropriate walking gif
         if(exercise == EXERCISE_JOGGING){
             icon_resource = R.drawable.human;
+            textResource = R.string.jogging;
         }else if(exercise == EXERCISE_WALKING){
             icon_resource = R.drawable.ic_appicon_rectangle;
+            textResource = R.string.walking;
         }else{
             icon_resource = R.drawable.ic_stopwatch;
-
+            textResource = R.string.walking;
         }
+
         mediaPlayer.start();
+        txt_exercise_indicator.setText(textResource);
         workout_tab_running_gif.setImageResource(icon_resource);
         current_exercise = exercise;
     }

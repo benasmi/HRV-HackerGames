@@ -31,6 +31,7 @@ import com.mabe.productions.hrv_madison.fragments.ViewPagerAdapter;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Benas on 1/30/2018.
@@ -269,6 +270,46 @@ public class Utils {
         Date second = calendar.getTime();
 
         return weekDifference(first, second);
+    }
+
+    /**
+     * Returns a number of days between two dates
+     * @param date1 The first date
+     * @param date2 The second date
+     * @return A number of days between the given dates
+     */
+    public static int dayDifference(Date date1, Date date2){
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(date1);
+        cal2.setTime(date2);
+
+        long msDiff = Math.abs(cal1.getTimeInMillis() - cal2.getTimeInMillis());
+        int daysDiff = (int) TimeUnit.MILLISECONDS.toDays(msDiff);
+
+        return daysDiff;
+    }
+
+    public static int calendoricDayDifference(Date date1, Date date2){
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTime(date1);
+        int year1 = cal.get(Calendar.YEAR);
+        int month1 = cal.get(Calendar.MONTH);
+        int day1 = cal.get(Calendar.DATE);
+
+        cal.setTime(date2);
+        int year2 = cal.get(Calendar.YEAR);
+        int month2 = cal.get(Calendar.MONTH);
+        int day2 = cal.get(Calendar.DATE);
+
+        cal.set(year1, month1, day1);
+        Date firstDate = cal.getTime();
+
+        cal.set(year2, month2, day2);
+        Date secondDate = cal.getTime();
+
+        return Utils.dayDifference(firstDate, secondDate);
     }
 
     public static void saveToSharedPrefs(Context context, String holder, String value, String sharedPref){

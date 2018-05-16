@@ -111,6 +111,8 @@
     <string name="workout">Workout</string>
     <string name="min">min</string>
     <string name="VHF">VHF: </string>
+    <string name="jogging">Jogging</string>
+    <string name="walking">Walking</string>
 
 </resources>
 

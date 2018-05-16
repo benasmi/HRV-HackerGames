@@ -440,33 +440,26 @@ public class User {
         int hrvSumSecondLastWeek = 0;
         int hrvCountSecondLastWeek = 0;
 
-        Calendar calendar = Calendar.getInstance();
-        //TODO: user Utils.calendoricWeekDifference() since this is invalid.
-        int currentWeek = calendar.get(Calendar.WEEK_OF_YEAR);
-        int currentDay = calendar.get(Calendar.DAY_OF_YEAR);
-
         for(Measurement measurement : measurements){
 
+            Date today = Calendar.getInstance().getTime();
+
             //Summing up rmssd if date if from last week
-            calendar.setTime(measurement.getDate());
-
-            int measurementDay = calendar.get(Calendar.DAY_OF_YEAR);
-            int measurementWeek = calendar.get(Calendar.WEEK_OF_YEAR);
-
-            if (currentWeek - 1 == measurementWeek) {
+            if (Utils.calendoricWeekDifference(today, measurement.getDate()) == 1) {
                 hrvCountLastWeek++;
                 hrvSumLastWeek += measurement.getHrv();
             }
 
-            if (currentWeek - 2 == measurementWeek) {
+            if (Utils.calendoricWeekDifference(today, measurement.getDate()) == 2) {
                 hrvCountSecondLastWeek++;
                 hrvSumSecondLastWeek += measurement.getHrv();
             }
 
-            if (measurementDay == currentDay) {
+
+            if (Utils.calendoricDayDifference(today, measurement.getDate()) == 0) {
                 //Today's measurement
                 setCurrentHrv(measurement.getHrv());
-            } else if (measurementDay == currentDay - 1) {
+            } else if (Utils.calendoricDayDifference(today, measurement.getDate()) == 1) {
                 //yesterday's measurement
                 setYesterdayHrv(measurement.getHrv());
             }

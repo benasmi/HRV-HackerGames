@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.mabe.productions.hrv_madison.MainScreenActivity;
 import com.mabe.productions.hrv_madison.R;
+import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 
@@ -77,7 +78,10 @@ public class IntroInitialInfoBirthday extends AppCompatActivity {
 
         Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_BIRTHDAY,Utils.getStringFromDate(calendar.getTime()),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
 
-        startActivity(new Intent(this, IntroInitialBaseProgram.class));
+//        startActivity(new Intent(this, IntroInitialBaseProgram.class));
+        //todo: remove this dummy program
+        User.saveProgram(this, 30f, 2, null);
+        startActivity(new Intent(this, IntroInitialDaySelection.class));
     }
 
 }
