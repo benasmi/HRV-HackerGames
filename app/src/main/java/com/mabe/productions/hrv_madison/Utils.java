@@ -207,6 +207,14 @@ public class Utils {
             array[i] = prefs.getBoolean(holder + "_" + i, false);
         return array;
     }
+    public static int[] readFromSharedPrefs_intarray(Context context, String holder, String sharedPref){
+        SharedPreferences prefs = context.getSharedPreferences(sharedPref, Context.MODE_PRIVATE);
+        int size = prefs.getInt(holder + "_size", 0);
+        int array[] = new int[size];
+        for(int i=0;i<size;i++)
+            array[i] = prefs.getInt(holder + "_" + i, 0);
+        return array;
+    }
 
     public static long[] readFromSharedPrefs_longarray(Context context, String holder, String sharedPref){
         SharedPreferences prefs = context.getSharedPreferences(sharedPref, Context.MODE_PRIVATE);
@@ -225,6 +233,16 @@ public class Utils {
             editor.putBoolean(holder + "_" + i, array[i]);
         editor.commit();
     }
+
+    public static void saveToSharedPrefs(Context context, String holder, int[] array, String sharedPref) {
+        SharedPreferences prefs = context.getSharedPreferences(sharedPref, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(holder +"_size", array.length);
+        for(int i=0;i<array.length;i++)
+            editor.putInt(holder + "_" + i, array[i]);
+        editor.commit();
+    }
+
     public static void saveToSharedPrefs(Context context, String holder, long[] array, String sharedPref) {
         SharedPreferences prefs = context.getSharedPreferences(sharedPref, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();

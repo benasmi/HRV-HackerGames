@@ -78,14 +78,25 @@ public class User {
      * Specified in seconds
      */
     private long[] walkRunIntervals = {};
+    private int[] pulseZoneIntervals = {3};
 
     public static final long[][] WEEKLY_INTERVAL_PROGRAM = {
             {0L}, /* Walking (No intervals) */
-            {60L, 30L, 10L},
+            {60L, 30L},
             {60L, 50L},
-            {30L, 20L, 30L, 20L},
-            {60L, 60L, 10L, 15L},
+            {30L, 20L},
+            {60L, 60L},
             {}, /* Jogging (No intervals) */
+    };
+    //Kolkas sukuriu tik array, nes daug reiktu keisti.
+    //Paskui galesim padaryti su klase
+    public static final int[][] WEEKLY_PULSE_ZONE_PROGRAM = {
+            {2},
+            {1, 2},
+            {2, 3},
+            {1, 3},
+            {1, 2},
+            {3},
     };
 
 
@@ -499,6 +510,7 @@ public class User {
         user.setWeekDays(Utils.readFromSharedPrefs_boolarray(context, FeedReaderDbHelper.FIELD_WEEK_DAYS, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
         user.setLastGeneratedWeeklyDate(Utils.getDateFromString(Utils.readFromSharedPrefs_string(context, FeedReaderDbHelper.FIELD_LAST_TIME_GENERATED_WEEKLY, FeedReaderDbHelper.SHARED_PREFS_SPORT)));
         user.setWalkRunIntervals(Utils.readFromSharedPrefs_longarray(context, FeedReaderDbHelper.FIELD_WORKOUT_INTERVALS, FeedReaderDbHelper.SHARED_PREFS_SPORT));
+        user.setPulseZoneIntervals(Utils.readFromSharedPrefs_intarray(context, FeedReaderDbHelper.FIELD_PULSE_ZONE_INTERVALS, FeedReaderDbHelper.SHARED_PREFS_SPORT));
 
         //Dummy data
         user.setSelectedSport(SPORT_JOGGING);
@@ -509,7 +521,7 @@ public class User {
 
         if(user.checkWeeklyProgramDate(context)){
             user.generateWeeklyProgram(context);
-            User.saveProgram(context, user.getWorkoutDuration(), user.getPulseZone(), user.getWalkRunIntervals());
+            User.saveProgram(context, user.getWorkoutDuration(), user.getPulseZone(), user.getWalkRunIntervals(), user.getPulseZoneIntervals());
         }
 
         user.generateDailyReccomendation(context);
@@ -527,42 +539,15 @@ public class User {
      * Saves workout duration and pulse_zone to the database
      * @param walkRunIntervals Walk/Run intervals of the workout. Can be null.
      */
-    public static void saveProgram(Context context, float workout_duration, int pulse_zone, long[] walkRunIntervals) {
+    public static void saveProgram(Context context, float workout_duration, int pulse_zone, long[] walkRunIntervals, int[] pulseZoneIntervals) {
         Log.i("TEST", "saving program...");
-        Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_WORKOUT_INTERVALS, User.parseWorkoutIntervals(walkRunIntervals), FeedReaderDbHelper.SHARED_PREFS_SPORT);
+        Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_WORKOUT_INTERVALS, walkRunIntervals == null ? new long[0] : walkRunIntervals, FeedReaderDbHelper.SHARED_PREFS_SPORT);
+        Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_PULSE_ZONE_INTERVALS, pulseZoneIntervals == null ? new int[0] : pulseZoneIntervals, FeedReaderDbHelper.SHARED_PREFS_SPORT);
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_DURATION, workout_duration, FeedReaderDbHelper.SHARED_PREFS_SPORT);
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_PULSE_ZONE, pulse_zone, FeedReaderDbHelper.SHARED_PREFS_SPORT);
     }
 
-    /**
-     * Fixes the workout interval array in case it contains an uneven number of elements.
-     * For example, it doesn't make sense to have this array of intervals:
-     * {10L, 5L, 10L}
-     * Since it is the same as the following:
-     * {20L, 5L}
-     *
-     * The main reason this method exists is because workout interval arrays with uneven length
-     * cause problems in WorkoutFragment
-     * @param intervals The intervals to be fixed
-     * @return A fixed array
-     */
-    public static long[] parseWorkoutIntervals(long[] intervals){
-        if(intervals == null){
-            return new long[0];
-        }
-        if(intervals.length % 2 != 0 && intervals.length > 1){
-            long[] fixedIntervals = new long[intervals.length-1];
-            for(int i = 0; i < intervals.length-1; i++){
-                if(i == 0){
-                    fixedIntervals[i] = intervals[i] + intervals[intervals.length-1];
-                }else{
-                    fixedIntervals[i] = intervals[i];
-                }
-            }
-            return fixedIntervals;
-        }
-        return intervals;
-    }
+
 
     /**
      * Gets all measurements that the user has made.
@@ -574,13 +559,13 @@ public class User {
 
 
     /**
-     * Determines whether a weekly program should be generated or not and sets @firstWeeklyDate and @lastWeeklyDate.
+     * Determines whether a weekly program should be generated or not and sets {@link #firstWeeklyDate} and {@link #lastWeeklyDate}.
      *
-     * True will be returned and @lastWeeklyDate will be set to today if either of these conditions are met:
+     * True will be returned and {@link #lastWeeklyDate} will be set to today if either of these conditions are met:
      *    There is no saved lastWeeklyDate.
      *    lastWeeklyDate is at least one week behind current date.
      *
-     * The variable @firstWeeklyDate will be set to today if any of the following conditions are met:
+     * The variable {@link #firstWeeklyDate} will be set to today if any of the following conditions are met:
      *     There is no saved firstWeeklyDate
      *     firstWeeklyDate is at least two weeks behind
      *
@@ -641,8 +626,10 @@ public class User {
         if(programWeekProgress < WEEKLY_INTERVAL_PROGRAM.length){
 
             setWalkRunIntervals(WEEKLY_INTERVAL_PROGRAM[programWeekProgress]);
+            setPulseZoneIntervals(WEEKLY_PULSE_ZONE_PROGRAM[programWeekProgress]);
         }else{
-            setWalkRunIntervals(new long[]{1});
+            setWalkRunIntervals(new long[1]);
+            setPulseZoneIntervals(new int[]{2});
         }
 
         //First time
@@ -1059,6 +1046,12 @@ public class User {
         this.walkRunIntervals = walkRunIntervals;
     }
 
+    private void setPulseZoneIntervals(int[] pulseZoneIntervals){
+        this.pulseZoneIntervals = pulseZoneIntervals;
+    }
+    public int[] getPulseZoneIntervals(){
+        return pulseZoneIntervals;
+    }
     public long[] getWalkRunIntervals() {
         return walkRunIntervals;
     }

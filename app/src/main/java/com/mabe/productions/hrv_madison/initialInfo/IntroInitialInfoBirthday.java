@@ -80,7 +80,7 @@ public class IntroInitialInfoBirthday extends AppCompatActivity {
 
 //        startActivity(new Intent(this, IntroInitialBaseProgram.class));
         //todo: remove this dummy program
-        User.saveProgram(this, 30f, 2, null);
+        User.saveProgram(this, 30f, 2, null, null);
         startActivity(new Intent(this, IntroInitialDaySelection.class));
     }
 

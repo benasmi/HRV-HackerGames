@@ -171,6 +171,7 @@ public class WorkoutFragment extends Fragment {
     private MediaPlayer mediaPlayer;
 
     private long[] walkRunIntervals;
+    private int[] pulseZoneIntervals;
 
     @Nullable
     @Override
@@ -262,6 +263,7 @@ public class WorkoutFragment extends Fragment {
         reccomended_duration.setText("" + (int) user.getWorkoutDuration());
         reccomended_pulse.setText(user.getPulseZone() + "" + Utils.getNumberSuffix(user.getPulseZone()));
         walkRunIntervals = user.getWalkRunIntervals();
+        pulseZoneIntervals = user.getPulseZoneIntervals();
     }
 
     private void initializeAnimations() {
@@ -1291,10 +1293,12 @@ public class WorkoutFragment extends Fragment {
             if(walkRunIntervals.length % 2 == 0){
                 if(current_exercise != EXERCISE_JOGGING){
                     setExercise(EXERCISE_JOGGING);
+                    pulseZoneView.setRequiredPulseZone(pulseZoneIntervals[0]);
                 }
             }else {
                 if(current_exercise != EXERCISE_WALKING){
                     setExercise(EXERCISE_WALKING);
+                    pulseZoneView.setRequiredPulseZone(pulseZoneIntervals[0]);
                 }
             }
             return;
@@ -1314,11 +1318,15 @@ public class WorkoutFragment extends Fragment {
                     if(current_exercise != EXERCISE_WALKING){
                         setExercise(EXERCISE_WALKING);
                     }
+                    int x = pulseZoneIntervals[i];
+                    pulseZoneView.setRequiredPulseZone(pulseZoneIntervals[i]);
                     setProgressBarDuration((int) (upperBound-lowerBound), (int) (currentCycleProgress-lowerBound), false);
                 }else{
                     if(current_exercise != EXERCISE_JOGGING){
                         setExercise(EXERCISE_JOGGING);
                     }
+                    int x = pulseZoneIntervals[i];
+                    pulseZoneView.setRequiredPulseZone(pulseZoneIntervals[i]);
                     setProgressBarDuration((int) (upperBound-lowerBound), (int) (currentCycleProgress-lowerBound), true);
 
                 }

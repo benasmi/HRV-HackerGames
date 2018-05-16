@@ -89,6 +89,7 @@ public class PulseZoneView extends View {
 
     public void setRequiredPulseZone(int requiredPulseZone) {
         this.requiredPulseZone = requiredPulseZone;
+        invalidate();
     }
 
     public float getProgressPercentage() {
@@ -115,14 +116,4 @@ public class PulseZoneView extends View {
 
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        Random r = new Random();
-        int Low = 10;
-        int High = 100;
-        int Result = r.nextInt(High-Low) + Low;
-        setProgressPercentage(Result/100f);
-        return super.onTouchEvent(event);
-
-    }
 }
