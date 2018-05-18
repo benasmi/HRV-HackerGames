@@ -670,7 +670,7 @@ public class User {
         if(programWeekProgress < WEEKLY_INTERVAL_PROGRAM.length){
             exercise = WEEKLY_INTERVAL_PROGRAM[programWeekProgress];
         }else{
-            exercise = new Exercise(new long[0], new int[]{pulse_zone}, new int[]{});
+            exercise = new Exercise(new long[0], new int[]{pulse_zone}, new int[]{pulse_zone});
         }
 
         //First time
@@ -741,6 +741,33 @@ public class User {
         }
 
         return "not supported";
+    }
+
+    public int getMaximumPulseZone(){
+        int[] runningPulseZones = getExercise().getRunningPulseZones();
+        int[] walkingPulseZones = getExercise().getWalkingPulseZones();
+
+        if(walkingPulseZones.length != 0 && runningPulseZones.length != 0){
+            return Math.max(Utils.maxNum(runningPulseZones), Utils.maxNum(walkingPulseZones));
+        }else if(walkingPulseZones.length == 0){
+            return Utils.maxNum(runningPulseZones);
+        }else if(runningPulseZones.length == 0){
+            return Utils.maxNum(walkingPulseZones);
+        }
+        return 0;
+    }
+    public int getMinimumPulseZone(){
+        int[] runningPulseZones = getExercise().getRunningPulseZones();
+        int[] walkingPulseZones = getExercise().getWalkingPulseZones();
+
+        if(walkingPulseZones.length != 0 && runningPulseZones.length != 0){
+            return Math.min(Utils.minNum(runningPulseZones), Utils.minNum(walkingPulseZones));
+        }else if(walkingPulseZones.length == 0){
+            return Utils.minNum(runningPulseZones);
+        }else if(runningPulseZones.length == 0){
+            return Utils.minNum(walkingPulseZones);
+        }
+        return 0;
     }
 
     /**

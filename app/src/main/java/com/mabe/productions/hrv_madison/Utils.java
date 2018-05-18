@@ -417,13 +417,32 @@ public class Utils {
         return manager.isProviderEnabled( LocationManager.GPS_PROVIDER );
     }
 
-    public static final boolean intArrayContains(int[] array, int num){
+    public static boolean intArrayContains(int[] array, int num){
         for (int i = 0; i < array.length; i++){
             if(array[i] == num){
                 return true;
             }
         }
         return false;
+    }
+
+    public static int maxNum(int[] array){
+        int maxX = array[0];
+        for(int x : array){
+            if(x > maxX){
+                maxX = x;
+            }
+        }
+        return maxX;
+    }
+    public static int minNum(int[] array){
+        int minX = array[0];
+        for(int x : array){
+            if(x < minX){
+                minX = x;
+            }
+        }
+        return minX;
     }
 
 }

@@ -260,7 +260,16 @@ public class WorkoutFragment extends Fragment {
         editText_minutes.setText("" + (int) user.getWorkoutDuration());
         editText_seconds.setText("00");
         reccomended_duration.setText("" + (int) user.getWorkoutDuration());
-        reccomended_pulse.setText(user.getPulseZone() + "" + Utils.getNumberSuffix(user.getPulseZone()));
+
+        int minPulseZone = user.getMinimumPulseZone();
+        int maxPulseZone = user.getMaximumPulseZone();
+
+        if(minPulseZone == maxPulseZone){
+            reccomended_pulse.setText(minPulseZone);
+        }else{
+            reccomended_pulse.setText(minPulseZone + "-" + maxPulseZone);
+        }
+
         exercise = user.getExercise();
     }
 
@@ -831,18 +840,8 @@ public class WorkoutFragment extends Fragment {
         int min_pulse = 0;
         int max_pulse = 0;
 
-        int lowest_pulse_zone = 5;
-        int highest_pulse_zone = 0;
-
-        //Finding pulse zone bounds
-        for(int pulseZone : required_pulse_zones){
-            if (pulseZone < lowest_pulse_zone){
-                lowest_pulse_zone = pulseZone;
-            }
-            if (pulseZone > highest_pulse_zone) {
-                highest_pulse_zone = pulseZone;
-            }
-        }
+        int lowest_pulse_zone = Utils.minNum(required_pulse_zones);
+        int highest_pulse_zone = Utils.maxNum(required_pulse_zones);
 
         //Setting hrMax
         if (highest_pulse_zone == 1) {
@@ -1281,19 +1280,8 @@ public class WorkoutFragment extends Fragment {
 
     private void setIntensityStatus(TextView intensityStatusView, int[] requiredPulseZones, int currentPulseZone) {
 
-        int lowest_pulse_zone = 5;
-        int highest_pulse_zone = 0;
-
-        //Finding pulse zone bounds
-        for(int pulseZone : requiredPulseZones){
-            if (pulseZone < lowest_pulse_zone){
-                lowest_pulse_zone = pulseZone;
-            }
-            if (pulseZone > highest_pulse_zone) {
-                highest_pulse_zone = pulseZone;
-            }
-        }
-
+        int lowest_pulse_zone = Utils.minNum(requiredPulseZones);
+        int highest_pulse_zone = Utils.maxNum(requiredPulseZones);
 
         if (currentPulseZone >= lowest_pulse_zone && currentPulseZone <= highest_pulse_zone) {
             intensityStatusView.setText("Intensity: Optimal");
