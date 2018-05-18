@@ -417,4 +417,13 @@ public class Utils {
         return manager.isProviderEnabled( LocationManager.GPS_PROVIDER );
     }
 
+    public static final boolean intArrayContains(int[] array, int num){
+        for (int i = 0; i < array.length; i++){
+            if(array[i] == num){
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

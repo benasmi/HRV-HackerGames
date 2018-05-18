@@ -3,22 +3,11 @@ package com.mabe.productions.hrv_madison;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.RectF;
-import android.graphics.Region;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-
-import java.util.Random;
 
 /**
  * Created by Benas on 4/22/2018.
@@ -35,7 +24,7 @@ public class PulseZoneView extends View {
 
 
 
-    private int requiredPulseZone = 0;
+    private int[] requiredPulseZones = {1, 2};
     private float progressPercentage = 5f;
 
     private Context context;
@@ -60,21 +49,21 @@ public class PulseZoneView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        int pulseZone = getRequiredPulseZone();
         float progress = getProgressPercentage();
         Log.i("TEST", "DrawProgress: " + progress);
         int width = canvas.getWidth();
         int height = canvas.getHeight();
-        (pulseZone==1 ? selectedElement : basicElement).setBounds(PULSE_ZONE_ELEMET_PADDING/2,0, (int) (width*PULSE_ZONE_ELEMET_WIDTH)-PULSE_ZONE_ELEMET_PADDING/2, (int) (height*PULSE_ZONE_ELEMET_HEIGHT));
-        (pulseZone==1 ? selectedElement : basicElement).draw(canvas);
-        (pulseZone==2 ? selectedElement : basicElement).setBounds((int) (width*PULSE_ZONE_ELEMET_WIDTH)+PULSE_ZONE_ELEMET_PADDING/2,0, (int) (width*PULSE_ZONE_ELEMET_WIDTH*2)-PULSE_ZONE_ELEMET_PADDING/2, (int) (height*PULSE_ZONE_ELEMET_HEIGHT));
-        (pulseZone==2 ? selectedElement : basicElement).draw(canvas);
-        (pulseZone==3 ? selectedElement : basicElement).setBounds((int) (width*PULSE_ZONE_ELEMET_WIDTH*2)+PULSE_ZONE_ELEMET_PADDING/2,0, (int) (width*PULSE_ZONE_ELEMET_WIDTH*3)-PULSE_ZONE_ELEMET_PADDING/2, (int) (height*PULSE_ZONE_ELEMET_HEIGHT));
-        (pulseZone==3 ? selectedElement : basicElement).draw(canvas);
-        (pulseZone==4 ? selectedElement : basicElement).setBounds((int) (width*PULSE_ZONE_ELEMET_WIDTH*3)+PULSE_ZONE_ELEMET_PADDING/2,0, (int) (width*PULSE_ZONE_ELEMET_WIDTH*4)-PULSE_ZONE_ELEMET_PADDING/2, (int) (height*PULSE_ZONE_ELEMET_HEIGHT));
-        (pulseZone==4 ? selectedElement : basicElement).draw(canvas);
-        (pulseZone==5 ? selectedElement : basicElement).setBounds((int) (width*PULSE_ZONE_ELEMET_WIDTH*4)+PULSE_ZONE_ELEMET_PADDING/2,0, (int) (width*PULSE_ZONE_ELEMET_WIDTH*5)-PULSE_ZONE_ELEMET_PADDING/2, (int) (height*PULSE_ZONE_ELEMET_HEIGHT));
-        (pulseZone==5 ? selectedElement : basicElement).draw(canvas);
+
+        (Utils.intArrayContains(getRequiredPulseZones(), 1) ? selectedElement : basicElement).setBounds(PULSE_ZONE_ELEMET_PADDING/2,0, (int) (width*PULSE_ZONE_ELEMET_WIDTH)-PULSE_ZONE_ELEMET_PADDING/2, (int) (height*PULSE_ZONE_ELEMET_HEIGHT));
+        (Utils.intArrayContains(getRequiredPulseZones(), 1) ? selectedElement : basicElement).draw(canvas);
+        (Utils.intArrayContains(getRequiredPulseZones(), 2) ? selectedElement : basicElement).setBounds((int) (width*PULSE_ZONE_ELEMET_WIDTH)+PULSE_ZONE_ELEMET_PADDING/2,0, (int) (width*PULSE_ZONE_ELEMET_WIDTH*2)-PULSE_ZONE_ELEMET_PADDING/2, (int) (height*PULSE_ZONE_ELEMET_HEIGHT));
+        (Utils.intArrayContains(getRequiredPulseZones(), 2) ? selectedElement : basicElement).draw(canvas);
+        (Utils.intArrayContains(getRequiredPulseZones(), 3) ? selectedElement : basicElement).setBounds((int) (width*PULSE_ZONE_ELEMET_WIDTH*2)+PULSE_ZONE_ELEMET_PADDING/2,0, (int) (width*PULSE_ZONE_ELEMET_WIDTH*3)-PULSE_ZONE_ELEMET_PADDING/2, (int) (height*PULSE_ZONE_ELEMET_HEIGHT));
+        (Utils.intArrayContains(getRequiredPulseZones(), 3) ? selectedElement : basicElement).draw(canvas);
+        (Utils.intArrayContains(getRequiredPulseZones(), 4) ? selectedElement : basicElement).setBounds((int) (width*PULSE_ZONE_ELEMET_WIDTH*3)+PULSE_ZONE_ELEMET_PADDING/2,0, (int) (width*PULSE_ZONE_ELEMET_WIDTH*4)-PULSE_ZONE_ELEMET_PADDING/2, (int) (height*PULSE_ZONE_ELEMET_HEIGHT));
+        (Utils.intArrayContains(getRequiredPulseZones(), 4) ? selectedElement : basicElement).draw(canvas);
+        (Utils.intArrayContains(getRequiredPulseZones(), 5) ? selectedElement : basicElement).setBounds((int) (width*PULSE_ZONE_ELEMET_WIDTH*4)+PULSE_ZONE_ELEMET_PADDING/2,0, (int) (width*PULSE_ZONE_ELEMET_WIDTH*5)-PULSE_ZONE_ELEMET_PADDING/2, (int) (height*PULSE_ZONE_ELEMET_HEIGHT));
+        (Utils.intArrayContains(getRequiredPulseZones(), 5) ? selectedElement : basicElement).draw(canvas);
 
         elementSelector.draw(canvas);
     }
@@ -83,12 +72,12 @@ public class PulseZoneView extends View {
         elementSelector.setBounds((int) (getWidth()*multiplier)-PULSE_ZONE_ELEMET_SELECTOR_WIDTH, (int) ((getHeight()*PULSE_ZONE_ELEMET_HEIGHT)+PULSE_ZONE_ELEMET_SELECTOR_HEIGHT_PADDING), (int) (getWidth()*multiplier + PULSE_ZONE_ELEMET_SELECTOR_WIDTH),getHeight());
     }
 
-    public int getRequiredPulseZone() {
-        return requiredPulseZone;
+    public int[] getRequiredPulseZones() {
+        return requiredPulseZones;
     }
 
-    public void setRequiredPulseZone(int requiredPulseZone) {
-        this.requiredPulseZone = requiredPulseZone;
+    public void setRequiredPulseZones(int[] requiredPulseZones) {
+        this.requiredPulseZones = requiredPulseZones;
         invalidate();
     }
 

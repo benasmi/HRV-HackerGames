@@ -14,7 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -47,6 +46,7 @@ import android.widget.Toast;
 import com.budiyev.android.circularprogressbar.CircularProgressBar;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.maps.model.LatLng;
+import com.mabe.productions.hrv_madison.Exercise;
 import com.mabe.productions.hrv_madison.FrequentlyAskedActivity;
 import com.mabe.productions.hrv_madison.GoogleMapService;
 import com.mabe.productions.hrv_madison.MainScreenActivity;
@@ -170,8 +170,7 @@ public class WorkoutFragment extends Fragment {
 
     private MediaPlayer mediaPlayer;
 
-    private long[] walkRunIntervals;
-    private int[] pulseZoneIntervals;
+    private Exercise exercise;
 
     @Nullable
     @Override
@@ -257,13 +256,12 @@ public class WorkoutFragment extends Fragment {
     public void updateData() {
         User user = User.getUser(getContext());
         required_pulse_zone = user.getPulseZone();
-        pulseZoneView.setRequiredPulseZone(required_pulse_zone);
+        //pulseZoneView.setRequiredPulseZones(required_pulse_zone);
         editText_minutes.setText("" + (int) user.getWorkoutDuration());
         editText_seconds.setText("00");
         reccomended_duration.setText("" + (int) user.getWorkoutDuration());
         reccomended_pulse.setText(user.getPulseZone() + "" + Utils.getNumberSuffix(user.getPulseZone()));
-        walkRunIntervals = user.getWalkRunIntervals();
-        pulseZoneIntervals = user.getPulseZoneIntervals();
+        exercise = user.getExercise();
     }
 
     private void initializeAnimations() {
@@ -810,11 +808,11 @@ public class WorkoutFragment extends Fragment {
             pulse_zone = pulseZone(gender, age, bpm);
             float realPercentage = calculateUIMultiplier(HRMax * 0.5f, HRMax, bpm);
             pulseZoneView.setProgressPercentageWithAnim(realPercentage);
-            setIntensityStatus(txt_intensity, required_pulse_zone, pulse_zone);
+            setIntensityStatus(txt_intensity, pulseZoneView.getRequiredPulseZones(), pulse_zone);
             txt_calories_burned.setText(String.valueOf(Math.round(calories_burned * 100.0) / 100.0)); //Rounding and displaying calories
 
             if(vibrateState){
-            vibrateByPulseZone(required_pulse_zone, HRMax, bpm);
+                vibrateByPulseZone(pulseZoneView.getRequiredPulseZones(), HRMax, bpm);
             }
         }
     }
@@ -824,30 +822,51 @@ public class WorkoutFragment extends Fragment {
      * If a timer is currently running, it is cancelled, and the new one with updated data is started.
      * Timer is stored in vibrationTimer field.
      *
-     * @param required_pulse_zone The pulse zone user has to be in. Can be an integer from 1 to 5.
+     * @param required_pulse_zones The pulse zone user has to be in. Can be an integer from 1 to 5.
      * @param HRMax               The maximum BPM user can withstand. Can be calculated from age and gender.
      * @param heartRate           The current user's heart rate in BPM
      */
-    private void vibrateByPulseZone(int required_pulse_zone, float HRMax, int heartRate) {
+    private void vibrateByPulseZone(int[] required_pulse_zones, float HRMax, int heartRate) {
 
         int min_pulse = 0;
         int max_pulse = 0;
 
-        if (required_pulse_zone == 1) {
-            min_pulse = (int) (HRMax * 0.5f);
+        int lowest_pulse_zone = 5;
+        int highest_pulse_zone = 0;
+
+        //Finding pulse zone bounds
+        for(int pulseZone : required_pulse_zones){
+            if (pulseZone < lowest_pulse_zone){
+                lowest_pulse_zone = pulseZone;
+            }
+            if (pulseZone > highest_pulse_zone) {
+                highest_pulse_zone = pulseZone;
+            }
+        }
+
+        //Setting hrMax
+        if (highest_pulse_zone == 1) {
             max_pulse = (int) (HRMax * 0.6f);
-        } else if (required_pulse_zone == 2) {
-            min_pulse = (int) (HRMax * 0.6f);
+        } else if (highest_pulse_zone == 2) {
             max_pulse = (int) (HRMax * 0.7f);
-        } else if (required_pulse_zone == 3) {
-            min_pulse = (int) (HRMax * 0.7f);
+        } else if (highest_pulse_zone == 3) {
             max_pulse = (int) (HRMax * 0.8f);
-        } else if (required_pulse_zone == 4) {
-            min_pulse = (int) (HRMax * 0.8f);
+        } else if (highest_pulse_zone == 4) {
             max_pulse = (int) (HRMax * 0.9f);
-        } else if (required_pulse_zone == 5) {
-            min_pulse = (int) (HRMax * 0.9f);
+        } else if (highest_pulse_zone == 5) {
             max_pulse = (int) (HRMax * 1f);
+        }
+        //Setting hrMin
+        if (lowest_pulse_zone == 1) {
+            min_pulse = (int) (HRMax * 0.5f);
+        } else if (lowest_pulse_zone == 2) {
+            min_pulse = (int) (HRMax * 0.6f);
+        } else if (lowest_pulse_zone == 3) {
+            min_pulse = (int) (HRMax * 0.7f);
+        } else if (lowest_pulse_zone == 4) {
+            min_pulse = (int) (HRMax * 0.8f);
+        } else if (lowest_pulse_zone == 5) {
+            min_pulse = (int) (HRMax * 0.9f);
         }
 
         final long vibrationPeriod;
@@ -949,7 +968,7 @@ public class WorkoutFragment extends Fragment {
                             Log.i("TEST", "Setting progressBar duration 2nd if...");
 
                             //Checking if intervals are enabled.
-                            if(walkRunIntervals.length <= 1){
+                            if(exercise.getWorkoutIntervals().length <= 1){
                                 setProgressBarDuration((int) userSpecifiedWorkoutDuration, (int) (userSpecifiedWorkoutDuration - timePassed), true);
                             }
 
@@ -964,7 +983,7 @@ public class WorkoutFragment extends Fragment {
                             }
                         }else{
                             //Checking if intervals are enabled.
-                            if(walkRunIntervals.length <= 1){
+                            if(exercise.getWorkoutIntervals().length <= 1){
                                 setProgressBarDuration(1,1, false);
                             }
                             setState(STATE_TIME_ENDED);
@@ -1260,12 +1279,27 @@ public class WorkoutFragment extends Fragment {
 
     }
 
-    private void setIntensityStatus(TextView intensityStatusView, int requiredPulseZone, int currentPulseZone) {
-        if (currentPulseZone == requiredPulseZone) {
+    private void setIntensityStatus(TextView intensityStatusView, int[] requiredPulseZones, int currentPulseZone) {
+
+        int lowest_pulse_zone = 5;
+        int highest_pulse_zone = 0;
+
+        //Finding pulse zone bounds
+        for(int pulseZone : requiredPulseZones){
+            if (pulseZone < lowest_pulse_zone){
+                lowest_pulse_zone = pulseZone;
+            }
+            if (pulseZone > highest_pulse_zone) {
+                highest_pulse_zone = pulseZone;
+            }
+        }
+
+
+        if (currentPulseZone >= lowest_pulse_zone && currentPulseZone <= highest_pulse_zone) {
             intensityStatusView.setText("Intensity: Optimal");
-        } else if (currentPulseZone < requiredPulseZone) {
+        } else if (currentPulseZone < lowest_pulse_zone) {
             intensityStatusView.setText("Intensity: Too low!");
-        } else if (currentPulseZone > requiredPulseZone) {
+        } else if (currentPulseZone > highest_pulse_zone) {
             intensityStatusView.setText("Intensity: Too high!");
         }
 
@@ -1285,20 +1319,20 @@ public class WorkoutFragment extends Fragment {
 
         //Calculating the total duration of a cycle
         long cycleDuration = 0;
-        for(long interval : walkRunIntervals){
+        for(long interval : exercise.getWorkoutIntervals()){
             cycleDuration+=interval*1000L;
         }
 
         if(cycleDuration == 0){
-            if(walkRunIntervals.length % 2 == 0){
+            if(exercise.getWorkoutIntervals().length % 2 == 0){
                 if(current_exercise != EXERCISE_JOGGING){
                     setExercise(EXERCISE_JOGGING);
-                    pulseZoneView.setRequiredPulseZone(pulseZoneIntervals[0]);
+                    pulseZoneView.setRequiredPulseZones(exercise.getRunningPulseZones());
                 }
             }else {
                 if(current_exercise != EXERCISE_WALKING){
                     setExercise(EXERCISE_WALKING);
-                    pulseZoneView.setRequiredPulseZone(pulseZoneIntervals[0]);
+                    pulseZoneView.setRequiredPulseZones(exercise.getWalkingPulseZones());
                 }
             }
             return;
@@ -1308,9 +1342,9 @@ public class WorkoutFragment extends Fragment {
         long currentCycleProgress = timePassed - cycleDuration*timesCycleCompleted;
 
         long intervalSum = 0;
-        for(int i = 0; i < walkRunIntervals.length; i++){
+        for(int i = 0; i < exercise.getWorkoutIntervals().length; i++){
             long lowerBound = intervalSum;
-            intervalSum+=walkRunIntervals[i]*1000L;
+            intervalSum+=exercise.getWorkoutIntervals()[i]*1000L;
             long upperBound = intervalSum;
             if(currentCycleProgress <= upperBound && currentCycleProgress >= lowerBound){
 
@@ -1318,15 +1352,13 @@ public class WorkoutFragment extends Fragment {
                     if(current_exercise != EXERCISE_WALKING){
                         setExercise(EXERCISE_WALKING);
                     }
-                    int x = pulseZoneIntervals[i];
-                    pulseZoneView.setRequiredPulseZone(pulseZoneIntervals[i]);
+                    pulseZoneView.setRequiredPulseZones(exercise.getWalkingPulseZones());
                     setProgressBarDuration((int) (upperBound-lowerBound), (int) (currentCycleProgress-lowerBound), false);
                 }else{
                     if(current_exercise != EXERCISE_JOGGING){
                         setExercise(EXERCISE_JOGGING);
                     }
-                    int x = pulseZoneIntervals[i];
-                    pulseZoneView.setRequiredPulseZone(pulseZoneIntervals[i]);
+                    pulseZoneView.setRequiredPulseZones(exercise.getRunningPulseZones());
                     setProgressBarDuration((int) (upperBound-lowerBound), (int) (currentCycleProgress-lowerBound), true);
 
                 }

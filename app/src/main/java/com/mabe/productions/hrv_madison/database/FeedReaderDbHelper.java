@@ -68,7 +68,8 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public static final String FIELD_DURATION = "duration";
     public static final String FIELD_PULSE_ZONE = "pulse_zone";
     public static final String FIELD_WORKOUT_INTERVALS = "workout_intervals";
-    public static final String FIELD_PULSE_ZONE_INTERVALS = "pulse_zone_intervals";
+    public static final String FIELD_RUNNING_PULSE_ZONES = "running_pulse_zones";
+    public static final String FIELD_WALKING_PULSE_ZONES = "walking_pulse_zones";
     public static final String FIELD_LAST_TIME_GENERATED_WEEKLY = "last_weekly_generated_date";
     public static final String FIELD_FIRST_TIME_GENERATED_WEEKLY = "first_weekly_generated_date";
 

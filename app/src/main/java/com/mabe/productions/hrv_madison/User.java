@@ -71,38 +71,70 @@ public class User {
     private Date firstWeeklyDate;
     private Date lastWeeklyDate;
 
-    /*
-     * The intervals of workout's walk/run ratio.
-     * Every second element of the array represents running duration.
-     * {walking_duration, running_duration, walking_duration, running_duration...}
-     * Specified in seconds
-     */
-    private long[] walkRunIntervals = {};
-    private int[] pulseZoneIntervals = {3};
 
-    public static final long[][] WEEKLY_INTERVAL_PROGRAM = {
-            {0L}, /* Walking (No intervals) */
-            {0L},
-            {0L},
-            {120L, 60L},
-            {120L, 60L},
-            {120L, 60L},
-            {60L, 60L},
-            {}, /* Jogging (No intervals) */
-    };
-    //Kolkas sukuriu tik array, nes daug reiktu keisti.
-    //Paskui galesim padaryti su klase
-    public static final int[][] WEEKLY_PULSE_ZONE_PROGRAM = {
-            {2},
-            {2},
-            {2},
-            {2, 3},
-            {2, 3},
-            {2, 3},
-            {2, 3},
-            {2},
-    };
+    public static final Exercise[] WEEKLY_INTERVAL_PROGRAM =
+            {
+                    new Exercise(
+                            new long[]{0}, //Walk/Run intervals
+                            new int[]{}, //Running pulse zones
+                            new int[]{1, 2} //Walking pulse zones
+                            ),
 
+                    new Exercise(
+                            new long[]{0}, //Walk-only workout
+                            new int[]{},
+                            new int[]{1, 2}
+                    ),
+
+                    new Exercise(
+                            new long[]{0},
+                            new int[]{},
+                            new int[]{1, 2}
+                    )           ,
+
+                    new Exercise(
+                            new long[]{120, 60},
+                            new int[]{3, 2},
+                            new int[]{3, 2}
+                    ),
+                    new Exercise(
+                            new long[]{120, 60},
+                            new int[]{3, 2},
+                            new int[]{3, 2}
+                    ),
+                    new Exercise(
+                            new long[]{120, 60},
+                            new int[]{3, 2},
+                            new int[]{3, 2}
+                    ),
+                    new Exercise(
+                            new long[]{90, 90},
+                            new int[]{3, 2},
+                            new int[]{3, 2}
+                    ),
+                    new Exercise(
+                            new long[]{90, 90},
+                            new int[]{3, 2},
+                            new int[]{3, 2}
+                    ),
+                    new Exercise(
+                            new long[]{60, 120},
+                            new int[]{3, 2},
+                            new int[]{3, 2}
+                    ),
+                    new Exercise(
+                            new long[]{60, 180},
+                            new int[]{3, 2},
+                            new int[]{3, 2}
+                    ),
+                    new Exercise(
+                            new long[]{60, 300},
+                            new int[]{3, 2},
+                            new int[]{3, 2}
+                    ),
+            };
+
+    private Exercise exercise = new Exercise();
 
     private Date last_generated_weekly_date;
     public float second_last_week_hrv;
@@ -513,8 +545,13 @@ public class User {
         user.setPulseZone(Utils.readFromSharedPrefs_int(context, FeedReaderDbHelper.FIELD_PULSE_ZONE, FeedReaderDbHelper.SHARED_PREFS_SPORT));
         user.setWeekDays(Utils.readFromSharedPrefs_boolarray(context, FeedReaderDbHelper.FIELD_WEEK_DAYS, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
         user.setLastGeneratedWeeklyDate(Utils.getDateFromString(Utils.readFromSharedPrefs_string(context, FeedReaderDbHelper.FIELD_LAST_TIME_GENERATED_WEEKLY, FeedReaderDbHelper.SHARED_PREFS_SPORT)));
-        user.setWalkRunIntervals(Utils.readFromSharedPrefs_longarray(context, FeedReaderDbHelper.FIELD_WORKOUT_INTERVALS, FeedReaderDbHelper.SHARED_PREFS_SPORT));
-        user.setPulseZoneIntervals(Utils.readFromSharedPrefs_intarray(context, FeedReaderDbHelper.FIELD_PULSE_ZONE_INTERVALS, FeedReaderDbHelper.SHARED_PREFS_SPORT));
+
+        //Creating an exercise object using database data
+        Exercise exercise = new Exercise();
+        exercise.setWorkoutIntervals(Utils.readFromSharedPrefs_longarray(context, FeedReaderDbHelper.FIELD_WORKOUT_INTERVALS, FeedReaderDbHelper.SHARED_PREFS_SPORT));
+        exercise.setWalkingPulseZones(Utils.readFromSharedPrefs_intarray(context, FeedReaderDbHelper.FIELD_WALKING_PULSE_ZONES, FeedReaderDbHelper.SHARED_PREFS_SPORT));
+        exercise.setRunningPulseZones(Utils.readFromSharedPrefs_intarray(context, FeedReaderDbHelper.FIELD_RUNNING_PULSE_ZONES, FeedReaderDbHelper.SHARED_PREFS_SPORT));
+        user.setExercise(exercise);
 
         //Dummy data
         user.setSelectedSport(SPORT_JOGGING);
@@ -525,7 +562,7 @@ public class User {
 
         if(user.checkWeeklyProgramDate(context)){
             user.generateWeeklyProgram(context);
-            User.saveProgram(context, user.getWorkoutDuration(), user.getPulseZone(), user.getWalkRunIntervals(), user.getPulseZoneIntervals());
+            User.saveProgram(context, user.getWorkoutDuration(), user.getPulseZone(), user.getExercise());
         }
 
         user.generateDailyReccomendation(context);
@@ -541,12 +578,15 @@ public class User {
 
     /**
      * Saves workout duration and pulse_zone to the database
-     * @param walkRunIntervals Walk/Run intervals of the workout. Can be null.
+     * @param exercise The exercise of workout.
      */
-    public static void saveProgram(Context context, float workout_duration, int pulse_zone, long[] walkRunIntervals, int[] pulseZoneIntervals) {
+    public static void saveProgram(Context context, float workout_duration, int pulse_zone, Exercise exercise) {
         Log.i("TEST", "saving program...");
-        Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_WORKOUT_INTERVALS, walkRunIntervals == null ? new long[0] : walkRunIntervals, FeedReaderDbHelper.SHARED_PREFS_SPORT);
-        Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_PULSE_ZONE_INTERVALS, pulseZoneIntervals == null ? new int[0] : pulseZoneIntervals, FeedReaderDbHelper.SHARED_PREFS_SPORT);
+        if(exercise != null){
+            Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_WORKOUT_INTERVALS, exercise.getWorkoutIntervals() , FeedReaderDbHelper.SHARED_PREFS_SPORT);
+            Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_RUNNING_PULSE_ZONES, exercise.getRunningPulseZones(), FeedReaderDbHelper.SHARED_PREFS_SPORT);
+            Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_WALKING_PULSE_ZONES, exercise.getWalkingPulseZones(), FeedReaderDbHelper.SHARED_PREFS_SPORT);
+        }
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_DURATION, workout_duration, FeedReaderDbHelper.SHARED_PREFS_SPORT);
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_PULSE_ZONE, pulse_zone, FeedReaderDbHelper.SHARED_PREFS_SPORT);
     }
@@ -628,12 +668,9 @@ public class User {
         int programWeekProgress = Utils.calendoricWeekDifference(firstWeeklyDate, Calendar.getInstance().getTime());
         Log.i("TEST", "week diff: " + programWeekProgress);
         if(programWeekProgress < WEEKLY_INTERVAL_PROGRAM.length){
-
-            setWalkRunIntervals(WEEKLY_INTERVAL_PROGRAM[programWeekProgress]);
-            setPulseZoneIntervals(WEEKLY_PULSE_ZONE_PROGRAM[programWeekProgress]);
+            exercise = WEEKLY_INTERVAL_PROGRAM[programWeekProgress];
         }else{
-            setWalkRunIntervals(new long[1]);
-            setPulseZoneIntervals(new int[]{2});
+            exercise = new Exercise(new long[0], new int[]{pulse_zone}, new int[]{});
         }
 
         //First time
@@ -642,11 +679,9 @@ public class User {
             //Weak duration
             if (activity_index < 30) {
                 workout_duration = LOW_INITIAL_WORKOUT_DURATION;
-                pulse_zone = 1;
             } else {
                 //Fit duration
                 workout_duration = HIGH_INITIAL_WORKOUT_DURATION;
-                pulse_zone = 2 ;
             }
             return "Jums sugeneruota pirmoji programa";
         }
@@ -1046,17 +1081,12 @@ public class User {
         this.last_generated_weekly_date = last_generated_weekly_date;
     }
 
-    private void setWalkRunIntervals(long[] walkRunIntervals) {
-        this.walkRunIntervals = walkRunIntervals;
+    public Exercise getExercise() {
+        return exercise;
     }
 
-    private void setPulseZoneIntervals(int[] pulseZoneIntervals){
-        this.pulseZoneIntervals = pulseZoneIntervals;
+    public void setExercise(Exercise exercise) {
+        this.exercise = exercise;
     }
-    public int[] getPulseZoneIntervals(){
-        return pulseZoneIntervals;
-    }
-    public long[] getWalkRunIntervals() {
-        return walkRunIntervals;
-    }
+
 }

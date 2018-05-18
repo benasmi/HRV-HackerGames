@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
+import com.mabe.productions.hrv_madison.Exercise;
 import com.mabe.productions.hrv_madison.MainScreenActivity;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
@@ -80,7 +81,8 @@ public class IntroInitialInfoBirthday extends AppCompatActivity {
 
 //        startActivity(new Intent(this, IntroInitialBaseProgram.class));
         //todo: remove this dummy program
-        User.saveProgram(this, 30f, 2, null, null);
+
+        User.saveProgram(this, 30f, 3, null);
         startActivity(new Intent(this, IntroInitialDaySelection.class));
     }
 
