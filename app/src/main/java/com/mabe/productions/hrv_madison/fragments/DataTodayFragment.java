@@ -959,10 +959,10 @@ public class DataTodayFragment extends Fragment {
 
     @Override
     public void onPause() {
-        super.onPause();
         if (map_fragment != null) {
             map_fragment.onPause();
         }
+        super.onPause();
     }
 
 }

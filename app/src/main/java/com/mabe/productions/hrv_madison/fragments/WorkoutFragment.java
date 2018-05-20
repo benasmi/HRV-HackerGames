@@ -372,7 +372,7 @@ public class WorkoutFragment extends Fragment {
      */
     private void startWorkout(){
 
-        if(!checkForGPS()){
+        if(checkForGPS()){
             return;
         }
 
