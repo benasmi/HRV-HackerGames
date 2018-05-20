@@ -1,5 +1,6 @@
 package com.mabe.productions.hrv_madison.initialInfo;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mabe.productions.hrv_madison.MainScreenActivity;
+import com.mabe.productions.hrv_madison.PulseZoneView;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
@@ -163,11 +165,23 @@ public class IntroInitialDaySelection extends AppCompatActivity {
 
         if(selectedCount < 2) {
             Toast.makeText(this, R.string.select_at_least_two_days, Toast.LENGTH_LONG).show();
-        }else{
-            Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_WEEK_DAYS, week_days, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-            startActivity(new Intent(this, IntroInitialMaxDuration.class));
-
+            return;
         }
+
+        if(selectedCount>4){
+            Utils.buildAlertDialogPrompt(this, "Are you sure with your days selection?", "It's not healthy to workout more than 4 days for begginers. Are you sure with your selections?", "Continue", "Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Utils.saveToSharedPrefs(IntroInitialDaySelection.this, FeedReaderDbHelper.FIELD_WEEK_DAYS, week_days, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                    startActivity(new Intent(IntroInitialDaySelection.this, IntroInitialMaxDuration.class));
+                }
+            },null);
+            return;
+        }
+
+        Utils.saveToSharedPrefs(IntroInitialDaySelection.this, FeedReaderDbHelper.FIELD_WEEK_DAYS, week_days, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+        startActivity(new Intent(IntroInitialDaySelection.this, IntroInitialMaxDuration.class));
+
 
     }
 }

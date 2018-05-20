@@ -183,8 +183,24 @@ public class IntroInitialActivityIndex extends AppCompatActivity {
     public void next(View view) {
         int activity_index = i_training_duration*i_training_frequency*i_training_intensity;
         Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_ACTIVITY_INDEX, activity_index,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-        Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_DONE_INITIAL,true,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-
+        setUpProgram(activity_index);
         startActivity(new Intent(this, IntroInitialInfoBirthday.class));
+
+
     }
+
+    private void setUpProgram(int activity_index){
+        int activity_streak = 0;
+        float initial_workout_duration = 15;
+
+        //Active person - skips to 5th week
+        if(activity_index>=20){
+            initial_workout_duration = 25;
+            activity_streak = 4;
+        }
+        User.saveProgram(this, initial_workout_duration, 3, null);
+        Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_ACTIVITY_STREAK, activity_streak,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+        Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_INITIAL_DURATION, initial_workout_duration,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+    }
+
 }

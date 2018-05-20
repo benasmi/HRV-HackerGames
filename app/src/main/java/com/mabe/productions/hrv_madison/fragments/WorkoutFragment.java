@@ -59,6 +59,8 @@ import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 import com.tooltip.Tooltip;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Timer;
@@ -78,6 +80,7 @@ public class WorkoutFragment extends Fragment {
     private TextView txt_current_pace;
     private TextView txt_distance;
     private TextView txt_exercise_indicator;
+    private TextView txt_warning_dayoff;
     private TextView txt_bpm;
     private EditText editText_seconds;
     private EditText editText_minutes;
@@ -92,6 +95,7 @@ public class WorkoutFragment extends Fragment {
     private LinearLayout layout_bpm;
     private LinearLayout layout_pulse_zone;
     private LinearLayout layout_pulse_by_vibration_switch;
+    private LinearLayout layout_workout_name;
     private PulseZoneView pulseZoneView;
     private SwitchCompat pulseZone_switch;
 
@@ -105,6 +109,11 @@ public class WorkoutFragment extends Fragment {
     private AppCompatImageButton imgButton_view_duration_info;
     private AppCompatImageButton imgButton_view_pulse_info;
     private AppCompatImageButton imgButton_info_about_vibration;
+
+
+    private TextView txt_workout_name;
+    private TextView txt_workout_name_explaining;
+
 
     private TextView txt_intensity;
     private TextView txt_intensity_status;
@@ -205,8 +214,12 @@ public class WorkoutFragment extends Fragment {
     }
 
     private void initializeViews(View rootView) {
+        txt_workout_name = rootView.findViewById(R.id.txt_workout_name);
+        txt_workout_name_explaining = rootView.findViewById(R.id.txt_workout_name_explaining);
         txt_vibrate_or_not = rootView.findViewById(R.id.txt_vibrate_or_not);
+        txt_warning_dayoff = rootView.findViewById(R.id.txt_warning_day_off);
         layout_pulse_by_vibration_switch = rootView.findViewById(R.id.layout_pulse_by_vibration_switch);
+        layout_workout_name = rootView.findViewById(R.id.layout_workout_name);
         txt_intensity = rootView.findViewById(R.id.txt_intensity);
         txt_intensity_status = rootView.findViewById(R.id.txt_intensity_status);
         pulseZoneView = rootView.findViewById(R.id.pulse_zone_progress);
@@ -255,6 +268,7 @@ public class WorkoutFragment extends Fragment {
 
     public void updateData() {
         User user = User.getUser(getContext());
+        setUpWorkoutDefinition(user.getActivity_streak());
         required_pulse_zone = user.getPulseZone();
         //pulseZoneView.setRequiredPulseZones(required_pulse_zone);
         editText_minutes.setText("" + (int) user.getWorkoutDuration());
@@ -632,8 +646,10 @@ public class WorkoutFragment extends Fragment {
                 }
                 cancelTimer();
                 txt_exercise_indicator.setVisibility(View.GONE);
+                layout_workout_name.setVisibility(View.VISIBLE);
                 workout_tab_running_gif.setVisibility(View.INVISIBLE);
                 layout_pulse_zone.setVisibility(View.GONE);
+                txt_warning_dayoff.setVisibility(Utils.checkDayOffStatus(getContext())== true ? View.GONE : View.VISIBLE);
                 bpmArrayList.clear();
                 paceData.clear();
                 stopLocationListener();
@@ -670,6 +686,8 @@ public class WorkoutFragment extends Fragment {
                 break;
 
             case STATE_WORKING_OUT:
+
+
                 if (infoDuration != null) {
                     infoDuration.dismiss();
                 }
@@ -683,9 +701,11 @@ public class WorkoutFragment extends Fragment {
 
                 setWalkingRunningState(0L);
                 txt_exercise_indicator.setVisibility(View.VISIBLE);
+                layout_workout_name.setVisibility(View.GONE);
                 startLocationListener();
                 layout_bpm.setVisibility(View.VISIBLE);
                 layout_reccomended_workout.setVisibility(View.GONE);
+                txt_warning_dayoff.setVisibility(View.GONE);
                 txt_personolized_workout.setVisibility(View.GONE);
                 button_personalised_workout.setVisibility(View.GONE);
                 layout_pulse_by_vibration_switch.setVisibility(View.GONE);
@@ -697,7 +717,7 @@ public class WorkoutFragment extends Fragment {
                 layout_workout_progress.setVisibility(View.VISIBLE);
                 editText_minutes.setEnabled(false);
                 editText_seconds.setEnabled(false);
-                layout_pulse_zone.setVisibility(View.VISIBLE);
+                layout_pulse_zone.setVisibility(BluetoothGattService.isGattDeviceConnected == true ? View.VISIBLE : View.GONE);
                 int minutes = Integer.valueOf(editText_minutes.getText().toString());
                 int seconds = Integer.valueOf(editText_seconds.getText().toString());
 
@@ -782,6 +802,68 @@ public class WorkoutFragment extends Fragment {
             }
         }
     };
+
+    private void setUpWorkoutDefinition(int activity_streak){
+        switch (activity_streak){
+
+            case 0:
+                txt_workout_name.setText("Walking session");
+                txt_workout_name_explaining.setText("walking only");
+                break;
+
+
+            case 1:
+                txt_workout_name.setText("Walking session");
+                txt_workout_name_explaining.setText("walking only");
+                break;
+
+            case 2:
+                txt_workout_name.setText("Walking session");
+                txt_workout_name_explaining.setText("walking only");
+                break;
+
+            case 3:
+                txt_workout_name.setText("Interval session");
+                txt_workout_name_explaining.setText("2min walking + 1min running");
+                break;
+
+            case 4:
+                txt_workout_name.setText("Interval session");
+                txt_workout_name_explaining.setText("2min walking + 1min running");
+                break;
+
+            case 5:
+                txt_workout_name.setText("Interval session");
+                txt_workout_name_explaining.setText("2min walking + 1min running");
+                break;
+
+            case 6:
+                txt_workout_name.setText("Interval session");
+                txt_workout_name_explaining.setText("1min 30s walking + 1min 30s running");
+                break;
+
+            case 7:
+                txt_workout_name.setText("Interval session");
+                txt_workout_name_explaining.setText("1min 30s walking + 1min 30s running");
+                break;
+
+            case 8:
+                txt_workout_name.setText("Interval session");
+                txt_workout_name_explaining.setText("1min walking + 2mins running");
+                break;
+
+            case 9:
+                txt_workout_name.setText("Interval session");
+                txt_workout_name_explaining.setText("1min walking + 3mins running");
+                break;
+            case 10:
+                txt_workout_name.setText("Interval session");
+                txt_workout_name_explaining.setText("1min walking + 5mins running");
+                break;
+
+        }
+
+    }
 
     private void startLocationListener() {
         if (GoogleMapService.isLocationListeningEnabled) {
@@ -1275,6 +1357,8 @@ public class WorkoutFragment extends Fragment {
         txt_vibrate_or_not.setTypeface(futura);
         txt_intensity_status.setTypeface(futura);
         txt_intensity.setTypeface(futura);
+        txt_warning_dayoff.setTypeface(futura);
+        txt_workout_name_explaining.setTypeface(futura);
 
     }
 
@@ -1310,7 +1394,6 @@ public class WorkoutFragment extends Fragment {
         for(long interval : exercise.getWorkoutIntervals()){
             cycleDuration+=interval*1000L;
         }
-
         if(cycleDuration == 0){
             if(exercise.getWorkoutIntervals().length % 2 == 0){
                 if(current_exercise != EXERCISE_JOGGING){
@@ -1328,7 +1411,6 @@ public class WorkoutFragment extends Fragment {
 
         int timesCycleCompleted = (int) (timePassed/cycleDuration);
         long currentCycleProgress = timePassed - cycleDuration*timesCycleCompleted;
-
         long intervalSum = 0;
         for(int i = 0; i < exercise.getWorkoutIntervals().length; i++){
             long lowerBound = intervalSum;

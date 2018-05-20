@@ -79,10 +79,6 @@ public class IntroInitialInfoBirthday extends AppCompatActivity {
 
         Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_BIRTHDAY,Utils.getStringFromDate(calendar.getTime()),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
 
-//        startActivity(new Intent(this, IntroInitialBaseProgram.class));
-        //todo: remove this dummy program
-
-        User.saveProgram(this, 30f, 3, null);
         startActivity(new Intent(this, IntroInitialDaySelection.class));
     }
 

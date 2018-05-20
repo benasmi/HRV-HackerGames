@@ -57,6 +57,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:11.4.2'
     compile 'io.nlopez.smartlocation:library:3.3.3'
     compile 'com.github.vihtarb:tooltip:0.1.9'
+
     compile 'com.android.support:multidex:1.0.0'
     testCompile 'junit:junit:4.12'
 }

@@ -28,7 +28,7 @@ public class IntroInitialMaxDuration extends AppCompatActivity {
     private boolean clickedOnce = false;
     private TextView txt_question;
     private DiscreteSeekBar duration_slider;
-    private int maxDur = 0;
+    private int maxDur = 30;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

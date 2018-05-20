@@ -15,7 +15,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="180dp"
+            android:layout_height="160dp"
             android:layout_marginTop="10dp">
 
             <com.budiyev.android.circularprogressbar.CircularProgressBar
@@ -338,10 +338,40 @@
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/layout_workout_name"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Intervals session"
+                android:gravity="center"
+                android:id="@+id/txt_workout_name"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="30dp"
+                android:layout_gravity="center"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="17dp"
+                android:textColor="@color/colorAccent"
+                android:id="@+id/txt_workout_name_explaining"
+                android:gravity="center"
+                android:text="1min running + 2min walking"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:id="@+id/layout_reccomended_workout"
-            android:padding="30dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:layout_marginTop="25dp"
 
             >
 
@@ -556,6 +586,16 @@
             android:background="@drawable/login_button_gradient"
             android:text="Start training"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="*Today is your day-off. You should take a break!"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:id="@+id/txt_warning_day_off"
+            android:textSize="17dp"
+            />
 
 
     </LinearLayout>

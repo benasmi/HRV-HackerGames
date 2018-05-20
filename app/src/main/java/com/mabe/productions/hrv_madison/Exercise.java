@@ -12,6 +12,10 @@ public class Exercise {
     private int[] running_pulse_zones  =  {3, 4};
     private int[] walking_pulse_zones  =  {1, 2};
 
+
+    //{0,0} - Running always;
+    //{0} - Walking always;
+
     public Exercise() {
     }
 

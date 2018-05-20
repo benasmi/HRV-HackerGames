@@ -45,6 +45,8 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public static final String FIELD_HEIGHT = "height";
     public static final String FIELD_WEIGHT = "weight";
     public static final String FIELD_KMI = "KMI";
+    public static final String FIELD_ACTIVITY_STREAK = "activity_streak";
+    public static final String FIELD_INITIAL_DURATION = "initial_duration";
     public static final String FIELD_GENDER = "gender";
     public static final String FIELD_BIRTHDAY = "birthday";
     public static final String FIELD_ACTIVITY_INDEX = "activity_index";
@@ -71,7 +73,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public static final String FIELD_RUNNING_PULSE_ZONES = "running_pulse_zones";
     public static final String FIELD_WALKING_PULSE_ZONES = "walking_pulse_zones";
     public static final String FIELD_LAST_TIME_GENERATED_WEEKLY = "last_weekly_generated_date";
-    public static final String FIELD_FIRST_TIME_GENERATED_WEEKLY = "first_weekly_generated_date";
+    public static final String FIELD_WEEKLY_PROGRAME_GENERATED_DATE = "first_weekly_generated_date";
 
 
     public final static String HRV_COL_RMSSD = "RMSSD";

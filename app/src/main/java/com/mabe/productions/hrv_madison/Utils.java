@@ -445,4 +445,10 @@ public class Utils {
         return minX;
     }
 
+    public static boolean checkDayOffStatus(Context context){
+        int day = getDayOfWeek(Calendar.getInstance());
+        boolean[] weekDays = User.getUser(context).getWeekDays();
+        return  weekDays[day];
+    }
+
 }
