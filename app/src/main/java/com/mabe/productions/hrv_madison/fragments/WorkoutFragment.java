@@ -346,9 +346,10 @@ public class WorkoutFragment extends Fragment {
      */
     private boolean checkForGPS() {
 
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
                     WorkoutFragment.PERMISSION_GPS_REQUEST);
             return false;
         }
@@ -372,7 +373,7 @@ public class WorkoutFragment extends Fragment {
      */
     private void startWorkout(){
 
-        if(checkForGPS()){
+        if(!checkForGPS()){
             return;
         }
 
