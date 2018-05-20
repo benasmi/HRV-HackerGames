@@ -811,7 +811,6 @@ public class WorkoutFragment extends Fragment {
                 txt_workout_name_explaining.setText("walking only");
                 break;
 
-
             case 1:
                 txt_workout_name.setText("Walking session");
                 txt_workout_name_explaining.setText("walking only");

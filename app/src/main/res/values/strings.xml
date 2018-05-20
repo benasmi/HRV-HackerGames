@@ -76,7 +76,7 @@
     <string name="program_unchanged">Your hrv is normal. Not altering your workout.
     </string>
 
-    <string name="todays_program">Today\'s program</string>
+
     <string name="todays_program_subtext">Today we recommend you</string>
     <string name="bpm_rate">BPM and RMSSD data</string>
     <string name="txt_average_bpm">Average BPM</string>

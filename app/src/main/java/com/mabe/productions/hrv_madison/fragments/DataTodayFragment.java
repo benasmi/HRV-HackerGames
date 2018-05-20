@@ -235,10 +235,6 @@ public class DataTodayFragment extends Fragment {
 
                 case User.PROGRAM_STATE_CHANGED:
                     setReccomendationCardPercentage(user.getHrvYesterdayTodayRatio());
-                    reccomendation_txt_verbal_recommendation.setText(user.getVerbalReccomendation());
-                    reccomendation_txt_pulse_zone.setText(user.getPulseZone() + Utils.getNumberSuffix(user.getPulseZone()) + " pulse zone");
-                    reccomendation_txt_duration.setText(String.valueOf(user.getWorkoutDuration()) + " " + getString(
-                            R.string.min));
                     break;
                 case User.PROGRAM_STATE_DAY_OFF:
 
@@ -248,19 +244,24 @@ public class DataTodayFragment extends Fragment {
                     break;
                 case User.PROGRAM_STATE_NOT_ENOUGH_DATA:
                     reccomendation_img_arrow.setImageResource(R.drawable.ic_question);
-                    reccomendation_txt_hrv_increase.setText("Not enough data");
+                    reccomendation_txt_hrv_increase.setText("No data");
                     reccomendation_txt_hrv_increase.setTextColor(Color.parseColor("#ffffff"));
-                    reccomendation_txt_verbal_recommendation.setText(user.getVerbalReccomendation());
-                    reccomendation_txt_pulse_zone.setText(user.getPulseZone() + Utils.getNumberSuffix(user.getPulseZone()) + " pulse zone");
-                    reccomendation_txt_duration.setText(String.valueOf(user.getWorkoutDuration()) + " " + getString(
-                            R.string.min));
                     break;
             }
+
+            int minPulseZone = user.getMinimumPulseZone();
+            int maxPulseZone = user.getMaximumPulseZone();
+            if(minPulseZone == maxPulseZone){
+                reccomendation_txt_pulse_zone.setText(minPulseZone);
+            }else{
+                reccomendation_txt_pulse_zone.setText(minPulseZone + "-" + maxPulseZone);
+            }
+            reccomendation_txt_duration.setText(String.valueOf(user.getWorkoutDuration()) + " " + getString(
+                    R.string.min));
 
         } else {
             //Show: ---> no measurement layout
             no_measured_today_layout.setVisibility(View.VISIBLE);
-
             //Hide: ---> mood; BPM; LFHF; Training plan; workout results
             feeling_cardview.setVisibility(View.GONE);
             bpm_card.setVisibility(View.GONE);
@@ -601,22 +602,22 @@ public class DataTodayFragment extends Fragment {
         bpm_line_chart.setViewPortOffsets(0f, 0f, 0f, 0f);
 
         //Reccomendation cardview
-        reccomendation_txt_todays_program.setTypeface(verdana);
-        reccomendation_txt_hrv_increase.setTypeface(verdana);
-        reccomendation_txt_duration.setTypeface(verdana);
-        reccomendation_txt_pulse_zone.setTypeface(verdana);
-        reccomendation_txt_verbal_recommendation.setTypeface(verdana);
+        reccomendation_txt_todays_program.setTypeface(futura);
+        reccomendation_txt_hrv_increase.setTypeface(futura);
+        reccomendation_txt_duration.setTypeface(futura);
+        reccomendation_txt_pulse_zone.setTypeface(futura);
+        reccomendation_txt_verbal_recommendation.setTypeface(futura);
 
         //Workout cardview
-        workout_card_calories.setTypeface(verdana);
-        workout_card_pace.setTypeface(verdana);
-        workout_card_distance.setTypeface(verdana);
-        txt_workout_data.setTypeface(verdana);
-        txt_workout_time_ago.setTypeface(verdana);
+        workout_card_calories.setTypeface(futura);
+        workout_card_pace.setTypeface(futura);
+        workout_card_distance.setTypeface(futura);
+        txt_workout_data.setTypeface(futura);
+        txt_workout_time_ago.setTypeface(futura);
 
 
         //First time cardview
-        first_time_greeting.setTypeface(verdana);
+        first_time_greeting.setTypeface(futura);
 
     }
 

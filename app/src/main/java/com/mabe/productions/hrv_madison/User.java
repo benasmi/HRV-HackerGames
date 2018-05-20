@@ -776,7 +776,6 @@ public class User {
      */
     public void generateDailyReccomendation(Context context) {
         Calendar c = Calendar.getInstance();
-
         int dayOfWeek = Utils.getDayOfWeek(c);
 
 
@@ -902,13 +901,6 @@ public class User {
                 verbal_reccomendation =  "Jūsų hrv neatitinka normų";
                 return;
             }
-
-
-
-
-
-
-
 
 
     }
