@@ -59,8 +59,6 @@ import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 import com.tooltip.Tooltip;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Timer;
@@ -112,7 +110,7 @@ public class WorkoutFragment extends Fragment {
 
 
     private TextView txt_workout_name;
-    private TextView txt_workout_name_explaining;
+    private TextView txt_workout_name_explanation;
 
 
     private TextView txt_intensity;
@@ -215,7 +213,7 @@ public class WorkoutFragment extends Fragment {
 
     private void initializeViews(View rootView) {
         txt_workout_name = rootView.findViewById(R.id.txt_workout_name);
-        txt_workout_name_explaining = rootView.findViewById(R.id.txt_workout_name_explaining);
+        txt_workout_name_explanation = rootView.findViewById(R.id.txt_workout_name_explaining);
         txt_vibrate_or_not = rootView.findViewById(R.id.txt_vibrate_or_not);
         txt_warning_dayoff = rootView.findViewById(R.id.txt_warning_day_off);
         layout_pulse_by_vibration_switch = rootView.findViewById(R.id.layout_pulse_by_vibration_switch);
@@ -268,7 +266,9 @@ public class WorkoutFragment extends Fragment {
 
     public void updateData() {
         User user = User.getUser(getContext());
-        setUpWorkoutDefinition(user.getActivity_streak());
+        txt_workout_name.setText(user.getWorkoutSessionType());
+        txt_workout_name_explanation.setText(user.getVerbalSessionExplanation());
+
         required_pulse_zone = user.getPulseZone();
         //pulseZoneView.setRequiredPulseZones(required_pulse_zone);
         editText_minutes.setText("" + (int) user.getWorkoutDuration());
@@ -803,66 +803,7 @@ public class WorkoutFragment extends Fragment {
         }
     };
 
-    private void setUpWorkoutDefinition(int activity_streak){
-        switch (activity_streak){
 
-            case 0:
-                txt_workout_name.setText("Walking session");
-                txt_workout_name_explaining.setText("walking only");
-                break;
-
-            case 1:
-                txt_workout_name.setText("Walking session");
-                txt_workout_name_explaining.setText("walking only");
-                break;
-
-            case 2:
-                txt_workout_name.setText("Walking session");
-                txt_workout_name_explaining.setText("walking only");
-                break;
-
-            case 3:
-                txt_workout_name.setText("Interval session");
-                txt_workout_name_explaining.setText("2min walking + 1min running");
-                break;
-
-            case 4:
-                txt_workout_name.setText("Interval session");
-                txt_workout_name_explaining.setText("2min walking + 1min running");
-                break;
-
-            case 5:
-                txt_workout_name.setText("Interval session");
-                txt_workout_name_explaining.setText("2min walking + 1min running");
-                break;
-
-            case 6:
-                txt_workout_name.setText("Interval session");
-                txt_workout_name_explaining.setText("1min 30s walking + 1min 30s running");
-                break;
-
-            case 7:
-                txt_workout_name.setText("Interval session");
-                txt_workout_name_explaining.setText("1min 30s walking + 1min 30s running");
-                break;
-
-            case 8:
-                txt_workout_name.setText("Interval session");
-                txt_workout_name_explaining.setText("1min walking + 2mins running");
-                break;
-
-            case 9:
-                txt_workout_name.setText("Interval session");
-                txt_workout_name_explaining.setText("1min walking + 3mins running");
-                break;
-            case 10:
-                txt_workout_name.setText("Interval session");
-                txt_workout_name_explaining.setText("1min walking + 5mins running");
-                break;
-
-        }
-
-    }
 
     private void startLocationListener() {
         if (GoogleMapService.isLocationListeningEnabled) {
@@ -1357,7 +1298,7 @@ public class WorkoutFragment extends Fragment {
         txt_intensity_status.setTypeface(futura);
         txt_intensity.setTypeface(futura);
         txt_warning_dayoff.setTypeface(futura);
-        txt_workout_name_explaining.setTypeface(futura);
+        txt_workout_name_explanation.setTypeface(futura);
 
     }
 

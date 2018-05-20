@@ -1,6 +1,5 @@
 package com.mabe.productions.hrv_madison;
 
-import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
@@ -18,6 +17,7 @@ import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
 
 public class User {
@@ -27,9 +27,11 @@ public class User {
 
     public final static int SPORT_JOGGING = 0;
 
+    public static final String RUNNING_SESSION = "Running session";
+    public static final String WALKING_SESSION = "Walking session";
+    public static final String INTERVAL_SESSION = "Interval session";
 
-
-    public static float INITIRAL_WORKOUT_DURATION = 15f;
+    public static float INITIAL_WORKOUT_DURATION = 15f;
 
     private int program_update_state;
 
@@ -573,7 +575,7 @@ public class User {
         //Getting initial user data from SharedPreferences
         user.setKMI(Utils.readFromSharedPrefs_float(context, FeedReaderDbHelper.FIELD_KMI, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
         user.setActivity_streak(Utils.readFromSharedPrefs_int(context, FeedReaderDbHelper.FIELD_ACTIVITY_STREAK, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
-        user.setInitiralWorkoutDuration(Utils.readFromSharedPrefs_float(context, FeedReaderDbHelper.FIELD_INITIAL_DURATION, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
+        user.setInitialWorkoutDuration(Utils.readFromSharedPrefs_float(context, FeedReaderDbHelper.FIELD_INITIAL_DURATION, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
         user.setBirthday(Utils.getDateFromString(Utils.readFromSharedPrefs_string(context, FeedReaderDbHelper.FIELD_BIRTHDAY, FeedReaderDbHelper.SHARED_PREFS_USER_DATA)));
         user.setGender(Utils.readFromSharedPrefs_int(context, FeedReaderDbHelper.FIELD_GENDER, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
         user.setHeight(Utils.readFromSharedPrefs_float(context, FeedReaderDbHelper.FIELD_HEIGHT, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
@@ -699,7 +701,7 @@ public class User {
         if(last_week_workouts.size()<2 && second_last_week_workouts.size()<2){
             Log.i("TEST", "Žmogau, mažai sportuoji ---> Pradėk nuo nulio");
             activity_streak=0;
-            Utils.buildAlertDialogPrompt(context,"Weekly program status!", "Zero activity of 2 or more weeks has been detected, hence program starts from the beggining. " + String.valueOf(activity_streak+1) + " week out of 11","Close","",null,null);
+            Utils.buildAlertDialogPrompt(context,"Weekly program status!", "Zero activity of 2 or more weeks has been detected, hence program starts from the beggining. " + String.valueOf(activity_streak+1) + Utils.getNumberSuffix(activity_streak+1) + " week out of 11","Close","",null,null);
             exercise = WEEKLY_INTERVAL_PROGRAM[0];
         }else{
             if(last_week_workouts.size()>=2){
@@ -710,13 +712,13 @@ public class User {
                         exercise = WEEKLY_INTERVAL_PROGRAM[activity_streak];
                         workout_duration *= 1.1;
                         workout_duration = Math.min(workout_duration, max_duration);
-                        Utils.buildAlertDialogPrompt(context,"Weekly program status!", "New weekly program has been generated for you. Currently you are on week: " + String.valueOf(activity_streak+1) + "out of 11","Close","",null,null);
+                        Utils.buildAlertDialogPrompt(context,"Weekly program status!", "New weekly program has been generated for you. Currently you are on week: " + String.valueOf(activity_streak+1) + Utils.getNumberSuffix(activity_streak+1) +  "out of 11","Close","",null,null);
                     }else {
                         workout_duration *= 1.1;
 
                         if (workout_duration >= max_duration) {
 
-                            workout_duration = INITIRAL_WORKOUT_DURATION;
+                            workout_duration = INITIAL_WORKOUT_DURATION;
                             pulse_zone++;
                             pulse_zone = Math.min(pulse_zone,5);
                             Utils.buildAlertDialogPrompt(context,"Weekly program status!", "Great! We have increased your pulse zone!","Close","",null,null);
@@ -931,7 +933,42 @@ public class User {
         }
 
         database.close();
+    }
 
+
+
+    public String getWorkoutSessionType(){
+        //Calculating the total duration of a cycle
+        long cycleDuration = 0;
+        for(long interval : exercise.getWorkoutIntervals()){
+            cycleDuration+=interval*1000L;
+        }
+
+        if(cycleDuration == 0){
+            if(exercise.getWorkoutIntervals().length % 2 == 0){
+                return RUNNING_SESSION;
+            }else {
+                return WALKING_SESSION;
+            }
+        }else{
+            return INTERVAL_SESSION;
+        }
+    }
+
+    public String getVerbalSessionExplanation(){
+        if(getWorkoutSessionType().equals(RUNNING_SESSION)){
+            return "Running only";
+        }else if(getWorkoutSessionType().equals(WALKING_SESSION)){
+            return "Walking only";
+        }else{
+            int walkingMinutes = (int) (exercise.getWorkoutIntervals()[0]/60L);
+            int walkingSeconds = (int) (exercise.getWorkoutIntervals()[0] - walkingMinutes*60);
+            int runningMinutes = (int) (exercise.getWorkoutIntervals()[1]/60L);
+            int runningSeconds = (int) (exercise.getWorkoutIntervals()[1] - runningMinutes*60);
+            return ((walkingMinutes == 0 ? "" : (walkingMinutes + "min")) + (walkingSeconds == 0 ? "" : (" " + walkingSeconds + "s")) +
+                    " walking + " + (runningMinutes == 0 ? "" : (runningMinutes + "min")) + (runningSeconds == 0 ? "" : (" " + runningSeconds + "s")) +
+                    " running");
+        }
 
     }
 
@@ -1086,15 +1123,27 @@ public class User {
     }
 
     public float getHrvYesterdayTodayRatio() {
-
-
         if(yesterday_hrv == 0f){
             return 0;
         }
-
         return  current_hrv/ yesterday_hrv;
-
     }
+
+    public float getLatestHrvRatio(){
+        List<Measurement> measurements = getAllMeasurements();
+        if(measurements.size() < 2){
+            return 0;
+        }
+
+        int lastHrv = measurements.get(0).getHrv();
+        int secondLastHrv = measurements.get(1).getHrv();
+
+        if(secondLastHrv != 0){
+            return ((float) lastHrv)/((float) secondLastHrv);
+        }
+        return 0;
+    }
+
     public String getVerbalReccomendation() {
         return verbal_reccomendation;
     }
@@ -1103,12 +1152,12 @@ public class User {
         return last_generated_weekly_date;
     }
 
-    public static float getInitiralWorkoutDuration() {
-        return INITIRAL_WORKOUT_DURATION;
+    public static float getInitialWorkoutDuration() {
+        return INITIAL_WORKOUT_DURATION;
     }
 
-    public static void setInitiralWorkoutDuration(float initiralWorkoutDuration) {
-        INITIRAL_WORKOUT_DURATION = initiralWorkoutDuration;
+    public static void setInitialWorkoutDuration(float initialWorkoutDuration) {
+        INITIAL_WORKOUT_DURATION = initialWorkoutDuration;
     }
 
 

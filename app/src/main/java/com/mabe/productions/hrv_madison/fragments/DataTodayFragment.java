@@ -97,6 +97,7 @@ public class DataTodayFragment extends Fragment {
     private TextView reccomendation_txt_pulse_zone;
     private TextView reccomendation_txt_verbal_recommendation;
     private ImageView reccomendation_img_arrow;
+    private TextView reccomendation_todays_program_explanation;
 
     //How do you feel? cardview
     private CardView feeling_cardview;
@@ -126,7 +127,7 @@ public class DataTodayFragment extends Fragment {
     private TextView first_time_greeting;
 
     private boolean hasMeasuredToday;
-    private boolean hasWorkoutedToday;
+    private boolean hasWorkedOutToday;
 
     private AppCompatButton reccomendation_btn_start_workout;
 
@@ -157,7 +158,7 @@ public class DataTodayFragment extends Fragment {
         Measurement todayMeasurement = user.getTodaysMeasurement();
         WorkoutMeasurements todaysWorkoutMeasurement = user.getTodaysWorkout();
         hasMeasuredToday = todayMeasurement == null ? false : true;
-        hasWorkoutedToday = todaysWorkoutMeasurement == null ? false : true;
+        hasWorkedOutToday = todaysWorkoutMeasurement == null ? false : true;
 
         if (hasMeasuredToday) {
 
@@ -230,34 +231,6 @@ public class DataTodayFragment extends Fragment {
             }
 
 
-            //RECCOMENDATION CARDVIEW
-            switch (user.getProgramUpdateState()) {
-
-                case User.PROGRAM_STATE_CHANGED:
-                    setReccomendationCardPercentage(user.getHrvYesterdayTodayRatio());
-                    break;
-                case User.PROGRAM_STATE_DAY_OFF:
-
-                    break;
-                case User.PROGRAM_STATE_INVALID:
-
-                    break;
-                case User.PROGRAM_STATE_NOT_ENOUGH_DATA:
-                    reccomendation_img_arrow.setImageResource(R.drawable.ic_question);
-                    reccomendation_txt_hrv_increase.setText("No data");
-                    reccomendation_txt_hrv_increase.setTextColor(Color.parseColor("#ffffff"));
-                    break;
-            }
-
-            int minPulseZone = user.getMinimumPulseZone();
-            int maxPulseZone = user.getMaximumPulseZone();
-            if(minPulseZone == maxPulseZone){
-                reccomendation_txt_pulse_zone.setText(minPulseZone);
-            }else{
-                reccomendation_txt_pulse_zone.setText(minPulseZone + "-" + maxPulseZone);
-            }
-            reccomendation_txt_duration.setText(String.valueOf(user.getWorkoutDuration()) + " " + getString(
-                    R.string.min));
 
         } else {
             //Show: ---> no measurement layout
@@ -266,12 +239,55 @@ public class DataTodayFragment extends Fragment {
             feeling_cardview.setVisibility(View.GONE);
             bpm_card.setVisibility(View.GONE);
             freq_card.setVisibility(View.GONE);
-            recommendation_card.setVisibility(View.GONE);
+            //recommendation_card.setVisibility(View.GONE);
             workout_done_cardview.setVisibility(View.GONE);
         }
 
+        //RECCOMENDATION CARDVIEW
+        switch (user.getProgramUpdateState()) {
 
-        if (hasWorkoutedToday) {
+            case User.PROGRAM_STATE_CHANGED:
+                break;
+            case User.PROGRAM_STATE_DAY_OFF:
+
+                break;
+            case User.PROGRAM_STATE_INVALID:
+
+                break;
+            case User.PROGRAM_STATE_NOT_ENOUGH_DATA:
+
+
+
+                break;
+        }
+
+        if(user.getAllMeasurements().size() >= 2){
+            setReccomendationCardPercentage(user.getLatestHrvRatio());
+        }else{
+            reccomendation_txt_hrv_increase.setText(String.valueOf((int) user.getCurrentHrv()));
+            reccomendation_img_arrow.setImageResource(R.drawable.ic_appicon_rectangle);
+            reccomendation_txt_hrv_increase.setTextColor(Color.parseColor("#ffffff"));
+        }
+
+        if(!user.getWeekDays()[Utils.getDayOfWeek(Calendar.getInstance())]){
+            reccomendation_txt_verbal_recommendation.setText("We reccomend you to take a day off!");
+        }
+
+        int minPulseZone = user.getMinimumPulseZone();
+        int maxPulseZone = user.getMaximumPulseZone();
+        if(minPulseZone == maxPulseZone){
+            reccomendation_txt_pulse_zone.setText(minPulseZone + Utils.getNumberSuffix(minPulseZone) + " pulse zone");
+        }else{
+            reccomendation_txt_pulse_zone.setText(minPulseZone +  Utils.getNumberSuffix(minPulseZone) + "-" + maxPulseZone + Utils.getNumberSuffix(maxPulseZone) + "\npulse zone");
+        }
+        reccomendation_txt_todays_program.setText(user.getWorkoutSessionType());
+        reccomendation_todays_program_explanation.setText(user.getVerbalSessionExplanation());
+        reccomendation_txt_duration.setText(String.valueOf((int) user.getWorkoutDuration()) + " " + getString(
+                R.string.min));
+
+
+
+        if (hasWorkedOutToday) {
             //Show: ---> workoutResults
             workout_done_cardview.setVisibility(View.VISIBLE);
 
@@ -442,6 +458,7 @@ public class DataTodayFragment extends Fragment {
         reccomendation_txt_pulse_zone = view.findViewById(R.id.txt_pulse_zone_value);
         reccomendation_txt_verbal_recommendation = view.findViewById(R.id.txt_verbal_recomendation);
         reccomendation_img_arrow = view.findViewById(R.id.reccomendation_arrow_img);
+        reccomendation_todays_program_explanation = view.findViewById(R.id.txt_todays_program_explanation);
         reccomendation_btn_start_workout = view.findViewById(R.id.startWorkout);
         reccomendation_btn_start_workout.setOnClickListener(new View.OnClickListener() {
             @Override
