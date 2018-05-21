@@ -261,13 +261,21 @@ public class DataTodayFragment extends Fragment {
                 break;
         }
 
-        if(user.getAllMeasurements().size() >= 2){
-            setReccomendationCardPercentage(user.getLatestHrvRatio());
-        }else{
+        if(hasMeasuredToday && user.getAllMeasurements().size() < 2){
+            //We do not have enough data to display percentage, so current hrv is displayed
             reccomendation_txt_hrv_increase.setText(String.valueOf((int) user.getCurrentHrv()));
             reccomendation_img_arrow.setImageResource(R.drawable.ic_appicon_rectangle);
             reccomendation_txt_hrv_increase.setTextColor(Color.parseColor("#ffffff"));
+        }else if(!hasMeasuredToday){
+            //User has not measured today, asking him to do so.
+            reccomendation_txt_hrv_increase.setText("Please measure\nyour HRV!");
+            reccomendation_img_arrow.setImageResource(R.drawable.ic_question);
+            reccomendation_txt_hrv_increase.setTextColor(Color.parseColor("#ffffff"));
+        }else{
+            //User has measured today and there is plenty of data to display percentage.
+            setReccomendationCardPercentage(user.getLatestHrvRatio());
         }
+
 
         if(!user.getWeekDays()[Utils.getDayOfWeek(Calendar.getInstance())]){
             reccomendation_txt_verbal_recommendation.setText("We reccomend you to take a day off!");
