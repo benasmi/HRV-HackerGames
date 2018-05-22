@@ -25,6 +25,7 @@
         <activity
             android:name=".MainScreenActivity"
             android:screenOrientation="portrait"
+            android:showOnLockScreen="true"
             android:theme="@style/NoActionBar" />
 
         <service
