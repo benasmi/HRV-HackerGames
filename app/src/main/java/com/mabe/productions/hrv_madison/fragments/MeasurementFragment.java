@@ -202,7 +202,7 @@ public class MeasurementFragment extends Fragment {
 
                                             //if device is connected
                                             if(BluetoothGattService.isGattDeviceConnected){
-                                                startCalculation();
+                                                startMeasuring();
                                             }else{
                                                 autoConnectDevice();
                                             }
@@ -215,7 +215,7 @@ public class MeasurementFragment extends Fragment {
                         }else{
                             //if device is connected
                             if(BluetoothGattService.isGattDeviceConnected){
-                                startCalculation();
+                                startMeasuring();
                             }else{
                                 autoConnectDevice();
                             }
@@ -321,11 +321,13 @@ public class MeasurementFragment extends Fragment {
 
     }
 
-    public void startCalculation(){
+    public void startMeasuring(){
         currentMeasurementState = STATE_MEASURING;
         txt_connection_status.setText(R.string.measuring);
         btn_start_measuring.setText(R.string.cancel);
         measurement_duration.setEnabled(false);
+
+        MainScreenActivity.setDisplayOnLockscreen(true, getActivity());
 
         measurement_duration.setVisibility(View.GONE);
         txt_duration_picker_text.setVisibility(View.GONE);
@@ -475,6 +477,7 @@ public class MeasurementFragment extends Fragment {
 
     private void cancelMeasurement(){
         currentMeasurementState = STATE_WAITING_TO_MEASURE;
+        MainScreenActivity.setDisplayOnLockscreen(false, getActivity());
         if(countDownTimer!=null){
             countDownTimer.cancel();
         }

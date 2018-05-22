@@ -1,6 +1,7 @@
 package com.mabe.productions.hrv_madison;
 
 import android.Manifest;
+import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,7 +19,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -37,7 +37,6 @@ import com.mabe.productions.hrv_madison.bluetooth.BluetoothGattService;
 import com.mabe.productions.hrv_madison.bluetooth.LeDevicesDialog;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.fragments.ViewPagerAdapter;
-import com.mabe.productions.hrv_madison.fragments.WorkoutFragment;
 
 public class MainScreenActivity extends AppCompatActivity {
 
@@ -62,10 +61,8 @@ public class MainScreenActivity extends AppCompatActivity {
 
 
         Window wind = getWindow();
-        wind.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-        wind.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-        wind.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-        wind.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        //wind.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         wind.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
@@ -93,22 +90,23 @@ public class MainScreenActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
-            return;
-        }
 
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce=false;
-            }
-        }, 2000);
+        moveTaskToBack(true);
     }
+
+    public static void setDisplayOnLockscreen(boolean displayOnLockscreen, Activity activity){
+        Window wind = activity.getWindow();
+        if(displayOnLockscreen){
+            wind.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+            wind.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+            wind.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        }else{
+            wind.clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+            wind.clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+            wind.clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        }
+    }
+
 
     private void setupBottomBar(){
         AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.measure, R.drawable.ic_stopwatch,R.color.colorAccent);
@@ -203,7 +201,7 @@ public class MainScreenActivity extends AppCompatActivity {
                     //If the measure button has already been pressed, starting the measurement automatically.
                     if(viewPagerAdapter.measurementFragment.shouldStartMeasurementImmediately){
                         Log.i("TEST", "Starting measurement immediately");
-                        viewPagerAdapter.measurementFragment.startCalculation();
+                        viewPagerAdapter.measurementFragment.startMeasuring();
                         viewPagerAdapter.measurementFragment.shouldStartMeasurementImmediately = false;
                     }
 

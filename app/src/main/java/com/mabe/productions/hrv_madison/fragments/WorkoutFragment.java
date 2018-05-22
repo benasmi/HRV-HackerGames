@@ -34,6 +34,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.CompoundButton;
@@ -405,6 +407,7 @@ public class WorkoutFragment extends Fragment {
     }
 
 
+
     private View.OnClickListener durationInfoListener = new View.OnClickListener() {
 
         @Override
@@ -642,6 +645,7 @@ public class WorkoutFragment extends Fragment {
         switch (workout_state) {
 
             case STATE_BEFORE_WORKOUT:
+                MainScreenActivity.setDisplayOnLockscreen(false, getActivity());
                 if (vibrationTimer != null) {
                     vibrationTimer.cancel();
                 }
@@ -688,7 +692,7 @@ public class WorkoutFragment extends Fragment {
 
             case STATE_WORKING_OUT:
 
-
+                MainScreenActivity.setDisplayOnLockscreen(true, getActivity());
                 if (infoDuration != null) {
                     infoDuration.dismiss();
                 }
