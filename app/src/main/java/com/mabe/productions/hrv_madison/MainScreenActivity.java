@@ -334,4 +334,7 @@ public class MainScreenActivity extends AppCompatActivity {
 
     }
 
+    public void faqActivity(View view) {
+        startActivity(new Intent(MainScreenActivity.this, FrequentlyAskedActivity.class));
+    }
 }

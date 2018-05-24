@@ -8,4 +8,79 @@
     android:background="@drawable/login_background"
     tools:context="com.mabe.productions.hrv_madison.FrequentlyAskedActivity">
 
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="What is HRV?"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textSize="30dp"
+        android:id="@+id/txt_what_is_hrv_faq"
+        android:layout_marginTop="50dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Heart rate variability (HRV) is the physiological phenomenon of variation in the time interval between heartbeats. It is measured by the variation in the beat-to-beat interval"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textSize="20dp"
+        android:padding="10dp"
+        android:layout_marginTop="5dp"
+        android:id="@+id/txt_what_is_hrv_answer_faq"
+        android:layout_below="@+id/txt_what_is_hrv_faq" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="What does it represent?"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textSize="30dp"
+        android:id="@+id/txt_what_hrv_represents_faq"
+        android:layout_below="@+id/txt_what_is_hrv_answer_faq"
+        android:layout_marginTop="20dp"
+
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Heart rate variability is one of the indicators of the state of your health and fitness, recovery and readiness"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textSize="20dp"
+        android:padding="10dp"
+        android:layout_marginTop="5dp"
+        android:id="@+id/txt_what_hrv_represents_answer_faq"
+        android:layout_below="@+id/txt_what_hrv_represents_faq" />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="How do we use it?"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textSize="30dp"
+        android:id="@+id/txt_where_hrv_used_faq"
+        android:layout_below="@+id/txt_what_hrv_represents_answer_faq"
+        android:layout_marginTop="20dp"
+
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="We use HRV data to generate the most optimal workout for you"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textSize="20dp"
+        android:padding="10dp"
+        android:layout_marginTop="5dp"
+        android:id="@+id/txt_where_hrv_used_answer_faq"
+        android:layout_below="@+id/txt_where_hrv_used_faq" />
+
+
 </RelativeLayout>

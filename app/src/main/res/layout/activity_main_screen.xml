@@ -65,6 +65,7 @@
                     android:layout_height="35dp"
                     android:layout_marginRight="10dp"
                     android:id="@+id/imag_ask"
+                    android:onClick="faqActivity"
                     android:src="@drawable/ic_question"/>
 
             </LinearLayout>

@@ -14,7 +14,7 @@
         android:text="@string/initial_what_is_your_weight"
         android:gravity="center"
         android:textColor="#FFF"
-        android:textSize="25dp"
+        android:textSize="35dp"
         android:layout_marginTop="40dp"
         android:id="@+id/txt_what_is_your_weight"/>
 

@@ -1,6 +1,7 @@
 package com.mabe.productions.hrv_madison;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.graphics.drawable.Animatable2Compat;
@@ -27,6 +28,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
 
         initializeViews();
+        setFonts();
     }
 
 
@@ -65,5 +67,15 @@ public class SplashScreenActivity extends AppCompatActivity {
 
 
         animatedIconVectorIntro.start();
+    }
+
+    private void setFonts(){
+
+        Typeface futura = Typeface.createFromAsset(getAssets(),
+                "fonts/futura_light.ttf");
+        txt_slogan.setTypeface(futura);
+
+
+
     }
 }

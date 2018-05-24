@@ -47,7 +47,7 @@
             android:gravity="center"
             android:text="@string/initial_ask_user_info"
             android:textColor="#fff"
-            android:textSize="20dp"
+            android:textSize="25dp"
             android:layout_gravity="center"/>
 
     </LinearLayout>

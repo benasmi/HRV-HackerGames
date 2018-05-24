@@ -86,10 +86,10 @@ public class IntroInitialGender extends AppCompatActivity {
 
     private void setFonts(){
 
-        Typeface verdana = Typeface.createFromAsset(getAssets(),
+        Typeface futura = Typeface.createFromAsset(getAssets(),
                 "fonts/futura_light.ttf");
 
-        txt_question.setTypeface(verdana);
+        txt_question.setTypeface(futura);
 
 
 
