@@ -46,6 +46,12 @@ import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.initialInfo.IntroInitialPage;
 
@@ -57,6 +63,7 @@ import java.util.Arrays;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private static final int RC_SIGN_IN = 2 ;
     private TextView txt_slogan;
     private TextView txt_noAccount;
     private TextView txt_noRegistration;
@@ -70,6 +77,7 @@ public class LoginActivity extends AppCompatActivity {
     private ImageView circle;
     private ImageView img_login_appicon;
     private CallbackManager callbackManager;
+    private GoogleSignInClient mGoogleSignInClient;
 
 
     @Override
@@ -143,6 +151,21 @@ public class LoginActivity extends AppCompatActivity {
         );
         ///////////////////////////////////////////////////////////////////////////////////
 
+
+        //GMAIL LOGIN
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if(account!=null){
+            //TODO: user has already connected to the app with gmail, thus go to main activity
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////
+
     }
 
     private void initializeViews(){
@@ -212,14 +235,48 @@ public class LoginActivity extends AppCompatActivity {
                 this,
                 Arrays.asList("public_profile")
         );
+    }
 
+    public void googleLogin(View view) {
+        googleSignIn();
     }
 
     // this part was missing thanks to wesely
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            // The Task returned from this call is always completed, no need to attach
+            // a listener.
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        }else{
+            callbackManager.onActivityResult(requestCode, resultCode, data);
+        }
+
+
 
     }
+
+    private void googleSignIn() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+
+            // Signed in successfully, show authenticated UI.
+            Log.w("TEST", "Success " + account.getEmail());
+        } catch (ApiException e) {
+            // The ApiException status code indicates the detailed failure reason.
+            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+            Log.w("TEST", "signInResult:failed code=" + e.getStatusCode());
+
+        }
+    }
+
 }

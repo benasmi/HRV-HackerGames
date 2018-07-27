@@ -1,6 +1,7 @@
 <resources>
     <string name="facebook_app_id">260260364770676</string>
     <string name="fb_login_protocol_scheme">fb260260364770676</string>
+    <string name="server_client_id">220914111240-p6ubq3qi57dpuum3q1tgfc225m1eau9a.apps.googleusercontent.com</string>
 
     <string name="app_name">iPulsus-HRV</string>
     <string name="email">E-mail</string>

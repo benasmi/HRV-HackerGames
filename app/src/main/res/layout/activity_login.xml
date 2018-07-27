@@ -74,6 +74,7 @@
         android:layout_height="40dp"
         android:layout_below="@+id/buttonLogin"
         android:src="@drawable/ic_googleicon"
+        android:onClick="googleLogin"
         android:layout_marginTop="10dp"
         android:background="@drawable/login_socialmedia"
         android:layout_alignRight="@+id/buttonLogin"
