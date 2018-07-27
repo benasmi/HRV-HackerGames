@@ -9,6 +9,29 @@
 
     </style>
 
+    <!--Error label text style-->
+    <style name="MyErrorText" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <!--Input field style-->
+    <style name="MyEditText" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">#FFFFFF</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+    </style>
+
+    <!--Error label text style-->
+    <style name="MyErrorText1" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <!--Input field style-->
+    <style name="MyEditText1" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">#FFFFFF</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+    </style>
+
+
     <style name="AppThemeDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:textColorPrimary">#ffffff</item>
         <item name="android:background">@drawable/alert_dialog_background</item>

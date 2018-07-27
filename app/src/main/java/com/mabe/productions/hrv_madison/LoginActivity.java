@@ -201,6 +201,13 @@ public class LoginActivity extends AppCompatActivity {
         txt_noRegistration.startAnimation(fade_in_delay);
         txt_slogan.startAnimation(top_to_bottom_delay);
 
+        txt_noAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this, RegistrationActivity.class));
+            }
+        });
+
     }
 
     private void setFonts(){
