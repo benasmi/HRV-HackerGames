@@ -58,6 +58,9 @@ dependencies {
     compile 'io.nlopez.smartlocation:library:3.3.3'
     compile 'com.github.vihtarb:tooltip:0.1.9'
 
+
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+
     compile 'com.android.support:multidex:1.0.0'
     testCompile 'junit:junit:4.12'
 }

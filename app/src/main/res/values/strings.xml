@@ -1,4 +1,7 @@
 <resources>
+    <string name="facebook_app_id">260260364770676</string>
+    <string name="fb_login_protocol_scheme">fb260260364770676</string>
+
     <string name="app_name">iPulsus-HRV</string>
     <string name="email">E-mail</string>
     <string name="password">Password</string>

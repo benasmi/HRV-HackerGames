@@ -7,6 +7,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -21,6 +24,7 @@ import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -31,8 +35,25 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.Profile;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.initialInfo.IntroInitialPage;
+
+import org.json.JSONObject;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -48,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
     private ImageButton imgBtn_google;
     private ImageView circle;
     private ImageView img_login_appicon;
-
+    private CallbackManager callbackManager;
 
 
     @Override
@@ -57,13 +78,71 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         Utils.changeNotifBarColor(Color.parseColor("#3e5266"),getWindow());
 
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
+
         initializeViews();
         setFonts();
 
 
+        //FACEBOOK LOGIN
+        // Some code
+        callbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().registerCallback(
+                callbackManager,
+                new FacebookCallback < LoginResult > () {
+                    @Override
+                    public void onSuccess(final LoginResult loginResult) {
+                        AccessToken accessToken = loginResult.getAccessToken();
+
+                Profile profile = Profile.getCurrentProfile();
+
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "first_name,last_name,email,gender,hometown,birthday");
+
+                GraphRequest request = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+
+                                try {
+
+                                    String name = object.getString("first_name");
+                                    Log.i("TEST", name);
+
+                                }catch (Exception e ){
+
+                                    Log.i("TEST", "ERROR");
+
+                                }
+
+                            }
+
+                        });
 
 
-        
+
+
+
+
+
+                request.setParameters(parameters);
+
+                request.executeAsync();
+                    }
+
+                    @Override
+                    public void onCancel() {
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                    }
+                }
+        );
+        ///////////////////////////////////////////////////////////////////////////////////
+
     }
 
     private void initializeViews(){
@@ -125,6 +204,22 @@ public class LoginActivity extends AppCompatActivity {
             }else{
                 startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
             }
+
+    }
+
+    public void facebookLogin(View view) {
+        LoginManager.getInstance().logInWithReadPermissions(
+                this,
+                Arrays.asList("public_profile")
+        );
+
+    }
+
+    // this part was missing thanks to wesely
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
 
     }
 }
