@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,6 +13,9 @@ import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 public class HistoryActivity extends AppCompatActivity {
 
@@ -32,7 +36,9 @@ public class HistoryActivity extends AppCompatActivity {
         User user = User.getUser(this);
         workouts = user.getAllWorkouts();
         measurements = user.getAllMeasurements();
+
         combineMeasurementsAndWorkouts(measurements,workouts);
+        sortByDate(adapterDataSet);
 
         initialiseViews();
 
@@ -107,6 +113,21 @@ public class HistoryActivity extends AppCompatActivity {
                     ,measurement.getMood()
                     ,measurement.getHrv(),1));
         }
+    }
+
+    private void sortByDate(ArrayList<RecyclerViewDataHolder> data){
+            for(int i = 0; i<data.size(); i++){
+                for(int z = 0; z<data.size()-1; z++){
+                    int day = Integer.parseInt(DateFormat.format("dd", data.get(z).getDate()).toString());
+                    int day1 = Integer.parseInt(DateFormat.format("dd", data.get(z+1).getDate()).toString());
+                    if(day>day1){
+                        RecyclerViewDataHolder temporaryItem = data.get(z+1);
+                        data.set(z+1, data.get(z));
+                        data.set(z, temporaryItem);
+                    }
+                }
+            }
+
     }
 
 }

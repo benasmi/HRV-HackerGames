@@ -12,7 +12,7 @@ public class RecyclerViewDataHolder {
 
 
     /*
-    average_bpm, bpm_data and date is used for both measurements and workouts
+    average_bpm, bpm_data, durationand date is used for both measurements and workouts
     */
 
 

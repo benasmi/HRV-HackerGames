@@ -14,6 +14,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         card_view:cardCornerRadius="5dp"
+        android:id="@+id/recycler_view_workout_cardview"
         card_view:contentPadding="5dp"
         card_view:cardBackgroundColor="#2c3e50">
 
@@ -44,6 +45,7 @@
                     android:layout_height="wrap_content"
                     android:text="Running workout"
                     android:textColor="@color/white"
+                    android:id="@+id/recycler_workout_card_title"
                     android:textStyle="bold"
                     android:textSize="17dp"
 
@@ -61,6 +63,7 @@
                         android:text="1 min running"
                         android:textColor="@color/white"
                         android:layout_gravity="center"
+                        android:id="@+id/recycler_workout_txt_duration"
                         android:textSize="12dp"
 
                         />
@@ -81,7 +84,7 @@
                         android:textColor="@color/white"
                         android:layout_gravity="center"
                         android:textSize="12dp"
-
+                        android:id="@+id/recycler_workout_txt_date"
                         />
                 </LinearLayout>
 

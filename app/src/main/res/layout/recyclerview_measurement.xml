@@ -8,6 +8,7 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="70dp"
+        android:id="@+id/recycler_view_measurement_cardview"
         card_view:cardElevation="4dp"
         card_view:cardMaxElevation="6dp"
         android:layout_marginRight="10dp"
@@ -43,6 +44,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="HRV measurement"
+                    android:id="@+id/recycler_measurement_txt_card_title"
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     android:textSize="17dp"
@@ -58,11 +60,11 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Accurate: 5 min"
+                        android:text="Duration: 5 min"
                         android:textColor="@color/white"
                         android:layout_gravity="center"
                         android:textSize="12dp"
-
+                        android:id="@+id/recycler_measurement_txt_measurent_duration"
                         />
 
                     <ImageView
@@ -81,6 +83,7 @@
                         android:textColor="@color/white"
                         android:layout_gravity="center"
                         android:textSize="12dp"
+                        android:id="@+id/recycler_measurement_txt_date"
 
                         />
                 </LinearLayout>

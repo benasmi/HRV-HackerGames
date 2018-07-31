@@ -18,6 +18,7 @@ import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
+import android.text.format.DateFormat;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -38,6 +39,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 public class Utils {
+
 
     /**
      * Gets the integer number suffix
@@ -450,5 +452,15 @@ public class Utils {
         boolean[] weekDays = User.getUser(context).getWeekDays();
         return  weekDays[day];
     }
+
+
+    public static String showDate(Date date){
+        String day = (String) DateFormat.format("dd",   date); // 20
+        String monthString  = (String) DateFormat.format("MMM",  date); // Jun
+
+        return String.valueOf(new StringBuilder().append(day).append(" ").append(monthString));
+    }
+
+
 
 }
