@@ -110,10 +110,18 @@
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
-        <activity android:name=".RegistrationActivity"
+        <activity
+            android:name=".RegistrationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar" />
+
+        <activity android:name=".HistoryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar"
-            ></activity>
+            >
+
+
+        </activity>
     </application>
 
 </manifest>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_history"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_background"
+    tools:context="com.mabe.productions.hrv_madison.HistoryActivity">
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/registration_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#3e5266"
+        android:elevation="4dp"
+        >
+
+
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="35dp"
+            android:id="@+id/img_back_arrow"
+            android:onClick="backImage"
+            android:layout_marginRight="30dp"
+            android:src="@drawable/ic_back_arrow"/>
+
+
+        <TextView
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="History"
+            android:layout_gravity="left"
+            android:textColor="#FFF"
+            android:gravity="left"
+            android:textSize="18dp"
+            android:id="@+id/toolbar_title_registration" />
+
+    </android.support.v7.widget.Toolbar>
+
+</RelativeLayout>

@@ -1,5 +1,6 @@
 package com.mabe.productions.hrv_madison.fragments;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -42,6 +43,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.mabe.productions.hrv_madison.HistoryActivity;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
@@ -130,6 +132,8 @@ public class DataTodayFragment extends Fragment {
     private boolean hasWorkedOutToday;
 
     private AppCompatButton reccomendation_btn_start_workout;
+    private AppCompatButton button_history;
+    private ImageView img_back_arrow;
 
     public DataTodayFragment() {
         // Required empty public constructor
@@ -567,6 +571,17 @@ public class DataTodayFragment extends Fragment {
                 User.addMeasurementData(getContext(),new Measurement(Calendar.getInstance().getTime(),50,50,50,50,50,50,50,50,50,50,50,new int[]{5,4,3},new int[]{5,4,3},2,0,4,Integer.valueOf(test_edittext.getText().toString())),true);
             }
         });
+
+        button_history = view.findViewById(R.id.button_history);
+        button_history.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(DataTodayFragment.this.getActivity(), HistoryActivity.class));
+            }
+        });
+
+
+
     }
 
 
