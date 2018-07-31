@@ -650,6 +650,10 @@ public class User {
         return measurements;
     }
 
+    public ArrayList<WorkoutMeasurements> getAllWorkouts() {
+        return workouts;
+    }
+
 
     /**
      * Determined whether the weekly program shoudl be generated or not
