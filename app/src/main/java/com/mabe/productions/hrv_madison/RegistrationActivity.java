@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,7 +24,8 @@ public class RegistrationActivity extends AppCompatActivity {
     private EditText register_username;
     private EditText register_password;
     private EditText register_repeat_password;
-
+    private ImageView img_back_arrow;
+    private TextView toolbar_title_registration;
     private TextInputLayout register_name_input;
     private TextInputLayout register_username_input;
     private TextInputLayout register_password_input;
@@ -60,7 +62,8 @@ public class RegistrationActivity extends AppCompatActivity {
         Animation anim_left_to_right = AnimationUtils.loadAnimation(this, R.anim.left_to_right);
         Animation anim_right_to_left = AnimationUtils.loadAnimation(this, R.anim.right_to_left);
         Animation anim_button = AnimationUtils.loadAnimation(this, R.anim.bottom_to_top_delay);
-
+        Animation left_to_right = AnimationUtils.loadAnimation(this, R.anim.left_to_right);
+        Animation left_to_right_d = AnimationUtils.loadAnimation(this, R.anim.left_to_right_delay);
 
         register_name = (EditText) findViewById(R.id.register_name);
         register_username = (EditText) findViewById(R.id.register_username);
@@ -76,6 +79,8 @@ public class RegistrationActivity extends AppCompatActivity {
         register_username_input = (TextInputLayout) findViewById(R.id.register_username_input);
         register_password_input = (TextInputLayout) findViewById(R.id.register_password_input);
         register_repeat_password_input = (TextInputLayout) findViewById(R.id.register_repeat_password_input);
+        img_back_arrow = (ImageView) findViewById(R.id.img_back_arrow);
+        toolbar_title_registration = (TextView) findViewById(R.id.toolbar_title_registration);
 
         register_name_input.startAnimation(anim_right_to_left);
         register_username_input.startAnimation(anim_left_to_right);
@@ -83,6 +88,8 @@ public class RegistrationActivity extends AppCompatActivity {
         register_repeat_password_input.startAnimation(anim_left_to_right);
         terms_layout.startAnimation(anim_txt_top_down);
         register_button.startAnimation(anim_button);
+        img_back_arrow.startAnimation(left_to_right);
+        toolbar_title_registration.startAnimation(left_to_right_d);
 
     }
 

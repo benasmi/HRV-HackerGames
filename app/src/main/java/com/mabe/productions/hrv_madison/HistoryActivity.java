@@ -7,7 +7,10 @@ import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
@@ -20,6 +23,8 @@ import java.util.Date;
 public class HistoryActivity extends AppCompatActivity {
 
     private View img_back_arrow;
+    private TextView txt_history;
+
     private ArrayList<Measurement> measurements = new ArrayList<>();
     private ArrayList<WorkoutMeasurements> workouts = new ArrayList<>();
     private ArrayList<RecyclerViewDataHolder> adapterDataSet = new ArrayList<>();
@@ -47,6 +52,11 @@ public class HistoryActivity extends AppCompatActivity {
     private void initialiseViews(){
 
 
+        Animation left_to_right = AnimationUtils.loadAnimation(this, R.anim.left_to_right);
+        Animation left_to_right_d = AnimationUtils.loadAnimation(this, R.anim.left_to_right_delay);
+
+
+
         recyclerview_history = (RecyclerView) findViewById(R.id.history_recyler);
         recyclerview_history.setHasFixedSize(true);
 
@@ -62,7 +72,7 @@ public class HistoryActivity extends AppCompatActivity {
         recyclerView_adapter = new AdapterRecyclerView(adapterDataSet, this);
         recyclerview_history.setAdapter(recyclerView_adapter);
 
-
+        txt_history = (TextView) findViewById(R.id.toolbar_title_registration);
         img_back_arrow = (ImageView) findViewById(R.id.img_back_arrow);
         img_back_arrow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,6 +80,9 @@ public class HistoryActivity extends AppCompatActivity {
                 HistoryActivity.this.finish();
             }
         });
+
+        img_back_arrow.startAnimation(left_to_right);
+        txt_history.startAnimation(left_to_right_d);
     }
 
 
