@@ -118,7 +118,9 @@
             android:name=".HistoryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar"></activity>
-        <activity android:name=".AdvancedWorkoutHistoryActivity"></activity>
+        <activity android:name=".AdvancedWorkoutHistoryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar"></activity>
     </application>
 
 </manifest>

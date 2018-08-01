@@ -49,7 +49,7 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="80dp"
         card_view:cardElevation="4dp"
         card_view:cardMaxElevation="6dp"
         android:id="@+id/feeling_card"
@@ -82,6 +82,7 @@
                     android:layout_height="wrap_content"
                     android:text="Running workout"
                     android:textSize="20dp"
+                    android:id="@+id/advanced_history_txt_card_title"
                     android:layout_gravity="left"
                     android:textColor="#FFFFFF"
                     />
@@ -90,7 +91,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-
+                    android:id="@+id/advanced_history_txt_card_duration"
                     android:text="12 min running"
                     android:textSize="13dp"
                     android:textColor="#FFFFFF"
@@ -98,7 +99,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
+                    android:id="@+id/advanced_history_txt_card_date"
                     android:text="Tue, 17:23"
                     android:textSize="13dp"
                     android:textColor="#FFFFFF"
@@ -118,40 +119,7 @@
         android:orientation="vertical"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="40dp">
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:background="@drawable/ic_stopwatch"
-                android:layout_marginLeft="10dp"
-
-                android:layout_gravity="center"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Duration"
-                android:textSize="17dp"
-                android:layout_marginLeft="20dp"
-                android:textColor="#FFFFFF"
-                android:layout_gravity="center"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="2s"
-                android:textSize="17dp"
-                android:textColor="#FFFFFF"
-                android:gravity="right"
-                android:layout_marginRight="15dp"
-                android:layout_gravity="center"
-                />
-
-
-        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="horizontal"
@@ -169,6 +137,7 @@
                 android:layout_height="wrap_content"
                 android:text="Calories"
                 android:textSize="17dp"
+                android:id="@+id/advanced_history_txt_calories"
                 android:layout_marginLeft="20dp"
                 android:textColor="#FFFFFF"
                 android:layout_gravity="center"
@@ -178,6 +147,7 @@
                 android:layout_height="wrap_content"
                 android:text="157 Kcal"
                 android:textSize="17dp"
+                android:id="@+id/advanced_history_txt_calories_value"
                 android:textColor="#FFFFFF"
                 android:gravity="right"
                 android:layout_marginRight="15dp"
@@ -203,6 +173,7 @@
                 android:layout_height="wrap_content"
                 android:text="BPM"
                 android:textSize="17dp"
+                android:id="@+id/advanced_history_txt_bpm"
                 android:layout_marginLeft="20dp"
                 android:textColor="#FFFFFF"
                 android:layout_gravity="center"
@@ -215,9 +186,10 @@
                 android:textSize="17dp"
                 android:textColor="#FFFFFF"
                 android:gravity="right"
+                android:id="@+id/advanced_history_txt_bpm_value"
                 android:layout_marginRight="15dp"
                 android:layout_gravity="center"
-                android:id="@+id/textView3" />
+                />
 
 
         </LinearLayout>
@@ -234,11 +206,13 @@
                 android:layout_marginLeft="10dp"
 
                 android:layout_gravity="center"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Pace"
                 android:textSize="17dp"
+                android:id="@+id/advanced_history_txt_pace"
                 android:layout_marginLeft="20dp"
                 android:textColor="#FFFFFF"
                 android:layout_gravity="center"
@@ -251,6 +225,7 @@
                 android:textSize="17dp"
                 android:textColor="#FFFFFF"
                 android:gravity="right"
+                android:id="@+id/advanced_history_txt_pace_value"
                 android:layout_marginRight="15dp"
                 android:layout_gravity="center"
                 />
@@ -276,6 +251,7 @@
                 android:textSize="17dp"
                 android:layout_marginLeft="20dp"
                 android:textColor="#FFFFFF"
+                android:id="@+id/advanced_history_txt_distance"
                 android:layout_gravity="center"
                 />
 
@@ -287,6 +263,7 @@
                 android:textColor="#FFFFFF"
                 android:gravity="right"
                 android:layout_marginRight="15dp"
+                android:id="@+id/advanced_history_txt_distance_value"
                 android:layout_gravity="center"
                 />
 
@@ -311,6 +288,7 @@
                 android:text="Intensity"
                 android:textSize="17dp"
                 android:layout_marginLeft="20dp"
+                android:id="@+id/advanced_history_txt_intensity"
                 android:textColor="#FFFFFF"
                 android:layout_gravity="center"
                 />
@@ -322,6 +300,7 @@
                 android:textSize="17dp"
                 android:textColor="#FFFFFF"
                 android:gravity="right"
+                android:id="@+id/advanced_history_txt_intensity_value"
                 android:layout_marginRight="15dp"
                 android:layout_gravity="center"
                 />

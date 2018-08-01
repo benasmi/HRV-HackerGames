@@ -1,9 +1,16 @@
 package com.mabe.productions.hrv_madison;
 
+import android.app.Notification;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -17,26 +24,122 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.mabe.productions.hrv_madison.fragments.DataTodayFragment;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
+import java.io.Serializable;
+import java.util.Date;
+
 public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
 
+    //Map
     private GoogleMap route_display_googlemap;
     private SupportMapFragment map_fragment;
+
+    //Toolbar
+    private ImageView img_back_arrow;
+
+    //Card
+    private TextView advanced_history_txt_card_title;
+    private TextView advanced_history_txt_card_duration;
+    private TextView advanced_history_txt_card_date;
+
+    //WorkoutData
+    private TextView advanced_history_txt_calories;
+    private TextView advanced_history_txt_calories_value;
+
+    private TextView advanced_history_txt_bpm;
+    private TextView advanced_history_txt_bpm_value;
+
+    private TextView advanced_history_txt_pace;
+    private TextView advanced_history_txt_pace_value;
+
+    private TextView advanced_history_txt_distance;
+    private TextView advanced_history_txt_distance_value;
+
+    private TextView advanced_history_txt_intensity;
+    private TextView advanced_history_txt_intensity_value;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_advanced_workout_history);
 
-        map_fragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.history_workout_route);
 
-        //settingWorkoutMap(null);
+        //Receiving data from RecyclerView and creating workout object
+        RecyclerViewDataHolder parcel = getIntent().getExtras().getParcelable("Workout");
+        WorkoutMeasurements workout = new WorkoutMeasurements(parcel.getDate()
+                ,parcel.getWorkout_duration()
+                ,parcel.getAverage_bpm()
+                ,parcel.getBpm_data()
+                ,parcel.getPace_data()
+                ,parcel.getRoute()
+                ,parcel.getCalories_burned()
+                ,parcel.getPulse_zone()
+                ,parcel.getDistance());
+
+
+        initialiseViews();
+        setUpData(workout);
+        settingWorkoutMap(workout);
 
     }
 
 
+
+
+
+    private void initialiseViews(){
+        map_fragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.history_workout_route);
+
+
+        img_back_arrow = (ImageView) findViewById(R.id.img_back_arrow);
+        img_back_arrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AdvancedWorkoutHistoryActivity.this.finish();
+            }
+        });
+
+
+        advanced_history_txt_card_title = (TextView) findViewById(R.id.advanced_history_txt_card_title);
+        advanced_history_txt_card_duration = (TextView) findViewById(R.id.advanced_history_txt_card_duration);
+        advanced_history_txt_card_date = (TextView) findViewById(R.id.advanced_history_txt_card_date);
+        advanced_history_txt_calories = (TextView) findViewById(R.id.advanced_history_txt_calories);
+        advanced_history_txt_calories_value = (TextView) findViewById(R.id.advanced_history_txt_calories_value);
+        advanced_history_txt_bpm = (TextView) findViewById(R.id.advanced_history_txt_bpm);
+        advanced_history_txt_bpm_value = (TextView) findViewById(R.id.advanced_history_txt_bpm_value);
+        advanced_history_txt_pace = (TextView) findViewById(R.id.advanced_history_txt_pace);
+        advanced_history_txt_pace_value = (TextView) findViewById(R.id.advanced_history_txt_pace_value);
+        advanced_history_txt_distance = (TextView) findViewById(R.id.advanced_history_txt_distance);
+        advanced_history_txt_distance_value = (TextView) findViewById(R.id.advanced_history_txt_distance_value);
+        advanced_history_txt_intensity = (TextView) findViewById(R.id.advanced_history_txt_intensity);
+        advanced_history_txt_intensity_value = (TextView) findViewById(R.id.advanced_history_txt_intensity_value);
+
+    }
+
+    private void setUpData(WorkoutMeasurements workout){
+        advanced_history_txt_card_duration.setText((workout.getWorkout_duration()/1000) + " min running");
+        advanced_history_txt_card_date.setText(formatDate(workout.getDate()));
+        advanced_history_txt_calories_value.setText(String.valueOf(workout.getCalories_burned()) + " Kcal");
+        advanced_history_txt_bpm_value.setText(String.valueOf(workout.getAverage_bpm()== 0 ? "-" : workout.getAverage_bpm()));
+        advanced_history_txt_pace_value.setText(String.valueOf(workout.getAveragePace()) + " m/s");
+        advanced_history_txt_distance_value.setText(String.valueOf(workout.getDistance()) + " km");
+        advanced_history_txt_intensity_value.setText(String.valueOf(workout.getPulse_zone()));
+
+    }
+
+    private String formatDate(Date date){
+        String day = (String) DateFormat.format("dd",   date); // 20
+        String time = (String) DateFormat.format("HH:mm",   date); // 17:05
+        String monthString  = (String) DateFormat.format("MMM",  date); // Jun
+        return String.valueOf(new StringBuilder().append(day).append(" ").append(monthString).append(", ").append(time));
+    }
+
+
     private void settingWorkoutMap(final WorkoutMeasurements workout) {
-        if (route_display_googlemap == null) {
+
 
 
             map_fragment.getMapAsync(new OnMapReadyCallback() {
@@ -45,16 +148,9 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
                     route_display_googlemap = googleMap;
 
                     try {
-                        // Customise the styling of the base map using a JSON object defined
-                        // in a raw resource file.
-                        boolean success = googleMap.setMapStyle(
-                                MapStyleOptions.loadRawResourceStyle(AdvancedWorkoutHistoryActivity.this, R.raw.dark_google_map));
 
-                        if (!success) {
-                            Log.e("GMAPS", "Style parsing failed.");
-                        } else {
-                            Log.e("GMAPS", "Style SUCCESS");
-                        }
+                        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(AdvancedWorkoutHistoryActivity.this, R.raw.dark_google_map));
+
                     } catch (Resources.NotFoundException e) {
                         Log.e("GMAPS", "Can't find style. Error: ", e);
                     }
@@ -64,9 +160,7 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
 
                 }
             });
-        } else {
-            displayMapRoute(workout.getRoute());
-        }
+
     }
 
     private void displayMapRoute(LatLng[] route) {
@@ -91,9 +185,29 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
             cu = CameraUpdateFactory.newLatLngZoom(new LatLng(55.19f, 23.4f), 6f); //Geographical centre of lithuania
         } else {
             LatLngBounds bounds = builder.build();
-            cu = CameraUpdateFactory.newLatLngBounds(bounds, 50);
+            double lat = (bounds.northeast.latitude+bounds.southwest.latitude)/2;
+            double longt = (bounds.northeast.longitude+bounds.southwest.longitude)/2;
+            cu = CameraUpdateFactory.newLatLngZoom(new LatLng(lat,longt),16);
         }
 
         route_display_googlemap.animateCamera(cu);
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (route_display_googlemap != null) {
+            map_fragment.onResume();
+        }
+    }
+
+
+
+    @Override
+    public void onPause() {
+        if (map_fragment != null) {
+            map_fragment.onPause();
+        }
+        super.onPause();
     }
 }

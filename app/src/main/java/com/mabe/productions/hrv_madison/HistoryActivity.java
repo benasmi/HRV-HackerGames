@@ -81,6 +81,8 @@ public class HistoryActivity extends AppCompatActivity {
             }
         });
 
+
+
         img_back_arrow.startAnimation(left_to_right);
         txt_history.startAnimation(left_to_right_d);
     }

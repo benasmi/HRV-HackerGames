@@ -1,9 +1,12 @@
 package com.mabe.productions.hrv_madison;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,13 +32,15 @@ public class AdapterRecyclerView extends RecyclerView.Adapter<AdapterRecyclerVie
     }
 
 
+
+
     @Override
     public int getItemViewType(int position) {
         return data.get(position).getViewType();
     }
 
     @Override
-    public void onBindViewHolder(MyAdapterHolder holder, int position) {
+    public void onBindViewHolder(final MyAdapterHolder holder, final int position) {
 
         final int card_type = data.get(position).getViewType();
         final RecyclerViewDataHolder item = data.get(position);
@@ -130,6 +135,15 @@ public class AdapterRecyclerView extends RecyclerView.Adapter<AdapterRecyclerVie
                     recycler_workout_txt_duration = itemView.findViewById(R.id.recycler_workout_txt_duration);
                     recycler_workout_txt_date = itemView.findViewById(R.id.recycler_workout_txt_date);
                     recycler_view_workout_cardview = itemView.findViewById(R.id.recycler_view_workout_cardview);
+
+                   recycler_view_workout_cardview.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Log.i("recycler", "DataRec: " + String.valueOf(data.get(getAdapterPosition()).getDate()));
+
+                            context.startActivity(new Intent(context, AdvancedWorkoutHistoryActivity.class).putExtra("Workout", data.get(getAdapterPosition())));
+                        }
+                    });
                     break;
 
 
@@ -145,6 +159,8 @@ public class AdapterRecyclerView extends RecyclerView.Adapter<AdapterRecyclerVie
 
         }
     }
+
+
 
 
 }
