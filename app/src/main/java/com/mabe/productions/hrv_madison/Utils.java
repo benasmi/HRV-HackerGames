@@ -454,11 +454,11 @@ public class Utils {
     }
 
 
-    public static String showDate(Date date){
-        String day = (String) DateFormat.format("dd",   date); // 20
-        String monthString  = (String) DateFormat.format("MMM",  date); // Jun
+    public static String showDate(Date date,Context context){
+        String time = DateFormat.getMediumDateFormat(context).format(date);
+        String realTime = time.substring(0,5);
 
-        return String.valueOf(new StringBuilder().append(day).append(" ").append(monthString));
+        return realTime;
     }
 
 

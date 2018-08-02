@@ -37,7 +37,7 @@
             android:textColor="#FFF"
             android:gravity="left"
             android:textSize="18dp"
-            android:id="@+id/toolbar_title_registration" />
+            android:id="@+id/toolbar_title_advanced" />
 
     </android.support.v7.widget.Toolbar>
 
@@ -52,7 +52,7 @@
         android:layout_height="80dp"
         card_view:cardElevation="4dp"
         card_view:cardMaxElevation="6dp"
-        android:id="@+id/feeling_card"
+        android:id="@+id/advanced_history_card"
         card_view:cardCornerRadius="5dp"
         card_view:contentPadding="5dp"
         card_view:cardBackgroundColor="#2c3e50">
@@ -117,6 +117,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
+        android:id="@+id/advanced_history_data_layout"
         android:layout_height="match_parent">
 
 

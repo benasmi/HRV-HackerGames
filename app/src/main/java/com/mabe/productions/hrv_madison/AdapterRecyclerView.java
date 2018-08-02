@@ -49,15 +49,15 @@ public class AdapterRecyclerView extends RecyclerView.Adapter<AdapterRecyclerVie
         switch (card_type){
             //Workout
             case 0:
-                holder.recycler_workout_txt_duration.setText(String.valueOf(item.getDuration())+ " min running");
-                holder.recycler_workout_txt_date.setText(Utils.showDate(item.getDate()));
+                holder.recycler_workout_txt_duration.setText((int)(item.getWorkout_duration()/1000/60) + " min running");
+                holder.recycler_workout_txt_date.setText(Utils.showDate(item.getDate(),context));
                 setFadeAnimation(holder.recycler_view_workout_cardview);
                 break;
 
             //Measurement
             case 1:
                 holder.recycler_measurement_txt_duration.setText("Duration: " + String.valueOf(item.getDuration())+ " min");
-                holder.recycler_measurement_txt_date.setText(Utils.showDate(item.getDate()));
+                holder.recycler_measurement_txt_date.setText(Utils.showDate(item.getDate(),context));
                 setFadeAnimation(holder.recycler_view_measurement_cardview);
                 break;
         }
@@ -139,7 +139,7 @@ public class AdapterRecyclerView extends RecyclerView.Adapter<AdapterRecyclerVie
                    recycler_view_workout_cardview.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Log.i("recycler", "DataRec: " + String.valueOf(data.get(getAdapterPosition()).getDate()));
+                            Log.i("recycler", "DataRec: " + String.valueOf(data.get(getAdapterPosition()).getWorkout_duration()));
 
                             context.startActivity(new Intent(context, AdvancedWorkoutHistoryActivity.class).putExtra("Workout", data.get(getAdapterPosition())));
                         }
