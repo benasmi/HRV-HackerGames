@@ -1,0 +1,858 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_advanced_measurement_history"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_background"
+    tools:context="com.mabe.productions.hrv_madison.AdvancedMeasurementHistoryActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/history_toolbar"
+            android:layout_width="match_parent"
+            android:layout_gravity="top"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#3e5266"
+            android:elevation="4dp"
+            >
+
+
+
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="35dp"
+                android:id="@+id/img_back_arrow"
+                android:layout_marginRight="30dp"
+                android:src="@drawable/ic_back_arrow"/>
+
+
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="Measurement History"
+                android:layout_gravity="left"
+                android:textColor="#FFF"
+                android:gravity="left"
+                android:textSize="18dp"
+                android:id="@+id/toolbar_title_advanced" />
+
+        </android.support.v7.widget.Toolbar>
+
+
+
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="15dp"
+            card_view:cardElevation="4dp"
+            card_view:cardMaxElevation="6dp"
+            android:layout_margin="10dp"
+            android:id="@+id/frequency_card"
+            card_view:cardCornerRadius="5dp"
+            card_view:contentPadding="5dp"
+            card_view:cardBackgroundColor="#2c3e50">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/hrv_frequency_bands"
+                        android:layout_toRightOf="@+id/frequency_bands_icon_img"
+                        android:layout_marginLeft="10dp"
+                        android:textSize="@dimen/cardview_title"
+                        android:textColor="#fff"
+                        android:layout_alignParentTop="true"
+                        android:id="@+id/frequency_bands_text_view"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/time_ago"
+                        android:textSize="@dimen/cardview_date"
+                        android:layout_toRightOf="@+id/frequency_bands_icon_img"
+                        android:layout_marginLeft="10dp"
+                        android:id="@+id/frequency_bands_measurement_date"
+                        android:layout_below="@+id/frequency_bands_text_view"
+                        android:textColor="#bdc3c7"/>
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_freq_bands"
+                        android:id="@+id/frequency_bands_icon_img"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true" />
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:weightSum="3">
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:layout_width="0dp"
+                        android:layout_height="180dp"
+                        android:layout_weight="2"
+                        android:id="@+id/chart_frequencies"
+                        android:gravity="left"
+                        android:layout_gravity="left"></com.github.mikephil.charting.charts.PieChart>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:weightSum="2">
+
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/after_this_measurement"
+                                android:textColor="#F62459"
+                                android:layout_marginTop="30dp"
+                                android:gravity="left"
+                                android:id="@+id/freq_card_txt_after_this_measure"
+                                android:paddingBottom="5dp"/>
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp">
+
+                                <ImageView
+                                    android:layout_width="10dp"
+                                    android:layout_height="10dp"
+                                    android:background="@drawable/hf_circle"
+                                    android:id="@+id/HF_color"
+                                    />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_toRightOf="@id/HF_color"
+                                    android:layout_marginLeft="10dp"
+                                    android:text="@string/HF"
+
+                                    android:textColor="#fff"
+                                    android:id="@+id/freq_card_txt_hf_after_measurement"
+                                    android:textSize="@dimen/cardview_value_txt"/>
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp">
+
+                                <ImageView
+                                    android:layout_width="10dp"
+                                    android:layout_height="10dp"
+                                    android:background="@drawable/lf_circle"
+                                    android:id="@+id/LF_color"
+                                    />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_toRightOf="@id/LF_color"
+                                    android:layout_marginLeft="10dp"
+                                    android:text="@string/LF"
+                                    android:id="@+id/freq_card_txt_lf_after_measurement"
+                                    android:textColor="#fff"
+                                    android:textSize="@dimen/cardview_value_txt"/>
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp">
+
+                                <ImageView
+                                    android:layout_width="10dp"
+                                    android:layout_height="10dp"
+                                    android:background="@drawable/vlf_circle"
+                                    android:id="@+id/VLF_color"
+                                    />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_toRightOf="@id/VLF_color"
+                                    android:layout_marginLeft="10dp"
+                                    android:text="@string/VLF"
+                                    android:id="@+id/freq_card_txt_vlf_after_measurement"
+                                    android:textColor="#fff"
+                                    android:textSize="@dimen/cardview_value_txt"/>
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp">
+
+                                <ImageView
+                                    android:layout_width="10dp"
+                                    android:layout_height="10dp"
+                                    android:background="@drawable/vhf_circle"
+                                    android:id="@+id/VHF_color"
+                                    />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_toRightOf="@id/VHF_color"
+                                    android:layout_marginLeft="10dp"
+                                    android:text="@string/VHF"
+                                    android:id="@+id/freq_card_txt_vhf_after_measurement"
+                                    android:textColor="#fff"
+                                    android:textSize="@dimen/cardview_value_txt"/>
+                            </RelativeLayout>
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:textColor="#bdc3c7"
+                    android:textSize="12dp"
+                    android:text="*! in order to get reliable frequency data atleast 4 minutes measurement is needed !*"
+                    android:id="@+id/textView" />
+
+            </LinearLayout>
+
+
+v
+        </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
+            card_view:cardElevation="4dp"
+            android:layout_margin="10dp"
+            card_view:cardMaxElevation="6dp"
+            card_view:cardCornerRadius="5dp"
+            android:id="@+id/bpm_card"
+            android:layout_marginTop="15dp"
+            card_view:contentPadding="5dp"
+            card_view:cardBackgroundColor="#2c3e50">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp">
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_appicon_heart"
+                        android:id="@+id/bpm_index_icon_img"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bpm_rate"
+                        android:layout_toRightOf="@+id/bpm_index_icon_img"
+                        android:layout_marginLeft="10dp"
+                        android:textSize="@dimen/cardview_title"
+                        android:textColor="#fff"
+                        android:layout_alignParentTop="true"
+                        android:id="@+id/bpm_index_text_view"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/time_ago"
+                        android:textSize="@dimen/cardview_date"
+                        android:layout_toRightOf="@+id/bpm_index_icon_img"
+                        android:layout_marginLeft="10dp"
+                        android:id="@+id/bpm_index_measurement_date"
+                        android:layout_below="@+id/bpm_index_text_view"
+                        android:textColor="#bdc3c7"/>
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:weightSum="2">
+
+
+                    <LinearLayout
+                        android:layout_width="0px"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/txt_average_bpm"
+                            android:textSize="@dimen/cardview_pink_explain_txt"
+                            android:id="@+id/bpm_txt_average"
+                            android:layout_gravity="center"
+                            android:textColor="#F62459"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="57"
+                            android:textSize="@dimen/cardview_value_txt"
+                            android:id="@+id/bpm_value"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="5dp"
+                            android:textColor="#FFF"
+                            />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0px"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/txt_average_rmssd"
+                            android:id="@+id/bpm_card_txt_hrv_average_value"
+                            android:textSize="@dimen/cardview_pink_explain_txt"
+                            android:layout_gravity="center"
+                            android:textColor="#F62459"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="89"
+                            android:layout_gravity="center"
+                            android:textSize="@dimen/cardview_value_txt"
+                            android:id="@+id/bpm_card_hrv_average_value"
+                            android:layout_marginTop="5dp"
+                            android:textColor="#FFF"
+                            />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:id="@+id/chart_bpm"
+                    >
+
+                </com.github.mikephil.charting.charts.LineChart>
+
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            card_view:cardElevation="4dp"
+            card_view:cardMaxElevation="6dp"
+            android:layout_margin="10dp"
+            android:id="@+id/feeling_card"
+            card_view:cardCornerRadius="5dp"
+            card_view:contentPadding="5dp"
+            card_view:cardBackgroundColor="#2c3e50">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:id="@+id/txt_how_do_you_feel"
+                    android:text="This is how you felt"
+                    android:gravity="center"
+                    android:textColor="#FFFFFF" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="5">
+
+                    <ImageView
+                        android:layout_width="0px"
+                        android:padding="12dp"
+                        android:id="@+id/img_negatively_excited"
+                        android:layout_height="65dp"
+                        android:src="@drawable/ic_negatively_excited"
+                        android:layout_weight="1"/>
+                    <ImageView
+                        android:layout_width="0px"
+                        android:layout_height="65dp"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_negatively_mellow"
+                        android:id="@+id/img_negatively_mellow"
+                        android:layout_weight="1"/>
+                    <ImageView
+                        android:layout_width="0px"
+                        android:layout_height="65dp"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_neutral_selected"
+                        android:id="@+id/img_neutral"
+                        android:layout_weight="1"/>
+                    <ImageView
+                        android:layout_width="0px"
+                        android:layout_height="65dp"
+                        android:padding="12dp"
+                        android:id="@+id/img_positively_mellow"
+                        android:src="@drawable/ic_positively_mellow"
+                        android:layout_weight="1"/>
+                    <ImageView
+                        android:layout_width="0px"
+                        android:padding="12dp"
+                        android:layout_height="65dp"
+                        android:id="@+id/img_positively_excited"
+                        android:src="@drawable/ic_positively_excited"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Possitively mellow"
+                    android:gravity="center"
+                    android:id="@+id/txt_emotion_explaining"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/cardview_pink_explain_txt"
+                    />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_height="90dp"
+            card_view:cardElevation="4dp"
+            card_view:cardMaxElevation="6dp"
+            android:id="@+id/advanced_history_card"
+            card_view:cardCornerRadius="5dp"
+            card_view:contentPadding="5dp"
+            card_view:cardBackgroundColor="#2c3e50">
+
+            <LinearLayout
+                android:padding="5dp"
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:background="@drawable/ic_resume"
+                    android:layout_gravity="top"
+
+                    android:layout_marginLeft="10dp"
+                    android:layout_height="24dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="25dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Measurement"
+                        android:textSize="20dp"
+                        android:id="@+id/advanced_history_txt_card_title"
+                        android:layout_gravity="left"
+                        android:textColor="#FFFFFF"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:id="@+id/advanced_history_txt_card_duration"
+                        android:text="12 min running"
+                        android:textSize="13dp"
+                        android:textColor="#FFFFFF"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/advanced_history_txt_card_date"
+                        android:text="Tue, 17:23"
+                        android:textSize="13dp"
+                        android:textColor="#FFFFFF"
+                        />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/advanced_history_data_layout"
+            android:layout_height="match_parent">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="50dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/ic_ecg"
+                    android:layout_marginLeft="10dp"
+
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="RMSSD"
+                    android:textSize="17dp"
+                    android:id="@+id/advanced_history_txt_rmssd"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="#FFFFFF"
+                    android:layout_gravity="center"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="157 Kcal"
+                    android:textSize="17dp"
+                    android:id="@+id/advanced_history_txt_rmssd_value"
+                    android:textColor="#FFFFFF"
+                    android:gravity="right"
+                    android:layout_marginRight="15dp"
+                    android:layout_gravity="center"
+                    />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="50dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/ic_workout_pulse_icon"
+                    android:layout_marginLeft="10dp"
+
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="LnRMSSD"
+                    android:textSize="17dp"
+                    android:id="@+id/advanced_history_txt_lnrmssd"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="#FFFFFF"
+                    android:layout_gravity="center"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="127"
+                    android:textSize="17dp"
+                    android:textColor="#FFFFFF"
+                    android:gravity="right"
+                    android:id="@+id/advanced_history_txt_lnrmssd_value"
+                    android:layout_marginRight="15dp"
+                    android:layout_gravity="center"
+                    />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="50dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/ic_hrv"
+                    android:layout_marginLeft="10dp"
+
+                    android:layout_gravity="center"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="HRV"
+                    android:textSize="17dp"
+                    android:id="@+id/advanced_history_txt_hrv"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="#FFFFFF"
+                    android:layout_gravity="center"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="8 m/s"
+                    android:textSize="17dp"
+                    android:textColor="#FFFFFF"
+                    android:gravity="right"
+                    android:id="@+id/advanced_history_txt_hrv_value"
+                    android:layout_marginRight="15dp"
+                    android:layout_gravity="center"
+                    />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="50dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/ic_heart"
+                    android:layout_marginLeft="10dp"
+
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="BPM"
+                    android:textSize="17dp"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="#FFFFFF"
+                    android:id="@+id/advanced_history_txt_bpm"
+                    android:layout_gravity="center"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="4 km"
+                    android:textSize="17dp"
+                    android:textColor="#FFFFFF"
+                    android:gravity="right"
+                    android:layout_marginRight="15dp"
+                    android:id="@+id/advanced_history_txt_bpm_value"
+                    android:layout_gravity="center"
+                    />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="50dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/ic_pie_chart"
+                    android:layout_marginLeft="10dp"
+
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="LF"
+                    android:textSize="17dp"
+                    android:layout_marginLeft="20dp"
+                    android:id="@+id/advanced_history_txt_lf"
+                    android:textColor="#FFFFFF"
+                    android:layout_gravity="center"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1-2"
+                    android:textSize="17dp"
+                    android:textColor="#FFFFFF"
+                    android:gravity="right"
+                    android:id="@+id/advanced_history_txt_lf_value"
+                    android:layout_marginRight="15dp"
+                    android:layout_gravity="center"
+                    />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="50dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/ic_pie_chart"
+                    android:layout_marginLeft="10dp"
+
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="HF"
+                    android:textSize="17dp"
+                    android:layout_marginLeft="20dp"
+                    android:id="@+id/advanced_history_txt_hf"
+                    android:textColor="#FFFFFF"
+                    android:layout_gravity="center"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1-2"
+                    android:textSize="17dp"
+                    android:textColor="#FFFFFF"
+                    android:gravity="right"
+                    android:id="@+id/advanced_history_txt_hf_value"
+                    android:layout_marginRight="15dp"
+                    android:layout_gravity="center"
+                    />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="50dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/ic_pie_chart"
+                    android:layout_marginLeft="10dp"
+
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="VLF"
+                    android:textSize="17dp"
+                    android:id="@+id/advanced_history_txt_vlf"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="#FFFFFF"
+                    android:layout_gravity="center"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1-2"
+                    android:textSize="17dp"
+                    android:textColor="#FFFFFF"
+                    android:gravity="right"
+                    android:id="@+id/advanced_history_txt_vlf_value"
+                    android:layout_marginRight="15dp"
+                    android:layout_gravity="center"
+                    />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="50dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/ic_pie_chart"
+                    android:layout_marginLeft="10dp"
+
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="VHF"
+                    android:id="@+id/advanced_history_txt_vhf"
+                    android:textSize="17dp"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="#FFFFFF"
+                    android:layout_gravity="center"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1-2"
+                    android:textSize="17dp"
+                    android:textColor="#FFFFFF"
+                    android:gravity="right"
+                    android:id="@+id/advanced_history_txt_vhf_value"
+                    android:layout_marginRight="15dp"
+                    android:layout_gravity="center"
+                    />
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+
+
+</ScrollView>

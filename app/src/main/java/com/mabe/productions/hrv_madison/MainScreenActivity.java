@@ -265,6 +265,8 @@ public class MainScreenActivity extends AppCompatActivity {
         img_toolbar_add_device.startAnimation(top_down_add);
         img_toolbar_ask.startAnimation(top_down_question);
 
+
+
     }
 
     private void registerReceiver(){
@@ -334,7 +336,13 @@ public class MainScreenActivity extends AppCompatActivity {
 
     }
 
-    public void faqActivity(View view) {
+    public void faqActivity(View view)
+    {
         startActivity(new Intent(MainScreenActivity.this, FrequentlyAskedActivity.class));
+    }
+
+    public void logOut(View view) {
+
+        startActivity(new Intent(MainScreenActivity.this, LoginActivity.class));
     }
 }

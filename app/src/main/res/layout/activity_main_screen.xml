@@ -50,6 +50,7 @@
                     android:layout_height="35dp"
                     android:id="@+id/img_login"
                     android:layout_marginRight="30dp"
+                    android:onClick="logOut"
                     android:src="@drawable/ic_user"/>
 
                 <ImageView

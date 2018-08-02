@@ -154,6 +154,12 @@ public class AdapterRecyclerView extends RecyclerView.Adapter<AdapterRecyclerVie
                     recycler_measurement_txt_duration = itemView.findViewById(R.id.recycler_measurement_txt_measurent_duration);
                     recycler_measurement_txt_date = itemView.findViewById(R.id.recycler_measurement_txt_date);
                     recycler_view_measurement_cardview = itemView.findViewById(R.id.recycler_view_measurement_cardview);
+                    recycler_view_measurement_cardview.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            context.startActivity(new Intent(context, AdvancedMeasurementHistoryActivity.class).putExtra("Measurement",data.get(getAdapterPosition())));
+                        }
+                    });
                     break;
             }
 
