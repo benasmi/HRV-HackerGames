@@ -3,7 +3,6 @@ package com.mabe.productions.hrv_madison;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
-import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -26,7 +25,6 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
-import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -104,7 +102,7 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_advanced_measurement_history);
 
         //Receiving data from RecyclerView and creating workout object
-        RecyclerViewDataHolder parcel = getIntent().getExtras().getParcelable("Measurement");
+        HistoryRecyclerViewDataHolder parcel = getIntent().getExtras().getParcelable("Measurement");
         Measurement measurement = new Measurement(
                 parcel.getDate()
                 ,parcel.getRmssd()

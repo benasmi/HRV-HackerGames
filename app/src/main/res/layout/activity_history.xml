@@ -23,7 +23,6 @@
             android:layout_width="36dp"
             android:layout_height="35dp"
             android:id="@+id/img_back_arrow"
-            android:onClick="backImage"
             android:layout_marginRight="30dp"
             android:src="@drawable/ic_back_arrow"/>
 
@@ -41,16 +40,31 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <android.support.v7.widget.RecyclerView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/history_recyler"
         android:layout_below="@+id/history_toolbar"
         >
 
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:id="@+id/txt_no_history"
+            android:layout_height="wrap_content"
+            android:textSize="17dp"
+            android:text="No measurements/workouts found."
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textColor="#fff"/>
 
-    </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/history_recyler"
+            />
+
+
+    </RelativeLayout>
 
 
 

@@ -1,9 +1,6 @@
 package com.mabe.productions.hrv_madison;
 
-import android.app.Notification;
-import android.content.Intent;
 import android.content.res.Resources;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -25,10 +22,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.mabe.productions.hrv_madison.fragments.DataTodayFragment;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
-import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -76,7 +71,7 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
 
 
         //Receiving data from RecyclerView and creating workout object
-        RecyclerViewDataHolder parcel = getIntent().getExtras().getParcelable("Workout");
+        HistoryRecyclerViewDataHolder parcel = getIntent().getExtras().getParcelable("Workout");
         WorkoutMeasurements workout = new WorkoutMeasurements(parcel.getDate()
                 ,parcel.getWorkout_duration()
                 ,parcel.getAverage_bpm()

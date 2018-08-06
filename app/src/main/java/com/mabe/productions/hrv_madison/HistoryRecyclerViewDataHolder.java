@@ -5,19 +5,18 @@ import android.os.Parcelable;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 /**
  * Created by Benas on 7/31/2018.
  */
 
-public class RecyclerViewDataHolder implements Parcelable  {
+public class HistoryRecyclerViewDataHolder implements Parcelable  {
 
 
     /*
-    average_bpm, bpm_data, durationand date is used for both measurements and workouts
-    */
+     * average_bpm, bpm_data, durationand date is used for both measurements and workouts
+     */
 
 
     //HRV MEASUREMENT DATA
@@ -54,7 +53,7 @@ public class RecyclerViewDataHolder implements Parcelable  {
 
 
 
-    public RecyclerViewDataHolder(int unique_id, Date date, float workout_duration, float average_bpm, int[] bpm_data, float[] pace_data, LatLng[] route, float calories_burned, int pulse_zone, float distance, int viewType) {
+    public HistoryRecyclerViewDataHolder(int unique_id, Date date, float workout_duration, float average_bpm, int[] bpm_data, float[] pace_data, LatLng[] route, float calories_burned, int pulse_zone, float distance, int viewType) {
         this.unique_id = unique_id;
         this.date = date;
         this.workout_duration = workout_duration;
@@ -68,7 +67,7 @@ public class RecyclerViewDataHolder implements Parcelable  {
         this.viewType = viewType;
     }
 
-    public RecyclerViewDataHolder(Date date, int duration, int rmssd, float ln_rmssd, float lowest_rmssd, float highest_rmssd, float lowest_bpm, float highest_bpm, float average_bpm, float LF_band, float VLF_band, float VHF_band, float HF_band, int[] bpm_data, int[] rmssd_data, int uniqueId, int mood, int hrv, int viewType) {
+    public HistoryRecyclerViewDataHolder(Date date, int duration, int rmssd, float ln_rmssd, float lowest_rmssd, float highest_rmssd, float lowest_bpm, float highest_bpm, float average_bpm, float LF_band, float VLF_band, float VHF_band, float HF_band, int[] bpm_data, int[] rmssd_data, int uniqueId, int mood, int hrv, int viewType) {
         this.date = date;
         this.duration = duration;
         this.rmssd = rmssd;
@@ -90,7 +89,7 @@ public class RecyclerViewDataHolder implements Parcelable  {
         this.viewType = viewType;
     }
 
-    protected RecyclerViewDataHolder(Parcel in) {
+    protected HistoryRecyclerViewDataHolder(Parcel in) {
         duration = in.readInt();
         rmssd = in.readInt();
         ln_rmssd = in.readFloat();
@@ -118,15 +117,15 @@ public class RecyclerViewDataHolder implements Parcelable  {
         date = (Date) in.readSerializable();
     }
 
-    public static final Creator<RecyclerViewDataHolder> CREATOR = new Creator<RecyclerViewDataHolder>() {
+    public static final Creator<HistoryRecyclerViewDataHolder> CREATOR = new Creator<HistoryRecyclerViewDataHolder>() {
         @Override
-        public RecyclerViewDataHolder createFromParcel(Parcel in) {
-            return new RecyclerViewDataHolder(in);
+        public HistoryRecyclerViewDataHolder createFromParcel(Parcel in) {
+            return new HistoryRecyclerViewDataHolder(in);
         }
 
         @Override
-        public RecyclerViewDataHolder[] newArray(int size) {
-            return new RecyclerViewDataHolder[size];
+        public HistoryRecyclerViewDataHolder[] newArray(int size) {
+            return new HistoryRecyclerViewDataHolder[size];
         }
     };
 
