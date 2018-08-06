@@ -2,10 +2,8 @@ package com.mabe.productions.hrv_madison;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,18 +14,20 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+
 
 /**
  * Created by Benas on 7/31/2018.
  */
 
-public class AdapterRecyclerView extends RecyclerView.Adapter<AdapterRecyclerView.MyAdapterHolder> {
+public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecyclerViewAdapter.MyAdapterHolder> {
 
-    private ArrayList<RecyclerViewDataHolder> data;
+    private ArrayList<HistoryRecyclerViewDataHolder> data;
     private Context context;
 
-    public AdapterRecyclerView(ArrayList<RecyclerViewDataHolder> data, Context context) {
+
+
+    public HistoryRecyclerViewAdapter(ArrayList<HistoryRecyclerViewDataHolder> data, Context context) {
         this.data = data;
         this.context = context;
     }
@@ -44,7 +44,7 @@ public class AdapterRecyclerView extends RecyclerView.Adapter<AdapterRecyclerVie
     public void onBindViewHolder(final MyAdapterHolder holder, final int position) {
 
         final int card_type = data.get(position).getViewType();
-        final RecyclerViewDataHolder item = data.get(position);
+        final HistoryRecyclerViewDataHolder item = data.get(position);
 
 
         switch (card_type){
@@ -92,7 +92,7 @@ public class AdapterRecyclerView extends RecyclerView.Adapter<AdapterRecyclerVie
     @Override
     public MyAdapterHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
-        AdapterRecyclerView.MyAdapterHolder holder;
+        HistoryRecyclerViewAdapter.MyAdapterHolder holder;
         LayoutInflater layoutInflater = LayoutInflater.from(context);
 
         switch (viewType){
