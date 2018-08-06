@@ -16,6 +16,7 @@ import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -51,6 +52,9 @@ public class HistoryActivity extends AppCompatActivity {
 
     private void initialiseViews(){
 
+
+        //Date currentTime = Calendar.getInstance().getTime();
+        //Log.i("TEST", String.valueOf(currentTime));
 
         Animation left_to_right = AnimationUtils.loadAnimation(this, R.anim.left_to_right);
         Animation left_to_right_d = AnimationUtils.loadAnimation(this, R.anim.left_to_right_delay);

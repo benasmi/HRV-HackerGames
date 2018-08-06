@@ -3,22 +3,31 @@ package com.mabe.productions.hrv_madison;
 import android.app.Notification;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Parcelable;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.budiyev.android.circularprogressbar.CircularProgressBar;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -29,6 +38,7 @@ import com.mabe.productions.hrv_madison.fragments.DataTodayFragment;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
 import java.io.Serializable;
+import java.time.Month;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -37,6 +47,10 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
     //Map
     private GoogleMap route_display_googlemap;
     private SupportMapFragment map_fragment;
+    private RelativeLayout map_frame_layout;
+    private ContentLoadingProgressBar loading_progress;
+    private TextView txt_loading;
+
 
     //Toolbar
     private ImageView img_back_arrow;
@@ -91,6 +105,15 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
         initialiseViews();
         setUpData(workout);
         settingWorkoutMap(workout);
+        setFonts();
+
+    }
+
+    private void setFonts(){
+
+        Typeface verdana = Typeface.createFromAsset(getAssets(),
+                "fonts/futura_light.ttf");
+        txt_loading.setTypeface(verdana);
 
     }
 
@@ -99,18 +122,20 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
 
 
     private void initialiseViews(){
-        Animation top_to_bottom = AnimationUtils.loadAnimation(this, R.anim.top_to_bottom);
+
+
+
+
         Animation bottom_to_top = AnimationUtils.loadAnimation(this, R.anim.bottom_to_top);
         Animation left_to_right = AnimationUtils.loadAnimation(this, R.anim.left_to_right);
-        Animation left_to_right_strong = AnimationUtils.loadAnimation(this, R.anim.left_to_right_strong);
         Animation left_to_right_d = AnimationUtils.loadAnimation(this, R.anim.left_to_right_delay);
 
+        txt_loading = (TextView) findViewById(R.id.txt_loading);
         toolbar_txt = (TextView) findViewById(R.id.toolbar_title_advanced);
         advanced_history_card = (CardView) findViewById(R.id.advanced_history_card);
         advanced_history_data_layout = (LinearLayout) findViewById(R.id.advanced_history_data_layout);
 
-        map_fragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.history_workout_route);
+        map_fragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.history_workout_route);
 
 
         img_back_arrow = (ImageView) findViewById(R.id.img_back_arrow);
@@ -136,9 +161,14 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
         advanced_history_txt_intensity = (TextView) findViewById(R.id.advanced_history_txt_intensity);
         advanced_history_txt_intensity_value = (TextView) findViewById(R.id.advanced_history_txt_intensity_value);
 
+        map_frame_layout = (RelativeLayout) findViewById(R.id.map_frame_layout);
+        loading_progress = (ContentLoadingProgressBar) findViewById(R.id.loading_progress);
+        loading_progress.show();
+
         img_back_arrow.startAnimation(left_to_right);
         toolbar_txt.startAnimation(left_to_right_d);
         advanced_history_card.startAnimation(left_to_right);
+
         advanced_history_data_layout.startAnimation(bottom_to_top);
     }
 
@@ -151,16 +181,21 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
         advanced_history_txt_distance_value.setText(String.valueOf(workout.getDistance()) + " km");
         advanced_history_txt_intensity_value.setText(String.valueOf(workout.getPulse_zone()));
 
+
     }
 
-    private String formatDate(Date date){
-        String time = DateFormat.getMediumDateFormat(this).format(date);
-        String realTime = time.substring(0,5);
 
+    private String formatDate(Date date){
         Calendar cal = Calendar.getInstance();
+
         cal.setTime(date);
-        int years = cal.get(Calendar.YEAR);
-        return String.valueOf(new StringBuilder().append(realTime).append(", ").append(years));
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        int month = cal.get(Calendar.MONTH);
+        int hour = cal.get(Calendar.HOUR);
+        int minute = cal.get(Calendar.MINUTE);
+        String menesines = Utils.convertNumberToMonth(month);
+        Log.i("datos", menesines);
+        return String.valueOf(new StringBuilder().append(day).append(" ").append(menesines).append(", ").append(hour).append(":").append(minute)) ;
     }
 
 
@@ -171,6 +206,17 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
             map_fragment.getMapAsync(new OnMapReadyCallback() {
                 @Override
                 public void onMapReady(GoogleMap googleMap) {
+
+
+
+                    googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                        @Override
+                        public void onMapLoaded() {
+                            map_frame_layout.setVisibility(View.GONE);
+                            loading_progress.hide();
+                        }
+                    });
+
                     route_display_googlemap = googleMap;
 
                     try {
@@ -217,6 +263,7 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
         }
 
         route_display_googlemap.animateCamera(cu);
+
     }
     @Override
     public void onResume() {

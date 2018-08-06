@@ -14,6 +14,7 @@ import android.view.animation.AlphaAnimation;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -50,14 +51,14 @@ public class AdapterRecyclerView extends RecyclerView.Adapter<AdapterRecyclerVie
             //Workout
             case 0:
                 holder.recycler_workout_txt_duration.setText((int)(item.getWorkout_duration()/1000/60) + " min running");
-                holder.recycler_workout_txt_date.setText(Utils.showDate(item.getDate(),context));
+                holder.recycler_workout_txt_date.setText(showDate(item.getDate()));
                 setFadeAnimation(holder.recycler_view_workout_cardview);
                 break;
 
             //Measurement
             case 1:
                 holder.recycler_measurement_txt_duration.setText("Duration: " + String.valueOf(item.getDuration())+ " min");
-                holder.recycler_measurement_txt_date.setText(Utils.showDate(item.getDate(),context));
+                holder.recycler_measurement_txt_date.setText(showDate(item.getDate()));
                 setFadeAnimation(holder.recycler_view_measurement_cardview);
                 break;
         }
@@ -67,7 +68,14 @@ public class AdapterRecyclerView extends RecyclerView.Adapter<AdapterRecyclerVie
     }
 
 
-
+    private String showDate(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        int month = cal.get(Calendar.MONTH);
+        String men = Utils.convertNumberToMonth(month);
+        return String.valueOf(new StringBuilder().append(day).append(" ").append(men)) ;
+    }
 
 
     @Override

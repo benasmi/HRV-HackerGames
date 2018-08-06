@@ -38,7 +38,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
      *
      */
 
-    public static final String DATE_FORMAT = "dd-MM-yyyy";
+    public static final String DATE_FORMAT = "dd-MM-yyyy hh:mm:ss";
 
     //User data
     public static final String SHARED_PREFS_USER_DATA = "user_data";

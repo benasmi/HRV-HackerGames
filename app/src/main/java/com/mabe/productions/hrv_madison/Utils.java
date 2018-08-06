@@ -19,6 +19,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -114,6 +115,7 @@ public class Utils {
 
     /**
      * Builds an alert dialog with a yes/no decision.
+     * Builds an alert dialog with a yes/no decision.
      * If a given listener is null, a default listener, which dismisses the dialog on press, is used.
      */
     public static void buildAlertDialogPrompt(Context context, String title, String message, String positiveButtonText, String negativeButtonText , @Nullable DialogInterface.OnClickListener positiveButtonListener, @Nullable DialogInterface.OnClickListener negativeButtonListener){
@@ -164,7 +166,9 @@ public class Utils {
 
     public static Date getDateFromString(String date){
         SimpleDateFormat format = new SimpleDateFormat(FeedReaderDbHelper.DATE_FORMAT);
+
         try {
+            //Log.i("TEST", "GetDateFromString: " + String.valueOf(format.parse(date)));
             return format.parse(date);
         } catch (ParseException e) {
             return null;
@@ -174,6 +178,7 @@ public class Utils {
 
     public static String getStringFromDate(Date date){
         SimpleDateFormat format = new SimpleDateFormat(FeedReaderDbHelper.DATE_FORMAT);
+        //Log.i("TEST", "getStringFromDate: " + String.valueOf(format.format(date)));
         return format.format(date);
     }
 
@@ -454,11 +459,70 @@ public class Utils {
     }
 
 
-    public static String showDate(Date date,Context context){
-        String time = DateFormat.getMediumDateFormat(context).format(date);
-        String realTime = time.substring(0,5);
 
-        return realTime;
+
+    public static String convertNumberToMonth(int num){
+        String month = "";
+            switch (num){
+                case 0:
+                    month = "Jan";
+                    break;
+
+                case 1:
+                    month = "Feb";
+                    break;
+
+
+                case 2:
+                    month = "Mar";
+                    break;
+
+
+                case 3:
+                    month = "Apr";
+                    break;
+
+
+                case 4:
+                    month = "May";
+                    break;
+
+
+                case 5:
+                    month = "Jun";
+                    break;
+
+
+                case 6:
+                    month = "July";
+                    break;
+
+
+                case 7:
+                    month = "Aug";
+                    break;
+
+
+                case 9:
+                    month = "Sep";
+                    break;
+
+
+                case 10:
+                    month = "Oct";
+                    break;
+
+
+                case 11:
+                    month = "Nov";
+                    break;
+
+                case 12:
+                    month = "Dec";
+                    break;
+
+            }
+        return month;
     }
 
 

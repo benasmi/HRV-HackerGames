@@ -612,6 +612,7 @@ public class WorkoutFragment extends Fragment {
                     totalDistance
             );
 
+            Log.i("TEST", "WORKOUTDATADATATDATATA: " + String.valueOf(workout.getDate()));
             User.addWorkoutData(getContext(), workout, true);
 
 

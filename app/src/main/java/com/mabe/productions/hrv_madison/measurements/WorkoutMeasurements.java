@@ -1,6 +1,7 @@
 package com.mabe.productions.hrv_madison.measurements;
 
 import android.content.ContentValues;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.mabe.productions.hrv_madison.Utils;
@@ -56,6 +57,8 @@ public class WorkoutMeasurements {
     public ContentValues getContentValues(){
         ContentValues values = new ContentValues();
         values.put(FeedReaderDbHelper.WORKOUT_COL_AVERAGE_BPM, getAverage_bpm());
+        Log.i("datos", "From Utils: " + String.valueOf(Utils.getStringFromDate(getDate())));
+        Log.i("datos", "From Nowhere: " + String.valueOf(getDate()));
         values.put(FeedReaderDbHelper.WORKOUT_COL_DATE, Utils.getStringFromDate(getDate()));
         values.put(FeedReaderDbHelper.WORKOUT_COL_DURATION, getWorkout_duration());
         values.put(FeedReaderDbHelper.WORKOUT_COL_AVERAGE_BPM, getAverage_bpm());
