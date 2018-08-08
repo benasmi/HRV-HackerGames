@@ -49,7 +49,7 @@ public class FireMeasurement {
         this.hrv = measurement.getHrv();
     }
 
-    public FireMeasurement(String date, int duration, int rmssd, float ln_rmssd, float lowest_rmssd, float highest_rmssd, float lowest_bpm, float highest_bpm, float average_bpm, float LF_band, float VLF_band, float VHF_band, float HF_band, int[] bpm_data, int[] rmssd_data, int uniqueId, int mood, int hrv) {
+    public FireMeasurement(String date, int duration, int rmssd, float ln_rmssd, float lowest_rmssd, float highest_rmssd, float lowest_bpm, float highest_bpm, float average_bpm, float LF_band, float VLF_band, float VHF_band, float HF_band, String bpm_data, String rmssd_data, int uniqueId, int mood, int hrv) {
         this.date = date;
         this.duration = duration;
         this.rmssd = rmssd;
@@ -63,8 +63,8 @@ public class FireMeasurement {
         this.VLF_band = VLF_band;
         this.VHF_band = VHF_band;
         this.HF_band = HF_band;
-        this.bpm_data = FeedReaderDbHelper.intArrayToString(bpm_data);
-        this.rmssd_data = FeedReaderDbHelper.intArrayToString(rmssd_data);
+        this.bpm_data = bpm_data;
+        this.rmssd_data = rmssd_data;
         this.mood = mood;
         this.hrv = hrv;
     }
@@ -81,51 +81,51 @@ public class FireMeasurement {
         return rmssd;
     }
 
-    public float getLnRmssd() {
+    public float getLn_rmssd() {
         return ln_rmssd;
     }
 
-    public float getLowestRmssd() {
+    public float getLowest_rmssd() {
         return lowest_rmssd;
     }
 
-    public float getHighestRmssd() {
+    public float getHighest_rmssd() {
         return highest_rmssd;
     }
 
-    public float getLowestBpm() {
+    public float getLowest_bpm() {
         return lowest_bpm;
     }
 
-    public float getHighestBpm() {
+    public float getHighest_bpm() {
         return highest_bpm;
     }
 
-    public float getAverageBpm() {
+    public float getAverage_bpm() {
         return average_bpm;
     }
 
-    public float getLFBand() {
+    public float getLF_band() {
         return LF_band;
     }
 
-    public float getVLFBand() {
+    public float getVLF_band() {
         return VLF_band;
     }
 
-    public float getVHFBand() {
+    public float getVHF_band() {
         return VHF_band;
     }
 
-    public float getHFBand() {
+    public float getHF_band() {
         return HF_band;
     }
 
-    public String getBpmData() {
+    public String getBpm_data() {
         return bpm_data;
     }
 
-    public String getRmssdData() {
+    public String getRmssd_data() {
         return rmssd_data;
     }
 

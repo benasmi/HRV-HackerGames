@@ -44,6 +44,8 @@ import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.bluetooth.BluetoothGattService;
 import com.mabe.productions.hrv_madison.bluetooth.LeDevicesDialog;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
+import com.mabe.productions.hrv_madison.firebaseDatase.FireMeasurement;
+import com.mabe.productions.hrv_madison.firebaseDatase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.measurements.BPM;
 import com.mabe.productions.hrv_madison.measurements.FrequencyMethod;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
@@ -233,7 +235,7 @@ public class MeasurementFragment extends Fragment {
 
                         ViewPager parentViewPager = getActivity().findViewById(R.id.viewpager);
                         ViewPagerAdapter adapter = (ViewPagerAdapter) parentViewPager.getAdapter();
-                        adapter.dataTodayFragment.updateData();
+                        adapter.dataTodayFragment.updateData(getContext());
                         adapter.workoutFragment.updateData();
                         parentViewPager.setCurrentItem(1);
                         break;
@@ -402,7 +404,10 @@ public class MeasurementFragment extends Fragment {
 
                         Measurement measurement = new Measurement(hrv, fft, bpm, measurement_duration.getValue(), Calendar.getInstance().getTime());
 
+                        //Saving to local db
                         User.addMeasurementData(getContext(), measurement, true);
+                        //Saving to remote db
+                        FirebaseUtils.addMeasurement(new FireMeasurement(measurement));
 
 
                         Calendar calendar = Calendar.getInstance();

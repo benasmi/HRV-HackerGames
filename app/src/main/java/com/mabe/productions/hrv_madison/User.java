@@ -170,6 +170,16 @@ public class User {
     }
 
     /**
+     * This remove all the measurements saved in the database.
+     * @param context
+     */
+    public static void removeAllWorkouts(Context context){
+        SQLiteDatabase db = new FeedReaderDbHelper(context).getWritableDatabase();
+        db.execSQL("delete from " + FeedReaderDbHelper.WORKOUT_DATA_TABLE_NAME);
+        db.close();
+    }
+
+    /**
      * Saves a new measurement to the database.
      * @param overrideByDate If true, existing table row with today's date is overridden.
      */
@@ -216,15 +226,10 @@ public class User {
         //Inserting values
         ContentValues values = measurement.getContentValues();
 
-        db.insertOrThrow(FeedReaderDbHelper.HRV_DATA_TABLE_NAME, null, values);
-
+        db.insert(FeedReaderDbHelper.HRV_DATA_TABLE_NAME, null, values);
         db.close();
 
-        //Pushing to online database
-        //todo: check if user is authenticated
 
-        FireMeasurement firebaseMeasurement = new FireMeasurement(measurement);
-        FirebaseUtils.addMeasurement(firebaseMeasurement);
 
     }
 
@@ -307,16 +312,9 @@ public class User {
         //Inserting values
         ContentValues values = workout.getContentValues();
 
-        db.insertOrThrow(FeedReaderDbHelper.WORKOUT_DATA_TABLE_NAME, null, values);
+        db.insert(FeedReaderDbHelper.WORKOUT_DATA_TABLE_NAME, null, values);
 
         db.close();
-
-        //Pushing to online database
-        //todo: check if user is authenticated
-        FireWorkout firebaseWorkout = new FireWorkout(workout);
-        FirebaseUtils.addWorkout(firebaseWorkout);
-
-
     }
 
     /**
@@ -665,6 +663,7 @@ public class User {
         }
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_DURATION, workout_duration, FeedReaderDbHelper.SHARED_PREFS_SPORT);
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_PULSE_ZONE, pulse_zone, FeedReaderDbHelper.SHARED_PREFS_SPORT);
+        
     }
 
 

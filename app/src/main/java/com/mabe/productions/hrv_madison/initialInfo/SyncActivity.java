@@ -16,8 +16,10 @@ import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.firebaseDatase.FireMeasurement;
 import com.mabe.productions.hrv_madison.firebaseDatase.FireUser;
+import com.mabe.productions.hrv_madison.firebaseDatase.FireWorkout;
 import com.mabe.productions.hrv_madison.firebaseDatase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
+import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
 import java.util.List;
 
@@ -53,27 +55,7 @@ public class SyncActivity extends AppCompatActivity {
                 Utils.saveToSharedPrefs(SyncActivity.this, FeedReaderDbHelper.FIELD_BASE_DURATION, fireUser.getMaxDuration(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
                 Utils.saveToSharedPrefs(SyncActivity.this, FeedReaderDbHelper.FIELD_WEEK_DAYS, FeedReaderDbHelper.getWeeksFromString(fireUser.getWorkout_days()),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
 
-                FirebaseUtils.getAllMeasurements(new FirebaseUtils.OnMeasurementFetchListener(){
-
-                    @Override
-                    public void onSuccess(List<FireMeasurement> measurements) {
-
-                        User.removeAllMeasurements(getApplicationContext());
-
-                        for(FireMeasurement fireMeasurement : measurements){
-                            Measurement measurement = new Measurement(fireMeasurement);
-                            User.addMeasurementData(getApplicationContext(), measurement, false);
-                        }
-
-                        startActivity(new Intent(SyncActivity.this, MainScreenActivity.class));
-                        loadingProgressBar.hide();
-                    }
-
-                    @Override
-                    public void onFailure(DatabaseError error) {
-                        Log.i("TEST", "Failure: " + error.getMessage());
-                    }
-                });
+                startActivity(new Intent(SyncActivity.this, MainScreenActivity.class));
 
             }
 
