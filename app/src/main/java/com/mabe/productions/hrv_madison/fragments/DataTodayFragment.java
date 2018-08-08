@@ -271,12 +271,12 @@ public class DataTodayFragment extends Fragment {
             reccomendation_img_arrow.setImageResource(R.drawable.ic_appicon_rectangle);
             reccomendation_txt_hrv_increase.setTextColor(Color.parseColor("#ffffff"));
         }else if(!hasMeasuredToday){
-            //User has not measured today, asking him to do so.
+            //FireUser has not measured today, asking him to do so.
             reccomendation_txt_hrv_increase.setText("Please measure\nyour HRV!");
             reccomendation_img_arrow.setImageResource(R.drawable.ic_question);
             reccomendation_txt_hrv_increase.setTextColor(Color.parseColor("#ffffff"));
         }else{
-            //User has measured today and there is plenty of data to display percentage.
+            //FireUser has measured today and there is plenty of data to display percentage.
             setReccomendationCardPercentage(user.getLatestHrvRatio());
         }
 

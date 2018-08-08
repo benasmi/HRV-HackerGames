@@ -3,6 +3,7 @@ package com.mabe.productions.hrv_madison;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -17,6 +19,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -34,6 +43,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private AppCompatCheckBox terms_checkbox;
     private TextView txt_terms;
     private LinearLayout terms_layout;
+    private FirebaseAuth mAuth;
 
     private AppCompatButton register_button;
 
@@ -42,6 +52,7 @@ public class RegistrationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
         initializeViews();
+        mAuth = FirebaseAuth.getInstance();
         setFonts();
     }
 
@@ -137,6 +148,26 @@ public class RegistrationActivity extends AppCompatActivity {
         }else{
             register_repeat_password_input.setError(null);
         }
+
+        mAuth.createUserWithEmailAndPassword(username, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            FirebaseUser user = mAuth.getCurrentUser();
+
+
+                        } else {
+                            // If sign in fails, display a message to the user.
+
+                        }
+
+
+                    }
+                });
+
+
 
     }
 }

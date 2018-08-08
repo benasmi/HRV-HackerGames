@@ -39,28 +39,45 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
+
+
+
+
+
+
+
+
+
     compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     compile 'no.nordicsemi.android.support.v18:scanner:1.0.0'
-    compile 'com.android.support:cardview-v7:21.0.3'
+    compile 'com.android.support:cardview-v7:26.0.0-alpha1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
     compile 'com.google.android.gms:play-services-fitness:15.0.1'
     compile 'com.google.android.gms:play-services-auth:15.0.1'
+    compile 'com.google.android.gms:play-services-maps:15.0.1'
+    
+    compile 'com.google.firebase:firebase-auth:16.0.2'
+    compile 'com.google.firebase:firebase-core:16.0.1'
+    compile 'com.google.firebase:firebase-database:16.0.1'
+
     compile 'com.aurelhubert:ahbottomnavigation:2.1.0'
-    compile 'com.android.support:support-v4:26.+'
+    compile 'com.android.support:support-v4:26.0.0-alpha1'
     compile 'com.shawnlin:number-picker:2.4.5'
     compile 'com.qindachang:ruler-view:1.0.0'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.2'
     compile 'com.github.channguyen:rsv:1.0.1'
     compile 'org.adw.library:discrete-seekbar:1.0.1'
     compile 'com.budiyev.android:circular-progress-bar:1.1.8'
-    compile 'com.google.android.gms:play-services-maps:15.0.1'
     compile 'io.nlopez.smartlocation:library:3.3.3'
     compile 'com.github.vihtarb:tooltip:0.1.9'
-
-
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
-
     compile 'com.android.support:multidex:1.0.0'
     testCompile 'junit:junit:4.12'
 }
+
+
+
+
+apply plugin: 'com.google.gms.google-services'

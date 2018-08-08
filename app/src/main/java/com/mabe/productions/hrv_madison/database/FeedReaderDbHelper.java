@@ -40,7 +40,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
     public static final String DATE_FORMAT = "dd-MM-yyyy hh:mm:ss";
 
-    //User data
+    //FireUser data
     public static final String SHARED_PREFS_USER_DATA = "user_data";
     public static final String FIELD_HEIGHT = "height";
     public static final String FIELD_WEIGHT = "weight";
@@ -60,12 +60,12 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public static final String FIELD_VIBRATION_INDICATION = "vibration_indication";
 
 
-    //User BT prefs.
+    //FireUser BT prefs.
     public static final String SHARED_PREFS_DEVICES = "SavedDevice";
     public static final String BT_FIELD_MAC_ADRESS = "MAC_adress";
     public static final String BT_FIELD_DEVICE_NAME = "device_name";
 
-    //User sport prefs
+    //FireUser sport prefs
     public static final String SHARED_PREFS_SPORT = "Sport";
     public static final String FIELD_DURATION = "duration";
     public static final String FIELD_PULSE_ZONE = "pulse_zone";

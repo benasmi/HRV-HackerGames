@@ -567,7 +567,7 @@ public class User {
 
     /**
      * Fetches data from the database and returns an instance of a user
-     * @return User instance
+     * @return FireUser instance
      */
     public static User getUser(Context context) {
         User user = new User();
@@ -666,7 +666,7 @@ public class User {
 
         if(firstWeeklyDate == null){
             first_time = true;
-            Log.i("TEST", "Users first ever generated program");
+            Log.i("TEST", "FireUser first ever generated program");
             firstWeeklyDate = calendar.getTime();
             Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_WEEKLY_PROGRAME_GENERATED_DATE, Utils.getStringFromDate(firstWeeklyDate), FeedReaderDbHelper.SHARED_PREFS_SPORT);
             Utils.buildAlertDialogPrompt(context,"Weekly program status!", "We have created your first weekly workout program. Based on your activity evaluation you should start from week: " + String.valueOf(activity_streak+1),"Close","",null,null);

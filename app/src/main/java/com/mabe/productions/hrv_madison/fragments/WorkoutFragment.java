@@ -342,7 +342,7 @@ public class WorkoutFragment extends Fragment {
      * Checks if gps enabled and gps permission is granted.
      * If gps is not enabled, user is notified via a toast.
      * If user has not granted gps permission yet, a permission is requested.
-     * After the User has granted a permission, {@link #startWorkout()} is called;
+     * After the FireUser has granted a permission, {@link #startWorkout()} is called;
      *
      * @return returns true if gps is enabled and ready to use
      */
@@ -366,7 +366,7 @@ public class WorkoutFragment extends Fragment {
 
     /**
      * Checks if:
-     *   User has granted a GPS permission
+     *   FireUser has granted a GPS permission
      *   GPS is on
      *   Pulsometer is connected
      *     If pulsometer is not connected, prompting user with a dialog.
@@ -978,7 +978,7 @@ public class WorkoutFragment extends Fragment {
 
                         setWalkingRunningState(timePassed);
 
-                        //User is working out longer, than specified duration
+                        //FireUser is working out longer, than specified duration
                         if (timePassed > userSpecifiedWorkoutDuration) {
                             Log.i("TEST", "Setting progressBar duration 1st if...");
                             int minutes = (int) (timePassed - userSpecifiedWorkoutDuration) / 60000;
@@ -991,7 +991,7 @@ public class WorkoutFragment extends Fragment {
                                 editText_seconds.setText(seconds + "");
                                 editText_minutes.setText("+" + minutes + "");
                             }
-                        } else if(timePassed < userSpecifiedWorkoutDuration){ //User is within his specified time limits
+                        } else if(timePassed < userSpecifiedWorkoutDuration){ //FireUser is within his specified time limits
                             Log.i("TEST", "Setting progressBar duration 2nd if...");
 
                             //Checking if intervals are enabled.
@@ -1144,7 +1144,7 @@ public class WorkoutFragment extends Fragment {
     /**
      * Calculates the calories burned.
      *
-     * @param gender     The gender of the user. Either User.GENDER_MALE or User.GENDER_FEMALE
+     * @param gender     The gender of the user. Either FireUser.GENDER_MALE or FireUser.GENDER_FEMALE
      * @param weight     The weight of the user in kilograms.
      * @param heartRate  The current heartRate in BPM.
      * @param timePassed The amount of time that has passed since last heart rate measurement.
@@ -1171,7 +1171,7 @@ public class WorkoutFragment extends Fragment {
     /**
      * Gets the current pulse zone user is in
      *
-     * @param gender The gender of the user. Either User.GENDER_MALE or User.GENDER_FEMALE
+     * @param gender The gender of the user. Either FireUser.GENDER_MALE or FireUser.GENDER_FEMALE
      * @param age    The age of the user.
      * @return The pulse zone user is in. If user does not fit pulse zone bounds, returns 0.
      * @heartRate The heart rate of the user in BPM.
@@ -1206,7 +1206,7 @@ public class WorkoutFragment extends Fragment {
      *
      * @param minimumHR The lower bounds of the lowest pulse zone.
      * @param maximumHR The upper bounds of the highest pulse zone.
-     * @return A number from 0 to 1. If User's HR is not in the min/max HR bounds, returns 0.05f
+     * @return A number from 0 to 1. If FireUser's HR is not in the min/max HR bounds, returns 0.05f
      */
     private float calculateUIMultiplier(float minimumHR, float maximumHR, int currentHR) {
         if (currentHR < minimumHR) {

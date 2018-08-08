@@ -13,6 +13,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mabe.productions.hrv_madison.MainScreenActivity;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.Utils;
@@ -29,13 +33,14 @@ public class IntroInitialMaxDuration extends AppCompatActivity {
     private TextView txt_question;
     private DiscreteSeekBar duration_slider;
     private int maxDur = 30;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.intro_initial_max_duration_activity);
         Utils.changeNotifBarColor(Color.parseColor("#3e5266"),getWindow());
-
+        mAuth = FirebaseAuth.getInstance();
         //Saving intro progress
         initializeViews();
         setFonts();
@@ -102,8 +107,15 @@ public class IntroInitialMaxDuration extends AppCompatActivity {
             clickedOnce = false;
             Toast.makeText(IntroInitialMaxDuration.this,"Pasirinkite didesnį periodą, negu 15min!", Toast.LENGTH_LONG).show();
         }else{
+
+
+            FirebaseUser user = mAuth.getCurrentUser();
+            DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
+            fireDatabase.child("doneInitial").setValue(true);
+
             Utils.saveToSharedPrefs(this,FeedReaderDbHelper.FIELD_BASE_DURATION, (float) maxDur,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
             Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_DONE_INITIAL, true, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+
             startActivity(new Intent(this, MainScreenActivity.class));
         }
     }
