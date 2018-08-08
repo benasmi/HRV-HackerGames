@@ -12,6 +12,10 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mabe.productions.hrv_madison.Exercise;
 import com.mabe.productions.hrv_madison.MainScreenActivity;
 import com.mabe.productions.hrv_madison.R;
@@ -78,6 +82,11 @@ public class IntroInitialInfoBirthday extends AppCompatActivity {
         calendar.set(year, month, day);
 
         Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_BIRTHDAY,Utils.getStringFromDate(calendar.getTime()),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
+        fireDatabase.child("birthday").setValue(Utils.getStringFromDate(calendar.getTime()));
+
 
         startActivity(new Intent(this, IntroInitialDaySelection.class));
     }

@@ -13,6 +13,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
@@ -98,6 +102,12 @@ public class IntroInitialGender extends AppCompatActivity {
     public void start(View view) {
         if(selectedGender!=-1){
             Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_GENDER, selectedGender,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+            FirebaseUser user = mAuth.getCurrentUser();
+            DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
+            fireDatabase.child("gender").setValue(selectedGender);
+
             startActivity(new Intent(this, IntroInitialActivityIndex.class));
         }else{
             Toast.makeText(this, R.string.please_select_gender, Toast.LENGTH_LONG).show();

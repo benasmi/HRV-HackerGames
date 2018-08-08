@@ -13,6 +13,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.github.channguyen.rsv.RangeSliderView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mabe.productions.hrv_madison.MainScreenActivity;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
@@ -201,6 +205,13 @@ public class IntroInitialActivityIndex extends AppCompatActivity {
         User.saveProgram(this, initial_workout_duration, 3, null);
         Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_ACTIVITY_STREAK, activity_streak,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
         Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_INITIAL_DURATION, initial_workout_duration,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
+        fireDatabase.child("activity_streak").setValue(activity_streak);
+        fireDatabase.child("base_duration").setValue(initial_workout_duration);
+
     }
 
 }

@@ -93,10 +93,9 @@ public class LoginActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
-
+    DatabaseReference allUsersTable = FirebaseDatabase.getInstance().getReference("ipulsus/users");
     private DatabaseReference fireDatabase;
-    private DatabaseReference allUsersTable;
-    private DatabaseReference specificUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,8 +103,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         Utils.changeNotifBarColor(Color.parseColor("#3e5266"),getWindow());
 
-        fireDatabase = FirebaseDatabase.getInstance().getReference();
-        allUsersTable = fireDatabase.child("users");
+
+
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
 
@@ -146,10 +145,7 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser!=null){
-            Log.i("auth", "FireUser has already connected");
-        }
+
 
         ///////////////////////////////////////////////////////////////////////////////////
 
@@ -277,8 +273,13 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d("auth", "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
-                            Log.i("auth", "isNew: " + String.valueOf(isNew));
+                            Log.i("auth", "User doesn't exists in auth database: " + String.valueOf(isNew));
+
                             if(isNew){
+
+
+                                DatabaseReference specificUser = FirebaseDatabase.getInstance().getReference("ipulsus/users"+user.getUid());
+                                Log.i("auth", "First time user providing info...");
                                 String id = allUsersTable.push().getKey();
                                 String identifier = user.getUid();
                                 String email = user.getEmail();
@@ -287,16 +288,20 @@ public class LoginActivity extends AppCompatActivity {
                                 FireUser database_user = new FireUser(id,identifier,email,password,doneInitial);
                                 allUsersTable.child(identifier).setValue(database_user);
                                 startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
+
+
                             }else{
 
-                                specificUser = fireDatabase.child("users/"+user.getUid());
-
+                                Log.i("auth", "Second time user providing info...");
+                                DatabaseReference specificUser = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
                                 ValueEventListener postListener = new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         // Get Post object and use the values to update the UI
                                         FireUser fireUser = dataSnapshot.getValue(FireUser.class);
-                                        Log.i("auth", String.valueOf(fireUser.isDoneInitial()));
+                                        Log.i("auth", "DoneInitial: " + String.valueOf(fireUser.isDoneInitial()));
+                                        Log.i("auth", "email: " + String.valueOf(fireUser.getEmail()));
+                                        Log.i("auth", "password: " + String.valueOf(fireUser.getPassword()));
                                         final boolean doneInitial = fireUser.isDoneInitial();
                                         if(doneInitial){
                                             startActivity(new Intent(LoginActivity.this, MainScreenActivity.class));
@@ -312,11 +317,11 @@ public class LoginActivity extends AppCompatActivity {
 
                                     }
                                 };
-                                allUsersTable.addValueEventListener(postListener);
 
-
+                                specificUser.addValueEventListener(postListener);
 
                             }
+
 
 
 
@@ -337,25 +342,68 @@ public class LoginActivity extends AppCompatActivity {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
-                            Log.i("auth", "isNew: " + String.valueOf(isNew));
-                            if(isNew){
+                    public void onComplete(@NonNull Task<AuthResult> task) {   if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d("auth", "signInWithCredential:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
+                        Log.i("auth", "User doesn't exists in auth database: " + String.valueOf(isNew));
 
-                            }else{
+                        if(isNew){
 
-                            }
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("auth", "signInWithCredential:success");
 
-                            Log.i("auth", user.getDisplayName());
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("auth", "signInWithCredential:failure", task.getException());
+                            Log.i("auth", "First time user providing info...");
+                            String id = allUsersTable.push().getKey();
+                            String identifier = user.getUid();
+                            String email = user.getEmail();
+                            String password = "Slaptazodis";
+                            boolean doneInitial = false;
+                            FireUser database_user = new FireUser(id,identifier,email,password,doneInitial);
+                            allUsersTable.child(identifier).setValue(database_user);
+                            startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
+
+
+                        }else{
+
+                            Log.i("auth", "Second time user providing info...");
+                            DatabaseReference specificUser = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
+
+                            ValueEventListener postListener = new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    // Get Post object and use the values to update the UI
+                                    FireUser fireUser = dataSnapshot.getValue(FireUser.class);
+                                    Log.i("auth", "DoneInitial: " + String.valueOf(fireUser.isDoneInitial()));
+                                    Log.i("auth", "email: " + String.valueOf(fireUser.getEmail()));
+                                    Log.i("auth", "password: " + String.valueOf(fireUser.getPassword()));
+                                    final boolean doneInitial = fireUser.isDoneInitial();
+                                    if(doneInitial){
+                                        startActivity(new Intent(LoginActivity.this, MainScreenActivity.class));
+                                    }else{
+                                        startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    // Getting Post failed, log a message
+                                    Log.w("auth", "loadPost:onCancelled", databaseError.toException());
+
+                                }
+                            };
+
+                            specificUser.addValueEventListener(postListener);
 
                         }
+
+
+
+
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w("auth", "signInWithCredential:failure", task.getException());
+
+                    }
 
                         // ...
                     }

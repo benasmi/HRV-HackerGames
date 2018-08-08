@@ -14,8 +14,17 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
+import com.mabe.productions.hrv_madison.firebaseDatase.FireUser;
 import com.mabe.productions.hrv_madison.fragments.DataTodayFragment;
+import com.mabe.productions.hrv_madison.initialInfo.IntroInitialPage;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -52,9 +61,51 @@ public class SplashScreenActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
+                /*
                 boolean doneInitial = Utils.readFromSharedPrefs_bool(SplashScreenActivity.this, FeedReaderDbHelper.FIELD_DONE_INITIAL, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
                 Log.i("TEST", String.valueOf(doneInitial));
                 startActivity(new Intent(SplashScreenActivity.this, doneInitial == true? MainScreenActivity.class : LoginActivity.class)); //kazkada pakeisim px
+            */
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                FirebaseUser currentUser = mAuth.getCurrentUser();
+            if(currentUser!=null){
+
+                DatabaseReference specificUser = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+currentUser.getUid());
+                ValueEventListener postListener = new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Get Post object and use the values to update the UI
+                        FireUser fireUser = dataSnapshot.getValue(FireUser.class);
+                        Log.i("auth", "DoneInitial: " + String.valueOf(fireUser.isDoneInitial()));
+                        Log.i("auth", "email: " + String.valueOf(fireUser.getEmail()));
+                        Log.i("auth", "password: " + String.valueOf(fireUser.getPassword()));
+
+                        final boolean doneInitial = fireUser.isDoneInitial();
+                        Log.i("auth","SPLASH SCREEN INITIAL: " + String.valueOf(doneInitial));
+
+                        if(doneInitial){
+                            startActivity(new Intent(SplashScreenActivity.this, MainScreenActivity.class));
+                        }else{
+                            startActivity(new Intent(SplashScreenActivity.this, IntroInitialPage.class));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Getting Post failed, log a message
+                        Log.w("auth", "loadPost:onCancelled", databaseError.toException());
+
+                    }
+                };
+
+                specificUser.addValueEventListener(postListener);
+
+            }else{
+                startActivity(new Intent(SplashScreenActivity.this,LoginActivity.class));
+
+            }
+
+
             }
 
             @Override

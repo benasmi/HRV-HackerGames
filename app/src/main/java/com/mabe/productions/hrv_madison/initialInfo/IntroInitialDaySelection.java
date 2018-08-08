@@ -15,6 +15,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mabe.productions.hrv_madison.MainScreenActivity;
 import com.mabe.productions.hrv_madison.PulseZoneView;
 import com.mabe.productions.hrv_madison.R;
@@ -181,6 +185,11 @@ public class IntroInitialDaySelection extends AppCompatActivity {
 
         Utils.saveToSharedPrefs(IntroInitialDaySelection.this, FeedReaderDbHelper.FIELD_WEEK_DAYS, week_days, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
         startActivity(new Intent(IntroInitialDaySelection.this, IntroInitialMaxDuration.class));
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
+        fireDatabase.child("workout_days").setValue(FeedReaderDbHelper.weekDaysToString(week_days));
 
 
     }

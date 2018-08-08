@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.google.firebase.auth.FirebaseAuth;
 import com.mabe.productions.hrv_madison.bluetooth.BluetoothGattService;
 import com.mabe.productions.hrv_madison.bluetooth.LeDevicesDialog;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
@@ -181,11 +182,7 @@ public class MainScreenActivity extends AppCompatActivity {
             }
         });
 
-        img_toolbar_login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
+
     }
 
 
@@ -344,7 +341,8 @@ public class MainScreenActivity extends AppCompatActivity {
 
 
     public void logOut(View view) {
-
+        FirebaseAuth fAuth = FirebaseAuth.getInstance();
+        fAuth.signOut();
         startActivity(new Intent(MainScreenActivity.this, LoginActivity.class));
     }
 }
