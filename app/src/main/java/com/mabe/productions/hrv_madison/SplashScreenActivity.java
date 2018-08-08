@@ -23,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.firebaseDatase.FireUser;
+import com.mabe.productions.hrv_madison.firebaseDatase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.fragments.DataTodayFragment;
 import com.mabe.productions.hrv_madison.initialInfo.IntroInitialPage;
 
@@ -35,7 +36,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         initializeViews();
         setFonts();
     }
@@ -70,36 +71,11 @@ public class SplashScreenActivity extends AppCompatActivity {
                 FirebaseUser currentUser = mAuth.getCurrentUser();
             if(currentUser!=null){
 
-                DatabaseReference specificUser = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+currentUser.getUid());
-                ValueEventListener postListener = new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        // Get Post object and use the values to update the UI
-                        FireUser fireUser = dataSnapshot.getValue(FireUser.class);
-                        Log.i("auth", "DoneInitial: " + String.valueOf(fireUser.isDoneInitial()));
-                        Log.i("auth", "email: " + String.valueOf(fireUser.getEmail()));
-                        Log.i("auth", "password: " + String.valueOf(fireUser.getPassword()));
-
-                        final boolean doneInitial = fireUser.isDoneInitial();
-                        Log.i("auth","SPLASH SCREEN INITIAL: " + String.valueOf(doneInitial));
-
-                        if(doneInitial){
-                            startActivity(new Intent(SplashScreenActivity.this, MainScreenActivity.class));
-                        }else{
-                            startActivity(new Intent(SplashScreenActivity.this, IntroInitialPage.class));
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        // Getting Post failed, log a message
-                        Log.w("auth", "loadPost:onCancelled", databaseError.toException());
-
-                    }
-                };
-
-                specificUser.addValueEventListener(postListener);
-
+                if(FirebaseUtils.isInitialDone()){
+                    startActivity(new Intent(SplashScreenActivity.this, MainScreenActivity.class));
+                }else{
+                    startActivity(new Intent(SplashScreenActivity.this, IntroInitialPage.class));
+                }
             }else{
                 startActivity(new Intent(SplashScreenActivity.this,LoginActivity.class));
 
