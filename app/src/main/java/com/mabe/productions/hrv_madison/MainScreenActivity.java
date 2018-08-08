@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.icu.util.Measure;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -40,6 +41,7 @@ import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.firebaseDatase.FireMeasurement;
 import com.mabe.productions.hrv_madison.firebaseDatase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.fragments.ViewPagerAdapter;
+import com.mabe.productions.hrv_madison.measurements.Measurement;
 
 import java.util.List;
 
@@ -85,7 +87,13 @@ public class MainScreenActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(List<FireMeasurement> measurements) {
-                Log.i("TEST", "Success: \nsize: " + measurements.size() + ((measurements.size() > 0) ? "\nfirst element duration: " + measurements.get(0).getDuration() : ""));
+
+                User.removeAllMeasurements(getApplicationContext());
+
+                for(FireMeasurement fireMeasurement : measurements){
+                    Measurement measurement = new Measurement(fireMeasurement);
+                    User.addMeasurementData(getApplicationContext(), measurement, false);
+                }
             }
 
             @Override

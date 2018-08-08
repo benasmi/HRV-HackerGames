@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
+import com.mabe.productions.hrv_madison.firebaseDatase.FireMeasurement;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -71,10 +72,28 @@ public class Measurement {
         this.VLF_band = (float) frequencies.getVLF_value();
         this.VHF_band = (float) frequencies.getVHF_value();
         this.HF_band = (float) frequencies.getHF_value();
-        this.bpm_data = bpm.getBpmValues();
         this.rmssd_data = rmssd.getRMSSDValues();
         this.duration = duration;
         this.date = date;
+    }
+
+    public Measurement(FireMeasurement fireMeasurement){
+        this.rmssd = fireMeasurement.getRmssd();
+        this.hrv = fireMeasurement.getHrv();
+        this.ln_rmssd = fireMeasurement.getLnRmssd();
+        this.date = Utils.getDateFromString(fireMeasurement.getDate());
+        this.lowest_rmssd = fireMeasurement.getLowestRmssd();
+        this.highest_rmssd = fireMeasurement.getHighestRmssd();
+        this.lowest_bpm = fireMeasurement.getLowestBpm();
+        this.highest_bpm = fireMeasurement.getHighestBpm();
+        this.average_bpm = fireMeasurement.getAverageBpm();
+        this.bpm_data = FeedReaderDbHelper.getIntArrayFromString(fireMeasurement.getBpmData());
+        this.LF_band = fireMeasurement.getLFBand();
+        this.VLF_band = fireMeasurement.getVLFBand();
+        this.VHF_band = fireMeasurement.getVHFBand();
+        this.HF_band = fireMeasurement.getHFBand();
+        this.rmssd_data = FeedReaderDbHelper.getIntArrayFromString(fireMeasurement.getRmssdData());
+        this.duration = fireMeasurement.getDuration();
     }
 
 

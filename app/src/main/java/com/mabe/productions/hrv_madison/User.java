@@ -160,6 +160,16 @@ public class User {
 
 
     /**
+     * This remove all the measurements saved in the database.
+     * @param context
+     */
+    public static void removeAllMeasurements(Context context){
+        SQLiteDatabase db = new FeedReaderDbHelper(context).getWritableDatabase();
+        db.execSQL("delete from " + FeedReaderDbHelper.HRV_DATA_TABLE_NAME);
+        db.close();
+    }
+
+    /**
      * Saves a new measurement to the database.
      * @param overrideByDate If true, existing table row with today's date is overridden.
      */
