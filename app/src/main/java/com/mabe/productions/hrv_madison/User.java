@@ -9,6 +9,9 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
+import com.mabe.productions.hrv_madison.firebaseDatase.FireMeasurement;
+import com.mabe.productions.hrv_madison.firebaseDatase.FireWorkout;
+import com.mabe.productions.hrv_madison.firebaseDatase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
@@ -207,6 +210,12 @@ public class User {
 
         db.close();
 
+        //Pushing to online database
+        //todo: check if user is authenticated
+
+        FireMeasurement firebaseMeasurement = new FireMeasurement(measurement);
+        FirebaseUtils.addMeasurement(firebaseMeasurement);
+
     }
 
 
@@ -291,6 +300,12 @@ public class User {
         db.insertOrThrow(FeedReaderDbHelper.WORKOUT_DATA_TABLE_NAME, null, values);
 
         db.close();
+
+        //Pushing to online database
+        //todo: check if user is authenticated
+        FireWorkout firebaseWorkout = new FireWorkout(workout);
+        FirebaseUtils.addWorkout(firebaseWorkout);
+
 
     }
 

@@ -104,10 +104,12 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         Utils.changeNotifBarColor(Color.parseColor("#3e5266"),getWindow());
 
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
         fireDatabase = FirebaseDatabase.getInstance().getReference();
         allUsersTable = fireDatabase.child("users");
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        AppEventsLogger.activateApp(this);
+        //FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(getApplication());
 
         initializeViews();
         setFonts();
