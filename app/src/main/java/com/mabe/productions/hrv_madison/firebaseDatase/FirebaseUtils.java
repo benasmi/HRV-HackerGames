@@ -12,18 +12,20 @@ public class FirebaseUtils {
     public static final String WORKOUTS_TABLE = "ipulsus/workouts";
 
     public static void addMeasurement(FireMeasurement measurement){
-
         DatabaseReference measurementsTable = FirebaseDatabase.getInstance().getReference().child(MEASUREMENTS_TABLE);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        measurementsTable.child(user.getUid()).setValue(measurement);
+        String key = measurementsTable.push().getKey();
+
+        measurementsTable.child(user.getUid()).child(key).setValue(measurement);
 
     }
 
     public static void addWorkout(FireWorkout workout){
-
         DatabaseReference workoutsTable = FirebaseDatabase.getInstance().getReference().child(WORKOUTS_TABLE);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        workoutsTable.child(user.getUid()).setValue(workout);
+        String key = workoutsTable.push().getKey();
+
+        workoutsTable.child(user.getUid()).child(key).setValue(workout);
     }
 
 
