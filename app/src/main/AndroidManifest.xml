@@ -122,10 +122,11 @@
             android:name=".AdvancedWorkoutHistoryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
-        <activity android:name=".AdvancedMeasurementHistoryActivity"
+        <activity
+            android:name=".AdvancedMeasurementHistoryActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar"
-            ></activity>
+            android:theme="@style/NoActionBar" />
+        <activity android:name=".initialInfo.SyncActivity"></activity>
     </application>
 
 </manifest>

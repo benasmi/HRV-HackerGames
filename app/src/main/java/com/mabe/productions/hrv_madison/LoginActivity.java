@@ -71,6 +71,7 @@ import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.firebaseDatase.FireUser;
 import com.mabe.productions.hrv_madison.firebaseDatase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.initialInfo.IntroInitialPage;
+import com.mabe.productions.hrv_madison.initialInfo.SyncActivity;
 
 import org.json.JSONObject;
 
@@ -290,7 +291,7 @@ public class LoginActivity extends AppCompatActivity {
                                    public void onSuccess(boolean isInitialDone) {
                                        Log.i("auth", "LoginGoogle: " + String.valueOf(isInitialDone));
                                        if(isInitialDone){
-                                           startActivity(new Intent(LoginActivity.this, MainScreenActivity.class));
+                                           startActivity(new Intent(LoginActivity.this, SyncActivity.class));
                                        }else{
                                            startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
                                        }
@@ -340,7 +341,7 @@ public class LoginActivity extends AppCompatActivity {
                                 public void onSuccess(boolean isInitialDone) {
                                     Log.i("auth", "LoginFacebook: " + String.valueOf(isInitialDone));
                                     if(isInitialDone){
-                                        startActivity(new Intent(LoginActivity.this, MainScreenActivity.class));
+                                        startActivity(new Intent(LoginActivity.this, SyncActivity.class));
                                     }else{
                                         startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
                                     }
