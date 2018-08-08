@@ -112,7 +112,7 @@ public class IntroInitialMaxDuration extends AppCompatActivity {
             FirebaseUser user = mAuth.getCurrentUser();
             DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
             fireDatabase.child("doneInitial").setValue(true);
-            fireDatabase.child("maxDuration").setValue(maxDur);
+            fireDatabase.child("maxDuration").setValue((float) maxDur);
 
             Utils.saveToSharedPrefs(this,FeedReaderDbHelper.FIELD_BASE_DURATION, (float) maxDur,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
             Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_DONE_INITIAL, true, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);

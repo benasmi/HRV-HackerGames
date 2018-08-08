@@ -11,13 +11,13 @@ public class FireUser {
     private String email;
     private String password;
     private boolean doneInitial;
-    private String base_duration;
+    private float base_duration;
     private String birthday;
-    private String gender;
-    private String height;
-    private String kmi;
-    private String maxDuration;
-    private String weight;
+    private int gender;
+    private float height;
+    private float kmi;
+    private float maxDuration;
+    private float weight;
     private String workout_days;
     private int activity_streak;
     private int activity_index;
@@ -30,10 +30,8 @@ public class FireUser {
         this.doneInitial = doneInitial;
     }
 
-    public FireUser(String id, String identifier, String email, String password, boolean doneInitial, String base_duration, String birthday, String gender, String height, String kmi, String maxDuration, String weight, String workout_days, int activity_streak, int activity_index) {
+    public FireUser(String id, String identifier, String email, String password, boolean doneInitial, float base_duration, String birthday, int gender, float height, float kmi, float maxDuration, float weight, String workout_days, int activity_streak, int activity_index) {
         this.id = id;
-        this.activity_index = activity_index;
-        this.activity_streak = activity_streak;
         this.identifier = identifier;
         this.email = email;
         this.password = password;
@@ -46,50 +44,12 @@ public class FireUser {
         this.maxDuration = maxDuration;
         this.weight = weight;
         this.workout_days = workout_days;
+        this.activity_streak = activity_streak;
+        this.activity_index = activity_index;
     }
 
     public FireUser(){
 
-    }
-
-    public int getActivity_index() {
-        return activity_index;
-    }
-
-    public int getActivity_streak() {
-        return activity_streak;
-    }
-
-    public String getBase_duration() {
-        return base_duration;
-    }
-
-    public String getBirthday() {
-        return birthday;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public String getHeight() {
-        return height;
-    }
-
-    public String getKmi() {
-        return kmi;
-    }
-
-    public String getMaxDuration() {
-        return maxDuration;
-    }
-
-    public String getWeight() {
-        return weight;
-    }
-
-    public String getWorkout_days() {
-        return workout_days;
     }
 
     public String getId() {
@@ -110,5 +70,45 @@ public class FireUser {
 
     public boolean isDoneInitial() {
         return doneInitial;
+    }
+
+    public float getBase_duration() {
+        return base_duration;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public int getGender() {
+        return gender;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public float getKmi() {
+        return kmi;
+    }
+
+    public float getMaxDuration() {
+        return maxDuration;
+    }
+
+    public float getWeight() {
+        return weight;
+    }
+
+    public String getWorkout_days() {
+        return workout_days;
+    }
+
+    public int getActivity_streak() {
+        return activity_streak;
+    }
+
+    public int getActivity_index() {
+        return activity_index;
     }
 }

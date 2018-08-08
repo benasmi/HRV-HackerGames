@@ -94,7 +94,7 @@ public class IntroInitialWeight extends AppCompatActivity {
         FirebaseUser user = mAuth.getCurrentUser();
         DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
         fireDatabase.child("kmi").setValue(KMI);
-        fireDatabase.child("weight").setValue(txt_value.getText().toString());
+        fireDatabase.child("weight").setValue(Float.parseFloat(txt_value.getText().toString()));
 
         Utils.saveToSharedPrefs(this,FeedReaderDbHelper.FIELD_KMI,KMI,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
         startActivity(new Intent(this, IntroInitialGender.class));

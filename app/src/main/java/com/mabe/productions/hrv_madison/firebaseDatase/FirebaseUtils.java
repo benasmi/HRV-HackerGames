@@ -132,6 +132,7 @@ public class FirebaseUtils {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
+                Log.i("TEST", dataSnapshot.toString());
                 FireUser fireUser = dataSnapshot.getValue(FireUser.class);
                 Log.i("auth", "DoneInitial: " + String.valueOf(fireUser.isDoneInitial()));
                 Log.i("auth", "email: " + String.valueOf(fireUser.getEmail()));

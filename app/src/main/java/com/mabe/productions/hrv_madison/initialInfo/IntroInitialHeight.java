@@ -89,7 +89,7 @@ public class IntroInitialHeight extends AppCompatActivity {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
-        fireDatabase.child("height").setValue(txt_value.getText().toString());
+        fireDatabase.child("height").setValue(Float.parseFloat(txt_value.getText().toString()));
 
         startActivity(new Intent(this, IntroInitialWeight.class));
     }

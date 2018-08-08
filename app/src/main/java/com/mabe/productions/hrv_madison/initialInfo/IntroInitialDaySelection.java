@@ -167,6 +167,11 @@ public class IntroInitialDaySelection extends AppCompatActivity {
             }
         }
 
+
+        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        final FirebaseUser user = mAuth.getCurrentUser();
+        final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
+
         if(selectedCount < 2) {
             Toast.makeText(this, R.string.select_at_least_two_days, Toast.LENGTH_LONG).show();
             return;
@@ -176,6 +181,7 @@ public class IntroInitialDaySelection extends AppCompatActivity {
             Utils.buildAlertDialogPrompt(this, "Are you sure with your days selection?", "It's not healthy to workout more than 4 days for begginers. Are you sure with your selections?", "Continue", "Cancel", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    fireDatabase.child("workout_days").setValue(FeedReaderDbHelper.weekDaysToString(week_days));
                     Utils.saveToSharedPrefs(IntroInitialDaySelection.this, FeedReaderDbHelper.FIELD_WEEK_DAYS, week_days, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
                     startActivity(new Intent(IntroInitialDaySelection.this, IntroInitialMaxDuration.class));
                 }
@@ -186,9 +192,6 @@ public class IntroInitialDaySelection extends AppCompatActivity {
         Utils.saveToSharedPrefs(IntroInitialDaySelection.this, FeedReaderDbHelper.FIELD_WEEK_DAYS, week_days, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
         startActivity(new Intent(IntroInitialDaySelection.this, IntroInitialMaxDuration.class));
 
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
-        DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
         fireDatabase.child("workout_days").setValue(FeedReaderDbHelper.weekDaysToString(week_days));
 
 
