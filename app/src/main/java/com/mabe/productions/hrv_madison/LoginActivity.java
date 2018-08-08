@@ -279,17 +279,31 @@ public class LoginActivity extends AppCompatActivity {
                             Log.i("auth", "User doesn't exists in auth database: " + String.valueOf(isNew));
 
                             if(isNew){
+
                                 Log.i("auth", "First time user providing info...");
                                 FirebaseUtils.addUser();
                                 startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
                             }else{
 
-                                Log.i("auth", "FirebaseUtils: " + String.valueOf(FirebaseUtils.isInitialDone()));
-                                if(FirebaseUtils.isInitialDone()){
-                                             startActivity(new Intent(LoginActivity.this, MainScreenActivity.class));
-                                        }else{
-                                            startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
-                                        }
+                               FirebaseUtils.isInitialDone(new FirebaseUtils.OnInitialDoneFetchListener() {
+                                   @Override
+                                   public void onSuccess(boolean isInitialDone) {
+                                       Log.i("auth", "LoginGoogle: " + String.valueOf(isInitialDone));
+                                       if(isInitialDone){
+                                           startActivity(new Intent(LoginActivity.this, MainScreenActivity.class));
+                                       }else{
+                                           startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
+                                       }
+                                   }
+
+                                   @Override
+                                   public void onFailure(DatabaseError error) {
+
+                                   }
+                               });
+
+
+
                                     }
 
                         } else {
@@ -320,11 +334,24 @@ public class LoginActivity extends AppCompatActivity {
                             FirebaseUtils.addUser();
                             startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
                         }else{
-                            if(FirebaseUtils.isInitialDone()){
-                                startActivity(new Intent(LoginActivity.this, MainScreenActivity.class));
-                            }else{
-                                startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
-                            }
+
+                            FirebaseUtils.isInitialDone(new FirebaseUtils.OnInitialDoneFetchListener() {
+                                @Override
+                                public void onSuccess(boolean isInitialDone) {
+                                    Log.i("auth", "LoginFacebook: " + String.valueOf(isInitialDone));
+                                    if(isInitialDone){
+                                        startActivity(new Intent(LoginActivity.this, MainScreenActivity.class));
+                                    }else{
+                                        startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(DatabaseError error) {
+
+                                }
+                            });
+
                         }
 
                     } else {

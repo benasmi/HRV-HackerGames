@@ -36,7 +36,9 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
         initializeViews();
         setFonts();
     }
@@ -71,11 +73,24 @@ public class SplashScreenActivity extends AppCompatActivity {
                 FirebaseUser currentUser = mAuth.getCurrentUser();
             if(currentUser!=null){
 
-                if(FirebaseUtils.isInitialDone()){
-                    startActivity(new Intent(SplashScreenActivity.this, MainScreenActivity.class));
-                }else{
-                    startActivity(new Intent(SplashScreenActivity.this, IntroInitialPage.class));
-                }
+                FirebaseUtils.isInitialDone(new FirebaseUtils.OnInitialDoneFetchListener() {
+                    @Override
+                    public void onSuccess(boolean isInitialDone) {
+                        Log.i("auth", "SplashOnInitial: " + String.valueOf(isInitialDone));
+                        if(isInitialDone){
+                            startActivity(new Intent(SplashScreenActivity.this, MainScreenActivity.class));
+                        }else{
+                            startActivity(new Intent(SplashScreenActivity.this, IntroInitialPage.class));
+                        }
+                    }
+                    @Override
+                    public void onFailure(DatabaseError error) {
+
+                    }
+                });
+
+
+
             }else{
                 startActivity(new Intent(SplashScreenActivity.this,LoginActivity.class));
 
