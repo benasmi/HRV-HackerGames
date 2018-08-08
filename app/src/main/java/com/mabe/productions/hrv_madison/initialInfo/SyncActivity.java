@@ -1,9 +1,12 @@
 package com.mabe.productions.hrv_madison.initialInfo;
 
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseError;
 import com.mabe.productions.hrv_madison.MainScreenActivity;
@@ -21,12 +24,19 @@ import java.util.List;
 public class SyncActivity extends AppCompatActivity {
 
 
+    private ContentLoadingProgressBar loadingProgressBar;
+    private TextView txt_sync;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sync);
+        loadingProgressBar = (ContentLoadingProgressBar) findViewById(R.id.loading_progress);
+        loadingProgressBar.show();
 
+        txt_sync = (TextView) findViewById(R.id.txt_sync);
+
+        setFonts();
 
         FirebaseUtils.getUserFromFirebase(new FirebaseUtils.OnUserDoneFetchListener() {
             @Override
@@ -56,6 +66,7 @@ public class SyncActivity extends AppCompatActivity {
                         }
 
                         startActivity(new Intent(SyncActivity.this, MainScreenActivity.class));
+                        loadingProgressBar.hide();
                     }
 
                     @Override
@@ -75,5 +86,11 @@ public class SyncActivity extends AppCompatActivity {
 
 
 
+    }
+
+    private void setFonts(){
+        Typeface futura = Typeface.createFromAsset(getAssets(),
+                "fonts/futura_light.ttf");
+        txt_sync.setTypeface(futura);
     }
 }

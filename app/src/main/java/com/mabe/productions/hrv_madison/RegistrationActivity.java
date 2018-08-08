@@ -1,5 +1,6 @@
 package com.mabe.productions.hrv_madison;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -25,7 +26,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
+import com.mabe.productions.hrv_madison.firebaseDatase.FirebaseUtils;
+import com.mabe.productions.hrv_madison.initialInfo.IntroInitialPage;
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -110,7 +114,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
     public void register(View view) {
         String name = register_name.getText().toString();
-        String username = register_username.getText().toString();
+        final String username = register_username.getText().toString();
         String password = register_password.getText().toString();
         String repeat_password = register_repeat_password.getText().toString();
 
@@ -154,12 +158,26 @@ public class RegistrationActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+
                             // Sign in success, update UI with the signed-in user's information
+
                             FirebaseUser user = mAuth.getCurrentUser();
+                            Log.i("auth", user.getEmail());
+                            Log.i("auth", user.getUid());
+                            FirebaseUtils.addUser();
+                            user.sendEmailVerification();
+                            Utils.buildAlertDialogPrompt(RegistrationActivity.this, "Success!", "Successful registration. To login, please verify your email adress", "Cancel", "", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
+                                }
+                            },null);
 
 
                         } else {
-                            // If sign in fails, display a message to the user.
+
+                            Toast.makeText(RegistrationActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                return;
 
                         }
 

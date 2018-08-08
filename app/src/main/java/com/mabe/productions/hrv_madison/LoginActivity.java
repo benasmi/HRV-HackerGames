@@ -97,6 +97,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -217,11 +218,58 @@ public class LoginActivity extends AppCompatActivity {
 
     public void login(View view) {
 
-            if(Utils.readFromSharedPrefs_bool(this,FeedReaderDbHelper.FIELD_DONE_INITIAL,FeedReaderDbHelper.SHARED_PREFS_USER_DATA)){
-                startActivity(new Intent(LoginActivity.this, MainScreenActivity.class));
-            }else{
-                startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
-            }
+        String email = editText_username.getText().toString();
+        String password = editText_password.getText().toString();
+
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("auth", "signInWithCredential:success");
+                            boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
+                            Log.i("auth", "User doesn't exists in auth database: " + String.valueOf(isNew));
+
+
+
+                            FirebaseUser fireUser = FirebaseAuth.getInstance().getCurrentUser();
+                            if(!fireUser.isEmailVerified()){
+                                Toast.makeText(LoginActivity.this,"Please verify your email adress and try again!", Toast.LENGTH_LONG).show();
+                                return;
+                            }
+
+                                FirebaseUtils.isInitialDone(new FirebaseUtils.OnInitialDoneFetchListener() {
+                                    @Override
+                                    public void onSuccess(boolean isInitialDone) {
+                                        Log.i("auth", "SimpleLogin: " + String.valueOf(isInitialDone));
+                                        if(isInitialDone){
+                                            startActivity(new Intent(LoginActivity.this, SyncActivity.class));
+                                        }else{
+                                            startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(DatabaseError error) {
+
+                                    }
+                                });
+
+
+
+
+
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("auth", "signInWithCredential:failure", task.getException());
+                            Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+
+                        }
+
+                        // ...
+                    }
+                });
+
 
     }
 

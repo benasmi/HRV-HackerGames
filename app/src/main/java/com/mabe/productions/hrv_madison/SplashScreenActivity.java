@@ -80,7 +80,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                         if(isInitialDone){
                             startActivity(new Intent(SplashScreenActivity.this, MainScreenActivity.class));
                         }else{
-                            startActivity(new Intent(SplashScreenActivity.this, IntroInitialPage.class));
+                            startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
                         }
                     }
                     @Override

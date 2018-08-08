@@ -151,7 +151,7 @@ public class FirebaseUtils {
             }
         };
 
-        specificUser.addValueEventListener(postListener);
+        specificUser.addListenerForSingleValueEvent(postListener);
     }
 
 
