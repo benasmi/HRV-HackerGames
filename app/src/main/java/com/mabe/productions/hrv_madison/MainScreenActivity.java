@@ -34,10 +34,15 @@ import android.widget.Toast;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseError;
 import com.mabe.productions.hrv_madison.bluetooth.BluetoothGattService;
 import com.mabe.productions.hrv_madison.bluetooth.LeDevicesDialog;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
+import com.mabe.productions.hrv_madison.firebaseDatase.FireMeasurement;
+import com.mabe.productions.hrv_madison.firebaseDatase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.fragments.ViewPagerAdapter;
+
+import java.util.List;
 
 public class MainScreenActivity extends AppCompatActivity {
 
@@ -77,7 +82,18 @@ public class MainScreenActivity extends AppCompatActivity {
         setFonts();
         registerReceiver();
 
+        FirebaseUtils.getAllMeasurements(new FirebaseUtils.OnFinishListener(){
 
+            @Override
+            public void onSuccess(List<FireMeasurement> measurements) {
+                Log.i("TEST", "Success: \nsize: " + measurements.size() + ((measurements.size() > 0) ? "\nfirst element duration: " + measurements.get(0).getDuration() : ""));
+            }
+
+            @Override
+            public void onFailure(DatabaseError error) {
+                Log.i("TEST", "Failure: " + error.getMessage());
+            }
+        });
 
         //Setting toolbar text
         String deviceName = Utils.readFromSharedPrefs_string(this, FeedReaderDbHelper.BT_FIELD_DEVICE_NAME, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);

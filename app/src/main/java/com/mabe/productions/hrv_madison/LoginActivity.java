@@ -107,7 +107,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
         AppEventsLogger.activateApp(this);
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         fireDatabase = FirebaseDatabase.getInstance().getReference();
         allUsersTable = fireDatabase.child("users");
@@ -284,7 +283,7 @@ public class LoginActivity extends AppCompatActivity {
                             if(isNew){
 
 
-                                DatabaseReference specificUser = FirebaseDatabase.getInstance().getReference("ipulsus/users"+user.getUid());
+                                DatabaseReference specificUser = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
                                 Log.i("auth", "First time user providing info...");
                                 String id = allUsersTable.push().getKey();
                                 String identifier = user.getUid();
