@@ -38,6 +38,7 @@ import com.mabe.productions.hrv_madison.bluetooth.BluetoothGattService;
 import com.mabe.productions.hrv_madison.bluetooth.LeDevicesDialog;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.firebaseDatase.FireMeasurement;
+import com.mabe.productions.hrv_madison.firebaseDatase.FireUser;
 import com.mabe.productions.hrv_madison.firebaseDatase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.fragments.ViewPagerAdapter;
 
@@ -64,6 +65,28 @@ public class MainScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        FirebaseUtils.getUserFromFirebase(new FirebaseUtils.OnUserDoneFetchListener() {
+            @Override
+            public void onSuccess(FireUser fireUser) {
+                Utils.saveToSharedPrefs(MainScreenActivity.this, FeedReaderDbHelper.FIELD_ACTIVITY_STREAK, fireUser.getActivity_streak(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(MainScreenActivity.this, FeedReaderDbHelper.FIELD_INITIAL_DURATION, fireUser.getBase_duration(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(MainScreenActivity.this, FeedReaderDbHelper.FIELD_KMI, fireUser.getKmi(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(MainScreenActivity.this, FeedReaderDbHelper.FIELD_BIRTHDAY, fireUser.getBirthday(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(MainScreenActivity.this, FeedReaderDbHelper.FIELD_GENDER, fireUser.getGender(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(MainScreenActivity.this, FeedReaderDbHelper.FIELD_HEIGHT, fireUser.getHeight(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(MainScreenActivity.this, FeedReaderDbHelper.FIELD_ACTIVITY_INDEX, fireUser.getActivity_index(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(MainScreenActivity.this, FeedReaderDbHelper.FIELD_WEIGHT, fireUser.getWeight(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(MainScreenActivity.this, FeedReaderDbHelper.FIELD_PASSWORD, fireUser.getPassword(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(MainScreenActivity.this, FeedReaderDbHelper.FIELD_BASE_DURATION, fireUser.getMaxDuration(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(MainScreenActivity.this, FeedReaderDbHelper.FIELD_WEEK_DAYS, FeedReaderDbHelper.getWeeksFromString(fireUser.getWorkout_days()),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+
+            }
+
+            @Override
+            public void onFailure(DatabaseError error) {
+
+            }
+        });
 
         Window wind = getWindow();
 

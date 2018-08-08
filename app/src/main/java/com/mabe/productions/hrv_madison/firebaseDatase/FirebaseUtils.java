@@ -70,6 +70,28 @@ public class FirebaseUtils {
 
     }
 
+    public static void getUserFromFirebase(final OnUserDoneFetchListener finishListener){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference specificUser = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
+
+        ValueEventListener listener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                FireUser fireUser = dataSnapshot.getValue(FireUser.class);
+                finishListener.onSuccess(fireUser);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                finishListener.onFailure(databaseError);
+            }
+        };
+
+
+        specificUser.addValueEventListener(listener);
+    }
+
     public static abstract class OnMeasurementFetchListener {
         public abstract void onSuccess(List<FireMeasurement> measurements);
         public abstract void onFailure(DatabaseError error);
@@ -79,6 +101,10 @@ public class FirebaseUtils {
         public abstract void onFailure(DatabaseError error);
     }
 
+    public static abstract class OnUserDoneFetchListener {
+        public abstract void onSuccess(FireUser fireUser);
+        public abstract void onFailure(DatabaseError error);
+    }
 
 
     public static void addUser(){

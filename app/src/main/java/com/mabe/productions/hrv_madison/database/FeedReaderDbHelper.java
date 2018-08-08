@@ -332,6 +332,26 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         return array.toString();
     }
 
+    public static boolean[] getWeeksFromString(String data){
+        try {
+            JSONArray array = new JSONArray(data);
+            boolean[] weekDays = new boolean[array.length()];
+
+            for(int i = 0; i < array.length(); i++){
+                JSONObject obj = array.getJSONObject(i);
+                boolean day = obj.getBoolean("weekday");
+
+                weekDays[i] = day;
+            }
+
+            return weekDays;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 
 
 

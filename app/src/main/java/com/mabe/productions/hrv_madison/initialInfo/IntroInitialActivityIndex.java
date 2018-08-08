@@ -211,6 +211,7 @@ public class IntroInitialActivityIndex extends AppCompatActivity {
         DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
         fireDatabase.child("activity_streak").setValue(activity_streak);
         fireDatabase.child("base_duration").setValue(initial_workout_duration);
+        fireDatabase.child("activity_index").setValue(activity_index);
 
     }
 
