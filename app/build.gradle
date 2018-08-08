@@ -25,6 +25,14 @@ android {
         vectorDrawables.useSupportLibrary true
     }
 
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE.txt'
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -39,15 +47,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-
-
-
-
-
-
-
-
-
     compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     compile 'no.nordicsemi.android.support.v18:scanner:1.0.0'
@@ -57,10 +56,11 @@ dependencies {
     compile 'com.google.android.gms:play-services-fitness:15.0.1'
     compile 'com.google.android.gms:play-services-auth:15.0.1'
     compile 'com.google.android.gms:play-services-maps:15.0.1'
-    
+
     compile 'com.google.firebase:firebase-auth:16.0.2'
     compile 'com.google.firebase:firebase-core:16.0.1'
     compile 'com.google.firebase:firebase-database:16.0.1'
+    compile 'com.firebase:firebase-client-android:2.5.0'
 
     compile 'com.aurelhubert:ahbottomnavigation:2.1.0'
     compile 'com.android.support:support-v4:26.0.0-alpha1'

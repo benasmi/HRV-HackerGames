@@ -105,8 +105,14 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-        FacebookSdk.sdkInitialize(getApplicationContext());
+
         AppEventsLogger.activateApp(this);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
+        fireDatabase = FirebaseDatabase.getInstance().getReference();
+        allUsersTable = fireDatabase.child("users");
+        //FacebookSdk.sdkInitialize(getApplicationContext());
+
 
         initializeViews();
         setFonts();
