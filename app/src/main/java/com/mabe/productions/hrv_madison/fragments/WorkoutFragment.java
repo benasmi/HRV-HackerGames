@@ -58,6 +58,9 @@ import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.bluetooth.BluetoothGattService;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
+import com.mabe.productions.hrv_madison.firebaseDatase.FireUser;
+import com.mabe.productions.hrv_madison.firebaseDatase.FireWorkout;
+import com.mabe.productions.hrv_madison.firebaseDatase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 import com.tooltip.Tooltip;
 
@@ -612,14 +615,13 @@ public class WorkoutFragment extends Fragment {
                     totalDistance
             );
 
-            Log.i("TEST", "WORKOUTDATADATATDATATA: " + String.valueOf(workout.getDate()));
             User.addWorkoutData(getContext(), workout, true);
-
+            FirebaseUtils.addWorkout(new FireWorkout(workout));
 
             setState(STATE_BEFORE_WORKOUT);
             ViewPager parentViewPager = getActivity().findViewById(R.id.viewpager);
             ViewPagerAdapter adapter = (ViewPagerAdapter) parentViewPager.getAdapter();
-            adapter.dataTodayFragment.updateData();
+            adapter.dataTodayFragment.updateData(getContext());
             parentViewPager.setCurrentItem(1);
 
 

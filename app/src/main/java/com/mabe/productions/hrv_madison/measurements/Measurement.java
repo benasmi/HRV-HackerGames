@@ -2,6 +2,7 @@ package com.mabe.productions.hrv_madison.measurements;
 
 import android.content.ContentValues;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
@@ -80,19 +81,19 @@ public class Measurement {
     public Measurement(FireMeasurement fireMeasurement){
         this.rmssd = fireMeasurement.getRmssd();
         this.hrv = fireMeasurement.getHrv();
-        this.ln_rmssd = fireMeasurement.getLnRmssd();
+        this.ln_rmssd = fireMeasurement.getLn_rmssd();
         this.date = Utils.getDateFromString(fireMeasurement.getDate());
-        this.lowest_rmssd = fireMeasurement.getLowestRmssd();
-        this.highest_rmssd = fireMeasurement.getHighestRmssd();
-        this.lowest_bpm = fireMeasurement.getLowestBpm();
-        this.highest_bpm = fireMeasurement.getHighestBpm();
-        this.average_bpm = fireMeasurement.getAverageBpm();
-        this.bpm_data = FeedReaderDbHelper.getIntArrayFromString(fireMeasurement.getBpmData());
-        this.LF_band = fireMeasurement.getLFBand();
-        this.VLF_band = fireMeasurement.getVLFBand();
-        this.VHF_band = fireMeasurement.getVHFBand();
-        this.HF_band = fireMeasurement.getHFBand();
-        this.rmssd_data = FeedReaderDbHelper.getIntArrayFromString(fireMeasurement.getRmssdData());
+        this.lowest_rmssd = fireMeasurement.getLowest_rmssd();
+        this.highest_rmssd = fireMeasurement.getHighest_rmssd();
+        this.lowest_bpm = fireMeasurement.getLowest_bpm();
+        this.highest_bpm = fireMeasurement.getHighest_bpm();
+        this.average_bpm = fireMeasurement.getAverage_bpm();
+        this.bpm_data = FeedReaderDbHelper.getIntArrayFromString(fireMeasurement.getBpm_data());
+        this.LF_band = fireMeasurement.getLF_band();
+        this.VLF_band = fireMeasurement.getVLF_band();
+        this.VHF_band = fireMeasurement.getVHF_band();
+        this.HF_band = fireMeasurement.getHF_band();
+        this.rmssd_data = FeedReaderDbHelper.getIntArrayFromString(fireMeasurement.getRmssd_data());
         this.duration = fireMeasurement.getDuration();
     }
 

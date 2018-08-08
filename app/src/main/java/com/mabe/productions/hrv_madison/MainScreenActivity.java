@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.icu.util.Measure;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -40,9 +41,12 @@ import com.mabe.productions.hrv_madison.bluetooth.LeDevicesDialog;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.firebaseDatase.FireMeasurement;
 import com.mabe.productions.hrv_madison.firebaseDatase.FireUser;
+import com.mabe.productions.hrv_madison.firebaseDatase.FireWorkout;
 import com.mabe.productions.hrv_madison.firebaseDatase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.fragments.ViewPagerAdapter;
+import com.mabe.productions.hrv_madison.initialInfo.SyncActivity;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
+import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
 import java.util.List;
 
@@ -83,7 +87,6 @@ public class MainScreenActivity extends AppCompatActivity {
         setupBottomBar();
         setFonts();
         registerReceiver();
-
 
         //Setting toolbar text
         String deviceName = Utils.readFromSharedPrefs_string(this, FeedReaderDbHelper.BT_FIELD_DEVICE_NAME, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);

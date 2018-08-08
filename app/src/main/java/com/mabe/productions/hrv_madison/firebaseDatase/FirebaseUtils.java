@@ -68,6 +68,32 @@ public class FirebaseUtils {
         DatabaseReference measurementsTable = FirebaseDatabase.getInstance().getReference().child(MEASUREMENTS_TABLE).child(user.getUid());
         measurementsTable.addValueEventListener(listener);
 
+    }
+    public static void getAllWorkouts(final OnWorkoutFetchListener finishListener){
+
+        ValueEventListener listener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                ArrayList<FireWorkout> workouts = new ArrayList<>();
+
+                for(DataSnapshot workout : dataSnapshot.getChildren()){
+                    workouts.add(workout.getValue(FireWorkout.class));
+                }
+
+                finishListener.onSuccess(workouts);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                finishListener.onFailure(databaseError);
+            }
+        };
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        DatabaseReference workoutsTable = FirebaseDatabase.getInstance().getReference().child(WORKOUTS_TABLE).child(user.getUid());
+        workoutsTable.addValueEventListener(listener);
 
     }
 
@@ -95,6 +121,10 @@ public class FirebaseUtils {
 
     public static abstract class OnMeasurementFetchListener {
         public abstract void onSuccess(List<FireMeasurement> measurements);
+        public abstract void onFailure(DatabaseError error);
+    }
+    public static abstract class OnWorkoutFetchListener {
+        public abstract void onSuccess(List<FireWorkout> workouts);
         public abstract void onFailure(DatabaseError error);
     }
     public static abstract class OnInitialDoneFetchListener {

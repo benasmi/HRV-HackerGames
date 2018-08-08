@@ -1,5 +1,6 @@
 package com.mabe.productions.hrv_madison.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -43,15 +44,21 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.firebase.database.DatabaseError;
 import com.mabe.productions.hrv_madison.HistoryActivity;
+import com.mabe.productions.hrv_madison.MainScreenActivity;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
+import com.mabe.productions.hrv_madison.firebaseDatase.FireMeasurement;
+import com.mabe.productions.hrv_madison.firebaseDatase.FireWorkout;
+import com.mabe.productions.hrv_madison.firebaseDatase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 //todo: card view animations and title snaping like 'prisiuk antraste'
 public class DataTodayFragment extends Fragment {
@@ -150,7 +157,8 @@ public class DataTodayFragment extends Fragment {
         health_index_pieChart();
         bpm_lineChart();
         imageViewClickers();
-        updateData();
+        updateData(getContext());
+        setUpFirebaseListeners();
         return view;
 
     }
@@ -319,9 +327,60 @@ public class DataTodayFragment extends Fragment {
     }
 
 
-    public void updateData() {
+    private void setUpFirebaseListeners(){
 
-        User user = User.getUser(getContext());
+        FirebaseUtils.getAllMeasurements(new FirebaseUtils.OnMeasurementFetchListener(){
+
+            @Override
+            public void onSuccess(List<FireMeasurement> measurements) {
+
+                User.removeAllMeasurements(getContext());
+
+                for(FireMeasurement fireMeasurement : measurements){
+                    Measurement measurement = new Measurement(fireMeasurement);
+                    User.addMeasurementData(getContext(), measurement, false);
+                }
+
+                updateData(getContext());
+
+
+            }
+
+            @Override
+            public void onFailure(DatabaseError error) {
+                Log.i("TEST", "Failure: " + error.getMessage());
+            }
+        });
+
+
+        FirebaseUtils.getAllWorkouts(new FirebaseUtils.OnWorkoutFetchListener() {
+
+            @Override
+            public void onSuccess(List<FireWorkout> workouts) {
+                User.removeAllWorkouts(getContext());
+
+                for(FireWorkout fireWorkout : workouts){
+                    WorkoutMeasurements workout = new WorkoutMeasurements(fireWorkout);
+                    User.addWorkoutData(getContext(), workout, false);
+                }
+
+                updateData(getContext());
+
+
+
+            }
+
+            @Override
+            public void onFailure(DatabaseError error) {
+
+            }
+        });
+    }
+
+
+    public void updateData(Context context) {
+
+        User user = User.getUser(context);
         setCardViewsVisibilityAndData(user);
 
     }

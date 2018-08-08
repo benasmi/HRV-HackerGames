@@ -51,19 +51,19 @@ public class FireWorkout {
         return date;
     }
 
-    public float getWorkoutDuration() {
+    public float getWorkout_duration() {
         return workout_duration;
     }
 
-    public float getAverageBpm() {
+    public float getAverage_bpm() {
         return average_bpm;
     }
 
-    public String getBpmData() {
+    public String getBpm_data() {
         return bpm_data;
     }
 
-    public String getPaceData() {
+    public String getPace_data() {
         return pace_data;
     }
 
@@ -71,11 +71,11 @@ public class FireWorkout {
         return route;
     }
 
-    public float getCaloriesBurned() {
+    public float getCalories_burned() {
         return calories_burned;
     }
 
-    public int getPulseZone() {
+    public int getPulse_zone() {
         return pulse_zone;
     }
 
