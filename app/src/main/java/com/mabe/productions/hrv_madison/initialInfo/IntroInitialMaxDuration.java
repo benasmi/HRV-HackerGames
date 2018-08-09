@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.mabe.productions.hrv_madison.CustomLoadingDialog;
 import com.mabe.productions.hrv_madison.MainScreenActivity;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.Utils;
@@ -116,6 +117,8 @@ public class IntroInitialMaxDuration extends AppCompatActivity {
 
             Utils.saveToSharedPrefs(this,FeedReaderDbHelper.FIELD_BASE_DURATION, (float) maxDur,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
             Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_DONE_INITIAL, true, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+
+            new CustomLoadingDialog(this, "Loading").show();
 
             startActivity(new Intent(this, MainScreenActivity.class));
         }

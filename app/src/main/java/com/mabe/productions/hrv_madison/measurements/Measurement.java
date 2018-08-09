@@ -94,6 +94,7 @@ public class Measurement {
         this.HF_band = fireMeasurement.gethf_band();
         this.rmssd_data = FeedReaderDbHelper.getIntArrayFromString(fireMeasurement.getRmssd_data());
         this.duration = fireMeasurement.getDuration();
+        this.mood = fireMeasurement.getMood();
     }
 
 
