@@ -16,10 +16,10 @@ public class FireMeasurement {
     private float lowest_bpm;
     private float highest_bpm;
     private float average_bpm;
-    private float LF_band;
-    private float VLF_band;
-    private float VHF_band;
-    private float HF_band;
+    private float lf_band;
+    private float vlf_band;
+    private float vhf_band;
+    private float hf_band;
     private String bpm_data;
     private String rmssd_data;
     private int mood;
@@ -39,17 +39,17 @@ public class FireMeasurement {
         this.lowest_bpm = measurement.getLowest_bpm();
         this.highest_bpm = measurement.getHighest_bpm();
         this.average_bpm = measurement.getAverage_bpm();
-        this.LF_band = measurement.getLF_band();
-        this.VLF_band = measurement.getVLF_band();
-        this.VHF_band = measurement.getVHF_band();
-        this.HF_band = measurement.getHF_band();
+        this.lf_band = measurement.getLF_band();
+        this.vlf_band = measurement.getVLF_band();
+        this.vhf_band = measurement.getVHF_band();
+        this.hf_band = measurement.getHF_band();
         this.bpm_data = FeedReaderDbHelper.intArrayToString(measurement.getBpm_data());
         this.rmssd_data = FeedReaderDbHelper.intArrayToString(measurement.getRmssd_data());
         this.mood = measurement.getMood();
         this.hrv = measurement.getHrv();
     }
 
-    public FireMeasurement(String date, int duration, int rmssd, float ln_rmssd, float lowest_rmssd, float highest_rmssd, float lowest_bpm, float highest_bpm, float average_bpm, float LF_band, float VLF_band, float VHF_band, float HF_band, String bpm_data, String rmssd_data, int uniqueId, int mood, int hrv) {
+    public FireMeasurement(String date, int duration, int rmssd, float ln_rmssd, float lowest_rmssd, float highest_rmssd, float lowest_bpm, float highest_bpm, float average_bpm, float LF_band, float VLF_band, float VHF_band, float hf_band, String bpm_data, String rmssd_data, int uniqueId, int mood, int hrv) {
         this.date = date;
         this.duration = duration;
         this.rmssd = rmssd;
@@ -59,10 +59,10 @@ public class FireMeasurement {
         this.lowest_bpm = lowest_bpm;
         this.highest_bpm = highest_bpm;
         this.average_bpm = average_bpm;
-        this.LF_band = LF_band;
-        this.VLF_band = VLF_band;
-        this.VHF_band = VHF_band;
-        this.HF_band = HF_band;
+        this.lf_band = LF_band;
+        this.vlf_band = VLF_band;
+        this.vhf_band = VHF_band;
+        this.hf_band = hf_band;
         this.bpm_data = bpm_data;
         this.rmssd_data = rmssd_data;
         this.mood = mood;
@@ -105,20 +105,20 @@ public class FireMeasurement {
         return average_bpm;
     }
 
-    public float getLF_band() {
-        return LF_band;
+    public float getLf_band() {
+        return lf_band;
     }
 
-    public float getVLF_band() {
-        return VLF_band;
+    public float getVlf_band() {
+        return vlf_band;
     }
 
-    public float getVHF_band() {
-        return VHF_band;
+    public float getVhf_band() {
+        return vhf_band;
     }
 
-    public float getHF_band() {
-        return HF_band;
+    public float gethf_band() {
+        return hf_band;
     }
 
     public String getBpm_data() {

@@ -46,7 +46,6 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.database.DatabaseError;
 import com.mabe.productions.hrv_madison.HistoryActivity;
-import com.mabe.productions.hrv_madison.MainScreenActivity;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
@@ -329,7 +328,7 @@ public class DataTodayFragment extends Fragment {
 
     private void setUpFirebaseListeners(){
 
-        FirebaseUtils.getAllMeasurements(new FirebaseUtils.OnMeasurementFetchListener(){
+        FirebaseUtils.startListeningForMeasurements(new FirebaseUtils.OnMeasurementFetchListener(){
 
             @Override
             public void onSuccess(List<FireMeasurement> measurements) {
@@ -353,7 +352,7 @@ public class DataTodayFragment extends Fragment {
         });
 
 
-        FirebaseUtils.getAllWorkouts(new FirebaseUtils.OnWorkoutFetchListener() {
+        FirebaseUtils.startListeningForWorkouts(new FirebaseUtils.OnWorkoutFetchListener() {
 
             @Override
             public void onSuccess(List<FireWorkout> workouts) {

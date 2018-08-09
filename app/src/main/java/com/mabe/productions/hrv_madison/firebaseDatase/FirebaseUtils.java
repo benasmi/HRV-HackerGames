@@ -12,7 +12,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.mabe.productions.hrv_madison.User;
 
 
 import java.util.ArrayList;
@@ -42,7 +41,7 @@ public class FirebaseUtils {
         workoutsTable.child(user.getUid()).child(key).setValue(workout);
     }
 
-    public static void getAllMeasurements(final OnMeasurementFetchListener finishListener){
+    public static void startListeningForMeasurements(final OnMeasurementFetchListener finishListener){
 
         ValueEventListener listener = new ValueEventListener() {
             @Override
@@ -52,6 +51,9 @@ public class FirebaseUtils {
 
                 for(DataSnapshot measurement : dataSnapshot.getChildren()){
                     measurements.add(measurement.getValue(FireMeasurement.class));
+                    float hf =  ((FireMeasurement) measurement.getValue(FireMeasurement.class)).gethf_band();
+                    String measurementString = measurement.toString();
+                    Log.i("TEST", measurement.toString());
                 }
 
                 finishListener.onSuccess(measurements);
@@ -69,7 +71,7 @@ public class FirebaseUtils {
         measurementsTable.addValueEventListener(listener);
 
     }
-    public static void getAllWorkouts(final OnWorkoutFetchListener finishListener){
+    public static void startListeningForWorkouts(final OnWorkoutFetchListener finishListener){
 
         ValueEventListener listener = new ValueEventListener() {
             @Override

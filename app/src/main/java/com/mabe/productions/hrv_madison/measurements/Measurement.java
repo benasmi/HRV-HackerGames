@@ -2,7 +2,6 @@ package com.mabe.productions.hrv_madison.measurements;
 
 import android.content.ContentValues;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
@@ -89,10 +88,10 @@ public class Measurement {
         this.highest_bpm = fireMeasurement.getHighest_bpm();
         this.average_bpm = fireMeasurement.getAverage_bpm();
         this.bpm_data = FeedReaderDbHelper.getIntArrayFromString(fireMeasurement.getBpm_data());
-        this.LF_band = fireMeasurement.getLF_band();
-        this.VLF_band = fireMeasurement.getVLF_band();
-        this.VHF_band = fireMeasurement.getVHF_band();
-        this.HF_band = fireMeasurement.getHF_band();
+        this.LF_band = fireMeasurement.getLf_band();
+        this.VLF_band = fireMeasurement.getVlf_band();
+        this.VHF_band = fireMeasurement.getVhf_band();
+        this.HF_band = fireMeasurement.gethf_band();
         this.rmssd_data = FeedReaderDbHelper.getIntArrayFromString(fireMeasurement.getRmssd_data());
         this.duration = fireMeasurement.getDuration();
     }
