@@ -140,6 +140,9 @@ public class FirebaseUtils {
     }
 
 
+    /**
+     * Adds new user to the remote database.
+     */
     public static void addUser(){
         DatabaseReference usersTable = FirebaseDatabase.getInstance().getReference(USERS_TABLE);
         FirebaseUser fireUser = FirebaseAuth.getInstance().getCurrentUser();

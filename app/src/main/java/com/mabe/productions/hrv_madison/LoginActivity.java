@@ -1,32 +1,11 @@
 package com.mabe.productions.hrv_madison;
 
-import android.Manifest;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Animatable2;
-import android.graphics.drawable.AnimatedVectorDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.graphics.drawable.Animatable2Compat;
-import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -42,10 +21,6 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
@@ -62,26 +37,17 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.firebaseDatase.FireUser;
 import com.mabe.productions.hrv_madison.firebaseDatase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.initialInfo.IntroInitialPage;
-import com.mabe.productions.hrv_madison.initialInfo.SyncActivity;
 
-import org.json.JSONObject;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final int RC_SIGN_IN = 2 ;
+    private static final int RC_SIGN_IN = 2;
     private TextView txt_slogan;
     private TextView txt_noAccount;
     private TextView txt_noRegistration;
@@ -97,36 +63,28 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Utils.changeNotifBarColor(Color.parseColor("#3e5266"),getWindow());
 
+        Utils.changeNotifBarColor(Color.parseColor("#3e5266"), getWindow());
 
-
-
-        AppEventsLogger.activateApp(this);
-
-
-
-        //FacebookSdk.sdkInitialize(getApplicationContext());
-
+        //This is required for Facebook SDK to work
+        AppEventsLogger.activateApp(getApplication());
 
         initializeViews();
         setFonts();
 
-        //FACEBOOK LOGIN
-        // Some code
+        //Registering facebook login callback
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(
                 callbackManager,
-                new FacebookCallback < LoginResult > () {
+                new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(final LoginResult loginResult) {
-                        Log.d("auth", "facebook:onSuccess:" + loginResult);
-                        handleFacebookAccessToken(loginResult.getAccessToken());
+                        //Saving user data to firebase after successful facebook auth.
+                        firebaseAuthWithFacebook(loginResult.getAccessToken());
                     }
 
                     @Override
@@ -138,8 +96,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 }
         );
-        ///////////////////////////////////////////////////////////////////////////////////
-
 
         //GMAIL LOGIN
         // Configure Google Sign In
@@ -152,21 +108,20 @@ public class LoginActivity extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
 
-
         ///////////////////////////////////////////////////////////////////////////////////
 
     }
 
-    private void initializeViews(){
+    private void initializeViews() {
 
 
-        Animation left_to_right = AnimationUtils.loadAnimation(this,R.anim.left_to_right);
-        Animation right_to_left = AnimationUtils.loadAnimation(this,R.anim.right_to_left);
-        Animation bottom_to_top = AnimationUtils.loadAnimation(this,R.anim.bottom_to_top);
-        Animation top_to_bottom  = AnimationUtils.loadAnimation(this,R.anim.bottom_to_top);
-        Animation fade_in  = AnimationUtils.loadAnimation(this,R.anim.fade_in);
-        Animation fade_in_delay  = AnimationUtils.loadAnimation(this,R.anim.fade_in_delay);
-        Animation top_to_bottom_delay  = AnimationUtils.loadAnimation(this,R.anim.top_to_bottom_delay);
+        Animation left_to_right = AnimationUtils.loadAnimation(this, R.anim.left_to_right);
+        Animation right_to_left = AnimationUtils.loadAnimation(this, R.anim.right_to_left);
+        Animation bottom_to_top = AnimationUtils.loadAnimation(this, R.anim.bottom_to_top);
+        Animation top_to_bottom = AnimationUtils.loadAnimation(this, R.anim.bottom_to_top);
+        Animation fade_in = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        Animation fade_in_delay = AnimationUtils.loadAnimation(this, R.anim.fade_in_delay);
+        Animation top_to_bottom_delay = AnimationUtils.loadAnimation(this, R.anim.top_to_bottom_delay);
 
 
         txt_slogan = (TextView) findViewById(R.id.slogan);
@@ -199,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void setFonts(){
+    private void setFonts() {
         Typeface face_slogan = Typeface.createFromAsset(getAssets(),
                 "fonts/CORBEL.TTF");
         Typeface futura = Typeface.createFromAsset(getAssets(),
@@ -222,53 +177,7 @@ public class LoginActivity extends AppCompatActivity {
         String password = editText_password.getText().toString();
 
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("auth", "signInWithCredential:success");
-                            boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
-                            Log.i("auth", "User doesn't exists in auth database: " + String.valueOf(isNew));
-
-
-
-                            FirebaseUser fireUser = FirebaseAuth.getInstance().getCurrentUser();
-                            if(!fireUser.isEmailVerified()){
-                                Toast.makeText(LoginActivity.this,"Please verify your email adress and try again!", Toast.LENGTH_LONG).show();
-                                return;
-                            }
-
-                                FirebaseUtils.isInitialDone(new FirebaseUtils.OnInitialDoneFetchListener() {
-                                    @Override
-                                    public void onSuccess(boolean isInitialDone) {
-                                        Log.i("auth", "SimpleLogin: " + String.valueOf(isInitialDone));
-                                        if(isInitialDone){
-                                            startActivity(new Intent(LoginActivity.this, SyncActivity.class));
-                                        }else{
-                                            startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
-                                        }
-                                    }
-                                    @Override
-                                    public void onFailure(DatabaseError error) {
-
-                                    }
-                                });
-
-
-
-
-
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("auth", "signInWithCredential:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-
-                        }
-
-                        // ...
-                    }
-                });
+                .addOnCompleteListener(listener);
 
 
     }
@@ -298,10 +207,8 @@ public class LoginActivity extends AppCompatActivity {
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
-                Log.w("auth", "Google sign in failed", e);
-                // ...
             }
-        }else{
+        } else {
             callbackManager.onActivityResult(requestCode, resultCode, data);
         }
 
@@ -312,106 +219,132 @@ public class LoginActivity extends AppCompatActivity {
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-
+    /**
+     * Authenticates FirebaseUser with gmail {@link GoogleSignInAccount}.
+     * After successful authentication the following is done:
+     *      If user has filled out initial data, it is fetched, and {@link MainScreenActivity} is launched.
+     *      If user has not filled out initial data, {@link IntroInitialPage} is launched.
+     * @param acct The {@link GoogleSignInAccount}, that is used for authentication
+     */
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d("auth", "firebaseAuthWithGoogle:" + acct.getId());
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("auth", "signInWithCredential:success");
-                            boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
-                            Log.i("auth", "User doesn't exists in auth database: " + String.valueOf(isNew));
-
-                            if(isNew){
-
-                                Log.i("auth", "First time user providing info...");
-                                FirebaseUtils.addUser();
-                                startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
-                            }else{
-
-                               FirebaseUtils.isInitialDone(new FirebaseUtils.OnInitialDoneFetchListener() {
-                                   @Override
-                                   public void onSuccess(boolean isInitialDone) {
-                                       Log.i("auth", "LoginGoogle: " + String.valueOf(isInitialDone));
-                                       if(isInitialDone){
-                                           startActivity(new Intent(LoginActivity.this, SyncActivity.class));
-                                       }else{
-                                           startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
-                                       }
-                                   }
-
-                                   @Override
-                                   public void onFailure(DatabaseError error) {
-
-                                   }
-                               });
-
-
-
-                                    }
-
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("auth", "signInWithCredential:failure", task.getException());
-
-                        }
-
-                    }
-                });
+                .addOnCompleteListener(listener);
     }
 
-    private void handleFacebookAccessToken(AccessToken token) {
-        Log.d("auth", "handleFacebookAccessToken:" + token);
+
+    /**
+     * Authenticates FirebaseUser with facebook AccessToken.
+     * After successful authentication the following is done:
+     *      If user has filled out initial data, it is fetched, and {@link MainScreenActivity} is launched.
+     *      If user has not filled out initial data, {@link IntroInitialPage} is launched.
+     * @param token The facebook {@link AccessToken}, that is used for authentication
+     */
+    private void firebaseAuthWithFacebook(AccessToken token) {
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {   if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d("auth", "signInWithCredential:success");
-                        boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
-                        Log.i("auth", "User doesn't exists in auth database: " + String.valueOf(isNew));
+                .addOnCompleteListener(this, listener);
+    }
 
-                        if(isNew){
-                            Log.i("auth", "First time user providing info...");
-                            FirebaseUtils.addUser();
-                            startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
-                        }else{
+    /**
+     * This method gets initial user information (height, weight, etc.) from the
+     * database, and saves it locally (SharedPreferences).
+     *
+     * It runs on assumption, that initial user information exists in remote database.
+     *
+     * After data is saved locally, MainScreenActivity is started.
+     *
+     * @param showProgressDialog If true, progress dialog is shown while data is being fetched.
+     */
+    private void getInitialUserInformation(boolean showProgressDialog){
 
-                            FirebaseUtils.isInitialDone(new FirebaseUtils.OnInitialDoneFetchListener() {
-                                @Override
-                                public void onSuccess(boolean isInitialDone) {
-                                    Log.i("auth", "LoginFacebook: " + String.valueOf(isInitialDone));
-                                    if(isInitialDone){
-                                        startActivity(new Intent(LoginActivity.this, SyncActivity.class));
-                                    }else{
-                                        startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
-                                    }
-                                }
+        final CustomLoadingDialog dialog = new CustomLoadingDialog(LoginActivity.this, "Loading your data");
 
-                                @Override
-                                public void onFailure(DatabaseError error) {
+        if(showProgressDialog){
+            dialog.show();
+        }
 
-                                }
-                            });
+        FirebaseUtils.getUserFromFirebase(new FirebaseUtils.OnUserDoneFetchListener() {
+            @Override
+            public void onSuccess(FireUser fireUser) {
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_ACTIVITY_STREAK, fireUser.getActivity_streak(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_INITIAL_DURATION, fireUser.getBase_duration(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_KMI, fireUser.getKmi(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_BIRTHDAY, fireUser.getBirthday(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_GENDER, fireUser.getGender(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_HEIGHT, fireUser.getHeight(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_ACTIVITY_INDEX, fireUser.getActivity_index(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_WEIGHT, fireUser.getWeight(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_PASSWORD, fireUser.getPassword(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_BASE_DURATION, fireUser.getMaxDuration(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_WEEK_DAYS, FeedReaderDbHelper.getWeeksFromString(fireUser.getWorkout_days()),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
 
+                dialog.dismiss();
+
+                startActivity(new Intent(LoginActivity.this, MainScreenActivity.class));
+
+            }
+
+            @Override
+            public void onFailure(DatabaseError error) {
+
+            }
+        });
+    }
+
+
+    private OnCompleteListener listener = new OnCompleteListener<AuthResult>() {
+
+        @Override
+        public void onComplete(@NonNull Task<AuthResult> task) {
+
+            if (task.isSuccessful()) {
+
+                boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
+
+                if (isNew) {
+                    //In this case, we know for sure that user hasn't provided us with initial information.
+                    FirebaseUtils.addUser();
+                    startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
+                } else {
+                    //If user already exists, we still need to check whether he has completed initial info questionnaire
+
+                    //Showing a custom progress dialog
+                    final CustomLoadingDialog loadingDialog = new CustomLoadingDialog(LoginActivity.this, "Checking your account status");
+                    loadingDialog.show();
+
+                    FirebaseUtils.isInitialDone(new FirebaseUtils.OnInitialDoneFetchListener() {
+                        @Override
+                        public void onSuccess(boolean isInitialDone) {
+                            loadingDialog.dismiss();
+
+                            if (isInitialDone) {
+                                //User has done the initial questionnaire. Downloading it's data, and launching MainScreenActivity afterwards.
+                                getInitialUserInformation(true);
+                            } else {
+                                //User has not filled out the initial questionnaire. Opening IntroInitialPage for the user to do so.
+                                startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
+                            }
                         }
 
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w("auth", "signInWithCredential:failure", task.getException());
+                        @Override
+                        public void onFailure(DatabaseError error) {
+                            loadingDialog.dismiss();
+                            Toast.makeText(LoginActivity.this, "Please check your connection!", Toast.LENGTH_LONG).show();
+                        }
+                    });
 
-                    }
+                }
+
+            } else {
+                Toast.makeText(LoginActivity.this, "Failed to authenticate with facebook :(", Toast.LENGTH_LONG).show();
+            }
 
 
-                    }
-                });
-    }
+        }
+    };
 
 }

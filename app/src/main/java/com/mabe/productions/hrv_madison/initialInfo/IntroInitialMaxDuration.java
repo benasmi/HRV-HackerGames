@@ -117,9 +117,11 @@ public class IntroInitialMaxDuration extends AppCompatActivity {
             Utils.saveToSharedPrefs(this,FeedReaderDbHelper.FIELD_BASE_DURATION, (float) maxDur,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
             Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_DONE_INITIAL, true, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
 
-            startActivity(new Intent(this, SyncActivity.class));
+            startActivity(new Intent(this, MainScreenActivity.class));
         }
     }
+
+
 
 
 

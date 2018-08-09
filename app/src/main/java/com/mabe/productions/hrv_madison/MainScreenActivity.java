@@ -11,8 +11,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.icu.util.Measure;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -35,20 +33,10 @@ import android.widget.Toast;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseError;
 import com.mabe.productions.hrv_madison.bluetooth.BluetoothGattService;
 import com.mabe.productions.hrv_madison.bluetooth.LeDevicesDialog;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
-import com.mabe.productions.hrv_madison.firebaseDatase.FireMeasurement;
-import com.mabe.productions.hrv_madison.firebaseDatase.FireUser;
-import com.mabe.productions.hrv_madison.firebaseDatase.FireWorkout;
-import com.mabe.productions.hrv_madison.firebaseDatase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.fragments.ViewPagerAdapter;
-import com.mabe.productions.hrv_madison.initialInfo.SyncActivity;
-import com.mabe.productions.hrv_madison.measurements.Measurement;
-import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
-
-import java.util.List;
 
 public class MainScreenActivity extends AppCompatActivity {
 
@@ -341,16 +329,33 @@ public class MainScreenActivity extends AppCompatActivity {
 
     }
 
-    public void faqActivity(View view)
-    {
+    public void faqActivity(View view){
         startActivity(new Intent(MainScreenActivity.this, FrequentlyAskedActivity.class));
-
     }
 
 
     public void logOut(View view) {
-        FirebaseAuth fAuth = FirebaseAuth.getInstance();
-        fAuth.signOut();
-        startActivity(new Intent(MainScreenActivity.this, LoginActivity.class));
+
+        Utils.buildAlertDialogPrompt(this,
+                "Warning",
+                "Do you really want to log out?",
+                "Yes",
+                "Cancel",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        FirebaseAuth fAuth = FirebaseAuth.getInstance();
+                        fAuth.signOut();
+
+                        //Clearing all local data
+                        User.removeAllMeasurements(MainScreenActivity.this);
+                        User.removeAllWorkouts(MainScreenActivity.this);
+                        User.removeAllPersonalData(MainScreenActivity.this);
+
+                        startActivity(new Intent(MainScreenActivity.this, LoginActivity.class));
+                    }
+                },
+                null);
+
     }
 }

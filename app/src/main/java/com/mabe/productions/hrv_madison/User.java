@@ -2,6 +2,7 @@ package com.mabe.productions.hrv_madison;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -160,8 +161,7 @@ public class User {
 
 
     /**
-     * This remove all the measurements saved in the database.
-     * @param context
+     * This will remove all the measurements saved in the database.
      */
     public static void removeAllMeasurements(Context context){
         SQLiteDatabase db = new FeedReaderDbHelper(context).getWritableDatabase();
@@ -170,13 +170,22 @@ public class User {
     }
 
     /**
-     * This remove all the measurements saved in the database.
-     * @param context
+     * This will remove all the workouts saved in the database.
      */
     public static void removeAllWorkouts(Context context){
         SQLiteDatabase db = new FeedReaderDbHelper(context).getWritableDatabase();
         db.execSQL("delete from " + FeedReaderDbHelper.WORKOUT_DATA_TABLE_NAME);
         db.close();
+    }
+
+
+    /**
+     * This will remove all the personal data saved in shared preferences.
+     */
+
+    public static void removeAllPersonalData(Context context) {
+        context.getSharedPreferences(FeedReaderDbHelper.SHARED_PREFS_USER_DATA, Context.MODE_PRIVATE).edit().clear().apply();
+        context.getSharedPreferences(FeedReaderDbHelper.SHARED_PREFS_SPORT, Context.MODE_PRIVATE).edit().clear().apply();
     }
 
     /**
@@ -1202,5 +1211,6 @@ public class User {
     public void setExercise(Exercise exercise) {
         this.exercise = exercise;
     }
+
 
 }
