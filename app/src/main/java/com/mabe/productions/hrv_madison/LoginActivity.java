@@ -340,7 +340,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
             } else {
-                Toast.makeText(LoginActivity.this, "Failed to authenticate with facebook :(", Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
             }
 
 
