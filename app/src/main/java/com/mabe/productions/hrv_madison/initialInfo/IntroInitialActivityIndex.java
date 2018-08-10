@@ -11,12 +11,14 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.channguyen.rsv.RangeSliderView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.mabe.productions.hrv_madison.LoginActivity;
 import com.mabe.productions.hrv_madison.MainScreenActivity;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
@@ -208,6 +210,12 @@ public class IntroInitialActivityIndex extends AppCompatActivity {
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
+
+        if(user.getUid() == null){
+            Toast.makeText(this, "Sorry, something went wrong!", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
         DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
         fireDatabase.child("activity_streak").setValue(activity_streak);
         fireDatabase.child("base_duration").setValue(initial_workout_duration);

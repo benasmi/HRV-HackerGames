@@ -6,7 +6,6 @@ import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -176,8 +175,71 @@ public class LoginActivity extends AppCompatActivity {
         String email = editText_username.getText().toString();
         String password = editText_password.getText().toString();
 
+        if(email.isEmpty() || password.isEmpty()){
+            return;
+        }
+
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(listener);
+
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                        if (task.isSuccessful()) {
+
+
+                            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                            FirebaseUser user = mAuth.getCurrentUser();
+
+                            if(!user.isEmailVerified()){
+                                Toast.makeText(LoginActivity.this, "Your email is unverified!", Toast.LENGTH_LONG).show();
+                                return;
+                            }
+
+                            boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
+
+                            if (isNew) {
+                                //In this case, we know for sure that user hasn't provided us with initial information.
+                                FirebaseUtils.addUser();
+                                startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
+                            } else {
+                                //If user already exists, we still need to check whether he has completed initial info questionnaire
+
+                                //Showing a custom progress dialog
+                                final CustomLoadingDialog loadingDialog = new CustomLoadingDialog(LoginActivity.this, "Checking your account status");
+                                loadingDialog.show();
+
+                                FirebaseUtils.isInitialDone(new FirebaseUtils.OnInitialDoneFetchListener() {
+                                    @Override
+                                    public void onSuccess(boolean isInitialDone) {
+                                        loadingDialog.dismiss();
+
+                                        if (isInitialDone) {
+                                            //User has done the initial questionnaire. Downloading it's data, and launching MainScreenActivity afterwards.
+                                            getInitialUserInformation(true);
+                                        } else {
+                                            //User has not filled out the initial questionnaire. Opening IntroInitialPage for the user to do so.
+                                            startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(DatabaseError error) {
+                                        loadingDialog.dismiss();
+                                        Toast.makeText(LoginActivity.this, "Please check your connection!", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+
+                            }
+
+                        } else {
+                            Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        }
+
+
+                    }
+                });
 
 
     }
@@ -230,7 +292,7 @@ public class LoginActivity extends AppCompatActivity {
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(listener);
+                .addOnCompleteListener(facebookGmailListener);
     }
 
 
@@ -246,7 +308,7 @@ public class LoginActivity extends AppCompatActivity {
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
 
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, listener);
+                .addOnCompleteListener(this, facebookGmailListener);
     }
 
     /**
@@ -296,7 +358,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    private OnCompleteListener listener = new OnCompleteListener<AuthResult>() {
+    private OnCompleteListener facebookGmailListener = new OnCompleteListener<AuthResult>() {
 
         @Override
         public void onComplete(@NonNull Task<AuthResult> task) {

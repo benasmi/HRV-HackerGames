@@ -12,6 +12,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 
 
 import java.util.ArrayList;
@@ -31,6 +32,16 @@ public class FirebaseUtils {
         String key = measurementsTable.push().getKey();
 
         measurementsTable.child(user.getUid()).child(key).setValue(measurement);
+    }
+    public static void updateProgram(float duration, ){
+
+        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        final FirebaseUser user = mAuth.getCurrentUser();
+        final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
+
+        fireDatabase.child("workout_duration").setValue();
+
+
     }
     
     public static void addWorkout(FireWorkout workout){
@@ -99,6 +110,7 @@ public class FirebaseUtils {
 
     }
 
+
     public static void getUserFromFirebase(final OnUserDoneFetchListener finishListener){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference specificUser = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
@@ -159,7 +171,6 @@ public class FirebaseUtils {
     public static void isInitialDone(final OnInitialDoneFetchListener finishListener){
         
         
-        Log.i("auth", "Second time user providing info...");
 
         FirebaseUser fireUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference specificUser = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+fireUser.getUid());
@@ -167,12 +178,7 @@ public class FirebaseUtils {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
-                Log.i("TEST", dataSnapshot.toString());
                 FireUser fireUser = dataSnapshot.getValue(FireUser.class);
-                Log.i("auth", "DoneInitial: " + String.valueOf(fireUser.isDoneInitial()));
-                Log.i("auth", "email: " + String.valueOf(fireUser.getEmail()));
-                Log.i("auth", "password: " + String.valueOf(fireUser.getPassword()));
-
                 finishListener.onSuccess(fireUser.isDoneInitial());
 
             }

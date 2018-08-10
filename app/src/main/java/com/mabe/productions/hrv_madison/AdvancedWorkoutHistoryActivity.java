@@ -200,7 +200,7 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
 
             map_fragment.getMapAsync(new OnMapReadyCallback() {
                 @Override
-                public void onMapReady(GoogleMap googleMap) {
+                public void onMapReady(final GoogleMap googleMap) {
 
 
 
@@ -209,21 +209,23 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
                         public void onMapLoaded() {
                             map_frame_layout.setVisibility(View.GONE);
                             loading_progress.hide();
+
+
+                            route_display_googlemap = googleMap;
+
+                            try {
+
+                                googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(AdvancedWorkoutHistoryActivity.this, R.raw.dark_google_map));
+
+                            } catch (Resources.NotFoundException e) {
+                                Log.e("GMAPS", "Can't find style. Error: ", e);
+                            }
+
+                            map_fragment.getView().setClickable(false);
+                            displayMapRoute(workout.getRoute());
                         }
                     });
 
-                    route_display_googlemap = googleMap;
-
-                    try {
-
-                        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(AdvancedWorkoutHistoryActivity.this, R.raw.dark_google_map));
-
-                    } catch (Resources.NotFoundException e) {
-                        Log.e("GMAPS", "Can't find style. Error: ", e);
-                    }
-
-                    map_fragment.getView().setClickable(false);
-                    displayMapRoute(workout.getRoute());
 
                 }
             });
@@ -251,10 +253,14 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
             //If no points are present for some reason
             cu = CameraUpdateFactory.newLatLngZoom(new LatLng(55.19f, 23.4f), 6f); //Geographical centre of lithuania
         } else {
+//            LatLngBounds bounds = builder.build();
+//            double lat = (bounds.northeast.latitude+bounds.southwest.latitude)/2;
+//            double longt = (bounds.northeast.longitude+bounds.southwest.longitude)/2;
+//            cu = CameraUpdateFactory.newLatLngZoom(new LatLng(lat,longt),16);
+
             LatLngBounds bounds = builder.build();
-            double lat = (bounds.northeast.latitude+bounds.southwest.latitude)/2;
-            double longt = (bounds.northeast.longitude+bounds.southwest.longitude)/2;
-            cu = CameraUpdateFactory.newLatLngZoom(new LatLng(lat,longt),16);
+            cu = CameraUpdateFactory.newLatLngBounds(bounds, 50);
+
         }
 
         route_display_googlemap.animateCamera(cu);
