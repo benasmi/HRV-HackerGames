@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.mabe.productions.hrv_madison.Exercise;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.firebaseDatase.FireWorkout;
@@ -26,10 +27,10 @@ public class WorkoutMeasurements {
     private float[] pace_data; //in kilometers/minute
     private LatLng[] route;
     private float calories_burned; //In KCal
-    private int pulse_zone;
     private float distance;
+    private Exercise exercise;
 
-    public WorkoutMeasurements(int unique_id, Date date, float workout_duration, float average_bpm, int[] bpm_data, float[] pace_data, LatLng[] route, float calories_burned, int pulse_zone, float distance) {
+    public WorkoutMeasurements(Exercise exercise, int unique_id, Date date, float workout_duration, float average_bpm, int[] bpm_data, float[] pace_data, LatLng[] route, float calories_burned, float distance) {
         this.unique_id = unique_id;
         this.date = date;
         this.workout_duration = workout_duration;
@@ -38,10 +39,10 @@ public class WorkoutMeasurements {
         this.pace_data = pace_data;
         this.route = route;
         this.calories_burned = calories_burned;
-        this.pulse_zone = pulse_zone;
         this.distance = distance;
+        this.exercise = exercise;
     }
-    public WorkoutMeasurements(Date date, float workout_duration,  float average_bpm, int[] bpm_data, float[] pace_data, LatLng[] route, float calories_burned, int pulse_zone, float distance) {
+    public WorkoutMeasurements(Exercise exercise, Date date, float workout_duration,  float average_bpm, int[] bpm_data, float[] pace_data, LatLng[] route, float calories_burned, float distance) {
         this.date             = date;
         this.workout_duration = workout_duration;
         this.average_bpm      = average_bpm;
@@ -49,8 +50,8 @@ public class WorkoutMeasurements {
         this.pace_data        = pace_data;
         this.route            = route;
         this.calories_burned  = calories_burned;
-        this.pulse_zone       = pulse_zone;
         this.distance         = distance;
+        this.exercise         = exercise;
     }
 
     public WorkoutMeasurements(FireWorkout workout){
@@ -62,8 +63,12 @@ public class WorkoutMeasurements {
         this.pace_data        = FeedReaderDbHelper.getFloatArrayFromString(workout.getPace_data());
         this.route            = FeedReaderDbHelper.getRouteFromString(workout.getRoute());
         this.calories_burned  = workout.getCalories_burned();
-        this.pulse_zone       = workout.getPulse_zone();
         this.distance         = workout.getDistance();
+
+        this.exercise = new Exercise();
+        this.exercise.setRunningPulseZones(FeedReaderDbHelper.getIntArrayFromString(workout.getRunning_pulse_zones()));
+        this.exercise.setWalkingPulseZones(FeedReaderDbHelper.getIntArrayFromString(workout.getWalking_pulse_zones()));
+        this.exercise.setWorkoutIntervals(FeedReaderDbHelper.getLongArrayFromString(workout.getWorkout_intervals()));
 
     }
 
@@ -72,17 +77,17 @@ public class WorkoutMeasurements {
     public ContentValues getContentValues(){
         ContentValues values = new ContentValues();
         values.put(FeedReaderDbHelper.WORKOUT_COL_AVERAGE_BPM, getAverage_bpm());
-        Log.i("datos", "From Utils: " + String.valueOf(Utils.getStringFromDate(getDate())));
-        Log.i("datos", "From Nowhere: " + String.valueOf(getDate()));
         values.put(FeedReaderDbHelper.WORKOUT_COL_DATE, Utils.getStringFromDate(getDate()));
         values.put(FeedReaderDbHelper.WORKOUT_COL_DURATION, getWorkout_duration());
         values.put(FeedReaderDbHelper.WORKOUT_COL_AVERAGE_BPM, getAverage_bpm());
         values.put(FeedReaderDbHelper.WORKOUT_COL_CALORIES, getCalories_burned());
-        values.put(FeedReaderDbHelper.WORKOUT_COL_PULSE_ZONE, getPulse_zone());
         values.put(FeedReaderDbHelper.WORKOUT_COL_ROUTE, FeedReaderDbHelper.routeToString(getRoute()));
         values.put(FeedReaderDbHelper.WORKOUT_COL_PACE_DATA, FeedReaderDbHelper.floatArrayToString(getPace_data()));
         values.put(FeedReaderDbHelper.WORKOUT_COL_BPM_DATA, FeedReaderDbHelper.intArrayToString(getBpm_data()));
         values.put(FeedReaderDbHelper.WORKOUT_COL_DISTANCE, getDistance());
+        values.put(FeedReaderDbHelper.WORKOUT_COL_RUNNING_PULSE_ZONES, FeedReaderDbHelper.intArrayToString(exercise.getRunningPulseZones()));
+        values.put(FeedReaderDbHelper.WORKOUT_COL_WALKING_PULSE_ZONES, FeedReaderDbHelper.intArrayToString(exercise.getWalkingPulseZones()));
+        values.put(FeedReaderDbHelper.WORKOUT_COL_INTERVALS, FeedReaderDbHelper.longArrayToString(exercise.getWorkoutIntervals()));
         return values;
     }
 
@@ -174,11 +179,11 @@ public class WorkoutMeasurements {
         this.calories_burned = calories_burned;
     }
 
-    public int getPulse_zone() {
-        return pulse_zone;
+    public Exercise getExercise() {
+        return exercise;
     }
 
-    public void setPulse_zone(int pulse_zone) {
-        this.pulse_zone = pulse_zone;
+    public void setExercise(Exercise exercise) {
+        this.exercise = exercise;
     }
 }

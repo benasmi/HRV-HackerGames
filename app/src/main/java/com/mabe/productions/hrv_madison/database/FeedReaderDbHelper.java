@@ -68,7 +68,6 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     //FireUser sport prefs
     public static final String SHARED_PREFS_SPORT = "Sport";
     public static final String FIELD_DURATION = "duration";
-    public static final String FIELD_PULSE_ZONE = "pulse_zone";
     public static final String FIELD_WORKOUT_INTERVALS = "workout_intervals";
     public static final String FIELD_RUNNING_PULSE_ZONES = "running_pulse_zones";
     public static final String FIELD_WALKING_PULSE_ZONES = "walking_pulse_zones";
@@ -125,11 +124,14 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public static final String WORKOUT_COL_DURATION = "duration";
     public static final String WORKOUT_COL_AVERAGE_BPM = "average_bpm";
     public static final String WORKOUT_COL_CALORIES = "calories";
-    public static final String WORKOUT_COL_PULSE_ZONE = "pulse_zone";
     public static final String WORKOUT_COL_ROUTE = "route";
     public static final String WORKOUT_COL_PACE_DATA = "pace_data";
     public static final String WORKOUT_COL_BPM_DATA = "bpm_data";
     public static final String WORKOUT_COL_DISTANCE = "distance";
+    public static final String WORKOUT_COL_RUNNING_PULSE_ZONES = "running_pulse_zones";
+    public static final String WORKOUT_COL_WALKING_PULSE_ZONES = "walking_pulse_zones";
+    public static final String WORKOUT_COL_INTERVALS = "workout_intervals";
+
 
     public static final String WORKOUT_DATA_TABLE_NAME = "workout_data";
 
@@ -141,15 +143,16 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
                     FeedReaderDbHelper.WORKOUT_COL_AVERAGE_BPM + " FLOAT," +
                     FeedReaderDbHelper.WORKOUT_COL_CALORIES + " FLOAT," +
                     FeedReaderDbHelper.WORKOUT_COL_DISTANCE + " FLOAT," +
-                    FeedReaderDbHelper.WORKOUT_COL_PULSE_ZONE + " INTEGER," +
                     FeedReaderDbHelper.WORKOUT_COL_BPM_DATA + " STRING," +
                     FeedReaderDbHelper.WORKOUT_COL_PACE_DATA + " STRING," +
+                    FeedReaderDbHelper.WORKOUT_COL_RUNNING_PULSE_ZONES + " STRING," +
+                    FeedReaderDbHelper.WORKOUT_COL_WALKING_PULSE_ZONES + " STRING," +
+                    FeedReaderDbHelper.WORKOUT_COL_INTERVALS + " STRING," +
                     FeedReaderDbHelper.WORKOUT_COL_ROUTE + " FLOAT)";
 
 
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "HRV_Madison.db";
-
 
 
     public FeedReaderDbHelper(Context context) {
@@ -207,6 +210,24 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         return null;
     }
 
+    public static long[] getLongArrayFromString(String jsonArray){
+        try {
+            JSONArray array = new JSONArray(jsonArray);
+
+            long[] values = new long[array.length()];
+
+            for(int i = 0; i < array.length(); i++){
+                values[i] = (long) array.getLong(i);
+            }
+
+            return values;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * Converts a integer array to a JSON array and returns it as string.
      * Intended to be used to store arrays in the database.
@@ -251,8 +272,28 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         }
 
         return null;
+    }
 
+    /**
+     * Converts a long array to a JSON array and returns it as string.
+     * Intended to be used to store arrays in the database.
+     * @param values The values to convert to string array.
+     * @return A JSONArray as string containing given values.
+     */
+    public static String longArrayToString(long[] values){
 
+        JSONArray array = new JSONArray();
+
+        try{
+            for(int i = 0; i < values.length; i++){
+                array.put(i, (long) values[i]);
+            }
+            return array.toString();
+        }catch(JSONException e){
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     /**

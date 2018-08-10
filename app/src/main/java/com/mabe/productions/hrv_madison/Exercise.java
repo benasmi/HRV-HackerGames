@@ -1,6 +1,9 @@
 package com.mabe.productions.hrv_madison;
 
-public class Exercise {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Exercise implements Parcelable{
 
     /*
      * The intervals of workout's walk/run ratio.
@@ -25,6 +28,24 @@ public class Exercise {
         this.walking_pulse_zones = walking_pulse_zones;
     }
 
+    protected Exercise(Parcel in) {
+        workout_intervals = in.createLongArray();
+        running_pulse_zones = in.createIntArray();
+        walking_pulse_zones = in.createIntArray();
+    }
+
+    public static final Creator<Exercise> CREATOR = new Creator<Exercise>() {
+        @Override
+        public Exercise createFromParcel(Parcel in) {
+            return new Exercise(in);
+        }
+
+        @Override
+        public Exercise[] newArray(int size) {
+            return new Exercise[size];
+        }
+    };
+
     public long[] getWorkoutIntervals() {
         return workout_intervals;
     }
@@ -47,5 +68,45 @@ public class Exercise {
 
     public void setWalkingPulseZones(int[] walking_pulse_zones) {
         this.walking_pulse_zones = walking_pulse_zones;
+    }
+
+    public int getMaximumPulseZone() {
+        int[] runningPulseZones = getRunningPulseZones();
+        int[] walkingPulseZones = getWalkingPulseZones();
+
+        if (walkingPulseZones.length != 0 && runningPulseZones.length != 0) {
+            return Math.max(Utils.maxNum(runningPulseZones), Utils.maxNum(walkingPulseZones));
+        } else if (walkingPulseZones.length == 0) {
+            return Utils.maxNum(runningPulseZones);
+        } else if (runningPulseZones.length == 0) {
+            return Utils.maxNum(walkingPulseZones);
+        }
+        return 0;
+    }
+
+    public int getMinimumPulseZone() {
+        int[] runningPulseZones = getRunningPulseZones();
+        int[] walkingPulseZones = getWalkingPulseZones();
+
+        if (walkingPulseZones.length != 0 && runningPulseZones.length != 0) {
+            return Math.min(Utils.minNum(runningPulseZones), Utils.minNum(walkingPulseZones));
+        } else if (walkingPulseZones.length == 0) {
+            return Utils.minNum(runningPulseZones);
+        } else if (runningPulseZones.length == 0) {
+            return Utils.minNum(walkingPulseZones);
+        }
+        return 0;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeLongArray(workout_intervals);
+        parcel.writeIntArray(running_pulse_zones);
+        parcel.writeIntArray(walking_pulse_zones);
     }
 }

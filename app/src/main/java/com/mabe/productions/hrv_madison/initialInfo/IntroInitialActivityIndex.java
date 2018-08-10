@@ -204,7 +204,8 @@ public class IntroInitialActivityIndex extends AppCompatActivity {
             initial_workout_duration = 25;
             activity_streak = 4;
         }
-        User.saveProgram(this, initial_workout_duration, 3, null);
+
+        User.saveProgram(this, initial_workout_duration, User.WEEKLY_INTERVAL_PROGRAM[activity_streak]);
         Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_ACTIVITY_STREAK, activity_streak,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
         Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_INITIAL_DURATION, initial_workout_duration,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
 

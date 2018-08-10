@@ -22,6 +22,12 @@ public class FireUser {
     private int activity_streak;
     private int activity_index;
 
+    private String walking_pulse_zones;
+    private String running_pulse_zones;
+    private String workout_intervals;
+    private int pulse_zone;
+    private float workout_duration;
+
     public FireUser(String id, String identifier, String email, String password, boolean doneInitial) {
         this.id = id;
         this.identifier = identifier;
@@ -30,7 +36,7 @@ public class FireUser {
         this.doneInitial = doneInitial;
     }
 
-    public FireUser(String id, String identifier, String email, String password, boolean doneInitial, float base_duration, String birthday, int gender, float height, float kmi, float maxDuration, float weight, String workout_days, int activity_streak, int activity_index) {
+    public FireUser(String id, String identifier, String email, String password, boolean doneInitial, float base_duration, String birthday, int gender, float height, float kmi, float maxDuration, float weight, String workout_days, int activity_streak, int activity_index, String walking_pulse_zones, String running_pulse_zones, String workout_intervals, int pulse_zone, float workout_duration) {
         this.id = id;
         this.identifier = identifier;
         this.email = email;
@@ -46,10 +52,35 @@ public class FireUser {
         this.workout_days = workout_days;
         this.activity_streak = activity_streak;
         this.activity_index = activity_index;
+        this.walking_pulse_zones = walking_pulse_zones;
+        this.running_pulse_zones = running_pulse_zones;
+        this.workout_intervals = workout_intervals;
+        this.pulse_zone = pulse_zone;
+        this.workout_duration = workout_duration;
     }
 
     public FireUser(){
 
+    }
+
+    public String getWalking_pulse_zones() {
+        return walking_pulse_zones;
+    }
+
+    public String getRunning_pulse_zones() {
+        return running_pulse_zones;
+    }
+
+    public String getWorkout_intervals() {
+        return workout_intervals;
+    }
+
+    public int getPulse_zone() {
+        return pulse_zone;
+    }
+
+    public float getWorkout_duration() {
+        return workout_duration;
     }
 
     public String getId() {

@@ -21,6 +21,7 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.Login;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -343,6 +344,11 @@ public class LoginActivity extends AppCompatActivity {
                 Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_PASSWORD, fireUser.getPassword(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
                 Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_BASE_DURATION, fireUser.getMaxDuration(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
                 Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_WEEK_DAYS, FeedReaderDbHelper.getWeeksFromString(fireUser.getWorkout_days()),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_WORKOUT_INTERVALS, fireUser.getWorkout_intervals() , FeedReaderDbHelper.SHARED_PREFS_SPORT);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_RUNNING_PULSE_ZONES, fireUser.getRunning_pulse_zones(), FeedReaderDbHelper.SHARED_PREFS_SPORT);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_WALKING_PULSE_ZONES, fireUser.getWalking_pulse_zones(), FeedReaderDbHelper.SHARED_PREFS_SPORT);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_DURATION, fireUser.getWorkout_duration(), FeedReaderDbHelper.SHARED_PREFS_SPORT);
 
                 dialog.dismiss();
 

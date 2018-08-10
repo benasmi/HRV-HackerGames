@@ -86,14 +86,15 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
 
         //Receiving data from RecyclerView and creating workout object
         HistoryRecyclerViewDataHolder parcel = getIntent().getExtras().getParcelable("Workout");
-        WorkoutMeasurements workout = new WorkoutMeasurements(parcel.getDate()
+        WorkoutMeasurements workout = new WorkoutMeasurements(
+                parcel.getExercise()
+                ,parcel.getDate()
                 ,parcel.getWorkout_duration()
                 ,parcel.getAverage_bpm()
                 ,parcel.getBpm_data()
                 ,parcel.getPace_data()
                 ,parcel.getRoute()
                 ,parcel.getCalories_burned()
-                ,parcel.getPulse_zone()
                 ,parcel.getDistance());
 
 
@@ -174,7 +175,17 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
         advanced_history_txt_bpm_value.setText(String.valueOf(workout.getAverage_bpm()== 0 ? "-" : workout.getAverage_bpm()));
         advanced_history_txt_pace_value.setText(String.valueOf(workout.getAveragePace()) + " m/s");
         advanced_history_txt_distance_value.setText(String.valueOf(workout.getDistance()) + " km");
-        advanced_history_txt_intensity_value.setText(String.valueOf(workout.getPulse_zone()));
+
+        int minPulseZone = workout.getExercise().getMinimumPulseZone();
+        int maxPulseZone = workout.getExercise().getMaximumPulseZone();
+        if(minPulseZone == maxPulseZone){
+            advanced_history_txt_intensity_value.setText(minPulseZone + Utils.getNumberSuffix(minPulseZone));
+        }else{
+            advanced_history_txt_intensity_value.setText(minPulseZone +  Utils.getNumberSuffix(minPulseZone) + "-" + maxPulseZone + Utils.getNumberSuffix(maxPulseZone));
+        }
+
+
+
 
 
     }

@@ -174,7 +174,6 @@ public class WorkoutFragment extends Fragment {
     private Animation anim_running_man_left_to_right;
     private Animation anim_top_to_bottom;
     private Animation anim_fade_out;
-    private int required_pulse_zone;
     private float HRMax;
     public static boolean vibrateState = true;
     private Vibrator mVibrator;
@@ -274,17 +273,16 @@ public class WorkoutFragment extends Fragment {
         txt_workout_name.setText(user.getWorkoutSessionType());
         txt_workout_name_explanation.setText(user.getVerbalSessionExplanation());
 
-        required_pulse_zone = user.getPulseZone();
         //pulseZoneView.setRequiredPulseZones(required_pulse_zone);
         editText_minutes.setText("" + (int) user.getWorkoutDuration());
         editText_seconds.setText("00");
         reccomended_duration.setText("" + (int) user.getWorkoutDuration());
 
-        int minPulseZone = user.getMinimumPulseZone();
-        int maxPulseZone = user.getMaximumPulseZone();
+        int minPulseZone = user.getExercise().getMinimumPulseZone();
+        int maxPulseZone = user.getExercise().getMaximumPulseZone();
 
         if(minPulseZone == maxPulseZone){
-            reccomended_pulse.setText(minPulseZone);
+            reccomended_pulse.setText("" + minPulseZone);
         }else{
             reccomended_pulse.setText(minPulseZone + "-" + maxPulseZone);
         }
@@ -603,7 +601,10 @@ public class WorkoutFragment extends Fragment {
             calories_burned = Math.round(calories_burned * 100.0) / 100.0;
             totalDistance = (float) (Math.round(totalDistance * 100.0) / 100.0);
 
+
+
             WorkoutMeasurements workout = new WorkoutMeasurements(
+                    exercise,
                     Calendar.getInstance().getTime(),
                     userSpecifiedWorkoutDuration,
                     0,
@@ -611,7 +612,6 @@ public class WorkoutFragment extends Fragment {
                     Utils.convertFloatArrayListToArray(paceData),
                     Utils.convertLatLngArrayListToArray(route),
                     (float) calories_burned,
-                    MainScreenActivity.user.getPulseZone(),
                     totalDistance
             );
 

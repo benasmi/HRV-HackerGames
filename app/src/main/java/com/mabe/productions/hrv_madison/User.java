@@ -11,11 +11,11 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.firebaseDatase.FireMeasurement;
+import com.mabe.productions.hrv_madison.firebaseDatase.FireUser;
 import com.mabe.productions.hrv_madison.firebaseDatase.FireWorkout;
 import com.mabe.productions.hrv_madison.firebaseDatase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
-
 
 
 import java.util.ArrayList;
@@ -64,8 +64,6 @@ public class User {
     private float KMI;
 
 
-
-
     private int activity_streak;
     private float current_hrv;
     private float yesterday_hrv = 0f;
@@ -78,7 +76,7 @@ public class User {
     private float weight;
     private String verbal_reccomendation;
     private boolean first_time;
-    private int pulse_zone=3;
+    //private int pulse_zone=3;
     private float workout_duration; //in minutes
     private Date firstWeeklyDate;
 
@@ -88,7 +86,7 @@ public class User {
                             new long[]{0}, //Walk/Run intervals
                             new int[]{}, //Running pulse zones
                             new int[]{1, 2} //Walking pulse zones
-                            ),
+                    ),
 
                     new Exercise(
                             new long[]{0}, //Walk-only workout
@@ -100,7 +98,7 @@ public class User {
                             new long[]{0},
                             new int[]{},
                             new int[]{1, 2}
-                    )           ,
+                    ),
 
                     new Exercise(
                             new long[]{120, 60},
@@ -142,6 +140,12 @@ public class User {
                             new int[]{3, 2},
                             new int[]{3, 2}
                     ),
+                    //Final exercise, which is going to be incremented every week
+                    new Exercise(
+                            new long[]{0, 0},
+                            new int[]{3, 3},
+                            new int[]{3, 3}
+                    ),
             };
 
     private Exercise exercise = new Exercise();
@@ -163,7 +167,7 @@ public class User {
     /**
      * This will remove all the measurements saved in the database.
      */
-    public static void removeAllMeasurements(Context context){
+    public static void removeAllMeasurements(Context context) {
         SQLiteDatabase db = new FeedReaderDbHelper(context).getWritableDatabase();
         db.execSQL("delete from " + FeedReaderDbHelper.HRV_DATA_TABLE_NAME);
         db.close();
@@ -172,7 +176,7 @@ public class User {
     /**
      * This will remove all the workouts saved in the database.
      */
-    public static void removeAllWorkouts(Context context){
+    public static void removeAllWorkouts(Context context) {
         SQLiteDatabase db = new FeedReaderDbHelper(context).getWritableDatabase();
         db.execSQL("delete from " + FeedReaderDbHelper.WORKOUT_DATA_TABLE_NAME);
         db.close();
@@ -190,6 +194,7 @@ public class User {
 
     /**
      * Saves a new measurement to the database.
+     *
      * @param overrideByDate If true, existing table row with today's date is overridden.
      */
 
@@ -239,29 +244,26 @@ public class User {
         db.close();
 
 
-
     }
 
 
-
-
-    public ArrayList<WorkoutMeasurements> getLastWeeksWorkouts(int week_difference_amount){
+    public ArrayList<WorkoutMeasurements> getLastWeeksWorkouts(int week_difference_amount) {
         Calendar calendar = Calendar.getInstance();
         ArrayList<WorkoutMeasurements> lastWeekWorkouts = new ArrayList<>();
-        if(week_difference_amount==1){
-            for(WorkoutMeasurements workout: workouts){
-                int dayDiference = Utils.dayDifference(calendar.getTime(),workout.getDate());
-                if(dayDiference>=1 && dayDiference<=7){
+        if (week_difference_amount == 1) {
+            for (WorkoutMeasurements workout : workouts) {
+                int dayDiference = Utils.dayDifference(calendar.getTime(), workout.getDate());
+                if (dayDiference >= 1 && dayDiference <= 7) {
                     lastWeekWorkouts.add(workout);
                 }
             }
             return lastWeekWorkouts;
-        }else{
-            for(WorkoutMeasurements workout: workouts){
-                int dayDiference = Utils.dayDifference(calendar.getTime(),workout.getDate());
-                int lower_bound = 7*week_difference_amount;
-                int higher_bound = lower_bound-6;
-                if(dayDiference<=lower_bound && dayDiference>=higher_bound){
+        } else {
+            for (WorkoutMeasurements workout : workouts) {
+                int dayDiference = Utils.dayDifference(calendar.getTime(), workout.getDate());
+                int lower_bound = 7 * week_difference_amount;
+                int higher_bound = lower_bound - 6;
+                if (dayDiference <= lower_bound && dayDiference >= higher_bound) {
                     lastWeekWorkouts.add(workout);
                 }
             }
@@ -272,10 +274,9 @@ public class User {
     }
 
 
-
-
     /**
      * Saves a new workout to the database.
+     *
      * @param overrideByDate If true, existing table row with today's date is overridden.
      */
 
@@ -340,16 +341,17 @@ public class User {
 
     /**
      * If no measurements were made today, returns null
+     *
      * @return Today's measurement.
      */
-    public Measurement getTodaysMeasurement(){
+    public Measurement getTodaysMeasurement() {
 
         Calendar todaysDate = Calendar.getInstance(TimeZone.getDefault());
         int today = todaysDate.get(Calendar.DAY_OF_YEAR);
-        for(int i = 0; i <measurements.size(); i++){
-        todaysDate.setTime(measurements.get(i).getDate());
+        for (int i = 0; i < measurements.size(); i++) {
+            todaysDate.setTime(measurements.get(i).getDate());
             int measurementDate = todaysDate.get(Calendar.DAY_OF_YEAR);
-            if(today==measurementDate){
+            if (today == measurementDate) {
                 Log.i("MEASUREMENTS", "MEASUREAMENT FOUND");
                 return measurements.get(i);
             }
@@ -457,8 +459,8 @@ public class User {
     }
 
     /**
-    * Fetches all workouts from the database and populates workouts list
-    */
+     * Fetches all workouts from the database and populates workouts list
+     */
     private void getAllWorkoutsFromDb(Context context) {
 
         ArrayList<WorkoutMeasurements> workoutList = new ArrayList<>();
@@ -486,13 +488,18 @@ public class User {
                     cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_DATE)));
             float duration = cursor.getFloat(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_DURATION));
             float average_bpm = cursor.getFloat(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_AVERAGE_BPM));
-            int pulse_zone = cursor.getInt(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_PULSE_ZONE));
             float calories = cursor.getFloat(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_CALORIES));
             int[] bpm_data = FeedReaderDbHelper.getIntArrayFromString(cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_BPM_DATA)));
             float[] pace_data = FeedReaderDbHelper.getFloatArrayFromString(cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_PACE_DATA)));
             LatLng[] route = FeedReaderDbHelper.getRouteFromString(cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_ROUTE)));
             float distance = cursor.getFloat(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_DISTANCE));
+
+            long[] workout_intervals = FeedReaderDbHelper.getLongArrayFromString(cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_INTERVALS)));
+            int[] running_intervals = FeedReaderDbHelper.getIntArrayFromString(cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_RUNNING_PULSE_ZONES)));
+            int[] walking_intervals = FeedReaderDbHelper.getIntArrayFromString(cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.WORKOUT_COL_WALKING_PULSE_ZONES)));
+
             WorkoutMeasurements workout = new WorkoutMeasurements(
+                    new Exercise(workout_intervals, running_intervals, walking_intervals),
                     id,
                     date,
                     duration,
@@ -501,10 +508,8 @@ public class User {
                     pace_data,
                     route,
                     calories,
-                    pulse_zone,
                     distance
             );
-
 
 
             workoutList.add(workout);
@@ -514,16 +519,16 @@ public class User {
 
         workouts = workoutList;
 
-        for(int i = 0; i<workouts.size(); i++){
+        for (int i = 0; i < workouts.size(); i++) {
             Log.i("TEST", String.valueOf(workouts.get(i).getDate()));
         }
 
     }
 
     /**
-    * @return Last saved workout
+     * @return Last saved workout
      */
-    public WorkoutMeasurements getLastWorkout(){
+    public WorkoutMeasurements getLastWorkout() {
         if (workouts.size() > 0) {
             return workouts.get(0);
         } else {
@@ -532,16 +537,17 @@ public class User {
     }
 
     /**
-    * If no workouts were completed today, returns null
-    * @return Today's workout.
-    */
-    public WorkoutMeasurements getTodaysWorkout(){
+     * If no workouts were completed today, returns null
+     *
+     * @return Today's workout.
+     */
+    public WorkoutMeasurements getTodaysWorkout() {
         Calendar todaysDate = Calendar.getInstance();
         int today = todaysDate.get(Calendar.DAY_OF_YEAR);
-        for(int i = 0; i <workouts.size(); i++){
+        for (int i = 0; i < workouts.size(); i++) {
             todaysDate.setTime(workouts.get(i).getDate());
             int measurementDate = todaysDate.get(Calendar.DAY_OF_YEAR);
-            if(today==measurementDate){
+            if (today == measurementDate) {
                 Log.i("MEASUREMENTS", "FOUND WORKOUT");
                 return workouts.get(i);
             }
@@ -553,7 +559,7 @@ public class User {
     /**
      * Sets last_week_hrv, second_last_week_hrv, current_hrv, yesterday_hrv values from measurement arrayList
      */
-    private void setHrvMeasurementsByDate(){
+    private void setHrvMeasurementsByDate() {
 
         int hrvSumLastWeek = 0;
         int hrvCountLastWeek = 0;
@@ -561,7 +567,7 @@ public class User {
         int hrvSumSecondLastWeek = 0;
         int hrvCountSecondLastWeek = 0;
 
-        for(Measurement measurement : measurements){
+        for (Measurement measurement : measurements) {
 
             Date today = Calendar.getInstance().getTime();
 
@@ -599,6 +605,7 @@ public class User {
 
     /**
      * Fetches data from the database and returns an instance of a user
+     *
      * @return FireUser instance
      */
     public static User getUser(Context context) {
@@ -618,10 +625,8 @@ public class User {
         user.setUserPassword(Utils.readFromSharedPrefs_string(context, FeedReaderDbHelper.FIELD_PASSWORD, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
         user.setMaxDuration(Utils.readFromSharedPrefs_float(context, FeedReaderDbHelper.FIELD_BASE_DURATION, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
         user.setWorkoutDuration(Utils.readFromSharedPrefs_float(context, FeedReaderDbHelper.FIELD_DURATION, FeedReaderDbHelper.SHARED_PREFS_SPORT));
-        user.setPulseZone(Utils.readFromSharedPrefs_int(context, FeedReaderDbHelper.FIELD_PULSE_ZONE, FeedReaderDbHelper.SHARED_PREFS_SPORT));
         user.setWeekDays(Utils.readFromSharedPrefs_boolarray(context, FeedReaderDbHelper.FIELD_WEEK_DAYS, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
         user.setLastGeneratedWeeklyDate(Utils.getDateFromString(Utils.readFromSharedPrefs_string(context, FeedReaderDbHelper.FIELD_LAST_TIME_GENERATED_WEEKLY, FeedReaderDbHelper.SHARED_PREFS_SPORT)));
-
 
 
         //Creating an exercise object using database data
@@ -638,9 +643,9 @@ public class User {
         user.setHrvMeasurementsByDate();
 
 
-        if(user.checkWeeklyProgramDate(context)){
+        if (user.checkWeeklyProgramDate(context)) {
             user.generateWeeklyProgram(context);
-            User.saveProgram(context, user.getWorkoutDuration(), user.getPulseZone(), user.getExercise());
+            User.saveProgram(context, user.getWorkoutDuration(), user.getExercise());
         }
 /*
         Calendar calendar = Calendar.getInstance();
@@ -651,34 +656,27 @@ public class User {
         user.generateDailyReccomendation(context);
 
 
-
-
-
         return user;
     }
 
 
-
     /**
      * Saves workout duration and pulse_zone to the database
+     *
      * @param exercise The exercise of workout.
      */
-    public static void saveProgram(Context context, float workout_duration, int pulse_zone, Exercise exercise) {
-        Log.i("TEST", "saving program...");
-        if(exercise != null){
-            Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_WORKOUT_INTERVALS, exercise.getWorkoutIntervals() , FeedReaderDbHelper.SHARED_PREFS_SPORT);
-            Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_RUNNING_PULSE_ZONES, exercise.getRunningPulseZones(), FeedReaderDbHelper.SHARED_PREFS_SPORT);
-            Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_WALKING_PULSE_ZONES, exercise.getWalkingPulseZones(), FeedReaderDbHelper.SHARED_PREFS_SPORT);
-        }
+    public static void saveProgram(Context context, float workout_duration, Exercise exercise) {
+        Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_WORKOUT_INTERVALS, exercise.getWorkoutIntervals(), FeedReaderDbHelper.SHARED_PREFS_SPORT);
+        Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_RUNNING_PULSE_ZONES, exercise.getRunningPulseZones(), FeedReaderDbHelper.SHARED_PREFS_SPORT);
+        Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_WALKING_PULSE_ZONES, exercise.getWalkingPulseZones(), FeedReaderDbHelper.SHARED_PREFS_SPORT);
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_DURATION, workout_duration, FeedReaderDbHelper.SHARED_PREFS_SPORT);
-        Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_PULSE_ZONE, pulse_zone, FeedReaderDbHelper.SHARED_PREFS_SPORT);
-
+        FirebaseUtils.updateIntervalProgram(workout_duration, exercise.getWorkoutIntervals(), exercise.getRunningPulseZones(), exercise.getWalkingPulseZones());
     }
-
 
 
     /**
      * Gets all measurements that the user has made.
+     *
      * @return A list of measurements
      */
     public ArrayList<Measurement> getAllMeasurements() {
@@ -699,24 +697,24 @@ public class User {
         firstWeeklyDate = Utils.getDateFromString(Utils.readFromSharedPrefs_string(context, FeedReaderDbHelper.FIELD_WEEKLY_PROGRAME_GENERATED_DATE, FeedReaderDbHelper.SHARED_PREFS_SPORT));
         Calendar calendar = Calendar.getInstance();
 
-        if(firstWeeklyDate == null){
+        if (firstWeeklyDate == null) {
             first_time = true;
             Log.i("TEST", "FireUser first ever generated program");
             firstWeeklyDate = calendar.getTime();
             Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_WEEKLY_PROGRAME_GENERATED_DATE, Utils.getStringFromDate(firstWeeklyDate), FeedReaderDbHelper.SHARED_PREFS_SPORT);
-            Utils.buildAlertDialogPrompt(context,"Weekly program status!", "We have created your first weekly workout program. Based on your activity evaluation you should start from week: " + String.valueOf(activity_streak+1),"Close","",null,null);
+            Utils.buildAlertDialogPrompt(context, "Weekly program status!", "We have created your first weekly workout program. Based on your activity evaluation you should start from week: " + String.valueOf(activity_streak + 1), "Close", "", null, null);
             return true;
         }
         first_time = false;
 
-        int weekDiff = Utils.weekDifference(firstWeeklyDate,calendar.getTime());
-        if(weekDiff>=1){
+        int weekDiff = Utils.weekDifference(firstWeeklyDate, calendar.getTime());
+        if (weekDiff >= 1) {
             Log.i("TEST", "One or more weeks have passed --> Generate program");
             firstWeeklyDate = calendar.getTime();
             Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_WEEKLY_PROGRAME_GENERATED_DATE, Utils.getStringFromDate(firstWeeklyDate), FeedReaderDbHelper.SHARED_PREFS_SPORT);
             return true;
         }
-            Log.i("TEST", "Same week");
+        Log.i("TEST", "Same week");
         return false;
     }
 
@@ -724,92 +722,66 @@ public class User {
     /**
      * Sets pulse_zone and workout_duration based on weekly program algorithm.
      * The program is saved to the database.
+     *
      * @return Weekly program verbal information
      */
 
     public String generateWeeklyProgram(Context context) {
-        ArrayList<WorkoutMeasurements> last_week_workouts =  getLastWeeksWorkouts(1);
-        ArrayList<WorkoutMeasurements> second_last_week_workouts =  getLastWeeksWorkouts(2);
+        ArrayList<WorkoutMeasurements> last_week_workouts = getLastWeeksWorkouts(1);
+        ArrayList<WorkoutMeasurements> second_last_week_workouts = getLastWeeksWorkouts(2);
 
-        if(first_time){
+        if (first_time) {
             exercise = WEEKLY_INTERVAL_PROGRAM[activity_streak];
             return "First time";
         }
 
         //Nesportavo dvi sav arba daugiau
-        if(last_week_workouts.size()<2 && second_last_week_workouts.size()<2){
+        if (last_week_workouts.size() < 2 && second_last_week_workouts.size() < 2) {
             Log.i("TEST", "Žmogau, mažai sportuoji ---> Pradėk nuo nulio");
-            activity_streak=0;
-            Utils.buildAlertDialogPrompt(context,"Weekly program status!", "Zero activity of 2 or more weeks has been detected, hence program starts from the beggining. " + String.valueOf(activity_streak+1) + Utils.getNumberSuffix(activity_streak+1) + " week out of 11","Close","",null,null);
+            activity_streak = 0;
+            Utils.buildAlertDialogPrompt(context, "Weekly program status!", "Zero activity of 2 or more weeks has been detected, hence program starts from the beggining. " + String.valueOf(activity_streak + 1) + Utils.getNumberSuffix(activity_streak + 1) + " week out of 11", "Close", "", null, null);
             exercise = WEEKLY_INTERVAL_PROGRAM[0];
-        }else{
-            if(last_week_workouts.size()>=2){
+        } else {
+            if (last_week_workouts.size() >= 2) {
                 Log.i("TEST", "Žmogau, gerai sportuoji ---> Neesi čainikas");
                 if (last_week_hrv >= second_last_week_hrv * 0.85) {
                     activity_streak++;
-                    if(activity_streak < WEEKLY_INTERVAL_PROGRAM.length){
+                    if (activity_streak < WEEKLY_INTERVAL_PROGRAM.length) {
                         exercise = WEEKLY_INTERVAL_PROGRAM[activity_streak];
                         workout_duration *= 1.1;
                         workout_duration = Math.min(workout_duration, max_duration);
-                        Utils.buildAlertDialogPrompt(context,"Weekly program status!", "New weekly program has been generated for you. Currently you are on week: " + String.valueOf(activity_streak+1) + Utils.getNumberSuffix(activity_streak+1) +  "out of 11","Close","",null,null);
-                    }else {
+                        Utils.buildAlertDialogPrompt(context, "Weekly program status!", "New weekly program has been generated for you. Currently you are on week: " + String.valueOf(activity_streak + 1) + Utils.getNumberSuffix(activity_streak + 1) + "out of 11", "Close", "", null, null);
+                    } else {
                         workout_duration *= 1.1;
 
                         if (workout_duration >= max_duration) {
 
-                            workout_duration = INITIAL_WORKOUT_DURATION;
-                            pulse_zone++;
-                            pulse_zone = Math.min(pulse_zone,5);
-                            Utils.buildAlertDialogPrompt(context,"Weekly program status!", "Great! We have increased your pulse zone!","Close","",null,null);
+                            workout_duration = exercise.getRunningPulseZones()[0] == 5 ? max_duration : INITIAL_WORKOUT_DURATION;
 
-                        }else{
-                            Utils.buildAlertDialogPrompt(context,"Weekly program status!", "You are doing great! Workout duration has been increased, pulse zone stays the same!","Close","",null,null);
+                            exercise.setRunningPulseZones(new int[]{Math.min(exercise.getRunningPulseZones()[0] + 1, 5), Math.min(exercise.getRunningPulseZones()[1] + 1, 5)});
+//                            pulse_zone++;
+//                            pulse_zone = Math.min(pulse_zone,5);
+                            Utils.buildAlertDialogPrompt(context, "Weekly program status!", "Great! We have increased your pulse zone!", "Close", "", null, null);
+
+                        } else {
+                            Utils.buildAlertDialogPrompt(context, "Weekly program status!", "You are doing great! Workout duration has been increased, pulse zone stays the same!", "Close", "", null, null);
                         }
 
                     }
 
-                }else{
-                    Utils.buildAlertDialogPrompt(context,"Weekly program status!", "Your HRV has decreased, therefore we reccomend you repeat this week. Currently you are on " + String.valueOf(activity_streak+1) + " week out of 11","Close","",null,null);
+                } else {
+                    Utils.buildAlertDialogPrompt(context, "Weekly program status!", "Your HRV has decreased, therefore we reccomend you repeat this week. Currently you are on " + String.valueOf(activity_streak + 1) + " week out of 11", "Close", "", null, null);
                 }
-                saveProgram(context,workout_duration,pulse_zone,null);
-            }else{
-                Utils.buildAlertDialogPrompt(context,"Weekly program status!", "Last week you didn't show any activity, so keeping you on the same week. Currently you are on week: " + String.valueOf(activity_streak+1) + " out of 11","Close","",null,null);
+//                saveProgram(context,workout_duration,pulse_zone,null);
+            } else {
+                Utils.buildAlertDialogPrompt(context, "Weekly program status!", "Last week you didn't show any activity, so keeping you on the same week. Currently you are on week: " + String.valueOf(activity_streak + 1) + " out of 11", "Close", "", null, null);
             }
         }
-        Utils.saveToSharedPrefs(context,FeedReaderDbHelper.FIELD_ACTIVITY_STREAK,activity_streak,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+        Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_ACTIVITY_STREAK, activity_streak, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
 
         return "not supported";
     }
 
-
-
-
-    public int getMaximumPulseZone(){
-        int[] runningPulseZones = getExercise().getRunningPulseZones();
-        int[] walkingPulseZones = getExercise().getWalkingPulseZones();
-
-        if(walkingPulseZones.length != 0 && runningPulseZones.length != 0){
-            return Math.max(Utils.maxNum(runningPulseZones), Utils.maxNum(walkingPulseZones));
-        }else if(walkingPulseZones.length == 0){
-            return Utils.maxNum(runningPulseZones);
-        }else if(runningPulseZones.length == 0){
-            return Utils.maxNum(walkingPulseZones);
-        }
-        return 0;
-    }
-    public int getMinimumPulseZone(){
-        int[] runningPulseZones = getExercise().getRunningPulseZones();
-        int[] walkingPulseZones = getExercise().getWalkingPulseZones();
-
-        if(walkingPulseZones.length != 0 && runningPulseZones.length != 0){
-            return Math.min(Utils.minNum(runningPulseZones), Utils.minNum(walkingPulseZones));
-        }else if(walkingPulseZones.length == 0){
-            return Utils.minNum(runningPulseZones);
-        }else if(runningPulseZones.length == 0){
-            return Utils.minNum(walkingPulseZones);
-        }
-        return 0;
-    }
 
     /**
      * Alters the weekly program based on current_hrv and yesterday_hrv.
@@ -820,136 +792,132 @@ public class User {
         int dayOfWeek = Utils.getDayOfWeek(c);
 
 
-            int baselineHrv = -1;
-            int minBaselineHrv = -1;
-            int maxBaselineHrv = -1;
-            int hrvBias = -1;
+        int baselineHrv = -1;
+        int minBaselineHrv = -1;
+        int maxBaselineHrv = -1;
+        int hrvBias = -1;
 
-            Resources resources = context.getResources();
+        Resources resources = context.getResources();
 
-            int age = Utils.getAgeFromDate(birthday);
+        int age = Utils.getAgeFromDate(birthday);
 
-            if (age >= 18 && age <= 24) {
-                baselineHrv = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_18_24_M) : resources.getInteger(R.integer.baseline_18_24_F);
-                hrvBias = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_bias_18_24_M) : resources.getInteger(R.integer.baseline_bias_18_24_F);
-            } else if (age >= 25 && age <= 34) {
-                baselineHrv = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_25_34_M) : resources.getInteger(R.integer.baseline_25_34_F);
-                hrvBias = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_bias_25_34_M) : resources.getInteger(R.integer.baseline_bias_25_34_F);
-            } else if (age >= 35 && age <= 44) {
-                baselineHrv = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_35_44_M) : resources.getInteger(R.integer.baseline_35_44_F);
-                hrvBias = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_bias_35_44_M) : resources.getInteger(R.integer.baseline_bias_35_44_F);
-            } else if (age >= 45 && age <= 54) {
-                baselineHrv = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_45_54_M) : resources.getInteger(R.integer.baseline_45_54_F);
-                hrvBias = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_bias_45_54_M) : resources.getInteger(R.integer.baseline_bias_45_54_F);
-            } else if (age >= 55 && age <= 64) {
-                baselineHrv = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_55_64_M) : resources.getInteger(R.integer.baseline_55_64_F);
-                hrvBias = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_bias_55_64_M) : resources.getInteger(R.integer.baseline_bias_55_64_F);
-            } else if (age >= 65 && age <= 74) {
-                baselineHrv = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_65_74_M) : resources.getInteger(R.integer.baseline_65_74_F);
-                hrvBias = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_bias_65_74_M) : resources.getInteger(R.integer.baseline_bias_65_74_F);
-            } else if (age >= 75) {
-                baselineHrv = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_75_M) : resources.getInteger(R.integer.baseline_75_F);
-                hrvBias = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_bias_75_M) : resources.getInteger(R.integer.baseline_bias_75_F);
-            }
+        if (age >= 18 && age <= 24) {
+            baselineHrv = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_18_24_M) : resources.getInteger(R.integer.baseline_18_24_F);
+            hrvBias = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_bias_18_24_M) : resources.getInteger(R.integer.baseline_bias_18_24_F);
+        } else if (age >= 25 && age <= 34) {
+            baselineHrv = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_25_34_M) : resources.getInteger(R.integer.baseline_25_34_F);
+            hrvBias = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_bias_25_34_M) : resources.getInteger(R.integer.baseline_bias_25_34_F);
+        } else if (age >= 35 && age <= 44) {
+            baselineHrv = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_35_44_M) : resources.getInteger(R.integer.baseline_35_44_F);
+            hrvBias = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_bias_35_44_M) : resources.getInteger(R.integer.baseline_bias_35_44_F);
+        } else if (age >= 45 && age <= 54) {
+            baselineHrv = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_45_54_M) : resources.getInteger(R.integer.baseline_45_54_F);
+            hrvBias = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_bias_45_54_M) : resources.getInteger(R.integer.baseline_bias_45_54_F);
+        } else if (age >= 55 && age <= 64) {
+            baselineHrv = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_55_64_M) : resources.getInteger(R.integer.baseline_55_64_F);
+            hrvBias = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_bias_55_64_M) : resources.getInteger(R.integer.baseline_bias_55_64_F);
+        } else if (age >= 65 && age <= 74) {
+            baselineHrv = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_65_74_M) : resources.getInteger(R.integer.baseline_65_74_F);
+            hrvBias = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_bias_65_74_M) : resources.getInteger(R.integer.baseline_bias_65_74_F);
+        } else if (age >= 75) {
+            baselineHrv = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_75_M) : resources.getInteger(R.integer.baseline_75_F);
+            hrvBias = gender == GENDER_MALE ? resources.getInteger(R.integer.baseline_bias_75_M) : resources.getInteger(R.integer.baseline_bias_75_F);
+        }
 
-            minBaselineHrv = baselineHrv - hrvBias;
-            maxBaselineHrv = baselineHrv + hrvBias;
+        minBaselineHrv = baselineHrv - hrvBias;
+        maxBaselineHrv = baselineHrv + hrvBias;
 
-            //If no yesterday data is present
-            //TODO: do some deciding on this one
-            if (yesterday_hrv == 0 || current_hrv == 0) {
+        //If no yesterday data is present
+        //TODO: do some deciding on this one
+        if (yesterday_hrv == 0 || current_hrv == 0) {
 //                yesterday_hrv = baselineHrv;
-                //yesterday_hrv = current_hrv;
-                program_update_state = PROGRAM_STATE_NOT_ENOUGH_DATA;
-                verbal_reccomendation = "Not enough data to generate reasonable workout plan";
-                return;
-            }
+            //yesterday_hrv = current_hrv;
+            program_update_state = PROGRAM_STATE_NOT_ENOUGH_DATA;
+            verbal_reccomendation = "Not enough data to generate reasonable workout plan";
+            return;
+        }
 
-          float percentageChange = current_hrv / yesterday_hrv;
+        float percentageChange = current_hrv / yesterday_hrv;
 
-            workout_duration*=percentageChange;
+        workout_duration *= percentageChange;
 
-            for(int i = 0; i < week_days.length; i++){
-                Log.i("TEST", "week day " + i + week_days[i]);
-            }
-
-
-            if (!week_days[dayOfWeek]) {
-                Log.i("TEST", "Šiandien jums poilsio diena");
-                verbal_reccomendation =  "Šiandien rekomenduojame pailsėti";
-                return;
-            }
-
-            if (minBaselineHrv <= current_hrv /*&& current_hrv <= maxBaselineHrv*/) {
+        for (int i = 0; i < week_days.length; i++) {
+            Log.i("TEST", "week day " + i + week_days[i]);
+        }
 
 
+        if (!week_days[dayOfWeek]) {
+            Log.i("TEST", "Šiandien jums poilsio diena");
+            verbal_reccomendation = "Šiandien rekomenduojame pailsėti";
+            return;
+        }
+
+        if (minBaselineHrv <= current_hrv /*&& current_hrv <= maxBaselineHrv*/) {
 
 
-                //Hrv has increased
-                if (percentageChange >= 1) {
+            //Hrv has increased
+            if (percentageChange >= 1) {
+                program_update_state = PROGRAM_STATE_CHANGED;
+
+
+                if (percentageChange <= MINIMAL_HRV_INCREASE) {
                     program_update_state = PROGRAM_STATE_CHANGED;
-
-
-                    if (percentageChange <= MINIMAL_HRV_INCREASE) {
-                        program_update_state = PROGRAM_STATE_CHANGED;
-                        Log.i("TEST", "detected minimal hrv increase");
-                        verbal_reccomendation =  "No significant change in your HRV, so your training plan is not altered";
-                        return;
-                    }
-                    if (percentageChange <= MEDIOCRE_HRV_INCREASE) {
-
-                        Log.i("TEST", "mediocre hrv increase");
-                        verbal_reccomendation =  "Your HRV has increased,in comparison to last time. Upgrading your workout!";
-                        return;
-                    }
-
-                    //hrv has greatly increased
-                    Log.i("TEST", "hrv has greatly increased");
-                    verbal_reccomendation =  "Incredible! Seems like you've been feeling great lately. Increasing training difficulty!";
+                    Log.i("TEST", "detected minimal hrv increase");
+                    verbal_reccomendation = "No significant change in your HRV, so your training plan is not altered";
                     return;
+                }
+                if (percentageChange <= MEDIOCRE_HRV_INCREASE) {
+
+                    Log.i("TEST", "mediocre hrv increase");
+                    verbal_reccomendation = "Your HRV has increased,in comparison to last time. Upgrading your workout!";
+                    return;
+                }
+
+                //hrv has greatly increased
+                Log.i("TEST", "hrv has greatly increased");
+                verbal_reccomendation = "Incredible! Seems like you've been feeling great lately. Increasing training difficulty!";
+                return;
 
 
+            } else {
 
+                //Hrv has decreased
+                program_update_state = PROGRAM_STATE_CHANGED;
 
-                } else {
-
-                    //Hrv has decreased
+                if (percentageChange >= MINIMAL_HRV_DECREASE) {
                     program_update_state = PROGRAM_STATE_CHANGED;
+                    Log.i("TEST", "detected minimal hrv decrease");
+                    verbal_reccomendation = "No significant change in your HRV, so your training plan is not altered";
+                    return;
+                }
 
-                    if (percentageChange >= MINIMAL_HRV_DECREASE) {
-                        program_update_state = PROGRAM_STATE_CHANGED;
-                        Log.i("TEST", "detected minimal hrv decrease");
-                        verbal_reccomendation =  "No significant change in your HRV, so your training plan is not altered";
-                        return;
-                    }
-
-                    if (percentageChange >= MEDIOCRE_HRV_DECREASE) {
-                        Log.i("TEST", "detected mediocre hrv decrease");
-                        verbal_reccomendation =  "Your HRV has decreased,in comparison to last time: Downgrading your workout!";
-                        return;
-                    }
-
-
-                    Log.i("TEST", "detected great hrv decrease");
-                    verbal_reccomendation =  "Your HRV has drastically decreased. You should take a day off.";
+                if (percentageChange >= MEDIOCRE_HRV_DECREASE) {
+                    Log.i("TEST", "detected mediocre hrv decrease");
+                    verbal_reccomendation = "Your HRV has decreased,in comparison to last time: Downgrading your workout!";
                     return;
                 }
 
 
-            } else {
-                program_update_state = PROGRAM_STATE_NOT_ENOUGH_DATA; //todo: do some deciding (hrv out of bounds)
-                Log.i("TEST", "Jusu hrv neatitinka normu");
-                verbal_reccomendation =  "Jūsų hrv neatitinka normų";
+                Log.i("TEST", "detected great hrv decrease");
+                verbal_reccomendation = "Your HRV has drastically decreased. You should take a day off.";
                 return;
             }
+
+
+        } else {
+            program_update_state = PROGRAM_STATE_NOT_ENOUGH_DATA; //todo: do some deciding (hrv out of bounds)
+            Log.i("TEST", "Jusu hrv neatitinka normu");
+            verbal_reccomendation = "Jūsų hrv neatitinka normų";
+            return;
+        }
 
 
     }
 
 
-
     /**
      * Updates the measurement in the database
+     *
      * @param context     Current context
      * @param measurement The measurement to update
      * @param updateType  Type, which determines which column should be used to identify the measurement
@@ -975,35 +943,34 @@ public class User {
     }
 
 
-
-    public String getWorkoutSessionType(){
+    public String getWorkoutSessionType() {
         //Calculating the total duration of a cycle
         long cycleDuration = 0;
-        for(long interval : exercise.getWorkoutIntervals()){
-            cycleDuration+=interval*1000L;
+        for (long interval : exercise.getWorkoutIntervals()) {
+            cycleDuration += interval * 1000L;
         }
 
-        if(cycleDuration == 0){
-            if(exercise.getWorkoutIntervals().length % 2 == 0){
+        if (cycleDuration == 0) {
+            if (exercise.getWorkoutIntervals().length % 2 == 0) {
                 return RUNNING_SESSION;
-            }else {
+            } else {
                 return WALKING_SESSION;
             }
-        }else{
+        } else {
             return INTERVAL_SESSION;
         }
     }
 
-    public String getVerbalSessionExplanation(){
-        if(getWorkoutSessionType().equals(RUNNING_SESSION)){
+    public String getVerbalSessionExplanation() {
+        if (getWorkoutSessionType().equals(RUNNING_SESSION)) {
             return "Running only";
-        }else if(getWorkoutSessionType().equals(WALKING_SESSION)){
+        } else if (getWorkoutSessionType().equals(WALKING_SESSION)) {
             return "Walking only";
-        }else{
-            int walkingMinutes = (int) (exercise.getWorkoutIntervals()[0]/60L);
-            int walkingSeconds = (int) (exercise.getWorkoutIntervals()[0] - walkingMinutes*60);
-            int runningMinutes = (int) (exercise.getWorkoutIntervals()[1]/60L);
-            int runningSeconds = (int) (exercise.getWorkoutIntervals()[1] - runningMinutes*60);
+        } else {
+            int walkingMinutes = (int) (exercise.getWorkoutIntervals()[0] / 60L);
+            int walkingSeconds = (int) (exercise.getWorkoutIntervals()[0] - walkingMinutes * 60);
+            int runningMinutes = (int) (exercise.getWorkoutIntervals()[1] / 60L);
+            int runningSeconds = (int) (exercise.getWorkoutIntervals()[1] - runningMinutes * 60);
             return ((walkingMinutes == 0 ? "" : (walkingMinutes + "min")) + (walkingSeconds == 0 ? "" : (" " + walkingSeconds + "s")) +
                     " walking + " + (runningMinutes == 0 ? "" : (runningMinutes + "min")) + (runningSeconds == 0 ? "" : (" " + runningSeconds + "s")) +
                     " running");
@@ -1100,6 +1067,7 @@ public class User {
     public void setActivity_streak(int activity_streak) {
         this.activity_streak = activity_streak;
     }
+
     public boolean[] getWeekDays() {
         return week_days;
     }
@@ -1133,14 +1101,6 @@ public class User {
         this.last_week_hrv = last_week_hrv;
     }
 
-    public int getPulseZone() {
-        return pulse_zone;
-    }
-
-    private void setPulseZone(int pulse_zone) {
-        this.pulse_zone = pulse_zone;
-    }
-
     public float getWorkoutDuration() {
         return Math.round(workout_duration);
     }
@@ -1162,23 +1122,23 @@ public class User {
     }
 
     public float getHrvYesterdayTodayRatio() {
-        if(yesterday_hrv == 0f){
+        if (yesterday_hrv == 0f) {
             return 0;
         }
-        return  current_hrv/ yesterday_hrv;
+        return current_hrv / yesterday_hrv;
     }
 
-    public float getLatestHrvRatio(){
+    public float getLatestHrvRatio() {
         List<Measurement> measurements = getAllMeasurements();
-        if(measurements.size() < 2){
+        if (measurements.size() < 2) {
             return 0;
         }
 
         int lastHrv = measurements.get(0).getHrv();
         int secondLastHrv = measurements.get(1).getHrv();
 
-        if(secondLastHrv != 0){
-            return ((float) lastHrv)/((float) secondLastHrv);
+        if (secondLastHrv != 0) {
+            return ((float) lastHrv) / ((float) secondLastHrv);
         }
         return 0;
     }

@@ -110,7 +110,8 @@ public class HistoryActivity extends AppCompatActivity {
 
         for(WorkoutMeasurements workout: workouts){
             adapterDataSet.add(0,new HistoryRecyclerViewDataHolder(
-                    workout.getUnique_id()
+                    workout.getExercise()
+                    ,workout.getUnique_id()
                     ,workout.getDate()
                     ,workout.getWorkout_duration()
                     ,workout.getAverage_bpm()
@@ -118,7 +119,6 @@ public class HistoryActivity extends AppCompatActivity {
                     ,workout.getPace_data()
                     ,workout.getRoute()
                     ,workout.getCalories_burned()
-                    ,workout.getPulse_zone()
                     ,workout.getDistance()
                     ,0));
         }

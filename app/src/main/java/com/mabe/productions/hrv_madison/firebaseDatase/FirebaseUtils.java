@@ -33,15 +33,17 @@ public class FirebaseUtils {
 
         measurementsTable.child(user.getUid()).child(key).setValue(measurement);
     }
-    public static void updateProgram(float duration, ){
 
+
+    public static void updateIntervalProgram(float duration, long[] workout_intervals, int[] running_pulse_zones, int[] walking_pulse_zones){
         final FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
         final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
 
-        fireDatabase.child("workout_duration").setValue();
-
-
+        fireDatabase.child("workout_intervals").setValue(FeedReaderDbHelper.longArrayToString(workout_intervals));
+        fireDatabase.child("running_pulse_zones").setValue(FeedReaderDbHelper.intArrayToString(running_pulse_zones));
+        fireDatabase.child("walking_pulse_zones").setValue(FeedReaderDbHelper.intArrayToString(walking_pulse_zones));
+        fireDatabase.child("workout_duration").setValue(duration);
     }
     
     public static void addWorkout(FireWorkout workout){
@@ -58,13 +60,11 @@ public class FirebaseUtils {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
+
                 ArrayList<FireMeasurement> measurements = new ArrayList<>();
 
                 for(DataSnapshot measurement : dataSnapshot.getChildren()){
                     measurements.add(measurement.getValue(FireMeasurement.class));
-                    float hf =  ((FireMeasurement) measurement.getValue(FireMeasurement.class)).gethf_band();
-                    String measurementString = measurement.toString();
-                    Log.i("TEST", measurement.toString());
                 }
 
                 finishListener.onSuccess(measurements);

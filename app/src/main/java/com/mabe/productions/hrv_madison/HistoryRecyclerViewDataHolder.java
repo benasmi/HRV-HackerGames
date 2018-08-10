@@ -45,15 +45,15 @@ public class HistoryRecyclerViewDataHolder implements Parcelable  {
     private float[] pace_data; //in kilometers/minute
     private LatLng[] route;
     private float calories_burned; //In KCal
-    private int pulse_zone;
     private float distance;
+    private Exercise exercise;
 
 
     private int viewType = 0;
 
 
 
-    public HistoryRecyclerViewDataHolder(int unique_id, Date date, float workout_duration, float average_bpm, int[] bpm_data, float[] pace_data, LatLng[] route, float calories_burned, int pulse_zone, float distance, int viewType) {
+    public HistoryRecyclerViewDataHolder(Exercise exercise, int unique_id, Date date, float workout_duration, float average_bpm, int[] bpm_data, float[] pace_data, LatLng[] route, float calories_burned, float distance, int viewType) {
         this.unique_id = unique_id;
         this.date = date;
         this.workout_duration = workout_duration;
@@ -62,9 +62,9 @@ public class HistoryRecyclerViewDataHolder implements Parcelable  {
         this.pace_data = pace_data;
         this.route = route;
         this.calories_burned = calories_burned;
-        this.pulse_zone = pulse_zone;
         this.distance = distance;
         this.viewType = viewType;
+        this.exercise = exercise;
     }
 
     public HistoryRecyclerViewDataHolder(Date date, int duration, int rmssd, float ln_rmssd, float lowest_rmssd, float highest_rmssd, float lowest_bpm, float highest_bpm, float average_bpm, float LF_band, float VLF_band, float VHF_band, float HF_band, int[] bpm_data, int[] rmssd_data, int uniqueId, int mood, int hrv, int viewType) {
@@ -111,10 +111,10 @@ public class HistoryRecyclerViewDataHolder implements Parcelable  {
         pace_data = in.createFloatArray();
         route = in.createTypedArray(LatLng.CREATOR);
         calories_burned = in.readFloat();
-        pulse_zone = in.readInt();
         distance = in.readFloat();
         viewType = in.readInt();
         date = (Date) in.readSerializable();
+        exercise = in.readParcelable(Exercise.class.getClassLoader());
     }
 
     public static final Creator<HistoryRecyclerViewDataHolder> CREATOR = new Creator<HistoryRecyclerViewDataHolder>() {
@@ -217,10 +217,6 @@ public class HistoryRecyclerViewDataHolder implements Parcelable  {
         this.calories_burned = calories_burned;
     }
 
-    public void setPulse_zone(int pulse_zone) {
-        this.pulse_zone = pulse_zone;
-    }
-
     public void setDistance(float distance) {
         this.distance = distance;
     }
@@ -251,10 +247,6 @@ public class HistoryRecyclerViewDataHolder implements Parcelable  {
 
     public float getCalories_burned() {
         return calories_burned;
-    }
-
-    public int getPulse_zone() {
-        return pulse_zone;
     }
 
     public float getDistance() {
@@ -329,6 +321,9 @@ public class HistoryRecyclerViewDataHolder implements Parcelable  {
         return hrv;
     }
 
+    public Exercise getExercise() {
+        return exercise;
+    }
 
     @Override
     public int describeContents() {
@@ -358,9 +353,9 @@ public class HistoryRecyclerViewDataHolder implements Parcelable  {
         parcel.writeFloatArray(pace_data);
         parcel.writeTypedArray(route, i);
         parcel.writeFloat(calories_burned);
-        parcel.writeInt(pulse_zone);
         parcel.writeFloat(distance);
         parcel.writeInt(viewType);
         parcel.writeSerializable(date);
+        parcel.writeParcelable(exercise, i);
     }
 }

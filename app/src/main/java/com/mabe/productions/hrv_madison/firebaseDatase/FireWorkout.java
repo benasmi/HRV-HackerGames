@@ -1,6 +1,7 @@
 package com.mabe.productions.hrv_madison.firebaseDatase;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.mabe.productions.hrv_madison.Exercise;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
@@ -16,8 +17,11 @@ public class FireWorkout {
     private String pace_data; //in kilometers/minute; Float array converted to string
     private String route; //LatLng array as string
     private float calories_burned; //In KCal
-    private int pulse_zone;
     private float distance;
+
+    private String workout_intervals;
+    private String running_pulse_zones;
+    private String walking_pulse_zones;
 
     public FireWorkout(){
 
@@ -31,20 +35,24 @@ public class FireWorkout {
         this.pace_data        = FeedReaderDbHelper.floatArrayToString(workoutMeasurements.getPace_data());
         this.route            = FeedReaderDbHelper.routeToString(workoutMeasurements.getRoute());
         this.calories_burned  = workoutMeasurements.getCalories_burned();
-        this.pulse_zone       = workoutMeasurements.getPulse_zone();
         this.distance         = workoutMeasurements.getDistance();
+        this.workout_intervals = FeedReaderDbHelper.longArrayToString(workoutMeasurements.getExercise().getWorkoutIntervals());
+        this.running_pulse_zones = FeedReaderDbHelper.intArrayToString(workoutMeasurements.getExercise().getRunningPulseZones());
+        this.walking_pulse_zones = FeedReaderDbHelper.intArrayToString(workoutMeasurements.getExercise().getWalkingPulseZones());
     }
 
-    public FireWorkout(String date, float workout_duration, float average_bpm, String bpm_data, String pace_data, String route, float calories_burned, int pulse_zone, float distance) {
-        this.date             = date;
-        this.workout_duration = workout_duration;
-        this.average_bpm      = average_bpm;
-        this.bpm_data         = bpm_data;
-        this.pace_data        = pace_data;
-        this.route            = route;
-        this.calories_burned  = calories_burned;
-        this.pulse_zone       = pulse_zone;
-        this.distance         = distance;
+    public FireWorkout(String date, float workout_duration, float average_bpm, String bpm_data, String pace_data, String route, float calories_burned, float distance, String workout_intervals, String running_pulse_zones, String walking_pulse_zones) {
+        this.date                = date;
+        this.workout_duration    = workout_duration;
+        this.average_bpm         = average_bpm;
+        this.bpm_data            = bpm_data;
+        this.pace_data           = pace_data;
+        this.route               = route;
+        this.calories_burned     = calories_burned;
+        this.distance            = distance;
+        this.workout_intervals   = workout_intervals;
+        this.running_pulse_zones = running_pulse_zones;
+        this.walking_pulse_zones = walking_pulse_zones;
     }
 
     public String getDate() {
@@ -75,11 +83,19 @@ public class FireWorkout {
         return calories_burned;
     }
 
-    public int getPulse_zone() {
-        return pulse_zone;
-    }
-
     public float getDistance() {
         return distance;
+    }
+
+    public String getWorkout_intervals() {
+        return workout_intervals;
+    }
+
+    public String getRunning_pulse_zones() {
+        return running_pulse_zones;
+    }
+
+    public String getWalking_pulse_zones() {
+        return walking_pulse_zones;
     }
 }

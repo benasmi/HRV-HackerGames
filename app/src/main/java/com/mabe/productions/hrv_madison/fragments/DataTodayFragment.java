@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatButton;
@@ -168,6 +169,7 @@ public class DataTodayFragment extends Fragment {
         //Today measurements and workouts
         Measurement todayMeasurement = user.getTodaysMeasurement();
         WorkoutMeasurements todaysWorkoutMeasurement = user.getTodaysWorkout();
+
         hasMeasuredToday = todayMeasurement == null ? false : true;
         hasWorkedOutToday = todaysWorkoutMeasurement == null ? false : true;
 
@@ -254,23 +256,23 @@ public class DataTodayFragment extends Fragment {
             workout_done_cardview.setVisibility(View.GONE);
         }
 
-        //RECCOMENDATION CARDVIEW
-        switch (user.getProgramUpdateState()) {
-
-            case User.PROGRAM_STATE_CHANGED:
-                break;
-            case User.PROGRAM_STATE_DAY_OFF:
-
-                break;
-            case User.PROGRAM_STATE_INVALID:
-
-                break;
-            case User.PROGRAM_STATE_NOT_ENOUGH_DATA:
-
-
-
-                break;
-        }
+//        //RECCOMENDATION CARDVIEW
+//        switch (user.getProgramUpdateState()) {
+//
+//            case User.PROGRAM_STATE_CHANGED:
+//                break;
+//            case User.PROGRAM_STATE_DAY_OFF:
+//
+//                break;
+//            case User.PROGRAM_STATE_INVALID:
+//
+//                break;
+//            case User.PROGRAM_STATE_NOT_ENOUGH_DATA:
+//
+//
+//
+//                break;
+//        }
 
         if(hasMeasuredToday && user.getAllMeasurements().size() < 2){
             //We do not have enough data to display percentage, so current hrv is displayed
@@ -292,8 +294,8 @@ public class DataTodayFragment extends Fragment {
             reccomendation_txt_verbal_recommendation.setText("We reccomend you to take a day off!");
         }
 
-        int minPulseZone = user.getMinimumPulseZone();
-        int maxPulseZone = user.getMaximumPulseZone();
+        int minPulseZone = user.getExercise().getMinimumPulseZone();
+        int maxPulseZone = user.getExercise().getMaximumPulseZone();
         if(minPulseZone == maxPulseZone){
             reccomendation_txt_pulse_zone.setText(minPulseZone + Utils.getNumberSuffix(minPulseZone) + " pulse zone");
         }else{
@@ -356,7 +358,13 @@ public class DataTodayFragment extends Fragment {
 
             @Override
             public void onSuccess(List<FireWorkout> workouts) {
+
+                User user = User.getUser(getContext());
+                ArrayList<WorkoutMeasurements> workoutai  = user.getAllWorkouts();
+
                 User.removeAllWorkouts(getContext());
+
+
 
                 for(FireWorkout fireWorkout : workouts){
                     WorkoutMeasurements workout = new WorkoutMeasurements(fireWorkout);
