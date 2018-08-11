@@ -1,12 +1,8 @@
-package com.mabe.productions.hrv_madison.firebaseDatase;
+package com.mabe.productions.hrv_madison.firebase;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.mabe.productions.hrv_madison.Exercise;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
-
-import java.util.Date;
 
 public class FireWorkout {
 

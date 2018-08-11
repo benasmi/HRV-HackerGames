@@ -34,8 +34,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.CompoundButton;
@@ -58,9 +56,8 @@ import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.bluetooth.BluetoothGattService;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
-import com.mabe.productions.hrv_madison.firebaseDatase.FireUser;
-import com.mabe.productions.hrv_madison.firebaseDatase.FireWorkout;
-import com.mabe.productions.hrv_madison.firebaseDatase.FirebaseUtils;
+import com.mabe.productions.hrv_madison.firebase.FireWorkout;
+import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 import com.tooltip.Tooltip;
 
@@ -269,17 +266,17 @@ public class WorkoutFragment extends Fragment {
 
 
     public void updateData() {
-        User user = User.getUser(getContext());
-        txt_workout_name.setText(user.getWorkoutSessionType());
-        txt_workout_name_explanation.setText(user.getVerbalSessionExplanation());
+        MainScreenActivity.user = User.getUser(getContext());
+        txt_workout_name.setText(MainScreenActivity.user.getWorkoutSessionType());
+        txt_workout_name_explanation.setText(MainScreenActivity.user.getVerbalSessionExplanation());
 
         //pulseZoneView.setRequiredPulseZones(required_pulse_zone);
-        editText_minutes.setText("" + (int) user.getWorkoutDuration());
+        editText_minutes.setText("" + (int) MainScreenActivity.user.getWorkoutDuration());
         editText_seconds.setText("00");
-        reccomended_duration.setText("" + (int) user.getWorkoutDuration());
+        reccomended_duration.setText("" + (int) MainScreenActivity.user.getWorkoutDuration());
 
-        int minPulseZone = user.getExercise().getMinimumPulseZone();
-        int maxPulseZone = user.getExercise().getMaximumPulseZone();
+        int minPulseZone = MainScreenActivity.user.getExercise().getMinimumPulseZone();
+        int maxPulseZone = MainScreenActivity.user.getExercise().getMaximumPulseZone();
 
         if(minPulseZone == maxPulseZone){
             reccomended_pulse.setText("" + minPulseZone);
@@ -287,7 +284,7 @@ public class WorkoutFragment extends Fragment {
             reccomended_pulse.setText(minPulseZone + "-" + maxPulseZone);
         }
 
-        exercise = user.getExercise();
+        exercise = MainScreenActivity.user.getExercise();
     }
 
     private void initializeAnimations() {
@@ -680,8 +677,7 @@ public class WorkoutFragment extends Fragment {
 
 
                 //Todo: fix that, it's ugly now :(
-                User user = User.getUser(getContext());
-                if (user.getTodaysMeasurement() == null) {
+                if (MainScreenActivity.user.getTodaysMeasurement() == null) {
                     button_personalised_workout.setVisibility(View.VISIBLE);
                     txt_personolized_workout.setVisibility(View.GONE);
                 } else {

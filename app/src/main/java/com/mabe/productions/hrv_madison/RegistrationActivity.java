@@ -26,10 +26,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
-import com.mabe.productions.hrv_madison.firebaseDatase.FirebaseUtils;
-import com.mabe.productions.hrv_madison.initialInfo.IntroInitialPage;
+import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -166,7 +164,7 @@ public class RegistrationActivity extends AppCompatActivity {
                             Log.i("auth", user.getUid());
                             FirebaseUtils.addUser();
                             user.sendEmailVerification();
-                            Utils.buildAlertDialogPrompt(RegistrationActivity.this, "Success!", "Successful registration. To login, please verify your email adress", "Cancel", "", new DialogInterface.OnClickListener() {
+                            Utils.buildAlertDialogPrompt(RegistrationActivity.this, "Success!", "Successful registration. To login, please verify your email adress", "Ok", "", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));

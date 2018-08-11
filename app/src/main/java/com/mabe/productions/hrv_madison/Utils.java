@@ -48,6 +48,12 @@ public class Utils {
      * @return suffix of the number
      */
     public static String getNumberSuffix(int number){
+
+        //Hardcoded because of how weird launguages are
+        if(number == 11 || number == 12 || number == 13){
+            return "th";
+        }
+
         String numberSuffix = "th";
         String numString = String.valueOf(number);
         int lastNum = Integer.valueOf(numString.substring(numString.length()-1, numString.length()));

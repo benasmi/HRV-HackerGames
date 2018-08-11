@@ -1,4 +1,4 @@
-package com.mabe.productions.hrv_madison.firebaseDatase;
+package com.mabe.productions.hrv_madison.firebase;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -35,7 +35,7 @@ public class FirebaseUtils {
     }
 
 
-    public static void updateIntervalProgram(float duration, long[] workout_intervals, int[] running_pulse_zones, int[] walking_pulse_zones){
+    public static void updateIntervalProgram(float duration, long[] workout_intervals, int[] running_pulse_zones, int[] walking_pulse_zones, int activity_streak){
         final FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
         final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
@@ -44,6 +44,7 @@ public class FirebaseUtils {
         fireDatabase.child("running_pulse_zones").setValue(FeedReaderDbHelper.intArrayToString(running_pulse_zones));
         fireDatabase.child("walking_pulse_zones").setValue(FeedReaderDbHelper.intArrayToString(walking_pulse_zones));
         fireDatabase.child("workout_duration").setValue(duration);
+        fireDatabase.child("activity_streak").setValue(activity_streak);
     }
     
     public static void addWorkout(FireWorkout workout){
@@ -133,6 +134,13 @@ public class FirebaseUtils {
         specificUser.addValueEventListener(listener);
     }
 
+    public static void saveFirstWeeklyProgramDate(String firstWeeklyDate) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final DatabaseReference userTable = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
+
+        userTable.child(user.getUid()).child("first_weekly_date").setValue(firstWeeklyDate);
+    }
+
     public static abstract class OnMeasurementFetchListener {
         public abstract void onSuccess(List<FireMeasurement> measurements);
         public abstract void onFailure(DatabaseError error);
@@ -161,9 +169,8 @@ public class FirebaseUtils {
         String id = usersTable.push().getKey();
         String identifier = fireUser.getUid();
         String email = fireUser.getEmail();
-        String password = "Slaptazodis";
         boolean doneInitial = false;
-        FireUser database_user = new FireUser(id,identifier,email,password,doneInitial);
+        FireUser database_user = new FireUser(id,identifier,email,doneInitial);
         usersTable.child(identifier).setValue(database_user);
        
     }
@@ -180,7 +187,6 @@ public class FirebaseUtils {
                 // Get Post object and use the values to update the UI
                 FireUser fireUser = dataSnapshot.getValue(FireUser.class);
                 finishListener.onSuccess(fireUser.isDoneInitial());
-
             }
 
             @Override

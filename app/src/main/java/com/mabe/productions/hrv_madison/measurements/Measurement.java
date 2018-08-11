@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
-import com.mabe.productions.hrv_madison.firebaseDatase.FireMeasurement;
+import com.mabe.productions.hrv_madison.firebase.FireMeasurement;
 
 import java.util.Calendar;
 import java.util.Date;

@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatButton;
@@ -47,12 +46,13 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.database.DatabaseError;
 import com.mabe.productions.hrv_madison.HistoryActivity;
+import com.mabe.productions.hrv_madison.MainScreenActivity;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
-import com.mabe.productions.hrv_madison.firebaseDatase.FireMeasurement;
-import com.mabe.productions.hrv_madison.firebaseDatase.FireWorkout;
-import com.mabe.productions.hrv_madison.firebaseDatase.FirebaseUtils;
+import com.mabe.productions.hrv_madison.firebase.FireMeasurement;
+import com.mabe.productions.hrv_madison.firebase.FireWorkout;
+import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
@@ -358,14 +358,7 @@ public class DataTodayFragment extends Fragment {
 
             @Override
             public void onSuccess(List<FireWorkout> workouts) {
-
-                User user = User.getUser(getContext());
-                ArrayList<WorkoutMeasurements> workoutai  = user.getAllWorkouts();
-
                 User.removeAllWorkouts(getContext());
-
-
-
                 for(FireWorkout fireWorkout : workouts){
                     WorkoutMeasurements workout = new WorkoutMeasurements(fireWorkout);
                     User.addWorkoutData(getContext(), workout, false);
@@ -387,8 +380,8 @@ public class DataTodayFragment extends Fragment {
 
     public void updateData(Context context) {
 
-        User user = User.getUser(context);
-        setCardViewsVisibilityAndData(user);
+        MainScreenActivity.user = User.getUser(context);
+        setCardViewsVisibilityAndData(MainScreenActivity.user);
 
     }
 
@@ -1019,7 +1012,7 @@ public class DataTodayFragment extends Fragment {
     }
 
     private void updateMood(final int status) {
-        Measurement lastMeasurement = User.getUser(getContext()).getLastMeasurement();
+        Measurement lastMeasurement = MainScreenActivity.user.getLastMeasurement();
         if (lastMeasurement == null) {
             return;
         }
@@ -1033,7 +1026,7 @@ public class DataTodayFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if (route_display_googlemap != null) {
+        if (map_fragment != null && route_display_googlemap != null) {
             map_fragment.onResume();
         }
     }
@@ -1041,17 +1034,20 @@ public class DataTodayFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        if (map_fragment != null) {
-//            map_fragment.onDestroy();
-//        }
+        if (map_fragment != null && route_display_googlemap != null) {
+            map_fragment.onDestroy();
+        }
+        Runtime.getRuntime().gc();
     }
 
     @Override
     public void onPause() {
-        if (map_fragment != null) {
-            map_fragment.onPause();
-        }
         super.onPause();
+        if (map_fragment != null && route_display_googlemap != null) {
+            map_fragment.onPause();
+
+        }
+
     }
 
 }

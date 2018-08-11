@@ -1,4 +1,4 @@
-package com.mabe.productions.hrv_madison.firebaseDatase;
+package com.mabe.productions.hrv_madison.firebase;
 
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;

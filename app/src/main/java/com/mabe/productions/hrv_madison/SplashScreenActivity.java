@@ -2,9 +2,6 @@ package com.mabe.productions.hrv_madison;
 
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.os.Handler;
-import android.support.graphics.drawable.Animatable2Compat;
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,16 +13,9 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
-import com.mabe.productions.hrv_madison.firebaseDatase.FireUser;
-import com.mabe.productions.hrv_madison.firebaseDatase.FirebaseUtils;
-import com.mabe.productions.hrv_madison.fragments.DataTodayFragment;
-import com.mabe.productions.hrv_madison.initialInfo.IntroInitialPage;
+import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
 
 public class SplashScreenActivity extends AppCompatActivity {
 

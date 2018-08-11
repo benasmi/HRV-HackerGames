@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -21,7 +22,6 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.Login;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -39,8 +39,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseError;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
-import com.mabe.productions.hrv_madison.firebaseDatase.FireUser;
-import com.mabe.productions.hrv_madison.firebaseDatase.FirebaseUtils;
+import com.mabe.productions.hrv_madison.firebase.FireUser;
+import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.initialInfo.IntroInitialPage;
 
 import java.util.Arrays;
@@ -106,6 +106,7 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
 
 
         ///////////////////////////////////////////////////////////////////////////////////
@@ -221,6 +222,7 @@ public class LoginActivity extends AppCompatActivity {
                                             getInitialUserInformation(true);
                                         } else {
                                             //User has not filled out the initial questionnaire. Opening IntroInitialPage for the user to do so.
+                                            LoginActivity.this.finish();
                                             startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
                                         }
                                     }
@@ -308,6 +310,7 @@ public class LoginActivity extends AppCompatActivity {
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
 
+        Log.i("TEST", "token: " + token.getToken());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, facebookGmailListener);
     }
@@ -341,9 +344,9 @@ public class LoginActivity extends AppCompatActivity {
                 Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_HEIGHT, fireUser.getHeight(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
                 Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_ACTIVITY_INDEX, fireUser.getActivity_index(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
                 Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_WEIGHT, fireUser.getWeight(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_PASSWORD, fireUser.getPassword(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
                 Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_BASE_DURATION, fireUser.getMaxDuration(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
                 Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_WEEK_DAYS, FeedReaderDbHelper.getWeeksFromString(fireUser.getWorkout_days()),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_WEEKLY_PROGRAM_GENERATED_DATE, fireUser.getFirst_weekly_Date(), FeedReaderDbHelper.SHARED_PREFS_SPORT);
 
                 Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_WORKOUT_INTERVALS, fireUser.getWorkout_intervals() , FeedReaderDbHelper.SHARED_PREFS_SPORT);
                 Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_RUNNING_PULSE_ZONES, fireUser.getRunning_pulse_zones(), FeedReaderDbHelper.SHARED_PREFS_SPORT);
@@ -401,6 +404,7 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(DatabaseError error) {
                             loadingDialog.dismiss();
+                            Log.i("TEST",  error.getCode() + ": " + error.getDetails() + "\n" + error.getMessage());
                             Toast.makeText(LoginActivity.this, "Please check your connection!", Toast.LENGTH_LONG).show();
                         }
                     });
@@ -409,6 +413,7 @@ public class LoginActivity extends AppCompatActivity {
 
             } else {
                 Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                Log.i("TEST", task.getException().getMessage());
             }
 
 

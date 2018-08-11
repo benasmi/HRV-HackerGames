@@ -2,7 +2,6 @@ package com.mabe.productions.hrv_madison;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,10 +9,8 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
-import com.mabe.productions.hrv_madison.firebaseDatase.FireMeasurement;
-import com.mabe.productions.hrv_madison.firebaseDatase.FireUser;
-import com.mabe.productions.hrv_madison.firebaseDatase.FireWorkout;
-import com.mabe.productions.hrv_madison.firebaseDatase.FirebaseUtils;
+import com.mabe.productions.hrv_madison.firebase.FireUser;
+import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
@@ -645,7 +642,7 @@ public class User {
 
         if (user.checkWeeklyProgramDate(context)) {
             user.generateWeeklyProgram(context);
-            User.saveProgram(context, user.getWorkoutDuration(), user.getExercise());
+            User.saveProgram(context, user.getWorkoutDuration(), user.getExercise(), user.getActivityStreak());
         }
 /*
         Calendar calendar = Calendar.getInstance();
@@ -665,12 +662,13 @@ public class User {
      *
      * @param exercise The exercise of workout.
      */
-    public static void saveProgram(Context context, float workout_duration, Exercise exercise) {
+    public static void saveProgram(Context context, float workout_duration, Exercise exercise, int activity_streak) {
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_WORKOUT_INTERVALS, exercise.getWorkoutIntervals(), FeedReaderDbHelper.SHARED_PREFS_SPORT);
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_RUNNING_PULSE_ZONES, exercise.getRunningPulseZones(), FeedReaderDbHelper.SHARED_PREFS_SPORT);
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_WALKING_PULSE_ZONES, exercise.getWalkingPulseZones(), FeedReaderDbHelper.SHARED_PREFS_SPORT);
         Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_DURATION, workout_duration, FeedReaderDbHelper.SHARED_PREFS_SPORT);
-        FirebaseUtils.updateIntervalProgram(workout_duration, exercise.getWorkoutIntervals(), exercise.getRunningPulseZones(), exercise.getWalkingPulseZones());
+        Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_ACTIVITY_STREAK, activity_streak, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+        FirebaseUtils.updateIntervalProgram(workout_duration, exercise.getWorkoutIntervals(), exercise.getRunningPulseZones(), exercise.getWalkingPulseZones(), activity_streak);
     }
 
 
@@ -694,14 +692,15 @@ public class User {
      * @return Returns true, if weekly program should be generated.
      */
     private boolean checkWeeklyProgramDate(Context context) {
-        firstWeeklyDate = Utils.getDateFromString(Utils.readFromSharedPrefs_string(context, FeedReaderDbHelper.FIELD_WEEKLY_PROGRAME_GENERATED_DATE, FeedReaderDbHelper.SHARED_PREFS_SPORT));
+        firstWeeklyDate = Utils.getDateFromString(Utils.readFromSharedPrefs_string(context, FeedReaderDbHelper.FIELD_WEEKLY_PROGRAM_GENERATED_DATE, FeedReaderDbHelper.SHARED_PREFS_SPORT));
         Calendar calendar = Calendar.getInstance();
 
         if (firstWeeklyDate == null) {
             first_time = true;
             Log.i("TEST", "FireUser first ever generated program");
             firstWeeklyDate = calendar.getTime();
-            Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_WEEKLY_PROGRAME_GENERATED_DATE, Utils.getStringFromDate(firstWeeklyDate), FeedReaderDbHelper.SHARED_PREFS_SPORT);
+            Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_WEEKLY_PROGRAM_GENERATED_DATE, Utils.getStringFromDate(firstWeeklyDate), FeedReaderDbHelper.SHARED_PREFS_SPORT);
+            FirebaseUtils.saveFirstWeeklyProgramDate(Utils.getStringFromDate(firstWeeklyDate));
             Utils.buildAlertDialogPrompt(context, "Weekly program status!", "We have created your first weekly workout program. Based on your activity evaluation you should start from week: " + String.valueOf(activity_streak + 1), "Close", "", null, null);
             return true;
         }
@@ -711,7 +710,7 @@ public class User {
         if (weekDiff >= 1) {
             Log.i("TEST", "One or more weeks have passed --> Generate program");
             firstWeeklyDate = calendar.getTime();
-            Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_WEEKLY_PROGRAME_GENERATED_DATE, Utils.getStringFromDate(firstWeeklyDate), FeedReaderDbHelper.SHARED_PREFS_SPORT);
+            Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_WEEKLY_PROGRAM_GENERATED_DATE, Utils.getStringFromDate(firstWeeklyDate), FeedReaderDbHelper.SHARED_PREFS_SPORT);
             return true;
         }
         Log.i("TEST", "Same week");
@@ -750,7 +749,7 @@ public class User {
                         exercise = WEEKLY_INTERVAL_PROGRAM[activity_streak];
                         workout_duration *= 1.1;
                         workout_duration = Math.min(workout_duration, max_duration);
-                        Utils.buildAlertDialogPrompt(context, "Weekly program status!", "New weekly program has been generated for you. Currently you are on week: " + String.valueOf(activity_streak + 1) + Utils.getNumberSuffix(activity_streak + 1) + "out of 11", "Close", "", null, null);
+                        Utils.buildAlertDialogPrompt(context, "Weekly program status!", "New weekly program has been generated for you. Currently you are on week: " + String.valueOf(activity_streak + 1) + Utils.getNumberSuffix(activity_streak + 1) + " out of 11", "Close", "", null, null);
                     } else {
                         workout_duration *= 1.1;
 
@@ -777,7 +776,6 @@ public class User {
                 Utils.buildAlertDialogPrompt(context, "Weekly program status!", "Last week you didn't show any activity, so keeping you on the same week. Currently you are on week: " + String.valueOf(activity_streak + 1) + " out of 11", "Close", "", null, null);
             }
         }
-        Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_ACTIVITY_STREAK, activity_streak, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
 
         return "not supported";
     }
@@ -1060,7 +1058,7 @@ public class User {
         this.user_password = user_password;
     }
 
-    public int getActivity_streak() {
+    public int getActivityStreak() {
         return activity_streak;
     }
 

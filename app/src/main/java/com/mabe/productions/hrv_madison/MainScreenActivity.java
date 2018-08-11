@@ -351,7 +351,7 @@ public class MainScreenActivity extends AppCompatActivity {
                         User.removeAllMeasurements(MainScreenActivity.this);
                         User.removeAllWorkouts(MainScreenActivity.this);
                         User.removeAllPersonalData(MainScreenActivity.this);
-
+                        MainScreenActivity.this.finish();
                         startActivity(new Intent(MainScreenActivity.this, LoginActivity.class));
                     }
                 },

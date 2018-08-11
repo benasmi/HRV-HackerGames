@@ -1,4 +1,4 @@
-package com.mabe.productions.hrv_madison.firebaseDatase;
+package com.mabe.productions.hrv_madison.firebase;
 
 /**
  * Created by Benas on 8/7/2018.
@@ -9,7 +9,6 @@ public class FireUser {
     private String id;
     private String identifier;
     private String email;
-    private String password;
     private boolean doneInitial;
     private float base_duration;
     private String birthday;
@@ -28,19 +27,19 @@ public class FireUser {
     private int pulse_zone;
     private float workout_duration;
 
-    public FireUser(String id, String identifier, String email, String password, boolean doneInitial) {
+    private String first_weekly_Date;
+
+    public FireUser(String id, String identifier, String email, boolean doneInitial) {
         this.id = id;
         this.identifier = identifier;
         this.email = email;
-        this.password = password;
         this.doneInitial = doneInitial;
     }
 
-    public FireUser(String id, String identifier, String email, String password, boolean doneInitial, float base_duration, String birthday, int gender, float height, float kmi, float maxDuration, float weight, String workout_days, int activity_streak, int activity_index, String walking_pulse_zones, String running_pulse_zones, String workout_intervals, int pulse_zone, float workout_duration) {
+    public FireUser(String first_weekly_Date, String id, String identifier, String email, boolean doneInitial, float base_duration, String birthday, int gender, float height, float kmi, float maxDuration, float weight, String workout_days, int activity_streak, int activity_index, String walking_pulse_zones, String running_pulse_zones, String workout_intervals, int pulse_zone, float workout_duration) {
         this.id = id;
         this.identifier = identifier;
         this.email = email;
-        this.password = password;
         this.doneInitial = doneInitial;
         this.base_duration = base_duration;
         this.birthday = birthday;
@@ -57,6 +56,7 @@ public class FireUser {
         this.workout_intervals = workout_intervals;
         this.pulse_zone = pulse_zone;
         this.workout_duration = workout_duration;
+        this.first_weekly_Date = first_weekly_Date;
     }
 
     public FireUser(){
@@ -93,10 +93,6 @@ public class FireUser {
 
     public String getEmail() {
         return email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public boolean isDoneInitial() {
@@ -141,5 +137,9 @@ public class FireUser {
 
     public int getActivity_index() {
         return activity_index;
+    }
+
+    public String getFirst_weekly_Date() {
+        return first_weekly_Date;
     }
 }

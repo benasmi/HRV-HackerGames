@@ -1,13 +1,12 @@
 package com.mabe.productions.hrv_madison.measurements;
 
 import android.content.ContentValues;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.mabe.productions.hrv_madison.Exercise;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
-import com.mabe.productions.hrv_madison.firebaseDatase.FireWorkout;
+import com.mabe.productions.hrv_madison.firebase.FireWorkout;
 
 import java.util.Date;
 
