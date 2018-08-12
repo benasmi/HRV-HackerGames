@@ -68,9 +68,9 @@ public class SplashScreenActivity extends AppCompatActivity {
                     public void onSuccess(boolean isInitialDone) {
                         Log.i("auth", "SplashOnInitial: " + String.valueOf(isInitialDone));
                         if(isInitialDone){
-                            startActivity(new Intent(SplashScreenActivity.this, MainScreenActivity.class));
+                            startActivity(new Intent(SplashScreenActivity.this, MainScreenActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                         }else{
-                            startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
+                            startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                         }
                     }
                     @Override
@@ -82,7 +82,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
 
             }else{
-                startActivity(new Intent(SplashScreenActivity.this,LoginActivity.class));
+                startActivity(new Intent(SplashScreenActivity.this,LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
 
             }
 

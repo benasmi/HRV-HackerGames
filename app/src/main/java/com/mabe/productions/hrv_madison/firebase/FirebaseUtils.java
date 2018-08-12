@@ -31,6 +31,8 @@ public class FirebaseUtils {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String key = measurementsTable.push().getKey();
 
+        Log.i("debugging", "addMeasurement");
+
         measurementsTable.child(user.getUid()).child(key).setValue(measurement);
     }
 
@@ -39,6 +41,8 @@ public class FirebaseUtils {
         final FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
         final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
+
+        Log.i("debugging", "updateIntervalProgram");
 
         fireDatabase.child("workout_intervals").setValue(FeedReaderDbHelper.longArrayToString(workout_intervals));
         fireDatabase.child("running_pulse_zones").setValue(FeedReaderDbHelper.intArrayToString(running_pulse_zones));
@@ -51,6 +55,8 @@ public class FirebaseUtils {
         DatabaseReference workoutsTable = FirebaseDatabase.getInstance().getReference().child(WORKOUTS_TABLE);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String key = workoutsTable.push().getKey();
+
+        Log.i("debugging", "addWorkout");
 
         workoutsTable.child(user.getUid()).child(key).setValue(workout);
     }
@@ -67,7 +73,7 @@ public class FirebaseUtils {
                 for(DataSnapshot measurement : dataSnapshot.getChildren()){
                     measurements.add(measurement.getValue(FireMeasurement.class));
                 }
-
+                Log.i("debugging", "startListeningForMeasurements onDataChange");
                 finishListener.onSuccess(measurements);
             }
 
@@ -82,6 +88,8 @@ public class FirebaseUtils {
         DatabaseReference measurementsTable = FirebaseDatabase.getInstance().getReference().child(MEASUREMENTS_TABLE).child(user.getUid());
         measurementsTable.addValueEventListener(listener);
 
+        Log.i("debugging", "startListeningForMeasurements");
+
     }
     public static void startListeningForWorkouts(final OnWorkoutFetchListener finishListener){
 
@@ -94,7 +102,7 @@ public class FirebaseUtils {
                 for(DataSnapshot workout : dataSnapshot.getChildren()){
                     workouts.add(workout.getValue(FireWorkout.class));
                 }
-
+                Log.i("debugging", "startListeningForWorkoutso onDataChange");
                 finishListener.onSuccess(workouts);
             }
 
@@ -108,6 +116,7 @@ public class FirebaseUtils {
 
         DatabaseReference workoutsTable = FirebaseDatabase.getInstance().getReference().child(WORKOUTS_TABLE).child(user.getUid());
         workoutsTable.addValueEventListener(listener);
+        Log.i("debugging", "startListeningForWorkouts");
 
     }
 
@@ -115,11 +124,11 @@ public class FirebaseUtils {
     public static void getUserFromFirebase(final OnUserDoneFetchListener finishListener){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference specificUser = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
-
+        Log.i("debugging", "getUserFromFirebase");
         ValueEventListener listener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                Log.i("debugging", "getUserFromFirebase onDataChange");
                 FireUser fireUser = dataSnapshot.getValue(FireUser.class);
                 finishListener.onSuccess(fireUser);
             }
@@ -131,14 +140,15 @@ public class FirebaseUtils {
         };
 
 
-        specificUser.addValueEventListener(listener);
+        specificUser.addListenerForSingleValueEvent(listener);
     }
 
     public static void saveFirstWeeklyProgramDate(String firstWeeklyDate) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        Log.i("debugging", "saveFirstWeeklyProgramDate");
         final DatabaseReference userTable = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
 
-        userTable.child(user.getUid()).child("first_weekly_date").setValue(firstWeeklyDate);
+        userTable.child("first_weekly_date").setValue(firstWeeklyDate);
     }
 
     public static abstract class OnMeasurementFetchListener {
@@ -172,12 +182,14 @@ public class FirebaseUtils {
         boolean doneInitial = false;
         FireUser database_user = new FireUser(id,identifier,email,doneInitial);
         usersTable.child(identifier).setValue(database_user);
+
+        Log.i("debugging", "addUser");
        
     }
     
     public static void isInitialDone(final OnInitialDoneFetchListener finishListener){
-        
-        
+        Log.i("debugging", "isInitialDone");
+
 
         FirebaseUser fireUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference specificUser = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+fireUser.getUid());
@@ -187,6 +199,7 @@ public class FirebaseUtils {
                 // Get Post object and use the values to update the UI
                 FireUser fireUser = dataSnapshot.getValue(FireUser.class);
                 finishListener.onSuccess(fireUser.isDoneInitial());
+                Log.i("debugging", "isInitialDone onDataChange");
             }
 
             @Override

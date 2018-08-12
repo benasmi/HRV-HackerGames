@@ -635,7 +635,7 @@ public class DataTodayFragment extends Fragment {
         button_history.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(DataTodayFragment.this.getActivity(), HistoryActivity.class));
+                startActivity(new Intent(DataTodayFragment.this.getActivity(), HistoryActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             }
         });
 

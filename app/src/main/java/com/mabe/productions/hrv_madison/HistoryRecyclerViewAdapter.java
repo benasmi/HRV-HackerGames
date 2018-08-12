@@ -149,7 +149,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
                         public void onClick(View view) {
                             Log.i("recycler", "DataRec: " + String.valueOf(data.get(getAdapterPosition()).getWorkout_duration()));
 
-                            context.startActivity(new Intent(context, AdvancedWorkoutHistoryActivity.class).putExtra("Workout", data.get(getAdapterPosition())));
+                            context.startActivity(new Intent(context, AdvancedWorkoutHistoryActivity.class).putExtra("Workout", data.get(getAdapterPosition())).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                         }
                     });
                     break;
@@ -165,7 +165,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
                     recycler_view_measurement_cardview.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            context.startActivity(new Intent(context, AdvancedMeasurementHistoryActivity.class).putExtra("Measurement",data.get(getAdapterPosition())));
+                            context.startActivity(new Intent(context, AdvancedMeasurementHistoryActivity.class).putExtra("Measurement",data.get(getAdapterPosition())).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                         }
                     });
                     break;

@@ -355,7 +355,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 dialog.dismiss();
 
-                startActivity(new Intent(LoginActivity.this, MainScreenActivity.class));
+                startActivity(new Intent(LoginActivity.this, MainScreenActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
 
             }
 
@@ -397,7 +397,7 @@ public class LoginActivity extends AppCompatActivity {
                                 getInitialUserInformation(true);
                             } else {
                                 //User has not filled out the initial questionnaire. Opening IntroInitialPage for the user to do so.
-                                startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
+                                startActivity(new Intent(LoginActivity.this, IntroInitialPage.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                             }
                         }
 
@@ -420,4 +420,10 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        finish();
+        Runtime.getRuntime().gc();
+    }
 }

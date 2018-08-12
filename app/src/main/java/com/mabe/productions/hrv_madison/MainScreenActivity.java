@@ -352,10 +352,17 @@ public class MainScreenActivity extends AppCompatActivity {
                         User.removeAllWorkouts(MainScreenActivity.this);
                         User.removeAllPersonalData(MainScreenActivity.this);
                         MainScreenActivity.this.finish();
-                        startActivity(new Intent(MainScreenActivity.this, LoginActivity.class));
+                        startActivity(new Intent(MainScreenActivity.this, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                     }
                 },
                 null);
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        finish();
+        Runtime.getRuntime().gc();
+        super.onDestroy();
     }
 }
