@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.baoyz.widget.PullRefreshLayout;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -50,7 +51,6 @@ import com.mabe.productions.hrv_madison.MainScreenActivity;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
-import com.mabe.productions.hrv_madison.firebase.FireMeasurement;
 import com.mabe.productions.hrv_madison.firebase.FireWorkout;
 import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
@@ -62,6 +62,8 @@ import java.util.List;
 
 //todo: card view animations and title snaping like 'prisiuk antraste'
 public class DataTodayFragment extends Fragment {
+
+    private PullRefreshLayout pull_refresh_layout;
 
     //FrequencyCardView
     private CardView freq_card;
@@ -120,6 +122,7 @@ public class DataTodayFragment extends Fragment {
     private int STATE_FEELING = 2;
     private AppCompatButton test_button;
     private EditText test_edittext;
+
     //Workout route cardview
     private CardView workout_done_cardview;
     private SupportMapFragment map_fragment;
@@ -329,53 +332,61 @@ public class DataTodayFragment extends Fragment {
 
 
     private void setUpFirebaseListeners(){
-
-        FirebaseUtils.startListeningForMeasurements(new FirebaseUtils.OnMeasurementFetchListener(){
-
-            @Override
-            public void onSuccess(List<FireMeasurement> measurements) {
-
-                User.removeAllMeasurements(getContext());
-
-                for(FireMeasurement fireMeasurement : measurements){
-                    Measurement measurement = new Measurement(fireMeasurement);
-                    User.addMeasurementData(getContext(), measurement, false);
-                }
-
-                updateData(getContext());
-
-
-            }
-
-            @Override
-            public void onFailure(DatabaseError error) {
-                Log.i("TEST", "Failure: " + error.getMessage());
-            }
-        });
-
-
-        FirebaseUtils.startListeningForWorkouts(new FirebaseUtils.OnWorkoutFetchListener() {
-
-            @Override
-            public void onSuccess(List<FireWorkout> workouts) {
-                User.removeAllWorkouts(getContext());
-                for(FireWorkout fireWorkout : workouts){
-                    WorkoutMeasurements workout = new WorkoutMeasurements(fireWorkout);
-                    User.addWorkoutData(getContext(), workout, false);
-                }
-
-                updateData(getContext());
-
-
-
-            }
-
-            @Override
-            public void onFailure(DatabaseError error) {
-
-            }
-        });
+        pull_refresh_layout.setRefreshing(true);
+        FirebaseUtils.fetchMeasurements(measurementFetchListener, false);
+        FirebaseUtils.fetchWorkouts(workoutFetchListener, false);
     }
+
+    private void fetchDataOnce(){
+        pull_refresh_layout.setRefreshing(true);
+        FirebaseUtils.fetchMeasurements(measurementFetchListener, true);
+        FirebaseUtils.fetchWorkouts(workoutFetchListener, true);
+    }
+
+    private FirebaseUtils.OnMeasurementFetchListener measurementFetchListener = new FirebaseUtils.OnMeasurementFetchListener(){
+
+        @Override
+        public void onSuccess(List<Measurement> measurements) {
+
+            User.removeAllMeasurements(getContext());
+
+            for(Measurement measurement : measurements){
+                User.addMeasurementData(getContext(), measurement, false);
+            }
+
+            updateData(getContext());
+
+            pull_refresh_layout.setRefreshing(false);
+        }
+
+        @Override
+        public void onFailure(DatabaseError error) {
+            Log.i("TEST", "Failure: " + error.getMessage());
+            pull_refresh_layout.setRefreshing(false);
+        }
+    };
+
+    private FirebaseUtils.OnWorkoutFetchListener workoutFetchListener = new FirebaseUtils.OnWorkoutFetchListener() {
+
+        @Override
+        public void onSuccess(List<FireWorkout> workouts) {
+            User.removeAllWorkouts(getContext());
+            for(FireWorkout fireWorkout : workouts){
+                WorkoutMeasurements workout = new WorkoutMeasurements(fireWorkout);
+                User.addWorkoutData(getContext(), workout, false);
+            }
+
+            updateData(getContext());
+
+
+            pull_refresh_layout.setRefreshing(false);
+        }
+
+        @Override
+        public void onFailure(DatabaseError error) {
+            pull_refresh_layout.setRefreshing(false);
+        }
+    };
 
 
     public void updateData(Context context) {
@@ -627,7 +638,7 @@ public class DataTodayFragment extends Fragment {
         test_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                User.addMeasurementData(getContext(),new Measurement(Calendar.getInstance().getTime(),50,50,50,50,50,50,50,50,50,50,50,new int[]{5,4,3},new int[]{5,4,3},2,0,4,Integer.valueOf(test_edittext.getText().toString())),true);
+                User.addMeasurementData(getContext(),new Measurement(Calendar.getInstance().getTime(),50,50,50,50,50,50,50,50,50,50,50,new int[]{5,4,3},new int[]{5,4,3},2,0,4,Integer.valueOf(test_edittext.getText().toString()), null),true);
             }
         });
 
@@ -639,8 +650,14 @@ public class DataTodayFragment extends Fragment {
             }
         });
 
+        pull_refresh_layout = view.findViewById(R.id.rootLayout);
 
-
+        pull_refresh_layout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchDataOnce();
+            }
+        });
     }
 
 
@@ -1019,6 +1036,7 @@ public class DataTodayFragment extends Fragment {
 
         lastMeasurement.setMood(status);
         User.updateMeasurement(getContext(), lastMeasurement, User.UPDATE_TYPE_BY_ID);
+        FirebaseUtils.updateMeasurement(lastMeasurement);
     }
 
 

@@ -89,6 +89,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public final static String HRV_COL_VLF_BAND = "VLF_BAND";
     public final static String HRV_COL_VHF_BAND = "VHF_BAND";
     public final static String HRV_COL_DATE = "Date";
+    public final static String HRV_COL_REMOTE_DB_KEY = "Remote_db_id";
     public final static String HRV_COL_MEASUREMENT_DURATION = "measurement_duration";
     public final static String HRV_COL_ID = "ID";
     public static final String HRV_COL_MOOD = "Mood";
@@ -115,6 +116,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
                     FeedReaderDbHelper.HRV_COL_RMSSD_DATA + " STRING," +
                     FeedReaderDbHelper.HRV_COL_MEASUREMENT_DURATION + " INTEGER," +
                     FeedReaderDbHelper.HRV_COL_MOOD + " INTEGER," +
+                    FeedReaderDbHelper.HRV_COL_REMOTE_DB_KEY + " STRING," +
                     FeedReaderDbHelper.HRV_COL_RMSSD + " INTEGER)";
 
 

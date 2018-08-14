@@ -407,7 +407,7 @@ public class MeasurementFragment extends Fragment {
                         //Saving to local db
                         User.addMeasurementData(getContext(), measurement, true);
                         //Saving to remote db
-                        FirebaseUtils.addMeasurement(new FireMeasurement(measurement));
+                        FirebaseUtils.addMeasurement(new FireMeasurement(measurement), getContext());
 
 
                         Calendar calendar = Calendar.getInstance();

@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
-import com.mabe.productions.hrv_madison.firebase.FireUser;
 import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
@@ -206,6 +205,7 @@ public class User {
                 FeedReaderDbHelper.HRV_COL_ID,
 
         };
+
 
         String sortOrder =
                 FeedReaderDbHelper.HRV_COL_ID + " DESC";
@@ -423,6 +423,7 @@ public class User {
                     cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_MEASUREMENT_DURATION));
             int mood = cursor.getInt(
                     cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_MOOD));
+            String remoteDbKey = cursor.getString(cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_REMOTE_DB_KEY));
 
             Measurement measurement = new Measurement(date,
                     rmssd,
@@ -441,7 +442,8 @@ public class User {
                     measurement_duration,
                     id,
                     mood,
-                    hrv);
+                    hrv,
+                    remoteDbKey);
 
             measurementList.add(measurement);
 

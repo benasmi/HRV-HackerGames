@@ -61,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
+    private CustomLoadingDialog progressDialog;
 
 
     @Override
@@ -181,6 +182,9 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        progressDialog = new CustomLoadingDialog(this, "Logging you in");
+        progressDialog.show();
+
         mAuth.signInWithEmailAndPassword(email, password)
 
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -293,6 +297,9 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
 
+        progressDialog = new CustomLoadingDialog(this, "Logging you in");
+        progressDialog.show();
+
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(facebookGmailListener);
@@ -307,6 +314,9 @@ public class LoginActivity extends AppCompatActivity {
      * @param token The facebook {@link AccessToken}, that is used for authentication
      */
     private void firebaseAuthWithFacebook(AccessToken token) {
+
+        progressDialog = new CustomLoadingDialog(this, "Logging you in");
+        progressDialog.show();
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
 
@@ -415,6 +425,8 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                 Log.i("TEST", task.getException().getMessage());
             }
+
+            progressDialog.dismiss();
 
 
         }

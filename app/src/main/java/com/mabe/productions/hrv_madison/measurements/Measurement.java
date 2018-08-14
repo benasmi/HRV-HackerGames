@@ -35,26 +35,28 @@ public class Measurement {
     private int uniqueId;
     private int mood;
     private int hrv;
+    private String remoteDbId;
 
-    public Measurement(Date date, int rmssd, float ln_rmssd, float lowest_rmssd, float highest_rmssd, float lowest_bpm, float highest_bpm, float average_bpm, float LF_band, float VLF_band, float VHF_band, float HF_band, int[] bpm_data, int[] rmssd_data, int duration, @Nullable int uniqueId, int mood, int hrv) {
-        this.date = date;
-        this.rmssd = rmssd;
-        this.ln_rmssd = ln_rmssd;
-        this.lowest_rmssd = lowest_rmssd;
+    public Measurement(Date date, int rmssd, float ln_rmssd, float lowest_rmssd, float highest_rmssd, float lowest_bpm, float highest_bpm, float average_bpm, float LF_band, float VLF_band, float VHF_band, float HF_band, int[] bpm_data, int[] rmssd_data, int duration, @Nullable int uniqueId, int mood, int hrv, String remoteDbId) {
+        this.date          = date;
+        this.rmssd         = rmssd;
+        this.ln_rmssd      = ln_rmssd;
+        this.lowest_rmssd  = lowest_rmssd;
         this.highest_rmssd = highest_rmssd;
-        this.lowest_bpm = lowest_bpm;
-        this.highest_bpm = highest_bpm;
-        this.average_bpm = average_bpm;
-        this.LF_band = LF_band;
-        this.VLF_band = VLF_band;
-        this.VHF_band = VHF_band;
-        this.HF_band = HF_band;
-        this.bpm_data = bpm_data;
-        this.rmssd_data = rmssd_data;
-        this.duration = duration;
-        this.uniqueId = uniqueId;
-        this.mood = mood;
-        this.hrv = hrv;
+        this.lowest_bpm    = lowest_bpm;
+        this.highest_bpm   = highest_bpm;
+        this.average_bpm   = average_bpm;
+        this.LF_band       = LF_band;
+        this.VLF_band      = VLF_band;
+        this.VHF_band      = VHF_band;
+        this.HF_band       = HF_band;
+        this.bpm_data      = bpm_data;
+        this.rmssd_data    = rmssd_data;
+        this.duration      = duration;
+        this.uniqueId      = uniqueId;
+        this.mood          = mood;
+        this.hrv           = hrv;
+        this.remoteDbId    = remoteDbId;
     }
 
     public Measurement(RMSSD rmssd, FrequencyMethod frequencies, BPM bpm, int duration, Date date){
@@ -177,6 +179,14 @@ public class Measurement {
         return uniqueId;
     }
 
+    public String getRemoteDbId() {
+        return remoteDbId;
+    }
+
+    public void setRemoteDbId(String remoteDbId) {
+        this.remoteDbId = remoteDbId;
+    }
+
     /*
     * Just a useful method, that fills in all ContentValues from a given Measurement instance
     */
@@ -200,6 +210,7 @@ public class Measurement {
         values.put(FeedReaderDbHelper.HRV_COL_MOOD, getMood());
         values.put(FeedReaderDbHelper.HRV_COL_HRV, getHrv());
         values.put(FeedReaderDbHelper.HRV_COL_DATE, Utils.getStringFromDate(getDate()));
+        values.put(FeedReaderDbHelper.HRV_COL_REMOTE_DB_KEY, getRemoteDbId());
 
         return values;
     }
