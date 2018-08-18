@@ -361,8 +361,8 @@ public class MainScreenActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        super.onDestroy();
         finish();
         Runtime.getRuntime().gc();
-        super.onDestroy();
     }
 }

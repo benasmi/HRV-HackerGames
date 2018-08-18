@@ -689,7 +689,7 @@ public class User {
 
 
     /**
-     * Determined whether the weekly program shoudl be generated or not
+     * Determined whether the weekly program should be generated or not
      *
      * @return Returns true, if weekly program should be generated.
      */

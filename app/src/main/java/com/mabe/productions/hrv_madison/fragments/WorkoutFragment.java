@@ -992,8 +992,7 @@ public class WorkoutFragment extends Fragment {
                         } else if(timePassed < userSpecifiedWorkoutDuration){ //FireUser is within his specified time limits
                             Log.i("TEST", "Setting progressBar duration 2nd if...");
 
-                            //Checking if intervals are enabled.
-                            if(exercise.getWorkoutIntervals().length <= 1){
+                            if(!isIntervalProgram()){
                                 setProgressBarDuration((int) userSpecifiedWorkoutDuration, (int) (userSpecifiedWorkoutDuration - timePassed), true);
                             }
 
@@ -1008,7 +1007,7 @@ public class WorkoutFragment extends Fragment {
                             }
                         }else{
                             //Checking if intervals are enabled.
-                            if(exercise.getWorkoutIntervals().length <= 1){
+                            if(!isIntervalProgram()){
                                 setProgressBarDuration(1,1, false);
                             }
                             setState(STATE_TIME_ENDED);
@@ -1323,15 +1322,18 @@ public class WorkoutFragment extends Fragment {
 
     public static final int EXERCISE_WALKING = 0;
     public static final int EXERCISE_JOGGING = 1;
-    private int current_exercise = EXERCISE_JOGGING;
+    private int current_exercise = 3;
 
     /**
      * Sets the current exercise state based on the amount of time that has passed.
+     * Also sets progressbar duration accordingly via setProgressBarDuration()
      *
      * Intended to be used in a timer.
      * @param timePassed The amount of time that has passed from the start of workout.
      */
     private void setWalkingRunningState(long timePassed){
+
+
 
         //Calculating the total duration of a cycle
         long cycleDuration = 0;
@@ -1344,6 +1346,7 @@ public class WorkoutFragment extends Fragment {
                     setExercise(EXERCISE_JOGGING);
                     pulseZoneView.setRequiredPulseZones(exercise.getRunningPulseZones());
                 }
+
             }else {
                 if(current_exercise != EXERCISE_WALKING){
                     setExercise(EXERCISE_WALKING);
@@ -1381,6 +1384,19 @@ public class WorkoutFragment extends Fragment {
         }
 
 
+    }
+
+    private boolean isIntervalProgram(){
+        //Calculating the total duration of a cycle
+        long cycleDuration = 0;
+        for(long interval : exercise.getWorkoutIntervals()){
+            cycleDuration+=interval*1000L;
+        }
+        if(cycleDuration == 0){
+
+            return false;
+        }
+        return true;
     }
 
 
