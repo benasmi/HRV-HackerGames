@@ -21,6 +21,7 @@ import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
+import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
 
 public class IntroInitialGender extends AppCompatActivity {
 
@@ -105,8 +106,7 @@ public class IntroInitialGender extends AppCompatActivity {
 
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
             FirebaseUser user = mAuth.getCurrentUser();
-            DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
-            fireDatabase.child("gender").setValue(selectedGender);
+            final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference(FirebaseUtils.USERS_TABLE_RUNNING + "/" + user.getUid());            fireDatabase.child("gender").setValue(selectedGender);
 
             startActivity(new Intent(this, IntroInitialActivityIndex.class));
         }else{

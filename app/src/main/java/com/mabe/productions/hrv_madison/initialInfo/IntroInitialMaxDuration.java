@@ -22,6 +22,7 @@ import com.mabe.productions.hrv_madison.MainScreenActivity;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
+import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
@@ -111,8 +112,7 @@ public class IntroInitialMaxDuration extends AppCompatActivity {
 
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
             FirebaseUser user = mAuth.getCurrentUser();
-            DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
-            fireDatabase.child("doneInitial").setValue(true);
+            final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference(FirebaseUtils.USERS_TABLE_RUNNING + "/" + user.getUid());            fireDatabase.child("doneInitial").setValue(true);
             fireDatabase.child("maxDuration").setValue((float) maxDur);
 
             Utils.saveToSharedPrefs(this,FeedReaderDbHelper.FIELD_BASE_DURATION, (float) maxDur,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);

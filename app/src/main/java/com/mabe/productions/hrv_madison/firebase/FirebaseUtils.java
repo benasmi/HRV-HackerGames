@@ -2,7 +2,6 @@ package com.mabe.productions.hrv_madison.firebase;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.firebase.database.DatabaseReference;
 
@@ -14,7 +13,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mabe.productions.hrv_madison.User;
-import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
 
@@ -24,9 +22,11 @@ import java.util.List;
 
 public class FirebaseUtils {
 
-    public static final String MEASUREMENTS_TABLE = "ipulsus/measurements";
-    public static final String WORKOUTS_TABLE = "ipulsus/workouts";
-    public static final String USERS_TABLE = "ipulsus/users";
+    public static final String MEASUREMENTS_TABLE = "ipulsusRunning/measurements";
+    public static final String WORKOUTS_TABLE = "ipulsusRunning/workouts";
+
+    public static final String USERS_TABLE_RUNNING = "ipulsusRunning/users";
+    public static final String USERS_TABLE_GLOBAL = "users";
 
 
     /**
@@ -62,7 +62,7 @@ public class FirebaseUtils {
     public static void updateIntervalProgram(float duration, long[] workout_intervals, int[] running_pulse_zones, int[] walking_pulse_zones, int activity_streak){
         final FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
-        final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
+        final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference(USERS_TABLE_RUNNING + "/" + user.getUid());
 
         fireDatabase.child("workout_intervals").setValue(FeedReaderDbHelper.longArrayToString(workout_intervals));
         fireDatabase.child("running_pulse_zones").setValue(FeedReaderDbHelper.intArrayToString(running_pulse_zones));
@@ -70,7 +70,7 @@ public class FirebaseUtils {
         fireDatabase.child("workout_duration").setValue(duration);
         fireDatabase.child("activity_streak").setValue(activity_streak);
     }
-    
+
     public static void addWorkout(FireWorkout workout){
         DatabaseReference workoutsTable = FirebaseDatabase.getInstance().getReference().child(WORKOUTS_TABLE);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -149,7 +149,7 @@ public class FirebaseUtils {
 
     public static void getUserFromFirebase(final OnUserDoneFetchListener finishListener){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference specificUser = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
+        DatabaseReference specificUser = FirebaseDatabase.getInstance().getReference( USERS_TABLE_RUNNING + "/"+user.getUid());
         ValueEventListener listener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -169,7 +169,7 @@ public class FirebaseUtils {
 
     public static void saveFirstWeeklyProgramDate(String firstWeeklyDate) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        final DatabaseReference userTable = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
+        final DatabaseReference userTable = FirebaseDatabase.getInstance().getReference(USERS_TABLE_RUNNING + "/"+user.getUid());
 
         userTable.child("first_weekly_date").setValue(firstWeeklyDate);
     }
@@ -196,29 +196,41 @@ public class FirebaseUtils {
     /**
      * Adds new user to the remote database.
      */
-    public static void addUser(){
-        DatabaseReference usersTable = FirebaseDatabase.getInstance().getReference(USERS_TABLE);
+    public static void addUser(String name){
+        DatabaseReference usersTable = FirebaseDatabase.getInstance().getReference(USERS_TABLE_GLOBAL);
+
         FirebaseUser fireUser = FirebaseAuth.getInstance().getCurrentUser();
-        String id = usersTable.push().getKey();
+
+        boolean doneInitial = false;
+        DatabaseReference aerobicsTable = FirebaseDatabase.getInstance().getReference(USERS_TABLE_RUNNING);
+        aerobicsTable.child(fireUser.getUid()).child("doneInitial").setValue(doneInitial);
+
         String identifier = fireUser.getUid();
         String email = fireUser.getEmail();
-        boolean doneInitial = false;
-        FireUser database_user = new FireUser(id,identifier,email,doneInitial);
-        usersTable.child(identifier).setValue(database_user);
 
-
+        String displayname = name;
+        if(displayname == null){
+            displayname = fireUser.getDisplayName();
+        }
+        usersTable.child(identifier).child("email").setValue(email);
+        usersTable.child(identifier).child("displayname").setValue(displayname);
     }
-    
+
     public static void isInitialDone(final OnInitialDoneFetchListener finishListener){
 
         FirebaseUser fireUser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference specificUser = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+fireUser.getUid());
+        DatabaseReference specificUser = FirebaseDatabase.getInstance().getReference(USERS_TABLE_RUNNING + "/"+fireUser.getUid());
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
-                FireUser fireUser = dataSnapshot.getValue(FireUser.class);
-                finishListener.onSuccess(fireUser.isDoneInitial());
+                boolean doneInitial = false;
+
+                if(dataSnapshot.child("doneInitial").getValue(Boolean.class) != null){
+                    doneInitial = dataSnapshot.child("doneInitial").getValue(Boolean.class);
+                }
+
+                finishListener.onSuccess(doneInitial);
             }
 
             @Override
@@ -231,6 +243,4 @@ public class FirebaseUtils {
 
         specificUser.addListenerForSingleValueEvent(postListener);
     }
-
-
 }

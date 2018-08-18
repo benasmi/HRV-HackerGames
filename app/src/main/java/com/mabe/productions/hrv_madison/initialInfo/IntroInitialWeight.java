@@ -18,6 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
+import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
 import com.shawnlin.numberpicker.NumberPicker;
 
 public class IntroInitialWeight extends AppCompatActivity {
@@ -92,8 +93,7 @@ public class IntroInitialWeight extends AppCompatActivity {
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
-        DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
-        fireDatabase.child("kmi").setValue(KMI);
+        final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference(FirebaseUtils.USERS_TABLE_RUNNING + "/" + user.getUid());        fireDatabase.child("kmi").setValue(KMI);
         fireDatabase.child("weight").setValue(Float.parseFloat(txt_value.getText().toString()));
 
         Utils.saveToSharedPrefs(this,FeedReaderDbHelper.FIELD_KMI,KMI,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);

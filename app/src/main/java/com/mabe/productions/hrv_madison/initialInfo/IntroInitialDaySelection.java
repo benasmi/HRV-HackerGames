@@ -24,6 +24,7 @@ import com.mabe.productions.hrv_madison.PulseZoneView;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
+import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
 
 public class IntroInitialDaySelection extends AppCompatActivity {
 
@@ -170,7 +171,7 @@ public class IntroInitialDaySelection extends AppCompatActivity {
 
         final FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
-        final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
+        final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference(FirebaseUtils.USERS_TABLE_RUNNING + "/" + user.getUid());
 
         if(selectedCount < 2) {
             Toast.makeText(this, R.string.select_at_least_two_days, Toast.LENGTH_LONG).show();

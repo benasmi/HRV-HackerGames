@@ -24,6 +24,7 @@ import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
+import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
 
 public class IntroInitialActivityIndex extends AppCompatActivity {
 
@@ -217,7 +218,7 @@ public class IntroInitialActivityIndex extends AppCompatActivity {
             startActivity(new Intent(this, LoginActivity.class));
             return;
         }
-        DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
+        DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference(FirebaseUtils.USERS_TABLE_RUNNING + "/"+user.getUid());
         fireDatabase.child("activity_streak").setValue(activity_streak);
         fireDatabase.child("base_duration").setValue(initial_workout_duration);
         fireDatabase.child("activity_index").setValue(activity_index);

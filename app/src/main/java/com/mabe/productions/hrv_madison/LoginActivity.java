@@ -207,7 +207,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             if (isNew) {
                                 //In this case, we know for sure that user hasn't provided us with initial information.
-                                FirebaseUtils.addUser();
+                                //FirebaseUtils.addUser();
                                 startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
                             } else {
                                 //If user already exists, we still need to check whether he has completed initial info questionnaire
@@ -388,7 +388,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (isNew) {
                     //In this case, we know for sure that user hasn't provided us with initial information.
-                    FirebaseUtils.addUser();
+                    FirebaseUtils.addUser(null);
                     startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
                 } else {
                     //If user already exists, we still need to check whether he has completed initial info questionnaire

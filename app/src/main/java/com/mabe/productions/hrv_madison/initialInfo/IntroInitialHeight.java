@@ -18,6 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
+import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
 import com.qindachang.widget.RulerView;
 
 public class IntroInitialHeight extends AppCompatActivity {
@@ -88,8 +89,7 @@ public class IntroInitialHeight extends AppCompatActivity {
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
-        DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
-        fireDatabase.child("height").setValue(Float.parseFloat(txt_value.getText().toString()));
+        final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference(FirebaseUtils.USERS_TABLE_RUNNING + "/" + user.getUid());        fireDatabase.child("height").setValue(Float.parseFloat(txt_value.getText().toString()));
 
         startActivity(new Intent(this, IntroInitialWeight.class));
     }

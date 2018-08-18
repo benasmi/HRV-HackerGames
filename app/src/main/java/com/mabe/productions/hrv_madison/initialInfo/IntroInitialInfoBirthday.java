@@ -22,6 +22,7 @@ import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
+import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -84,8 +85,7 @@ public class IntroInitialInfoBirthday extends AppCompatActivity {
         Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_BIRTHDAY,Utils.getStringFromDate(calendar.getTime()),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
-        DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference("ipulsus/users/"+user.getUid());
-        fireDatabase.child("birthday").setValue(Utils.getStringFromDate(calendar.getTime()));
+        final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference(FirebaseUtils.USERS_TABLE_RUNNING + "/" + user.getUid());        fireDatabase.child("birthday").setValue(Utils.getStringFromDate(calendar.getTime()));
 
 
         startActivity(new Intent(this, IntroInitialDaySelection.class));
