@@ -224,10 +224,13 @@ public class FirebaseUtils {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
-                boolean doneInitial = false;
 
-                if(dataSnapshot.child("doneInitial").getValue(Boolean.class) != null){
+                boolean doneInitial;
+
+                try{
                     doneInitial = dataSnapshot.child("doneInitial").getValue(Boolean.class);
+                }catch (NullPointerException e){
+                    doneInitial = false;
                 }
 
                 finishListener.onSuccess(doneInitial);
