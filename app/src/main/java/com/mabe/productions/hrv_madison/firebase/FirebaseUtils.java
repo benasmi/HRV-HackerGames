@@ -22,7 +22,7 @@ import java.util.List;
 
 public class FirebaseUtils {
 
-    public static final String MEASUREMENTS_TABLE = "ipulsusRunning/measurements";
+    public static final String MEASUREMENTS_TABLE = "measurements";
     public static final String WORKOUTS_TABLE = "ipulsusRunning/workouts";
 
     public static final String USERS_TABLE_RUNNING = "ipulsusRunning/users";
