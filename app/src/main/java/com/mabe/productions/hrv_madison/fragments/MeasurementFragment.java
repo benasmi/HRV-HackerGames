@@ -13,6 +13,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.graphics.drawable.Animatable2Compat;
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
@@ -37,6 +38,7 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.mabe.productions.hrv_madison.FingerHRV.HeartRateMonitor;
 import com.mabe.productions.hrv_madison.MainScreenActivity;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
@@ -52,6 +54,8 @@ import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.RMSSD;
 import com.shawnlin.numberpicker.NumberPicker;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -59,6 +63,7 @@ import java.util.Date;
 
 public class MeasurementFragment extends Fragment {
 
+    private static final int MY_CAMERA_REQUEST_CODE = 5;
     private NumberPicker measurement_duration;
     private TextView txt_hr;
     private TextView txt_hrv;
@@ -72,6 +77,7 @@ public class MeasurementFragment extends Fragment {
     private TextView txt_time_left;
     private MediaPlayer mediaPlayer;
     private TextView txt_line_chart_label;
+    private TextView measure_with_camera;
 
     private int[] interval_values;
 
@@ -111,11 +117,27 @@ public class MeasurementFragment extends Fragment {
     }
 
 
+    @Override
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == MY_CAMERA_REQUEST_CODE) {
+
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                startActivity(new Intent(MeasurementFragment.this.getContext(), HeartRateMonitor.class));
+
+            }
+
+        }}//end onRequestPermissionsResult
 
     private void initializeViews(View view) {
         img_breathing_indicator = view.findViewById(R.id.breathing_indicator);
         txt_line_chart_label = view.findViewById(R.id.txt_line_chart_label);
         txt_line_chart_label.setVisibility(View.INVISIBLE);
+        measure_with_camera = view.findViewById(R.id.measure_with_camera);
         //Initializing animated vector drawable only once
         animatedBreathingVector = AnimatedVectorDrawableCompat.create(getContext(), R.drawable.breathing_indicator_anim);
         //A weird way to make the animation loop. I could not find a better one
@@ -158,6 +180,23 @@ public class MeasurementFragment extends Fragment {
         chart_hr.setTouchEnabled(false);
         chart_hr.setViewPortOffsets(0f, 0f, 0f, 0f);
         //chart_hr.setAutoScaleMinMaxEnabled(true);
+
+
+        measure_with_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("TEST", "Patenka");
+                if (ContextCompat.checkSelfPermission(MeasurementFragment.this.getContext(), android.Manifest.permission.CAMERA)
+                        == PackageManager.PERMISSION_DENIED){
+                    requestPermissions(new String[]{Manifest.permission.CAMERA},
+                            MY_CAMERA_REQUEST_CODE);
+                }else{
+                    startActivity(new Intent(MeasurementFragment.this.getContext(), HeartRateMonitor.class));
+                }
+
+
+            }
+        });
 
         btn_start_measuring = view.findViewById(R.id.button_start_measuring);
 
