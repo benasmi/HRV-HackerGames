@@ -151,6 +151,9 @@ public class MainScreenActivity extends AppCompatActivity {
                 if(viewPagerAdapter.workoutFragment.infoVibration !=null && viewPagerAdapter.workoutFragment.infoVibration.isShowing()){
                     viewPagerAdapter.workoutFragment.infoVibration.dismiss();
                 }
+                if(viewPagerAdapter.measurementFragment.infoHrvFinger !=null && viewPagerAdapter.measurementFragment.infoHrvFinger.isShowing()){
+                        viewPagerAdapter.measurementFragment.infoHrvFinger.dismiss();
+                }
             }
 
 

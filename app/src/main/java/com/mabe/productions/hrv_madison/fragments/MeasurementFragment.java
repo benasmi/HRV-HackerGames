@@ -23,6 +23,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,7 @@ import com.mabe.productions.hrv_madison.measurements.FrequencyMethod;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.RMSSD;
 import com.shawnlin.numberpicker.NumberPicker;
+import com.tooltip.Tooltip;
 
 import org.w3c.dom.Text;
 
@@ -68,6 +70,7 @@ public class MeasurementFragment extends Fragment {
     private TextView txt_hr;
     private TextView txt_hrv;
     private TextView txt_hr_value;
+    private ImageView imgButton_view_hrv_finger_info;
     private TextView txt_hrv_value;
     public TextView txt_connection_status;
     private AppCompatButton btn_start_measuring;
@@ -79,6 +82,7 @@ public class MeasurementFragment extends Fragment {
     private TextView txt_line_chart_label;
     private TextView measure_with_camera;
 
+    public Tooltip infoHrvFinger = null;
     private int[] interval_values;
 
     private User user;
@@ -154,7 +158,7 @@ public class MeasurementFragment extends Fragment {
             }
         });
         img_breathing_indicator.setImageDrawable(animatedBreathingVector);
-
+        imgButton_view_hrv_finger_info = view.findViewById(R.id.imgButton_view_hrv_finger_info);
         txt_time_left = view.findViewById(R.id.txt_duration_left);
         txt_connection_status = view.findViewById(R.id.txt_connection_status);
         txt_hr = view.findViewById(R.id.txt_hr);
@@ -181,6 +185,27 @@ public class MeasurementFragment extends Fragment {
         chart_hr.setViewPortOffsets(0f, 0f, 0f, 0f);
         //chart_hr.setAutoScaleMinMaxEnabled(true);
 
+
+        imgButton_view_hrv_finger_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (infoHrvFinger == null) {
+                    infoHrvFinger = new Tooltip.Builder(view)
+                            .setText("From now on you can measure HRV using your phone camera. Keep in mind that measurements with sensors provide more accurate and reasonable data!!!")
+                            .setDismissOnClick(true)
+                            .setBackgroundColor(getActivity().getResources().getColor(R.color.colorAccent))
+                            .setTextColor(getActivity().getResources().getColor(R.color.white))
+                            .setCornerRadius(7f)
+                            .setGravity(Gravity.TOP)
+                            .show();
+
+                }
+
+                if (!infoHrvFinger.isShowing()) {
+                    infoHrvFinger.show();
+                }
+            }
+        });
 
         measure_with_camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -372,6 +397,7 @@ public class MeasurementFragment extends Fragment {
 
         measurement_duration.setVisibility(View.GONE);
         measure_with_camera.setVisibility(View.INVISIBLE);
+        imgButton_view_hrv_finger_info.setVisibility(View.INVISIBLE);
         txt_duration_picker_text.setVisibility(View.GONE);
         img_breathing_indicator.setVisibility(View.VISIBLE);
 
@@ -539,6 +565,7 @@ public class MeasurementFragment extends Fragment {
         txt_time_left.setText("");
         measurement_duration.setVisibility(View.VISIBLE);
         measure_with_camera.setVisibility(View.VISIBLE);
+        imgButton_view_hrv_finger_info.setVisibility(View.VISIBLE);
         img_breathing_indicator.setVisibility(View.GONE);
         txt_duration_picker_text.setVisibility(View.GONE);
 

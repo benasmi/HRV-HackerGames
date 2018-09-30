@@ -111,16 +111,38 @@
             android:background="@drawable/login_button_gradient"
         android:text="@string/measure"/>
 
-        <TextView
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Measure with phone camera"
-            android:gravity="center"
-            android:textColor="#FFF"
-            android:id="@+id/measure_with_camera"
-            android:textSize="15dp"
-            android:layout_margin="10dp"
-            />
+            android:layout_height="40dp">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Measure with phone camera"
+                android:gravity="center"
+                android:textColor="#FFF"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/measure_with_camera"
+                android:textSize="15dp"
+                android:layout_margin="10dp"/>
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@color/transparent"
+                android:scaleType="fitCenter"
+                android:id="@+id/imgButton_view_hrv_finger_info"
+                android:src="@drawable/ic_info_icon"
+                android:layout_toEndOf="@+id/measure_with_camera"
+                android:layout_alignBottom="@+id/measure_with_camera"
+                android:layout_alignTop="@+id/measure_with_camera"
+                android:layout_marginLeft="5dp"
+                />
+
+        </RelativeLayout>
+
+
 
     </LinearLayout>
 
