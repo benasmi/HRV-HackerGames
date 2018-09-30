@@ -108,8 +108,6 @@ public class FrequencyMethod {
 
 
     public void add_to_freq_array(int interval){
-
-
         double Hz = 0;
 
         if(interval!=0){
@@ -117,6 +115,11 @@ public class FrequencyMethod {
             Log.i("DATA", "HZ: " + Hz);
         }
         hrv_data.add(new Complex(Hz, 0));
+
+        //Checking if number of data points is power of two
+        if(hrv_data.size() > 1 && ((hrv_data.size() & (hrv_data.size() - 1)) == 0)){
+            calculate_frequencies(hrv_data.size());
+        }
 
     }
 

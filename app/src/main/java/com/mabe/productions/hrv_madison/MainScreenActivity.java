@@ -33,9 +33,11 @@ import android.widget.Toast;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.google.firebase.auth.FirebaseAuth;
+import com.mabe.productions.hrv_madison.FingerHRV.HeartRateMonitor;
 import com.mabe.productions.hrv_madison.bluetooth.BluetoothGattService;
 import com.mabe.productions.hrv_madison.bluetooth.LeDevicesDialog;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
+import com.mabe.productions.hrv_madison.fragments.MeasurementFragment;
 import com.mabe.productions.hrv_madison.fragments.ViewPagerAdapter;
 
 public class MainScreenActivity extends AppCompatActivity {
@@ -297,23 +299,32 @@ public class MainScreenActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION){
-            if(Utils.isBluetoothEnabled()){
+        if(requestCode == PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION) {
+            if (Utils.isBluetoothEnabled()) {
 
                 LeDevicesDialog dialog = new LeDevicesDialog(this);
-                viewPagerAdapter.measurementFragment.shouldStartMeasurementImmediately=true;
+                viewPagerAdapter.measurementFragment.shouldStartMeasurementImmediately = true;
                 dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialogInterface) {
-                        viewPagerAdapter.measurementFragment.shouldStartMeasurementImmediately=false;
+                        viewPagerAdapter.measurementFragment.shouldStartMeasurementImmediately = false;
                     }
                 });
 
-            }else{
+            } else {
                 Toast.makeText(this, "Please enable bluetooth!", Toast.LENGTH_LONG).show(); //TODO: add a nice dialog or something
             }
+        }else if (requestCode == MeasurementFragment.MY_CAMERA_REQUEST_CODE) {
+
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                startActivity(new Intent(this, HeartRateMonitor.class));
+
+            }
+
         }
     }
+
 
     public void addDevice(View view) {
 

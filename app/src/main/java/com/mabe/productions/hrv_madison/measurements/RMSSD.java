@@ -55,8 +55,10 @@ public class RMSSD {
 
             for(int i = 0; i<intervals.length; i++){
                 rrList.add(intervals[i]);
-                Log.i("HRV", "HRV interval: " + String.valueOf(intervals[i]));
             }
+    }
+    public void addInterval(int interval){
+            rrList.add(interval);
     }
 
     public int getLowestRmssd(){

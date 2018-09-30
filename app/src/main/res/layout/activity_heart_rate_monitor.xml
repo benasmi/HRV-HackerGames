@@ -9,7 +9,7 @@
         android:id="@+id/history_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#3e5266"
+        android:background="#2c3e50"
         android:elevation="4dp"
         >
 
@@ -27,7 +27,7 @@
             android:layout_width="240dp"
             android:layout_height="wrap_content"
             android:maxLines="1"
-            android:text="Normal measurement"
+            android:text="Camera measurement"
             android:layout_gravity="left"
             android:textColor="#FFF"
             android:gravity="left"
@@ -35,6 +35,26 @@
             android:id="@+id/toolbar_title_measurement" />
 
     </android.support.v7.widget.Toolbar>
+
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:indeterminate="false"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:progressDrawable="@drawable/progress_bar"
+        android:progress="100"
+        android:id="@+id/measurement_progress_bar"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:text="00:00"
+        android:layout_gravity="right"
+        android:id="@+id/txt_time_left"
+        android:textColor="#fff"
+        android:textSize="16dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -85,7 +105,7 @@
             android:text="@string/info_txt"
             android:id="@+id/info_txt"
             android:textColor="#fff"
-            android:textSize="20dp" />
+            android:textSize="16dp" />
 
 
 

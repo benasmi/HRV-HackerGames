@@ -65,7 +65,7 @@ import java.util.Date;
 
 public class MeasurementFragment extends Fragment {
 
-    private static final int MY_CAMERA_REQUEST_CODE = 5;
+    public static final int MY_CAMERA_REQUEST_CODE = 5;
     private NumberPicker measurement_duration;
     private TextView txt_hr;
     private TextView txt_hrv;
@@ -121,21 +121,7 @@ public class MeasurementFragment extends Fragment {
     }
 
 
-    @Override
 
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == MY_CAMERA_REQUEST_CODE) {
-
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                startActivity(new Intent(MeasurementFragment.this.getContext(), HeartRateMonitor.class));
-
-            }
-
-        }}//end onRequestPermissionsResult
 
     private void initializeViews(View view) {
         img_breathing_indicator = view.findViewById(R.id.breathing_indicator);
@@ -210,7 +196,6 @@ public class MeasurementFragment extends Fragment {
         measure_with_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("TEST", "Patenka");
                 if (ContextCompat.checkSelfPermission(MeasurementFragment.this.getContext(), android.Manifest.permission.CAMERA)
                         == PackageManager.PERMISSION_DENIED){
                     requestPermissions(new String[]{Manifest.permission.CAMERA},
@@ -396,8 +381,7 @@ public class MeasurementFragment extends Fragment {
         MainScreenActivity.setDisplayOnLockscreen(true, getActivity());
 
         measurement_duration.setVisibility(View.GONE);
-        measure_with_camera.setVisibility(View.INVISIBLE);
-        imgButton_view_hrv_finger_info.setVisibility(View.INVISIBLE);
+        imgButton_view_hrv_finger_info.setVisibility(View.GONE);
         txt_duration_picker_text.setVisibility(View.GONE);
         img_breathing_indicator.setVisibility(View.VISIBLE);
 
@@ -407,6 +391,7 @@ public class MeasurementFragment extends Fragment {
 
         img_breathing_indicator.startAnimation(top_to_bottom);
         txt_line_chart_label.setVisibility(View.VISIBLE);
+        measure_with_camera.setVisibility(View.GONE);
         txt_line_chart_label.startAnimation(left_to_right);
         img_breathing_indicator.post(new Runnable() {
             @Override
@@ -416,11 +401,6 @@ public class MeasurementFragment extends Fragment {
             }
         });
 
-
-
-
-
-                //Starting measuring
                 countDownTimer = new CountDownTimer(measurement_duration.getValue()*60000,1000l){
                     @Override
                     public void onTick(long l) {
@@ -433,13 +413,13 @@ public class MeasurementFragment extends Fragment {
 
                         //Calculating FrequencyDomainMethod: 'times' has to be power of 2
                         for(int i = 0; i<interval_values.length; i++){
-                            times++;
+//                            times++;
                             fft.add_to_freq_array(interval_values[i]);
-                            if(times==16 || times == 64 || times==256){
-                                Log.i("DATA",""+times);
-                                fft.calculate_frequencies(times);
-
-                            }
+//                            if(times==16 || times == 64 || times==256){
+//                                Log.i("DATA",""+times);
+//                                fft.calculate_frequencies(times);
+//
+//                            }
                         }
 
                         long duration = measurement_duration.getValue()*60000;

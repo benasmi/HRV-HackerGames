@@ -1042,7 +1042,7 @@ public class WorkoutFragment extends Fragment {
         isTimerRunning = false;
 
     }
-    //TODO: destroy location service after measurement
+
     private void setupEditTextBehavior() {
         View.OnClickListener editTextClickListener = new View.OnClickListener() {
             @Override
