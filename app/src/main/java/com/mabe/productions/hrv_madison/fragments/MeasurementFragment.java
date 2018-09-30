@@ -371,6 +371,7 @@ public class MeasurementFragment extends Fragment {
         MainScreenActivity.setDisplayOnLockscreen(true, getActivity());
 
         measurement_duration.setVisibility(View.GONE);
+        measure_with_camera.setVisibility(View.INVISIBLE);
         txt_duration_picker_text.setVisibility(View.GONE);
         img_breathing_indicator.setVisibility(View.VISIBLE);
 
@@ -537,6 +538,7 @@ public class MeasurementFragment extends Fragment {
         times=0;
         txt_time_left.setText("");
         measurement_duration.setVisibility(View.VISIBLE);
+        measure_with_camera.setVisibility(View.VISIBLE);
         img_breathing_indicator.setVisibility(View.GONE);
         txt_duration_picker_text.setVisibility(View.GONE);
 
