@@ -61,7 +61,7 @@ public class Measurement {
 
     public Measurement(RMSSD rmssd, FrequencyMethod frequencies, BPM bpm, int duration, Date date){
         this.rmssd = rmssd.getRmssd();
-        this.hrv = rmssd.getPURE_HRV();
+        this.hrv = rmssd.getHrv();
         this.ln_rmssd = rmssd.getLnRmssd();
         this.date = Calendar.getInstance().getTime();
         this.lowest_rmssd = rmssd.getLowestRmssd();

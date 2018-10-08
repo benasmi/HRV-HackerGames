@@ -76,7 +76,7 @@ public class RMSSD {
         return (float) Math.log(rmssdList.get(rmssdList.size()-1));
     }
 
-    public int getPURE_HRV(){
+    public int getHrv(){
 
         int HRV = (int) (getLnRmssd()*15.5f);
         if(HRV<=0){

@@ -109,6 +109,7 @@ public class HeartRateMonitor extends Activity {
         img_back_arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                timer.cancel();
                 HeartRateMonitor.this.finish();
             }
         });
@@ -209,6 +210,12 @@ public class HeartRateMonitor extends Activity {
             camera = null;
 
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        timer.cancel();
+        finish();
     }
 
     private PreviewCallback previewCallback = new PreviewCallback() {
@@ -343,7 +350,9 @@ public class HeartRateMonitor extends Activity {
 
         int bpm = (int) ( samples.size() / ((double) timePassed/60000d) );
         int period = (int) (samples.get(samples.size()-1)-samples.get(samples.size()-2));
-        int interval = (int) (60000d/(double)bpm);
+        //int interval = (int) (60000d/(double)bpm);
+
+        int interval = (int) (lastSampleTime - samples.get(samples.size()-2));
 
         if(period < 300){
             return;
@@ -357,6 +366,7 @@ public class HeartRateMonitor extends Activity {
             v.vibrate(50);
         }
 
+        Log.i("RRTEST", String.valueOf(interval));
         rmssd.addInterval(interval);
         rmssd.calculateRMSSD();
         frequencyMethod.add_to_freq_array(interval);
@@ -364,7 +374,7 @@ public class HeartRateMonitor extends Activity {
 
 
         bpm_txt.setText(String.valueOf((int) bpm));
-        hrv_txt.setText("" + rmssd.getPURE_HRV());
+        hrv_txt.setText(String.valueOf(rmssd.getHrv()));
 
     }
 

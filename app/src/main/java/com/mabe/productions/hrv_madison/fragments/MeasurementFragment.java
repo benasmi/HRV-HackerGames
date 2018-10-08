@@ -13,7 +13,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.graphics.drawable.Animatable2Compat;
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
@@ -55,8 +54,6 @@ import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.RMSSD;
 import com.shawnlin.numberpicker.NumberPicker;
 import com.tooltip.Tooltip;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -438,9 +435,13 @@ public class MeasurementFragment extends Fragment {
 
                         //Calculating HRV
                         hrv.addIntervals(interval_values);
+
+                        for(int interval : interval_values){
+                            Log.i("RRTEST", String.valueOf(interval));
+                        }
                         bpm.addBPM(hearRate);
                         //Seting values
-                        txt_hrv_value.setText(String.valueOf(hrv.getPURE_HRV()));
+                        txt_hrv_value.setText(String.valueOf(hrv.getHrv()));
                     }
 
                     @Override
