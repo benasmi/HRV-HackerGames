@@ -34,6 +34,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -193,15 +194,10 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
 
     private String formatDate(Date date){
         Calendar cal = Calendar.getInstance();
-
         cal.setTime(date);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        int month = cal.get(Calendar.MONTH);
-        int hour = cal.get(Calendar.HOUR);
-        int minute = cal.get(Calendar.MINUTE);
-        String menesines = Utils.convertNumberToMonth(month);
-        Log.i("datos", menesines);
-        return String.valueOf(new StringBuilder().append(day).append(" ").append(menesines).append(", ").append(hour).append(":").append(minute)) ;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM, hh:mm 'val'");
+        return dateFormat.format(cal.getTime());
+
     }
 
 

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -71,10 +72,9 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
     private String showDate(Date date){
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        int month = cal.get(Calendar.MONTH);
-        String men = Utils.convertNumberToMonth(month);
-        return String.valueOf(new StringBuilder().append(day).append(" ").append(men)) ;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM");
+        return dateFormat.format(cal.getTime());
+
     }
 
 

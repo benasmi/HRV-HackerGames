@@ -26,6 +26,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -183,14 +184,13 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
     }
 
     private String formatDate(Date date){
-        String time = DateFormat.getMediumDateFormat(this).format(date);
-        String realTime = time.substring(0,5);
-
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        int years = cal.get(Calendar.YEAR);
-        return String.valueOf(new StringBuilder().append(realTime).append(", ").append(years));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM, hh:mm 'val'");
+        return dateFormat.format(cal.getTime());
+
     }
+
     private void setFonts() {
         Typeface futura = Typeface.createFromAsset(getAssets(),
                 "fonts/futura_light.ttf");
