@@ -185,10 +185,6 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
             advanced_history_txt_intensity_value.setText(minPulseZone +  Utils.getNumberSuffix(minPulseZone) + "-" + maxPulseZone + Utils.getNumberSuffix(maxPulseZone));
         }
 
-
-
-
-
     }
 
 
