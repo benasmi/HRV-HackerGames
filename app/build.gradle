@@ -1,7 +1,8 @@
 apply plugin: 'com.android.application'
 
 configurations.all {
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+    resolutionStrategy.eachDependency {
+        DependencyResolveDetails details ->
         def requested = details.requested
         if (requested.group == 'com.android.support') {
             if (!requested.name.startsWith("multidex")) {
@@ -13,7 +14,7 @@ configurations.all {
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "25.0.4"
+    buildToolsVersion "25.0.3"
     defaultConfig {
         applicationId "com.mabe.productions.hrv_madison"
         minSdkVersion 21
