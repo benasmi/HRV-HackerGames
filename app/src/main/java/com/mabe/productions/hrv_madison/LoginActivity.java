@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -107,11 +108,6 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-
-
-        ///////////////////////////////////////////////////////////////////////////////////
-
     }
 
     private void initializeViews() {
@@ -175,6 +171,9 @@ public class LoginActivity extends AppCompatActivity {
 
     public void login(View view) {
 
+        Crashlytics.log("Beggining to authenticate with e-mail");
+
+
         String email = editText_username.getText().toString();
         String password = editText_password.getText().toString();
 
@@ -199,33 +198,42 @@ public class LoginActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
 
                             if(!user.isEmailVerified()){
+                                Crashlytics.log("E-mail is unverified.");
                                 Toast.makeText(LoginActivity.this, "Your email is unverified!", Toast.LENGTH_LONG).show();
                                 return;
                             }
+                            Crashlytics.log("E-mail is verified");
+
 
                             boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
 
                             if (isNew) {
                                 //In this case, we know for sure that user hasn't provided us with initial information.
                                 //FirebaseUtils.addUser();
+                                Crashlytics.log("User is new as determined by getAdditionalUserInfo().isNewUser().");
+
                                 startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
                             } else {
+
                                 //If user already exists, we still need to check whether he has completed initial info questionnaire
+                                Crashlytics.log("User is not new as determined by getAdditionalUserInfo().isNewUser().");
 
                                 //Showing a custom progress dialog
                                 final CustomLoadingDialog loadingDialog = new CustomLoadingDialog(LoginActivity.this, "Checking your account status");
                                 loadingDialog.show();
-
+                                Crashlytics.log("Checking if user has done initial activity evaluation.");
                                 FirebaseUtils.isInitialDone(new FirebaseUtils.OnInitialDoneFetchListener() {
                                     @Override
                                     public void onSuccess(boolean isInitialDone) {
                                         loadingDialog.dismiss();
 
                                         if (isInitialDone) {
+                                            Crashlytics.log("User has done initial activity evaluation.");
                                             //User has done the initial questionnaire. Downloading it's data, and launching MainScreenActivity afterwards.
                                             getInitialUserInformation(true);
                                         } else {
                                             //User has not filled out the initial questionnaire. Opening IntroInitialPage for the user to do so.
+                                            Crashlytics.log("User has not done initial activity evaluation");
                                             LoginActivity.this.finish();
                                             startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
                                         }
@@ -337,6 +345,8 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void getInitialUserInformation(boolean showProgressDialog){
 
+        Crashlytics.log("Downloading initial user info.");
+
         final CustomLoadingDialog dialog = new CustomLoadingDialog(LoginActivity.this, "Loading your data");
 
         if(showProgressDialog){
@@ -346,6 +356,8 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseUtils.getUserFromFirebase(new FirebaseUtils.OnUserDoneFetchListener() {
             @Override
             public void onSuccess(FireUser fireUser) {
+                Crashlytics.log("Saving initial user info to shared prefs.");
+
                 Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_ACTIVITY_STREAK, fireUser.getActivity_streak(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
                 Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_INITIAL_DURATION, fireUser.getBase_duration(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
                 Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_KMI, fireUser.getKmi(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);

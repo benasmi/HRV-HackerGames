@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.mabe.productions.hrv_madison.FingerHRV.HeartRateMonitor;
 import com.mabe.productions.hrv_madison.bluetooth.BluetoothGattService;

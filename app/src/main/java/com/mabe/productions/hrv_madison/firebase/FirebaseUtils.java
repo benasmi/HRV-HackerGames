@@ -3,6 +3,7 @@ package com.mabe.productions.hrv_madison.firebase;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.database.DatabaseReference;
 
 
@@ -38,6 +39,16 @@ public class FirebaseUtils {
         DatabaseReference measurementsTable = FirebaseDatabase.getInstance().getReference().child(MEASUREMENTS_TABLE);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String key = measurementsTable.push().getKey();
+
+        Crashlytics.log("Measurement's remote database key: " + key);
+        String uid;
+        try{
+            uid = user.getUid();
+        }catch(NullPointerException e){
+            uid = "null";
+        }
+        Crashlytics.log("User's UID: " + uid);
+
 
         //We need to save the remote database key locally, so we could access the measurement later.
         Measurement localDbMeasurement = new Measurement(measurement);
@@ -169,7 +180,7 @@ public class FirebaseUtils {
 
     public static void saveFirstWeeklyProgramDate(String firstWeeklyDate) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        final DatabaseReference userTable = FirebaseDatabase.getInstance().getReference(USERS_TABLE_RUNNING + "/"+user.getUid());
+        final DatabaseReference userTable = FirebaseDatabase.getInstance().getReference(USERS_TABLE_RUNNING + "/" + user.getUid());
 
         userTable.child("first_weekly_date").setValue(firstWeeklyDate);
     }

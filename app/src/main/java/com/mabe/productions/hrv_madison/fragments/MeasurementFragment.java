@@ -33,6 +33,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -370,6 +371,8 @@ public class MeasurementFragment extends Fragment {
     }
 
     public void startMeasuring(){
+        Crashlytics.log("Starting the measurement.");
+
         currentMeasurementState = STATE_MEASURING;
         txt_connection_status.setText(R.string.measuring);
         btn_start_measuring.setText(R.string.cancel);
@@ -401,6 +404,8 @@ public class MeasurementFragment extends Fragment {
                 countDownTimer = new CountDownTimer(measurement_duration.getValue()*60000,1000l){
                     @Override
                     public void onTick(long l) {
+                        Crashlytics.setLong("measurement_time_passed", l);
+
                         hrv.calculateRMSSD();
                         timePassed++;
 
@@ -446,14 +451,18 @@ public class MeasurementFragment extends Fragment {
 
                     @Override
                     public void onFinish() {
+                        Crashlytics.log("Measurement is finished.");
+
                         //Playing the ending sound
                         mediaPlayer.start();
 
                         Measurement measurement = new Measurement(hrv, fft, bpm, measurement_duration.getValue(), Calendar.getInstance().getTime());
 
                         //Saving to local db
+                        Crashlytics.log("Saving measurement locally.");
                         User.addMeasurementData(getContext(), measurement, true);
                         //Saving to remote db
+                        Crashlytics.log("Saving measurement remotely");
                         FirebaseUtils.addMeasurement(new FireMeasurement(measurement), getContext());
 
 
@@ -528,6 +537,8 @@ public class MeasurementFragment extends Fragment {
     }
 
     private void cancelMeasurement(){
+        Crashlytics.log("Measurement is cancelled.");
+
         currentMeasurementState = STATE_WAITING_TO_MEASURE;
         MainScreenActivity.setDisplayOnLockscreen(false, getActivity());
         if(countDownTimer!=null){

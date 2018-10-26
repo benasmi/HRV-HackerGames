@@ -2,6 +2,8 @@ package com.mabe.productions.hrv_madison.measurements;
 
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.util.ArrayList;
 
 /**
@@ -119,7 +121,11 @@ public class FrequencyMethod {
         //Checking if number of data points is power of two
         if(hrv_data.size() > 1 && ((hrv_data.size() & (hrv_data.size() - 1)) == 0)){
             calculate_frequencies(hrv_data.size());
+            Crashlytics.log("Calculating frequencies.");
         }
+
+        Crashlytics.setInt("number_of_frequency_intervals", hrv_data.size());
+
 
     }
 

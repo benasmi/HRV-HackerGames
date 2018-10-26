@@ -11,6 +11,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
@@ -31,10 +32,11 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         initializeViews();
         setFonts();
+
     }
 
 
-    private void initializeViews(){
+    private void initializeViews() {
 
         img_login_appicon = (ImageView) findViewById(R.id.intro_appicon);
         txt_slogan = (TextView) findViewById(R.id.slogan);
@@ -54,37 +56,32 @@ public class SplashScreenActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                /*
-                boolean doneInitial = Utils.readFromSharedPrefs_bool(SplashScreenActivity.this, FeedReaderDbHelper.FIELD_DONE_INITIAL, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-                Log.i("TEST", String.valueOf(doneInitial));
-                startActivity(new Intent(SplashScreenActivity.this, doneInitial == true? MainScreenActivity.class : LoginActivity.class)); //kazkada pakeisim px
-            */
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 FirebaseUser currentUser = mAuth.getCurrentUser();
-            if(currentUser!=null){
+                if (currentUser != null) {
 
-                FirebaseUtils.isInitialDone(new FirebaseUtils.OnInitialDoneFetchListener() {
-                    @Override
-                    public void onSuccess(boolean isInitialDone) {
-                        Log.i("auth", "SplashOnInitial: " + String.valueOf(isInitialDone));
-                        if(isInitialDone){
-                            startActivity(new Intent(SplashScreenActivity.this, MainScreenActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                        }else{
-                            startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                    FirebaseUtils.isInitialDone(new FirebaseUtils.OnInitialDoneFetchListener() {
+                        @Override
+                        public void onSuccess(boolean isInitialDone) {
+                            Log.i("auth", "SplashOnInitial: " + String.valueOf(isInitialDone));
+                            if (isInitialDone) {
+                                startActivity(new Intent(SplashScreenActivity.this, MainScreenActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                            } else {
+                                startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                            }
                         }
-                    }
-                    @Override
-                    public void onFailure(DatabaseError error) {
 
-                    }
-                });
+                        @Override
+                        public void onFailure(DatabaseError error) {
+
+                        }
+                    });
 
 
+                } else {
+                    startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
 
-            }else{
-                startActivity(new Intent(SplashScreenActivity.this,LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-
-            }
+                }
 
 
             }
@@ -101,12 +98,11 @@ public class SplashScreenActivity extends AppCompatActivity {
         animatedIconVectorIntro.start();
     }
 
-    private void setFonts(){
+    private void setFonts() {
 
         Typeface futura = Typeface.createFromAsset(getAssets(),
                 "fonts/futura_light.ttf");
         txt_slogan.setTypeface(futura);
-
 
 
     }
