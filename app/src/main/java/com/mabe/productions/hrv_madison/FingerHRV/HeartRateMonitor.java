@@ -486,6 +486,7 @@ public class HeartRateMonitor extends Activity {
 
                 FirebaseUtils.addMeasurement(new FireMeasurement(measurement), HeartRateMonitor.this);
                 User.addMeasurementData(HeartRateMonitor.this, measurement, false);
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

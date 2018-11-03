@@ -41,6 +41,7 @@ public class FirebaseUtils {
         String key = measurementsTable.push().getKey();
 
         Crashlytics.log("Measurement's remote database key: " + key);
+
         String uid;
         try{
             uid = user.getUid();
@@ -48,7 +49,6 @@ public class FirebaseUtils {
             uid = "null";
         }
         Crashlytics.log("User's UID: " + uid);
-
 
         //We need to save the remote database key locally, so we could access the measurement later.
         Measurement localDbMeasurement = new Measurement(measurement);

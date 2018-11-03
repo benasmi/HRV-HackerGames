@@ -365,8 +365,9 @@ public class User {
     private void getAllMeasurementsFromDb(Context context) {
 
         ArrayList<Measurement> measurementList = new ArrayList<>();
-
+        Log.i("TEST", "I'm about to create the database please be nice and dont crash thanks xoxo");
         SQLiteDatabase db = new FeedReaderDbHelper(context).getWritableDatabase();
+
 
         String[] projection = {"*"};
 

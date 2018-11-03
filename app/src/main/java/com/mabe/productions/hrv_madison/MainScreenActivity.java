@@ -72,7 +72,7 @@ public class MainScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_screen);
         Utils.changeNotifBarColor(Color.parseColor("#2c3e50"),getWindow());
 
-        user =  User.getUser(this);
+        user = User.getUser(this);
 
         initializeViews();
         setupBottomBar();

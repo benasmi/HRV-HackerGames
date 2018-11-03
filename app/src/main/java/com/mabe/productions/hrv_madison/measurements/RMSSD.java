@@ -40,7 +40,7 @@ public class RMSSD {
     }
 
     public int getRmssd(){
-        return rmssdList.get(rmssdList.size()-1);
+        return rmssdList.get(rmssdList.size() > 0 ? rmssdList.size()-1 : 0);
     }
 
 

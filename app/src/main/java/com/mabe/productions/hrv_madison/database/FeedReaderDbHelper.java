@@ -3,6 +3,7 @@ package com.mabe.productions.hrv_madison.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -162,6 +163,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     }
 
     public void onCreate(SQLiteDatabase db) {
+        Log.i("TEST", "Creating tables...");
         db.execSQL(SQL_CREATE_HRV_DATA_TABLE_ENTRIES);
         db.execSQL(SQL_CREATE_WORKOUT_DATA_TABLE_ENTRIES);
     }
