@@ -989,6 +989,7 @@ public class WorkoutFragment extends Fragment {
                                 editText_seconds.setText(seconds + "");
                                 editText_minutes.setText("+" + minutes + "");
                             }
+
                         } else if(timePassed < userSpecifiedWorkoutDuration){ //FireUser is within his specified time limits
                             Log.i("TEST", "Setting progressBar duration 2nd if...");
 

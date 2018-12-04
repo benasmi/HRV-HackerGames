@@ -101,7 +101,7 @@
     <string name="txt_suggestion">Your HRV is elevated. Suggesting to workout harder</string>
     <string name="start_your_workout">Start workout!</string>
     <string name="txt_pulse_zone">1-2 pulse zone</string>
-    <string name="txt_how_do_you_feel">Which one is your today\'s mood?</string>
+    <string name="txt_how_do_you_feel">How are you feeling today?</string>
     <string name="negatively_excited">Negatively excited</string>
     <string name="negatively_mellow">Negatively mellow</string>
     <string name="neutral">Neutral</string>
