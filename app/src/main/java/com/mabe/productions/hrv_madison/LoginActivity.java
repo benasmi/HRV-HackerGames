@@ -437,7 +437,7 @@ public class LoginActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                 Log.i("TEST", task.getException().getMessage());
-                
+
             }
 
             progressDialog.dismiss();
