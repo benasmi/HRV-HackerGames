@@ -28,6 +28,7 @@
                 app:backgroundStrokeColor="#fff"
                 app:backgroundStrokeWidth="5dp"
                 app:drawBackgroundStroke="true"
+                android:keepScreenOn="true"
                 app:foregroundStrokeCap="butt"
                 app:foregroundStrokeColor="@color/colorAccent"
                 app:foregroundStrokeWidth="5dp"
