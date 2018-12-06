@@ -110,7 +110,7 @@
     <string name="end_training">End training</string>
     <string name="start_training">Start training</string>
     <string name="lost_connection">Lost connection</string>
-    <string name="do_you_really_want_to_stop_training_prompt">Do you really want to finish your training?</string>
+    <string name="do_you_really_want_to_stop_training_prompt">Are you sure you want to cancel your workout? The progress will be lost!</string>
     <string name="no">No</string>
     <string name="end">Finish</string>
     <string name="workout">Workout</string>
