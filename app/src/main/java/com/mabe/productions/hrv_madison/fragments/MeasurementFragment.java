@@ -80,6 +80,8 @@ public class MeasurementFragment extends Fragment {
     private TextView txt_line_chart_label;
     private TextView measure_with_camera;
 
+    private int failureIntervalTimes = 0;
+
     public Tooltip infoHrvFinger = null;
     private int[] interval_values;
 
@@ -365,14 +367,33 @@ public class MeasurementFragment extends Fragment {
         interval_values = intervals;
 
 
+        if(intervals.length==0){
+            failureIntervalTimes++;
+            Log.i("TEST", "FailureIntervals: " +failureIntervalTimes);
+        }
+        if(failureIntervalTimes==10){
+
+            cancelMeasurement();
+            Utils.buildAlertDialogPrompt(MeasurementFragment.this.getContext(), "R-R intervals Missing", "The app is not currently receiving R-R intervals from your heart rate monitor. For accurate HRV calculations it is important to receive consistent and accurate R-R intervals from the monitor", "Dismiss", "", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            },null);
+
+        }
+
+
+
         txt_hr_value.setText("" + heartRate);
         addEntry(heartRate);
+
 
     }
 
     public void startMeasuring(){
         Crashlytics.log("Starting the measurement.");
-
+        failureIntervalTimes=0;
         currentMeasurementState = STATE_MEASURING;
         txt_connection_status.setText(R.string.measuring);
         btn_start_measuring.setText(R.string.cancel);
@@ -408,6 +429,8 @@ public class MeasurementFragment extends Fragment {
 
                         hrv.calculateRMSSD();
                         timePassed++;
+
+
 
                         if(interval_values == null){
                             return;

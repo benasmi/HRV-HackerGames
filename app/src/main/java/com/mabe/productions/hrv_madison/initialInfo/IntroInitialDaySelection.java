@@ -213,8 +213,9 @@ public class IntroInitialDaySelection extends AppCompatActivity {
                     fireDatabase.child("workout_days").setValue(FeedReaderDbHelper.weekDaysToString(week_days));
                     Utils.saveToSharedPrefs(IntroInitialDaySelection.this, FeedReaderDbHelper.FIELD_WEEK_DAYS, week_days, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
                     if(fromOptions){
-                        IntroInitialDaySelection.this.finish();
                         startActivity(new Intent(IntroInitialDaySelection.this, UserOptionsPanelActivity.class));
+                        IntroInitialDaySelection.this.finish();
+
                     }else{
                         startActivity(new Intent(IntroInitialDaySelection.this, IntroInitialMaxDuration.class));
 
@@ -231,8 +232,9 @@ public class IntroInitialDaySelection extends AppCompatActivity {
         Utils.saveToSharedPrefs(IntroInitialDaySelection.this, FeedReaderDbHelper.FIELD_WEEK_DAYS, week_days, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
         fireDatabase.child("workout_days").setValue(FeedReaderDbHelper.weekDaysToString(week_days));
         if(fromOptions){
-            IntroInitialDaySelection.this.finish();
             startActivity(new Intent(IntroInitialDaySelection.this, UserOptionsPanelActivity.class));
+            IntroInitialDaySelection.this.finish();
+
         }else{
             startActivity(new Intent(IntroInitialDaySelection.this, IntroInitialMaxDuration.class));
 

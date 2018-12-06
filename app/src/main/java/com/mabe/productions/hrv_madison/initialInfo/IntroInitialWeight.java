@@ -108,8 +108,9 @@ public class IntroInitialWeight extends AppCompatActivity {
         Utils.saveToSharedPrefs(this,FeedReaderDbHelper.FIELD_KMI,KMI,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
 
         if(fromOptions){
-            IntroInitialWeight.this.finish();
             startActivity(new Intent(this, UserOptionsPanelActivity.class));
+            IntroInitialWeight.this.finish();
+
         }else{
             startActivity(new Intent(this, IntroInitialGender.class));
         }

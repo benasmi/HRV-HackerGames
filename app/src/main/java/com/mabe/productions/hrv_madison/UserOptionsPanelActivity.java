@@ -82,12 +82,14 @@ public class UserOptionsPanelActivity extends AppCompatActivity {
     }
 
     public void changeHeight(View view) {
-        UserOptionsPanelActivity.this.finish();
+
         startActivity(new Intent(UserOptionsPanelActivity.this, IntroInitialHeight.class).putExtra("FromOptions",true));
+        UserOptionsPanelActivity.this.finish();
     }
 
     public void changeWeight(View view) {
-        UserOptionsPanelActivity.this.finish();
         startActivity(new Intent(UserOptionsPanelActivity.this, IntroInitialWeight.class).putExtra("FromOptions",true));
+        UserOptionsPanelActivity.this.finish();
+
     }
 }

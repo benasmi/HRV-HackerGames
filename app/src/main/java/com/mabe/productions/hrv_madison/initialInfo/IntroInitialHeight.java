@@ -102,8 +102,9 @@ public class IntroInitialHeight extends AppCompatActivity {
         fireDatabase.child("height").setValue(Float.parseFloat(txt_value.getText().toString()));
 
         if(fromOptions){
-            IntroInitialHeight.this.finish();
             startActivity(new Intent(this, UserOptionsPanelActivity.class));
+            IntroInitialHeight.this.finish();
+
         }else{
             startActivity(new Intent(this, IntroInitialWeight.class));
         }
