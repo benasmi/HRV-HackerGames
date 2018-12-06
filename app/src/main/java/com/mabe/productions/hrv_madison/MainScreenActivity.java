@@ -349,29 +349,8 @@ public class MainScreenActivity extends AppCompatActivity {
     }
 
 
-    public void logOut(View view) {
-
-        Utils.buildAlertDialogPrompt(this,
-                "Warning",
-                "Do you really want to log out?",
-                "Yes",
-                "Cancel",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        FirebaseAuth fAuth = FirebaseAuth.getInstance();
-                        fAuth.signOut();
-
-                        //Clearing all local data
-                        User.removeAllMeasurements(MainScreenActivity.this);
-                        User.removeAllWorkouts(MainScreenActivity.this);
-                        User.removeAllPersonalData(MainScreenActivity.this);
-                        MainScreenActivity.this.finish();
-                        startActivity(new Intent(MainScreenActivity.this, LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                    }
-                },
-                null);
-
+    public void userPanel(View view) {
+        startActivity(new Intent(MainScreenActivity.this, UserOptionsPanelActivity.class));
     }
 
     @Override

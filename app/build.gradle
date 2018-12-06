@@ -4,12 +4,12 @@ apply plugin: 'io.fabric'
 configurations.all {
     resolutionStrategy.eachDependency {
         DependencyResolveDetails details ->
-        def requested = details.requested
-        if (requested.group == 'com.android.support') {
-            if (!requested.name.startsWith("multidex")) {
-                details.useVersion '25.3.0'
+            def requested = details.requested
+            if (requested.group == 'com.android.support') {
+                if (!requested.name.startsWith("multidex")) {
+                    details.useVersion '25.3.0'
+                }
             }
-        }
     }
 }
 
@@ -60,7 +60,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:15.0.1'
 
     compile 'com.google.firebase:firebase-auth:16.0.2'
-        compile 'com.google.firebase:firebase-core:16.0.1'
+    compile 'com.google.firebase:firebase-core:16.0.1'
     compile 'com.google.firebase:firebase-database:16.0.1'
     compile 'com.firebase:firebase-client-android:2.5.0'
 

@@ -11,10 +11,11 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-feature android:name="android.hardware.camera"/>
-    <uses-feature android:name="android.hardware.camera.flash"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
 
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.flash" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -125,7 +126,15 @@
             android:name=".AdvancedMeasurementHistoryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
-        <activity android:name=".FingerHRV.HeartRateMonitor"></activity>
+        <activity android:name=".FingerHRV.HeartRateMonitor" />
+        <activity android:name=".UserOptionsPanelActivity"
+            android:theme="@style/NoActionBar"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            >
+
+
+        </activity>
     </application>
 
 </manifest>
