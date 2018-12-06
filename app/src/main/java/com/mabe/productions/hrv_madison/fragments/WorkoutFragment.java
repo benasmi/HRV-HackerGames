@@ -2,6 +2,8 @@ package com.mabe.productions.hrv_madison.fragments;
 
 
 import android.Manifest;
+import android.animation.AnimatorInflater;
+import android.animation.ObjectAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -75,6 +77,8 @@ public class WorkoutFragment extends Fragment {
     private static final long VIBRATE_DURATION_CONNECTION_LOST = 5000l;
     private static final int PERMISSION_GPS_REQUEST = 0;
 
+    public static final long WARMUP_DURATION = 30000L;
+
     private CircularProgressBar progressbar_duration;
     private TextView txt_calories_burned;
     private TextView txt_current_pace;
@@ -94,6 +98,7 @@ public class WorkoutFragment extends Fragment {
     private LinearLayout layout_reccomended_workout;
     private LinearLayout layout_bpm;
     private LinearLayout layout_pulse_zone;
+
     private LinearLayout layout_pulse_by_vibration_switch;
     private LinearLayout layout_workout_name;
     private PulseZoneView pulseZoneView;
@@ -171,6 +176,7 @@ public class WorkoutFragment extends Fragment {
     private Animation anim_running_man_left_to_right;
     private Animation anim_top_to_bottom;
     private Animation anim_fade_out;
+    private ObjectAnimator blinking_anim;
     private float HRMax;
     public static boolean vibrateState = true;
     private Vibrator mVibrator;
@@ -295,6 +301,7 @@ public class WorkoutFragment extends Fragment {
         anim_top_to_bottom_delay = AnimationUtils.loadAnimation(getContext(), R.anim.top_to_bottom_delay);
         anim_top_to_bottom = AnimationUtils.loadAnimation(getContext(), R.anim.top_to_bottom);
         anim_fade_out = AnimationUtils.loadAnimation(getContext(), R.anim.fade_out);
+        blinking_anim = (ObjectAnimator) AnimatorInflater.loadAnimator(getContext(), R.animator.blinking_anim);
 
     }
 
@@ -830,13 +837,13 @@ public class WorkoutFragment extends Fragment {
     }
 
     public void onMeasurement(int bpm) {
+
         txt_bpm.setText(String.valueOf(bpm));
+
         if (workout_state == STATE_WORKING_OUT || workout_state == STATE_TIME_ENDED) {
             bpmArrayList.add(bpm);
             int gender = MainScreenActivity.user.getGender();
             int age = Utils.getAgeFromDate(MainScreenActivity.user.getBirthday());
-            //todo: ,
-            // weight to int
             int weight = (int) MainScreenActivity.user.getWeight();
 
             calories_burned = calories_burned + calculateCalories(gender, age, weight, bpm, 1f / 60f);
@@ -862,6 +869,12 @@ public class WorkoutFragment extends Fragment {
      * @param heartRate           The current user's heart rate in BPM
      */
     private void vibrateByPulseZone(int[] required_pulse_zones, float HRMax, int heartRate) {
+
+        if(required_pulse_zones.length == 0){
+            if (vibrationTimer != null)
+                vibrationTimer.cancel();
+            return;
+        }
 
         int min_pulse = 0;
         int max_pulse = 0;
@@ -976,11 +989,10 @@ public class WorkoutFragment extends Fragment {
 
                         setWalkingRunningState(timePassed);
 
-                        //FireUser is working out longer, than specified duration
-                        if (timePassed > userSpecifiedWorkoutDuration) {
-                            Log.i("TEST", "Setting progressBar duration 1st if...");
-                            int minutes = (int) (timePassed - userSpecifiedWorkoutDuration) / 60000;
-                            int seconds = Math.round((timePassed - userSpecifiedWorkoutDuration) / 1000 - (minutes * 60));
+
+                        if (timePassed-WARMUP_DURATION > userSpecifiedWorkoutDuration) { //The user has exceeded it's designated workout duration
+                            int minutes = (int) (timePassed - WARMUP_DURATION - userSpecifiedWorkoutDuration) / 60000;
+                            int seconds = Math.round((timePassed - WARMUP_DURATION - userSpecifiedWorkoutDuration) / 1000 - (minutes * 60));
 
                             if (seconds < 10) {
                                 editText_minutes.setText("+" + minutes + "");
@@ -990,15 +1002,29 @@ public class WorkoutFragment extends Fragment {
                                 editText_minutes.setText("+" + minutes + "");
                             }
 
-                        } else if(timePassed < userSpecifiedWorkoutDuration){ //FireUser is within his specified time limits
-                            Log.i("TEST", "Setting progressBar duration 2nd if...");
+                        } else if(timePassed-WARMUP_DURATION < userSpecifiedWorkoutDuration){ //The user has not exceeded the designated workout duration yet
 
-                            if(!isIntervalProgram()){
+                            if(!isIntervalProgram()) {
                                 setProgressBarDuration((int) userSpecifiedWorkoutDuration, (int) (userSpecifiedWorkoutDuration - timePassed), true);
                             }
 
-                            int minutes = (int) (userSpecifiedWorkoutDuration - timePassed) / 60000;
-                            int seconds = Math.round((userSpecifiedWorkoutDuration - timePassed) / 1000 - (minutes * 60));
+                            int minutes = 0;
+                            int seconds = 0;
+
+                            //Setting timer numbers
+                            if(timePassed <= WARMUP_DURATION){
+                                //It's warmup my dudes
+                                //The timer shows how much time is left for the warmup to end
+                                minutes = (int) (WARMUP_DURATION - timePassed) / 60000;
+                                seconds = Math.round((WARMUP_DURATION - timePassed) / 1000 - (minutes * 60));
+                            }else{
+                                //The warmup has ended, but the user has not finished the workout yet
+                                //The timer shows how much time before user completes their workout
+                                minutes = (int) (userSpecifiedWorkoutDuration - timePassed + WARMUP_DURATION) / 60000;
+                                seconds = Math.round((userSpecifiedWorkoutDuration - timePassed + WARMUP_DURATION) / 1000 - (minutes * 60));
+                            }
+
+                            //Setting timer numbers accordingly
                             if (seconds < 10) {
                                 editText_minutes.setText(minutes + "");
                                 editText_seconds.setText("0" + seconds);
@@ -1006,7 +1032,8 @@ public class WorkoutFragment extends Fragment {
                                 editText_seconds.setText(seconds + "");
                                 editText_minutes.setText(minutes + "");
                             }
-                        }else{
+                        }else{ //The user has just reached the designated workout duration
+
                             //Checking if intervals are enabled.
                             if(!isIntervalProgram()){
                                 setProgressBarDuration(1,1, false);
@@ -1308,21 +1335,33 @@ public class WorkoutFragment extends Fragment {
 
     private void setIntensityStatus(TextView intensityStatusView, int[] requiredPulseZones, int currentPulseZone) {
 
+        if(requiredPulseZones.length == 0){
+            intensityStatusView.setText("Optional intensity");
+            return;
+        }
+
         int lowest_pulse_zone = Utils.minNum(requiredPulseZones);
         int highest_pulse_zone = Utils.maxNum(requiredPulseZones);
 
         if (currentPulseZone >= lowest_pulse_zone && currentPulseZone <= highest_pulse_zone) {
             intensityStatusView.setText("Intensity: Optimal");
+            blinking_anim.end();
+            blinking_anim.cancel();
         } else if (currentPulseZone < lowest_pulse_zone) {
             intensityStatusView.setText("Intensity: Too low!");
+            blinking_anim.setTarget(intensityStatusView);
+            blinking_anim.start();
         } else if (currentPulseZone > highest_pulse_zone) {
             intensityStatusView.setText("Intensity: Too high!");
+            blinking_anim.setTarget(intensityStatusView);
+            blinking_anim.start();
         }
 
     }
 
     public static final int EXERCISE_WALKING = 0;
     public static final int EXERCISE_JOGGING = 1;
+    public static final int EXERCISE_WARMUP = 2;
     private int current_exercise = 3;
 
     /**
@@ -1334,7 +1373,14 @@ public class WorkoutFragment extends Fragment {
      */
     private void setWalkingRunningState(long timePassed){
 
-
+        if(timePassed <= WARMUP_DURATION){
+            if(current_exercise != EXERCISE_WARMUP){
+                setExercise(EXERCISE_WARMUP);
+                pulseZoneView.setRequiredPulseZones(new int[0]);
+            }
+            setProgressBarDuration((int) WARMUP_DURATION, (int) timePassed, true);
+            return;
+        }
 
         //Calculating the total duration of a cycle
         long cycleDuration = 0;
@@ -1356,9 +1402,9 @@ public class WorkoutFragment extends Fragment {
             }
             return;
         }
-
-        int timesCycleCompleted = (int) (timePassed/cycleDuration);
-        long currentCycleProgress = timePassed - cycleDuration*timesCycleCompleted;
+        long workoutTime = timePassed - WARMUP_DURATION; //workout time is the workout time that has passed without warmup
+        int timesCycleCompleted = (int) (workoutTime/cycleDuration);
+        long currentCycleProgress = workoutTime - cycleDuration*timesCycleCompleted;
         long intervalSum = 0;
         for(int i = 0; i < exercise.getWorkoutIntervals().length; i++){
             long lowerBound = intervalSum;
@@ -1409,11 +1455,18 @@ public class WorkoutFragment extends Fragment {
         if(exercise == EXERCISE_JOGGING){
             icon_resource = R.drawable.human;
             textResource = R.string.jogging;
+            progressbar_duration.setForegroundStrokeColor(getResources().getColor(R.color.colorAccent));
         }else if(exercise == EXERCISE_WALKING){
             icon_resource = R.drawable.ic_appicon_rectangle;
+            progressbar_duration.setForegroundStrokeColor(getResources().getColor(R.color.colorAccent));
             textResource = R.string.walking;
+        }else if(exercise == EXERCISE_WARMUP) {
+            icon_resource = R.drawable.ic_warmup;
+            progressbar_duration.setForegroundStrokeColor(getResources().getColor(R.color.warmup_timer));
+            textResource = R.string.warmup;
         }else{
             icon_resource = R.drawable.ic_stopwatch;
+            progressbar_duration.setForegroundStrokeColor(getResources().getColor(R.color.colorAccent));
             textResource = R.string.walking;
         }
 

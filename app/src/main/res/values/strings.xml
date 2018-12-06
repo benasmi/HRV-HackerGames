@@ -121,6 +121,7 @@
     <string name="repeat_password">Re-enter password</string>
     <string name="register">Register</string>
     <string name="info_txt">During the measurement stay calm and quiet</string>
+    <string name="warmup">Warmup</string>
 
 </resources>
 

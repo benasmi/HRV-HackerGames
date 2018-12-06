@@ -10,6 +10,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
+import com.mabe.productions.hrv_madison.fragments.WorkoutFragment;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
@@ -972,7 +973,10 @@ public class User {
             int walkingSeconds = (int) (exercise.getWorkoutIntervals()[0] - walkingMinutes * 60);
             int runningMinutes = (int) (exercise.getWorkoutIntervals()[1] / 60L);
             int runningSeconds = (int) (exercise.getWorkoutIntervals()[1] - runningMinutes * 60);
-            return ((walkingMinutes == 0 ? "" : (walkingMinutes + "min")) + (walkingSeconds == 0 ? "" : (" " + walkingSeconds + "s")) +
+            int warmupMinutes = (int) (WorkoutFragment.WARMUP_DURATION / 1000L / 60L);
+            int warmupSeconds = (int) ((WorkoutFragment.WARMUP_DURATION / 1000L) - warmupMinutes * 60);
+
+            return ((warmupMinutes == 0 ? warmupSeconds + "s warmup" : warmupMinutes + "min " + (warmupSeconds == 0 ? "warmup" : warmupSeconds + "s warmup")) + " + " + (walkingMinutes == 0 ? "" : (walkingMinutes + "min")) + (walkingSeconds == 0 ? "" : (" " + walkingSeconds + "s")) +
                     " walking + " + (runningMinutes == 0 ? "" : (runningMinutes + "min")) + (runningSeconds == 0 ? "" : (" " + runningSeconds + "s")) +
                     " running");
         }
