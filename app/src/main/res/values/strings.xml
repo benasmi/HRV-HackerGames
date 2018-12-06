@@ -93,6 +93,7 @@
     <string name="initial_what_is_your_weight">What\'s your weight?</string>
     <string name="initial_ask_user_info">One more thing!\n\n We would like you to provide information about yourself to generate sport programs based on you</string>
     <string name="initial_start_btn">Let\'s get started!</string>
+    <string name="logout">Log out</string>
     <string name="initial_continue_btn">Next</string>
     <string name="initial_how_much_do_you_workout">How much time do you workout?</string>
     <string name="initial_what_is_your_intensity">What\'s your intensity?</string>

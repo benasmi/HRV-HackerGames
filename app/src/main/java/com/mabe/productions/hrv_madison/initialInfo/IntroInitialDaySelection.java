@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -22,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.mabe.productions.hrv_madison.MainScreenActivity;
 import com.mabe.productions.hrv_madison.PulseZoneView;
 import com.mabe.productions.hrv_madison.R;
+import com.mabe.productions.hrv_madison.UserOptionsPanelActivity;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
@@ -38,6 +40,8 @@ public class IntroInitialDaySelection extends AppCompatActivity {
     private TextView txt_question;
     private Button btn_continue;
 
+    boolean fromOptions = false;
+
     boolean[] week_days = {true, true, false, true, true, false, false};
 
     @Override
@@ -45,9 +49,33 @@ public class IntroInitialDaySelection extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.intro_initial_day_selection);
         Utils.changeNotifBarColor(Color.parseColor("#3e5266"),getWindow());
-
+        fromOptions = getIntent().getExtras().getBoolean("FromOptions");
         initializeViews();
         setFonts();
+        if(fromOptions){
+            for(int i = 0; i<week_days.length; i++){
+                Log.i("Weeks", "Pasirinkta: " + week_days[i]);
+            }
+
+            week_days = Utils.readFromSharedPrefs_boolarray(IntroInitialDaySelection.this,FeedReaderDbHelper.FIELD_WEEK_DAYS, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+
+            Log.i("Weeks", "Po nuskaitymo");
+
+            for(int i = 0; i<week_days.length; i++){
+                Log.i("Weeks", "Pasirinkta: " + week_days[i]);
+            }
+
+
+            btn_monday.setBackgroundResource(week_days[0] ?  R.drawable.login_button_gradient: R.drawable.login_socialmedia);
+            btn_tuesday.setBackgroundResource(week_days[1] ? R.drawable.login_button_gradient: R.drawable.login_socialmedia );
+            btn_wednesday.setBackgroundResource(week_days[2] ? R.drawable.login_button_gradient :  R.drawable.login_socialmedia);
+            btn_thursday.setBackgroundResource(week_days[3] ?  R.drawable.login_button_gradient : R.drawable.login_socialmedia );
+            btn_friday.setBackgroundResource(week_days[4] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia );
+            btn_saturday.setBackgroundResource(week_days[5] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia );
+            btn_sunday.setBackgroundResource(week_days[6] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia );
+
+            btn_continue.setText("Done");
+        }
 
         btn_monday.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,16 +212,35 @@ public class IntroInitialDaySelection extends AppCompatActivity {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     fireDatabase.child("workout_days").setValue(FeedReaderDbHelper.weekDaysToString(week_days));
                     Utils.saveToSharedPrefs(IntroInitialDaySelection.this, FeedReaderDbHelper.FIELD_WEEK_DAYS, week_days, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-                    startActivity(new Intent(IntroInitialDaySelection.this, IntroInitialMaxDuration.class));
+                    if(fromOptions){
+                        startActivity(new Intent(IntroInitialDaySelection.this, UserOptionsPanelActivity.class));
+                        IntroInitialDaySelection.this.finish();
+
+                    }else{
+                        startActivity(new Intent(IntroInitialDaySelection.this, IntroInitialMaxDuration.class));
+
+                    }
                 }
             },null);
             return;
         }
 
-        Utils.saveToSharedPrefs(IntroInitialDaySelection.this, FeedReaderDbHelper.FIELD_WEEK_DAYS, week_days, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-        startActivity(new Intent(IntroInitialDaySelection.this, IntroInitialMaxDuration.class));
+        for(int i = 0; i<week_days.length; i++){
+            Log.i("Weeks", "Pasirinkta: " + week_days[i]);
+        }
 
+        Utils.saveToSharedPrefs(IntroInitialDaySelection.this, FeedReaderDbHelper.FIELD_WEEK_DAYS, week_days, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
         fireDatabase.child("workout_days").setValue(FeedReaderDbHelper.weekDaysToString(week_days));
+        if(fromOptions){
+            startActivity(new Intent(IntroInitialDaySelection.this, UserOptionsPanelActivity.class));
+            IntroInitialDaySelection.this.finish();
+
+        }else{
+            startActivity(new Intent(IntroInitialDaySelection.this, IntroInitialMaxDuration.class));
+
+        }
+
+
 
 
     }

@@ -218,38 +218,40 @@ public class BluetoothGattService extends Service {
 
         if ((flag & 0x01) != 0) {
             format = BluetoothGattCharacteristic.FORMAT_UINT16;
-//            Log.d(TAG, "Heart rate format UINT16.");
+            Log.d(TAG, "Heart rate format UINT16.");
             offset = 3;
         } else {
             format = BluetoothGattCharacteristic.FORMAT_UINT8;
-//            Log.d(TAG, "Heart rate format UINT8.");
+            Log.d(TAG, "Heart rate format UINT8.");
             offset = 2;
         }
         if ((flag & 0x08) != 0) {
             // calories present
             energy = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16, offset);
             offset += 2;
-//            Log.d(TAG, "Received energy: {}"+ energy);
+            Log.d(TAG, "Received energy: {}"+ energy);
         }
         if ((flag & 0x16) != 0){
             // RR stuff.
-//            Log.d(TAG, "RR stuff found at offset: "+ offset);
-//            Log.d(TAG, "RR length: "+ (characteristic.getValue()).length);
+           Log.d(TAG, "RR stuff found at offset: "+ offset);
+            Log.d(TAG, "RR length: "+ (characteristic.getValue()).length);
             rr_count = ((characteristic.getValue()).length - offset) / 2;
-//            Log.d(TAG, "RR length: "+ (characteristic.getValue()).length);
-//            Log.d(TAG, "rr_count: "+ rr_count);
+            Log.d(TAG, "RR length: "+ (characteristic.getValue()).length);
+            Log.d(TAG, "rr_count: "+ rr_count);
             if (rr_count > 0) {
                 int[] mRr_values = new int[rr_count];
                 for (int i = 0; i < rr_count; i++) {
                     mRr_values[i] = characteristic.getIntValue(
                             BluetoothGattCharacteristic.FORMAT_UINT16, offset);
                     offset += 2;
-//                    Log.d(TAG, "Received RR: " + mRr_values[i]);
+                    Log.d(TAG, "Received RR: " + mRr_values[i]);
                 }
                 return mRr_values;
             }
         }
-//        Log.d(TAG, "No RR data on this update: ");
+
+
+        Log.d(TAG, "No RR data on this update: ");
         return emptyArray;
     }
 

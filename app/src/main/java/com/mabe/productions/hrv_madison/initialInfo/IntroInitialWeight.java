@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mabe.productions.hrv_madison.R;
+import com.mabe.productions.hrv_madison.UserOptionsPanelActivity;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
@@ -29,15 +30,23 @@ public class IntroInitialWeight extends AppCompatActivity {
     private TextView txt_text_kg;
     private Button btn_continue;
 
+    private boolean fromOptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.intro_initial_weight_activity);
         Utils.changeNotifBarColor(Color.parseColor("#3e5266"),getWindow());
-
+        fromOptions = getIntent().getExtras().getBoolean("FromOptions");
         initializeViews();
         setFonts();
+
+        if(fromOptions){
+            float weight = Utils.readFromSharedPrefs_float(IntroInitialWeight.this, FeedReaderDbHelper.FIELD_WEIGHT, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+            txt_value.setText((int)weight+"");
+            weight_picker.setValue((int)weight);
+            btn_continue.setText("Done");
+        }
 
 
     }
@@ -97,6 +106,14 @@ public class IntroInitialWeight extends AppCompatActivity {
         fireDatabase.child("weight").setValue(Float.parseFloat(txt_value.getText().toString()));
 
         Utils.saveToSharedPrefs(this,FeedReaderDbHelper.FIELD_KMI,KMI,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-        startActivity(new Intent(this, IntroInitialGender.class));
+
+        if(fromOptions){
+            startActivity(new Intent(this, UserOptionsPanelActivity.class));
+            IntroInitialWeight.this.finish();
+
+        }else{
+            startActivity(new Intent(this, IntroInitialGender.class));
+        }
+
     }
 }

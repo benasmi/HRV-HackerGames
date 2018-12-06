@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mabe.productions.hrv_madison.R;
+import com.mabe.productions.hrv_madison.UserOptionsPanelActivity;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
@@ -29,14 +30,22 @@ public class IntroInitialHeight extends AppCompatActivity {
     private RulerView heightValuePicker;
     private Button btn_continue;
 
+    private boolean fromOptions;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.intro_initial_height_activity);
         Utils.changeNotifBarColor(Color.parseColor("#3e5266"),getWindow());
-
+        fromOptions = getIntent().getExtras().getBoolean("FromOptions");
         initializeViews();
         setFonts();
+
+        if(fromOptions){
+            float height = Utils.readFromSharedPrefs_float(IntroInitialHeight.this, FeedReaderDbHelper.FIELD_HEIGHT, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+            heightValuePicker.setValue(height,100f,300f,1);
+            btn_continue.setText("Done");
+            txt_value.setText(""+(int)height);
+        }
 
     }
 
@@ -89,8 +98,16 @@ public class IntroInitialHeight extends AppCompatActivity {
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
-        final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference(FirebaseUtils.USERS_TABLE_RUNNING + "/" + user.getUid());        fireDatabase.child("height").setValue(Float.parseFloat(txt_value.getText().toString()));
+        final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference(FirebaseUtils.USERS_TABLE_RUNNING + "/" + user.getUid());
+        fireDatabase.child("height").setValue(Float.parseFloat(txt_value.getText().toString()));
 
-        startActivity(new Intent(this, IntroInitialWeight.class));
+        if(fromOptions){
+            startActivity(new Intent(this, UserOptionsPanelActivity.class));
+            IntroInitialHeight.this.finish();
+
+        }else{
+            startActivity(new Intent(this, IntroInitialWeight.class));
+        }
+
     }
 }
