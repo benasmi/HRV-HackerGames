@@ -157,6 +157,26 @@ public class FirebaseUtils {
 
     }
 
+    public static void getGlobalUserInstance(final OnGlobalUserDoneFetchListener finishListener){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        DatabaseReference specificUser = FirebaseDatabase.getInstance().getReference(FirebaseUtils.USERS_TABLE_GLOBAL + "/" + user.getUid());
+
+        ValueEventListener listener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                FireGlobalUser user = dataSnapshot.getValue(FireGlobalUser.class);
+                finishListener.onSuccess(user);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                finishListener.onFailure(databaseError);
+            }
+        };
+        specificUser.addListenerForSingleValueEvent(listener);
+
+    }
 
     public static void getUserFromFirebase(final OnUserDoneFetchListener finishListener){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -187,6 +207,10 @@ public class FirebaseUtils {
 
     public static abstract class OnMeasurementFetchListener {
         public abstract void onSuccess(List<Measurement> measurements);
+        public abstract void onFailure(DatabaseError error);
+    }
+    public static abstract class OnGlobalUserDoneFetchListener {
+        public abstract void onSuccess(FireGlobalUser globalUser);
         public abstract void onFailure(DatabaseError error);
     }
     public static abstract class OnWorkoutFetchListener {

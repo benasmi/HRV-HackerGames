@@ -40,6 +40,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseError;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
+import com.mabe.productions.hrv_madison.firebase.FireGlobalUser;
 import com.mabe.productions.hrv_madison.firebase.FireUser;
 import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.initialInfo.IntroInitialPage;
@@ -230,7 +231,7 @@ public class LoginActivity extends AppCompatActivity {
                                         if (isInitialDone) {
                                             Crashlytics.log("User has done initial activity evaluation.");
                                             //User has done the initial questionnaire. Downloading it's data, and launching MainScreenActivity afterwards.
-                                            getInitialUserInformation(true);
+                                            getGlobalUserInformation(true, true);
                                         } else {
                                             //User has not filled out the initial questionnaire. Opening IntroInitialPage for the user to do so.
                                             Crashlytics.log("User has not done initial activity evaluation");
@@ -335,10 +336,45 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
+     * Fetches and saves the global user information (email, displayname) locally
+     * @param showProgressDialog If true, a progress dialog is shown
+     * @param startFetchingInitialInfoAfter If true, getInitialUserInformation(boolean) method is called after
+     */
+    private void getGlobalUserInformation(boolean showProgressDialog, final boolean startFetchingInitialInfoAfter){
+        Crashlytics.log("Downloading global user data.");
+
+        final CustomLoadingDialog dialog = new CustomLoadingDialog(LoginActivity.this, "Loading your data");
+
+        if(showProgressDialog){
+            dialog.show();
+        }
+
+        FirebaseUtils.getGlobalUserInstance(new FirebaseUtils.OnGlobalUserDoneFetchListener() {
+            @Override
+            public void onSuccess(FireGlobalUser globalUser) {
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_USERNAME, globalUser.getDisplayname(), FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_EMAIL, globalUser.getEmail(), FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                progressDialog.dismiss();
+
+                if(startFetchingInitialInfoAfter){
+                    getInitialUserInformation(true);
+                }
+            }
+
+            @Override
+            public void onFailure(DatabaseError error) {
+
+            }
+        });
+
+
+    }
+
+    /**
      * This method gets initial user information (height, weight, etc.) from the
      * database, and saves it locally (SharedPreferences).
      *
-     * It runs on assumption, that initial user information exists in remote database.
+     * It runs on assumption that initial user information exists in remote database.
      *
      * After data is saved locally, MainScreenActivity is started.
      *
@@ -417,7 +453,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             if (isInitialDone) {
                                 //User has done the initial questionnaire. Downloading it's data, and launching MainScreenActivity afterwards.
-                                getInitialUserInformation(true);
+                                getGlobalUserInformation(true, true);
                             } else {
                                 //User has not filled out the initial questionnaire. Opening IntroInitialPage for the user to do so.
                                 startActivity(new Intent(LoginActivity.this, IntroInitialPage.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
