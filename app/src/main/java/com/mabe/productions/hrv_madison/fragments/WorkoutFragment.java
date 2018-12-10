@@ -1004,8 +1004,8 @@ public class WorkoutFragment extends Fragment {
 
                         } else if(timePassed-WARMUP_DURATION < userSpecifiedWorkoutDuration){ //The user has not exceeded the designated workout duration yet
 
-                            if(!isIntervalProgram()) {
-                                setProgressBarDuration((int) userSpecifiedWorkoutDuration, (int) (userSpecifiedWorkoutDuration - timePassed), true);
+                            if(!isIntervalProgram() && current_exercise != EXERCISE_WARMUP){
+                                setProgressBarDuration((int) userSpecifiedWorkoutDuration, (int) (userSpecifiedWorkoutDuration - timePassed + WARMUP_DURATION), true);
                             }
 
                             int minutes = 0;
