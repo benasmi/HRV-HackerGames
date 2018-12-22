@@ -1139,7 +1139,7 @@ public class WorkoutFragment extends Fragment {
     }
 
 
-    /**
+    /*
      * Calculates the calories burned.
      *
      * @param gender     The gender of the user. Either FireUser.GENDER_MALE or FireUser.GENDER_FEMALE
@@ -1162,7 +1162,7 @@ public class WorkoutFragment extends Fragment {
                 break;
         }
 
-        return calories / 1000; //Conmverting to KCal
+        return calories;
     }
 
 
