@@ -60,6 +60,9 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public static final String FIELD_LAST_MEASUREMENT_DATE = "last_measurement_date";
     public static final String FIELD_VIBRATION_INDICATION = "vibration_indication";
 
+    //Global user variable field names
+    public static final String FIELD_USERNAME = "user_name";
+    public static final String FIELD_EMAIL = "user_email";
 
     //FireUser BT prefs.
     public static final String SHARED_PREFS_DEVICES = "SavedDevice";

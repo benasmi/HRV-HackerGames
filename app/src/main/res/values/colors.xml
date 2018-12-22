@@ -5,6 +5,7 @@
     <color name="colorAccent">#F62459</color>
     <color name="white">#FFFFFF</color>
     <color name="transparent">#00ffffff</color>
+    <color name="warmup_timer">#2ecc71</color>
 
 
 </resources>

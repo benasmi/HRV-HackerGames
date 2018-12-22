@@ -23,18 +23,38 @@
             android:elevation="4dp"
             >
 
-
-
-            <TextView
+            <LinearLayout
                 android:layout_width="170dp"
                 android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:text="No device"
-                android:layout_gravity="left"
-                android:textColor="#FFF"
-                android:gravity="left"
-                android:textSize="17dp"
-                android:id="@+id/toolbar_title" />
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="No name"
+                    android:layout_gravity="left"
+                    android:textColor="#FFF"
+                    android:gravity="left"
+                    android:textSize="17dp"
+                    android:id="@+id/toolbar_username" />
+
+                <TextView
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="No device"
+                    android:layout_gravity="left"
+                    android:textColor="#FFF"
+                    android:gravity="left"
+                    android:textSize="14dp"
+                    android:id="@+id/toolbar_title" />
+
+
+
+            </LinearLayout>
+
 
 
             <LinearLayout

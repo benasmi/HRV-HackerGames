@@ -32,19 +32,21 @@ import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
-import com.crashlytics.android.Crashlytics;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseError;
 import com.mabe.productions.hrv_madison.FingerHRV.HeartRateMonitor;
 import com.mabe.productions.hrv_madison.bluetooth.BluetoothGattService;
 import com.mabe.productions.hrv_madison.bluetooth.LeDevicesDialog;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
+import com.mabe.productions.hrv_madison.firebase.FireGlobalUser;
+import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.fragments.MeasurementFragment;
 import com.mabe.productions.hrv_madison.fragments.ViewPagerAdapter;
 
 public class MainScreenActivity extends AppCompatActivity {
 
     public static final int PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
-    private TextView txt_toolbar_title;
+    private TextView txt_toolbar_device_status;
+    private TextView txt_toolbar_username;
     private ImageView img_toolbar_login;
     private ImageView img_toolbar_ask;
     private ImageView img_toolbar_add_device;
@@ -82,8 +84,31 @@ public class MainScreenActivity extends AppCompatActivity {
         //Setting toolbar text
         String deviceName = Utils.readFromSharedPrefs_string(this, FeedReaderDbHelper.BT_FIELD_DEVICE_NAME, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
         if(!deviceName.equals("")){
-            txt_toolbar_title.setText(deviceName);
+            txt_toolbar_device_status.setText(deviceName);
         }
+
+        //todo: remove this if statement at some point
+        if(user.getUsername() == ""){
+            txt_toolbar_username.setText("Name unknown");
+
+            //The global user info has not been downloaded, so we need to fetch it
+            FirebaseUtils.getGlobalUserInstance(new FirebaseUtils.OnGlobalUserDoneFetchListener() {
+                @Override
+                public void onSuccess(FireGlobalUser globalUser) {
+                    Utils.saveToSharedPrefs(MainScreenActivity.this, FeedReaderDbHelper.FIELD_USERNAME, globalUser.getDisplayname(), FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                    Utils.saveToSharedPrefs(MainScreenActivity.this, FeedReaderDbHelper.FIELD_EMAIL, globalUser.getEmail(), FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                    txt_toolbar_username.setText(globalUser.getDisplayname());
+                }
+
+                @Override
+                public void onFailure(DatabaseError error) {
+
+                }
+            });
+
+        }
+
+        txt_toolbar_username.setText(user.getUsername());
 
     }
 
@@ -194,7 +219,7 @@ public class MainScreenActivity extends AppCompatActivity {
             switch (intent.getAction()){
                 case BluetoothGattService.ACTION_CONNECTED:
                     BluetoothDevice device = intent.getParcelableExtra("BT_DEVICE");
-                    txt_toolbar_title.setText(device.getName());
+                    txt_toolbar_device_status.setText(device.getName());
                     Log.i("TEST", "ACTION_CONNECTED");
                     Log.i("TEST", "About to start measurement immediately");
                     //If the measure button has already been pressed, starting the measurement automatically.
@@ -210,7 +235,7 @@ public class MainScreenActivity extends AppCompatActivity {
 
                 case BluetoothGattService.ACTION_DISCONNECTED:
                     Log.i("TEST", "ACTION_DISCONNECTED");
-                    txt_toolbar_title.setText(R.string.no_device);
+                    txt_toolbar_device_status.setText(R.string.no_device);
                     viewPagerAdapter.measurementFragment.disconnected();
                     viewPagerAdapter.workoutFragment.disconnected();
                     break;
@@ -251,7 +276,8 @@ public class MainScreenActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.my_toolbar);
 
         setSupportActionBar(toolbar);
-        txt_toolbar_title = toolbar.findViewById(R.id.toolbar_title);
+        txt_toolbar_device_status = toolbar.findViewById(R.id.toolbar_title);
+        txt_toolbar_username = toolbar.findViewById(R.id.toolbar_username);
         img_toolbar_login =  toolbar.findViewById(R.id.img_login);
         img_toolbar_add_device = toolbar.findViewById(R.id.img_add_device);
         img_toolbar_ask =  toolbar.findViewById(R.id.imag_ask);
@@ -259,7 +285,8 @@ public class MainScreenActivity extends AppCompatActivity {
         bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
         viewpager = (ViewPager) findViewById(R.id.viewpager);
 
-        txt_toolbar_title.startAnimation(top_down_device);
+        txt_toolbar_device_status.startAnimation(top_down_device);
+        txt_toolbar_username.startAnimation(top_down_device);
         img_toolbar_login.startAnimation(top_down_login);
         img_toolbar_add_device.startAnimation(top_down_add);
         img_toolbar_ask.startAnimation(top_down_question);
@@ -294,7 +321,7 @@ public class MainScreenActivity extends AppCompatActivity {
 
         toolbar.setTitleTextColor(Color.WHITE);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        txt_toolbar_title.setTypeface(futura);
+        txt_toolbar_device_status.setTypeface(futura);
         bottomNavigation.setTitleTypeface(verdana);
     }
 

@@ -10,6 +10,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
+import com.mabe.productions.hrv_madison.fragments.WorkoutFragment;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
@@ -59,6 +60,9 @@ public class User {
 
     private float KMI;
 
+    //Global user variables
+    private String username;
+    private String email;
 
     private int activity_streak;
     private float current_hrv;
@@ -76,12 +80,13 @@ public class User {
     private float workout_duration; //in minutes
     private Date firstWeeklyDate;
 
+
     public static final Exercise[] WEEKLY_INTERVAL_PROGRAM =
             {
                     new Exercise(
                             new long[]{0}, //Walk/Run intervals
                             new int[]{}, //Running pulse zones
-                            new int[]{1, 2} //Walking pulse zones
+                            new int[]{1, 2} //W0lking pulse zones
                     ),
 
                     new Exercise(
@@ -627,7 +632,8 @@ public class User {
         user.setWorkoutDuration(Utils.readFromSharedPrefs_float(context, FeedReaderDbHelper.FIELD_DURATION, FeedReaderDbHelper.SHARED_PREFS_SPORT));
         user.setWeekDays(Utils.readFromSharedPrefs_boolarray(context, FeedReaderDbHelper.FIELD_WEEK_DAYS, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
         user.setLastGeneratedWeeklyDate(Utils.getDateFromString(Utils.readFromSharedPrefs_string(context, FeedReaderDbHelper.FIELD_LAST_TIME_GENERATED_WEEKLY, FeedReaderDbHelper.SHARED_PREFS_SPORT)));
-
+        user.setUsername(Utils.readFromSharedPrefs_string(context, FeedReaderDbHelper.FIELD_USERNAME, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
+        user.setEmail(Utils.readFromSharedPrefs_string(context, FeedReaderDbHelper.FIELD_EMAIL, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
 
         //Creating an exercise object using database data
         Exercise exercise = new Exercise();
@@ -972,7 +978,10 @@ public class User {
             int walkingSeconds = (int) (exercise.getWorkoutIntervals()[0] - walkingMinutes * 60);
             int runningMinutes = (int) (exercise.getWorkoutIntervals()[1] / 60L);
             int runningSeconds = (int) (exercise.getWorkoutIntervals()[1] - runningMinutes * 60);
-            return ((walkingMinutes == 0 ? "" : (walkingMinutes + "min")) + (walkingSeconds == 0 ? "" : (" " + walkingSeconds + "s")) +
+            int warmupMinutes = (int) (WorkoutFragment.WARMUP_DURATION / 1000L / 60L);
+            int warmupSeconds = (int) ((WorkoutFragment.WARMUP_DURATION / 1000L) - warmupMinutes * 60);
+
+            return ((warmupMinutes == 0 ? warmupSeconds + "s warmup" : warmupMinutes + "min " + (warmupSeconds == 0 ? "warmup" : warmupSeconds + "s warmup")) + " + " + (walkingMinutes == 0 ? "" : (walkingMinutes + "min")) + (walkingSeconds == 0 ? "" : (" " + walkingSeconds + "s")) +
                     " walking + " + (runningMinutes == 0 ? "" : (runningMinutes + "min")) + (runningSeconds == 0 ? "" : (" " + runningSeconds + "s")) +
                     " running");
         }
@@ -1173,5 +1182,19 @@ public class User {
         this.exercise = exercise;
     }
 
+    public String getUsername() {
+        return username;
+    }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
