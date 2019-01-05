@@ -43,6 +43,60 @@ public class Utils {
 
 
     /**
+     * Returns the heart rate bounds of given pulse zone range
+     * @param required_pulse_zones Pulse zone range using the following format: int[]{min_pulse_zone, max_pulse_zone}
+     * @param hr_max The user's maximum heart rate.
+     * @return Pulse zone bounds using the following format: int[]{min_pulse_zone, max_pulse_zone}
+     */
+    public static int[] getPulseZoneBounds(int[] required_pulse_zones, float hr_max){
+
+        int min_pulse = 0;
+        int max_pulse = 0;
+
+        int lowest_pulse_zone = Utils.minNum(required_pulse_zones);
+        int highest_pulse_zone = Utils.maxNum(required_pulse_zones);
+
+        //Setting hrMax
+        if (highest_pulse_zone == 1) {
+            max_pulse = (int) (hr_max * 0.6f);
+        } else if (highest_pulse_zone == 2) {
+            max_pulse = (int) (hr_max * 0.7f);
+        } else if (highest_pulse_zone == 3) {
+            max_pulse = (int) (hr_max * 0.8f);
+        } else if (highest_pulse_zone == 4) {
+            max_pulse = (int) (hr_max * 0.9f);
+        } else if (highest_pulse_zone == 5) {
+            max_pulse = (int) (hr_max * 1f);
+        }
+        //Setting hrMin
+        if (lowest_pulse_zone == 1) {
+            min_pulse = (int) (hr_max * 0.5f);
+        } else if (lowest_pulse_zone == 2) {
+            min_pulse = (int) (hr_max * 0.6f);
+        } else if (lowest_pulse_zone == 3) {
+            min_pulse = (int) (hr_max * 0.7f);
+        } else if (lowest_pulse_zone == 4) {
+            min_pulse = (int) (hr_max * 0.8f);
+        } else if (lowest_pulse_zone == 5) {
+            min_pulse = (int) (hr_max * 0.9f);
+        }
+
+        return new int[]{min_pulse, max_pulse};
+
+    }
+
+    /**
+     * Returns the heart rate bounds of given pulse zone
+     * @param required_pulse_zone The target pulse zone
+     * @param hr_max The user's maximum heart rate.
+     * @return Pulse zone bounds using the following format: int[]{min_pulse_zone, max_pulse_zone}
+     */
+    public static int[] getPulseZoneBounds(int required_pulse_zone, float hr_max){
+        return getPulseZoneBounds(new int[]{required_pulse_zone, required_pulse_zone}, hr_max);
+    }
+
+
+    /**
      * Gets the integer number suffix
      * @param number Number to get the suffix of
      * @return suffix of the number

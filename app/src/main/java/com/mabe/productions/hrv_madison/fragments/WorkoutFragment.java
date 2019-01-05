@@ -876,36 +876,8 @@ public class WorkoutFragment extends Fragment {
             return;
         }
 
-        int min_pulse = 0;
-        int max_pulse = 0;
-
-        int lowest_pulse_zone = Utils.minNum(required_pulse_zones);
-        int highest_pulse_zone = Utils.maxNum(required_pulse_zones);
-
-        //Setting hrMax
-        if (highest_pulse_zone == 1) {
-            max_pulse = (int) (HRMax * 0.6f);
-        } else if (highest_pulse_zone == 2) {
-            max_pulse = (int) (HRMax * 0.7f);
-        } else if (highest_pulse_zone == 3) {
-            max_pulse = (int) (HRMax * 0.8f);
-        } else if (highest_pulse_zone == 4) {
-            max_pulse = (int) (HRMax * 0.9f);
-        } else if (highest_pulse_zone == 5) {
-            max_pulse = (int) (HRMax * 1f);
-        }
-        //Setting hrMin
-        if (lowest_pulse_zone == 1) {
-            min_pulse = (int) (HRMax * 0.5f);
-        } else if (lowest_pulse_zone == 2) {
-            min_pulse = (int) (HRMax * 0.6f);
-        } else if (lowest_pulse_zone == 3) {
-            min_pulse = (int) (HRMax * 0.7f);
-        } else if (lowest_pulse_zone == 4) {
-            min_pulse = (int) (HRMax * 0.8f);
-        } else if (lowest_pulse_zone == 5) {
-            min_pulse = (int) (HRMax * 0.9f);
-        }
+        int min_pulse = Utils.getPulseZoneBounds(required_pulse_zones, HRMax)[0];
+        int max_pulse = Utils.getPulseZoneBounds(required_pulse_zones, HRMax)[1];
 
         final long vibrationPeriod;
 

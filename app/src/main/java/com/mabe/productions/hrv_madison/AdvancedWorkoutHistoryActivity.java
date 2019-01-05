@@ -76,9 +76,6 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
     private TextView advanced_history_txt_intensity_value;
 
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +100,16 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
         setUpData(workout);
         settingWorkoutMap(workout);
         setFonts();
+
+        User user = User.getUser(this);
+
+        int HRMax = (int) ((user.getGender() == 0 ? 202 : 216) - (user.getGender() == 0 ? 0.55f : 1.09f) * Utils.getAgeFromDate(user.getBirthday()));
+
+        int[] percentages = getPulseZonePercentages(HRMax, workout.getBpm_data());
+
+        for(int percentage: percentages){
+            Log.i("TEST", "per: " + percentage);
+        }
 
     }
 
@@ -233,6 +240,49 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
                 }
             });
 
+    }
+
+    /**
+     * Returns the percentage of time the user has been in each pulse zone
+     * @param hr_max The maximum heart rate of a user
+     * @param bpm_data The heart rate data
+     * @return The percentage of time the user has been in each pulse zone.
+     */
+    private static int[] getPulseZonePercentages(int hr_max, int[] bpm_data){
+
+        int zone_1_data_count = 0;
+        int zone_2_data_count = 0;
+        int zone_3_data_count = 0;
+        int zone_4_data_count = 0;
+        int zone_5_data_count = 0;
+
+        for(int i = 0; i < bpm_data.length; i++){
+
+            if(bpm_data[i] > Utils.getPulseZoneBounds(1, hr_max)[0] && bpm_data[i] < Utils.getPulseZoneBounds(1, hr_max)[1]){
+                zone_1_data_count++;
+            }
+            if(bpm_data[i] > Utils.getPulseZoneBounds(2, hr_max)[0] && bpm_data[i] < Utils.getPulseZoneBounds(2, hr_max)[1]){
+                zone_2_data_count++;
+            }
+            if(bpm_data[i] > Utils.getPulseZoneBounds(3, hr_max)[0] && bpm_data[i] < Utils.getPulseZoneBounds(3, hr_max)[1]){
+                zone_3_data_count++;
+            }
+            if(bpm_data[i] > Utils.getPulseZoneBounds(4, hr_max)[0] && bpm_data[i] < Utils.getPulseZoneBounds(4, hr_max)[1]){
+                zone_4_data_count++;
+            }
+            if(bpm_data[i] > Utils.getPulseZoneBounds(5, hr_max)[0] && bpm_data[i] < Utils.getPulseZoneBounds(5, hr_max)[1]){
+                zone_5_data_count++;
+            }
+
+        }
+
+        int zone1Percentage = (int) ((zone_1_data_count * 100f)/ (float) (zone_1_data_count + zone_2_data_count + zone_3_data_count + zone_4_data_count + zone_5_data_count));
+        int zone2Percentage = (int) ((zone_2_data_count * 100f)/ (float) (zone_1_data_count + zone_2_data_count + zone_3_data_count + zone_4_data_count + zone_5_data_count));
+        int zone3Percentage = (int) ((zone_3_data_count * 100f)/ (float) (zone_1_data_count + zone_2_data_count + zone_3_data_count + zone_4_data_count + zone_5_data_count));
+        int zone4Percentage = (int) ((zone_4_data_count * 100f)/ (float) (zone_1_data_count + zone_2_data_count + zone_3_data_count + zone_4_data_count + zone_5_data_count));
+        int zone5Percentage = (int) ((zone_5_data_count * 100f)/ (float) (zone_1_data_count + zone_2_data_count + zone_3_data_count + zone_4_data_count + zone_5_data_count));
+
+        return new int[]{zone1Percentage, zone2Percentage, zone3Percentage, zone4Percentage, zone5Percentage};
     }
 
     private void displayMapRoute(LatLng[] route) {
