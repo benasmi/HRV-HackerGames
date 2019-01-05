@@ -46,7 +46,9 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.database.DatabaseError;
+import com.mabe.productions.hrv_madison.AdvancedWorkoutHistoryActivity;
 import com.mabe.productions.hrv_madison.HistoryActivity;
+import com.mabe.productions.hrv_madison.HistoryRecyclerViewDataHolder;
 import com.mabe.productions.hrv_madison.MainScreenActivity;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
@@ -131,6 +133,7 @@ public class DataTodayFragment extends Fragment {
     private TextView workout_card_pace;
     private TextView workout_card_distance;
     private TextView workout_card_calories;
+    private AppCompatButton workout_see_more_info_btn;
     private GoogleMap route_display_googlemap; //We may need this one in the future
 
     //First time layout
@@ -204,7 +207,6 @@ public class DataTodayFragment extends Fragment {
                         addEntryBpm(bpmValues[i], maxGraphValue);
 
                     }
-
                 }
 
                 for (int i = 0; i < rmssdValues.length; i++) {
@@ -321,6 +323,14 @@ public class DataTodayFragment extends Fragment {
 
                 workout_card_pace.setText(String.valueOf(workout.getAveragePace()));
                 workout_card_distance.setText(String.valueOf(workout.getDistance()));
+                workout_see_more_info_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(new Intent(getContext(), AdvancedWorkoutHistoryActivity.class).putExtra("Workout", new HistoryRecyclerViewDataHolder((workout))).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+
+                    }
+                });
+
                 workout_card_calories.setText(String.valueOf(workout.getCalories_burned()));
                 settingWorkoutMap(workout);
             }
@@ -576,8 +586,10 @@ public class DataTodayFragment extends Fragment {
         workout_card_calories = view.findViewById(R.id.workout_card_calories_burned);
         workout_card_pace = view.findViewById(R.id.workout_card_running_pace);
         workout_card_distance = view.findViewById(R.id.workout_card_distance_run);
+        workout_see_more_info_btn = view.findViewById(R.id.more_info_workout_btn);
         txt_workout_data = view.findViewById(R.id.workout_index_text_view);
         txt_workout_time_ago = view.findViewById(R.id.workout_index_measurement_date);
+
 
 
         feeling_cardview.setTranslationY(Utils.getScreenHeight(getContext()));

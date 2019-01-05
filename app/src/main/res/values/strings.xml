@@ -123,6 +123,8 @@
     <string name="register">Register</string>
     <string name="info_txt">During the measurement stay calm and quiet</string>
     <string name="warmup">Warmup</string>
+    <string name="bpm_data_after_workout">Workout BPM data</string>
+    <string name="txt_max_bpm_history">Max BPM</string>
 
 </resources>
 

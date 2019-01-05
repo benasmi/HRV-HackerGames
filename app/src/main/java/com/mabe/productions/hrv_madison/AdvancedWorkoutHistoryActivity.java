@@ -2,7 +2,9 @@ package com.mabe.productions.hrv_madison;
 
 import android.content.res.Resources;
 
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v4.widget.ContentLoadingProgressBar;
 
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +24,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.budiyev.android.circularprogressbar.CircularProgressBar;
+import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,9 +40,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.zxing.client.result.TextParsedResult;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -57,6 +67,14 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
     private TextView advanced_history_txt_card_duration;
     private TextView advanced_history_txt_card_date;
     private CardView advanced_history_card;
+
+    //BPM card
+    private TextView average_bpm_value_history;
+    private TextView max_bpm_history_value;
+    private LineChart chart_bpm_history;
+
+    //Pulse distribution card
+    private HorizontalBarChart horizontal_pulse_distribution_history;
 
     //WorkoutData
     private LinearLayout advanced_history_data_layout;
@@ -103,7 +121,7 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
         setUpData(workout);
         settingWorkoutMap(workout);
         setFonts();
-
+        bpm_lineChart();
     }
 
     private void setFonts(){
@@ -111,6 +129,8 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
         Typeface verdana = Typeface.createFromAsset(getAssets(),
                 "fonts/futura_light.ttf");
         txt_loading.setTypeface(verdana);
+
+
 
     }
 
@@ -144,6 +164,14 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
         });
 
 
+        //Bpm card
+        average_bpm_value_history = (TextView) findViewById(R.id.average_bpm_value_history);
+        max_bpm_history_value = (TextView) findViewById(R.id.max_bpm_history_value);
+        chart_bpm_history = (LineChart) findViewById(R.id.chart_bpm_history);
+
+        //Pulse distribution
+        horizontal_pulse_distribution_history = (HorizontalBarChart) findViewById(R.id.horizontal_pulse_distribution_history);
+
         advanced_history_txt_card_title = (TextView) findViewById(R.id.advanced_history_txt_card_title);
         advanced_history_txt_card_duration = (TextView) findViewById(R.id.advanced_history_txt_card_duration);
         advanced_history_txt_card_date = (TextView) findViewById(R.id.advanced_history_txt_card_date);
@@ -170,6 +198,18 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
     }
 
     private void setUpData(WorkoutMeasurements workout){
+
+        //BPM card
+        average_bpm_value_history.setText((int) workout.getAverage_bpm() + "");
+        max_bpm_history_value.setText((int) getHighestBpm(workout));
+
+        int bpmValues[] = workout.getBpm_data();
+        for (int i = 0; i < bpmValues.length; i++) {
+                addEntryBpm(bpmValues[i], getHighestBpm(workout));
+
+        }
+
+        //Other info
         advanced_history_txt_card_duration.setText((int)(workout.getWorkout_duration()/1000/60) + " min running");
         advanced_history_txt_card_date.setText(formatDate(workout.getDate()));
         advanced_history_txt_calories_value.setText(workout.getCalories_burned()==0 ? "-" : String.valueOf(workout.getCalories_burned()) + " Kcal");
@@ -185,6 +225,113 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
             advanced_history_txt_intensity_value.setText(minPulseZone +  Utils.getNumberSuffix(minPulseZone) + "-" + maxPulseZone + Utils.getNumberSuffix(maxPulseZone));
         }
 
+    }
+    private void addEntryBpm(int hr, int max_points) {
+
+        LineData data = chart_bpm_history.getData();
+        LineDataSet set = (LineDataSet) data.getDataSetByIndex(0);
+        if (set == null) {
+            //Creating a line with single hr value
+            ArrayList<Entry> singleValueList = new ArrayList<>();
+            singleValueList.add(new Entry(0, hr));
+            set = new LineDataSet(singleValueList, "HR");
+            set.setLineWidth(getResources().getDimension(R.dimen.line_width));
+            set.setDrawValues(false);
+            set.setDrawCircleHole(false);
+            set.setDrawCircles(false);
+            set.setCircleRadius(getResources().getDimension(R.dimen.circle_radius));
+            set.setCircleColor(Color.parseColor("#F62459"));
+            set.setColor(Color.parseColor("#F62459"));
+            set.setDrawFilled(false);
+
+            GradientDrawable drawable = new GradientDrawable();
+            drawable.setColors(new int[]{
+                    Color.parseColor("#a6f62459"),
+                    Color.TRANSPARENT
+            });
+            drawable.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+            drawable.setShape(GradientDrawable.RECTANGLE);
+            drawable.setSize(240, 160);
+            set.setFillDrawable(drawable);
+            data.addDataSet(set);
+        } else {
+            set.addEntry(new Entry(set.getEntryCount(), hr));
+        }
+
+        data.notifyDataChanged();
+        chart_bpm_history.notifyDataSetChanged();
+        chart_bpm_history.setVisibleXRangeMaximum(max_points);
+        chart_bpm_history.setVisibleXRangeMinimum(0);
+
+
+
+    }
+    private void bpm_lineChart() {
+
+
+
+        chart_bpm_history.getLegend().setPosition(Legend.LegendPosition.BELOW_CHART_RIGHT);
+        chart_bpm_history.getLegend().setTextColor(Color.WHITE);
+        chart_bpm_history.getXAxis().setDrawAxisLine(false);
+        chart_bpm_history.getAxisRight().setDrawAxisLine(false);
+        chart_bpm_history.getAxisLeft().setDrawAxisLine(true);
+        chart_bpm_history.getAxisLeft().setDrawGridLines(true);
+        chart_bpm_history.getXAxis().setDrawGridLines(false);
+        chart_bpm_history.getAxisRight().setDrawGridLines(false);
+        chart_bpm_history.setDescription(null);
+        chart_bpm_history.getAxisLeft().setDrawLabels(true);
+        chart_bpm_history.getAxisLeft().setAxisMinimum(0);
+        chart_bpm_history.getAxisLeft().setAxisMaximum(200);
+        chart_bpm_history.getAxisRight().setDrawLabels(false);
+        chart_bpm_history.getXAxis().setDrawLabels(false);
+        chart_bpm_history.setTouchEnabled(false);
+        chart_bpm_history.setViewPortOffsets(0f, 0f, 0f, 0f);
+
+        LineData data = new LineData();
+        //Creating a line with single hr value
+
+        //BPM DATA SET
+        ArrayList<Entry> singleValueList = new ArrayList<>();
+        singleValueList.add(new Entry(0, 16));
+        singleValueList.add(new Entry(1, 24));
+        singleValueList.add(new Entry(2, 64));
+        singleValueList.add(new Entry(3, 35));
+        LineDataSet set = new LineDataSet(singleValueList, "HR");
+        set.setLineWidth(1);
+        set.setDrawValues(false);
+        set.setDrawCircleHole(false);
+        set.setDrawCircles(false);
+        set.setCircleRadius(getResources().getDimension(R.dimen.circle_radius));
+        set.setCircleColor(Color.parseColor("#FFFFFF"));
+        set.setColor(Color.parseColor("#F62459"));
+        set.setDrawFilled(false);
+
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setColors(new int[]{
+                Color.parseColor("#a6f62459"),
+                Color.TRANSPARENT
+        });
+
+        drawable.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+        drawable.setShape(GradientDrawable.RECTANGLE);
+        drawable.setSize(240, 160);
+        set.setFillDrawable(drawable);
+        data.addDataSet(set);
+        chart_bpm_history.setData(data);
+
+
+
+
+    }
+
+    public int getHighestBpm(WorkoutMeasurements workout){
+        int highest_bpm = workout.getBpm_data()[0];
+
+        for(int bpm : workout.getBpm_data()){
+            highest_bpm = bpm > highest_bpm ? bpm : highest_bpm;
+        }
+
+        return highest_bpm;
     }
 
 

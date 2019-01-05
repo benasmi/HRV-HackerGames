@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
 import java.util.Date;
 
@@ -67,6 +68,20 @@ public class HistoryRecyclerViewDataHolder implements Parcelable  {
         this.exercise = exercise;
     }
 
+    public HistoryRecyclerViewDataHolder(WorkoutMeasurements workout) {
+        this.unique_id = workout.getUnique_id();
+        this.date = workout.getDate();
+        this.workout_duration = workout.getWorkout_duration();
+        this.average_bpm = workout.getAverage_bpm();
+        this.bpm_data = workout.getBpm_data();
+        this.pace_data = workout.getPace_data();
+        this.route = workout.getRoute();
+        this.calories_burned = workout.getCalories_burned();
+        this.distance = workout.getDistance();
+        this.viewType = 1;
+        this.exercise = workout.getExercise();
+    }
+
     public HistoryRecyclerViewDataHolder(Date date, int duration, int rmssd, float ln_rmssd, float lowest_rmssd, float highest_rmssd, float lowest_bpm, float highest_bpm, float average_bpm, float LF_band, float VLF_band, float VHF_band, float HF_band, int[] bpm_data, int[] rmssd_data, int uniqueId, int mood, int hrv, int viewType) {
         this.date = date;
         this.duration = duration;
@@ -88,6 +103,9 @@ public class HistoryRecyclerViewDataHolder implements Parcelable  {
         this.hrv = hrv;
         this.viewType = viewType;
     }
+
+
+
 
     protected HistoryRecyclerViewDataHolder(Parcel in) {
         duration = in.readInt();
