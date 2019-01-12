@@ -24,12 +24,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.budiyev.android.circularprogressbar.CircularProgressBar;
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -43,6 +52,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.zxing.client.result.TextParsedResult;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -115,10 +125,10 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
 
 
         initialiseViews();
+        bpm_lineChart();
         setUpData(workout);
         settingWorkoutMap(workout);
         setFonts();
-        bpm_lineChart();
 
 
     }
@@ -133,13 +143,7 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
 
     }
 
-
-
-
-
     private void initialiseViews(){
-
-
 
 
         Animation bottom_to_top = AnimationUtils.loadAnimation(this, R.anim.bottom_to_top);
@@ -200,13 +204,19 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
 
         //BPM card
         average_bpm_value_history.setText((int) workout.getAverage_bpm() + "");
-        max_bpm_history_value.setText((int) getHighestBpm(workout));
+        max_bpm_history_value.setText(String.valueOf(getHighestBpm(workout)));
 
         int bpmValues[] = workout.getBpm_data();
         for (int i = 0; i < bpmValues.length; i++) {
                 addEntryBpm(bpmValues[i], getHighestBpm(workout));
-
         }
+
+        //Pulse zone distribution card
+        int HRMax = (int) ((MainScreenActivity.user.getGender() == 0 ? 202 : 216) - (MainScreenActivity.user.getGender() == 0 ? 0.55f : 1.09f) * Utils.getAgeFromDate(MainScreenActivity.user.getBirthday()));
+
+        int[] percentages = getPulseZonePercentages(HRMax, workout.getBpm_data());
+
+        pulse_zone_lineChart(percentages);
 
         //Other info
         advanced_history_txt_card_duration.setText((int)(workout.getWorkout_duration()/1000/60) + " min running");
@@ -235,14 +245,13 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
             singleValueList.add(new Entry(0, hr));
             set = new LineDataSet(singleValueList, "HR");
             set.setLineWidth(getResources().getDimension(R.dimen.line_width));
-            set.setDrawValues(false);
+            set.setDrawValues(true);
             set.setDrawCircleHole(false);
             set.setDrawCircles(false);
             set.setCircleRadius(getResources().getDimension(R.dimen.circle_radius));
             set.setCircleColor(Color.parseColor("#F62459"));
             set.setColor(Color.parseColor("#F62459"));
             set.setDrawFilled(false);
-
             GradientDrawable drawable = new GradientDrawable();
             drawable.setColors(new int[]{
                     Color.parseColor("#a6f62459"),
@@ -261,29 +270,25 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
         chart_bpm_history.notifyDataSetChanged();
         chart_bpm_history.setVisibleXRangeMaximum(max_points);
         chart_bpm_history.setVisibleXRangeMinimum(0);
-
-
-
     }
+
     private void bpm_lineChart() {
-
-
-
         chart_bpm_history.getLegend().setPosition(Legend.LegendPosition.BELOW_CHART_RIGHT);
         chart_bpm_history.getLegend().setTextColor(Color.WHITE);
         chart_bpm_history.getXAxis().setDrawAxisLine(false);
         chart_bpm_history.getAxisRight().setDrawAxisLine(false);
-        chart_bpm_history.getAxisLeft().setDrawAxisLine(true);
+        chart_bpm_history.getAxisLeft().setDrawAxisLine(false);
         chart_bpm_history.getAxisLeft().setDrawGridLines(true);
         chart_bpm_history.getXAxis().setDrawGridLines(false);
+        chart_bpm_history.getXAxis().setDrawAxisLine(false);
         chart_bpm_history.getAxisRight().setDrawGridLines(false);
         chart_bpm_history.setDescription(null);
-        chart_bpm_history.getAxisLeft().setDrawLabels(true);
-        chart_bpm_history.getAxisLeft().setAxisMinimum(0);
-        chart_bpm_history.getAxisLeft().setAxisMaximum(200);
-        chart_bpm_history.getAxisRight().setDrawLabels(false);
-        chart_bpm_history.getXAxis().setDrawLabels(false);
         chart_bpm_history.setTouchEnabled(false);
+        chart_bpm_history.getAxisLeft().setLabelCount(5, true);
+        chart_bpm_history.getAxisLeft().setDrawLabels(true);
+        chart_bpm_history.setAutoScaleMinMaxEnabled(true);
+        chart_bpm_history.getAxisLeft().setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+        chart_bpm_history.getAxisLeft().setTextColor(Color.WHITE);
         chart_bpm_history.setViewPortOffsets(0f, 0f, 0f, 0f);
 
         LineData data = new LineData();
@@ -291,18 +296,16 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
 
         //BPM DATA SET
         ArrayList<Entry> singleValueList = new ArrayList<>();
-        singleValueList.add(new Entry(0, 16));
-        singleValueList.add(new Entry(1, 24));
-        singleValueList.add(new Entry(2, 64));
-        singleValueList.add(new Entry(3, 35));
+
         LineDataSet set = new LineDataSet(singleValueList, "HR");
         set.setLineWidth(1);
-        set.setDrawValues(false);
+        set.setDrawValues(true);
         set.setDrawCircleHole(false);
         set.setDrawCircles(false);
         set.setCircleRadius(getResources().getDimension(R.dimen.circle_radius));
         set.setCircleColor(Color.parseColor("#FFFFFF"));
         set.setColor(Color.parseColor("#F62459"));
+        set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         set.setDrawFilled(false);
 
         GradientDrawable drawable = new GradientDrawable();
@@ -318,8 +321,73 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
         data.addDataSet(set);
         chart_bpm_history.setData(data);
 
+        chart_bpm_history.animateY(3000, Easing.EasingOption.EaseInBack);
+
+    }
+
+    private void pulse_zone_lineChart(int[] pulse_zone_distribution) {
+
+        ArrayList<String> labels = new ArrayList<>();
+        labels.add("1st");
+        labels.add("2nd");
+        labels.add("3rd");
+        labels.add("4th");
+        labels.add("5th");
+
+        horizontal_pulse_distribution_history.getLegend().setPosition(Legend.LegendPosition.BELOW_CHART_RIGHT);
+        horizontal_pulse_distribution_history.getLegend().setEnabled(false);
+        horizontal_pulse_distribution_history.getXAxis().setDrawAxisLine(false);
+        horizontal_pulse_distribution_history.getAxisRight().setDrawAxisLine(false);
+        horizontal_pulse_distribution_history.getAxisLeft().setDrawAxisLine(true);
+        horizontal_pulse_distribution_history.getAxisLeft().setTextColor(Color.WHITE);
+        horizontal_pulse_distribution_history.getAxisRight().setTextColor(Color.WHITE);
+        horizontal_pulse_distribution_history.getAxisLeft().setDrawGridLines(true);
+        horizontal_pulse_distribution_history.getXAxis().setDrawGridLines(false);
+        horizontal_pulse_distribution_history.getAxisRight().setDrawGridLines(false);
+        horizontal_pulse_distribution_history.setDescription(null);
+        horizontal_pulse_distribution_history.getAxisLeft().setDrawLabels(true);
+        horizontal_pulse_distribution_history.getAxisLeft().setAxisMinimum(0);
+        horizontal_pulse_distribution_history.getAxisLeft().setAxisMaximum(100);
+        horizontal_pulse_distribution_history.getAxisRight().setDrawLabels(false);
+        horizontal_pulse_distribution_history.getXAxis().setDrawLabels(true);
+        horizontal_pulse_distribution_history.setTouchEnabled(false);
+        horizontal_pulse_distribution_history.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        horizontal_pulse_distribution_history.getXAxis().setTextColor(Color.WHITE);
+        horizontal_pulse_distribution_history.getAxisLeft().setValueFormatter(new PercentFormatter(new DecimalFormat("#0")));
+        horizontal_pulse_distribution_history.setViewPortOffsets(0f, 0f, 0f, 0f);
+
+        BarData data = new BarData();
+        //Creating a line with single hr value
+
+        //BPM DATA SET
+        ArrayList<BarEntry> singleValueList = new ArrayList<>();
+        singleValueList.add(new BarEntry(0,pulse_zone_distribution[0]));
+        singleValueList.add(new BarEntry(1,pulse_zone_distribution[1]));
+        singleValueList.add(new BarEntry(2,pulse_zone_distribution[2]));
+        singleValueList.add(new BarEntry(3,pulse_zone_distribution[3]));
+        singleValueList.add(new BarEntry(4,pulse_zone_distribution[4]));
+        BarDataSet set = new BarDataSet(singleValueList, "HR");
 
 
+
+        //Set label count to 5 as we are displaying 5 star rating
+        horizontal_pulse_distribution_history.getXAxis().setLabelCount(5);
+        horizontal_pulse_distribution_history.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
+
+        set.setDrawValues(false);
+        set.setColor(Color.parseColor("#F62459"));
+
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setColors(new int[]{
+                Color.parseColor("#a6f62459"),
+                Color.TRANSPARENT
+        });
+
+        drawable.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+        drawable.setShape(GradientDrawable.RECTANGLE);
+        drawable.setSize(240, 160);
+        data.addDataSet(set);
+        horizontal_pulse_distribution_history.setData(data);
 
     }
 

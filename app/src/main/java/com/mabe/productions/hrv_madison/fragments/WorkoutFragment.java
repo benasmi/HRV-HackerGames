@@ -60,6 +60,7 @@ import com.mabe.productions.hrv_madison.bluetooth.BluetoothGattService;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.firebase.FireWorkout;
 import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
+import com.mabe.productions.hrv_madison.measurements.BPM;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 import com.tooltip.Tooltip;
 
@@ -166,7 +167,7 @@ public class WorkoutFragment extends Fragment {
 
 
     private ArrayList<LatLng> route = new ArrayList<>();
-    private ArrayList<Integer> bpmArrayList = new ArrayList<Integer>();
+    private BPM pulseTracker = new BPM();
     private ArrayList<Float> paceData = new ArrayList<Float>();
 
     private Animation anim_left_to_right;
@@ -611,8 +612,8 @@ public class WorkoutFragment extends Fragment {
                     exercise,
                     Calendar.getInstance().getTime(),
                     userSpecifiedWorkoutDuration,
-                    0,
-                    Utils.convertIntArrayListToArray(bpmArrayList),
+                    pulseTracker.getAverageBpm(),
+                    pulseTracker.getBpmValues(),
                     Utils.convertFloatArrayListToArray(paceData),
                     Utils.convertLatLngArrayListToArray(route),
                     (float) calories_burned,
@@ -662,7 +663,7 @@ public class WorkoutFragment extends Fragment {
                 workout_tab_running_gif.setVisibility(View.INVISIBLE);
                 layout_pulse_zone.setVisibility(View.GONE);
                 txt_warning_dayoff.setVisibility(Utils.checkDayOffStatus(getContext())== true ? View.GONE : View.VISIBLE);
-                bpmArrayList.clear();
+                pulseTracker.clear();
                 paceData.clear();
                 stopLocationListener();
                 txt_distance.setText(String.valueOf(0f));
@@ -841,7 +842,7 @@ public class WorkoutFragment extends Fragment {
         txt_bpm.setText(String.valueOf(bpm));
 
         if (workout_state == STATE_WORKING_OUT || workout_state == STATE_TIME_ENDED) {
-            bpmArrayList.add(bpm);
+            pulseTracker.addBPM(bpm);
             int gender = MainScreenActivity.user.getGender();
             int age = Utils.getAgeFromDate(MainScreenActivity.user.getBirthday());
             int weight = (int) MainScreenActivity.user.getWeight();
