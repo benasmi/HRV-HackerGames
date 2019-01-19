@@ -52,7 +52,6 @@ public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 2;
     private TextView txt_slogan;
     private TextView txt_noAccount;
-    private TextView txt_noRegistration;
     private EditText editText_username;
     private EditText editText_password;
     private Button btn_login;
@@ -125,7 +124,6 @@ public class LoginActivity extends AppCompatActivity {
 
         txt_slogan = (TextView) findViewById(R.id.slogan);
         txt_noAccount = (TextView) findViewById(R.id.noAccount);
-        txt_noRegistration = (TextView) findViewById(R.id.noRegistration);
         editText_username = (EditText) findViewById(R.id.usernameEditText);
         editText_password = (EditText) findViewById(R.id.passwordEditText);
         imgBtn_facebook = (ImageButton) findViewById(R.id.login_facebook);
@@ -134,6 +132,9 @@ public class LoginActivity extends AppCompatActivity {
         circle = (ImageView) findViewById(R.id.circleDot);
         img_login_appicon = (ImageView) findViewById(R.id.imageView);
 
+        FrequencyZoneView test = (FrequencyZoneView) findViewById(R.id.test_view);
+        test.setElementPosition(1.5f);
+
         imgBtn_facebook.startAnimation(left_to_right);
         imgBtn_google.startAnimation(right_to_left);
         btn_login.startAnimation(bottom_to_top);
@@ -141,7 +142,6 @@ public class LoginActivity extends AppCompatActivity {
         circle.startAnimation(fade_in);
         editText_username.startAnimation(fade_in_delay);
         editText_password.startAnimation(fade_in_delay);
-        txt_noRegistration.startAnimation(fade_in_delay);
         txt_slogan.startAnimation(top_to_bottom_delay);
 
         txt_noAccount.setOnClickListener(new View.OnClickListener() {
@@ -163,7 +163,6 @@ public class LoginActivity extends AppCompatActivity {
                 "fonts/Verdana.ttf");
 
         txt_slogan.setTypeface(face_slogan);
-        txt_noRegistration.setTypeface(verdana);
         btn_login.setTypeface(futura);
         editText_username.setTypeface(futura);
         editText_password.setTypeface(futura);
