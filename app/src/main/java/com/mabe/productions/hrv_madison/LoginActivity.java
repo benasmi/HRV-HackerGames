@@ -132,8 +132,6 @@ public class LoginActivity extends AppCompatActivity {
         circle = (ImageView) findViewById(R.id.circleDot);
         img_login_appicon = (ImageView) findViewById(R.id.imageView);
 
-        FrequencyZoneView test = (FrequencyZoneView) findViewById(R.id.test_view);
-        test.setElementPosition(1.5f);
 
         imgBtn_facebook.startAnimation(left_to_right);
         imgBtn_google.startAnimation(right_to_left);

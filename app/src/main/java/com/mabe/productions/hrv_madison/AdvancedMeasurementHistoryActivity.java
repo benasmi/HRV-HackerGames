@@ -43,6 +43,9 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
     private TextView freq_card_txt_vlf_after_measurement;
     private TextView freq_card_txt_vhf_after_measurement;
     private TextView freq_card_txt_warning;
+    private TextView freq_card_ratio_meaning;
+    private TextView freq_card_ratio_meaning_advice;
+    private FrequencyZoneView freq_card_ratio_scale;
     private PieChart frequency_chart;
 
     private TextView advanced_history_txt_lf;
@@ -131,7 +134,10 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
         addDataToBPMChart(measurement);
         setFrequencyChartData(measurement.getHF_band(),measurement.getLF_band(),measurement.getVLF_band(),measurement.getVHF_band());
         setUpData(measurement);
+        setLF_HF_RatioZone(measurement.getLF_band()/measurement.getHF_band());
     }
+
+
 
     private void setUpData(Measurement measurement){
         freq_card_txt_hf_after_measurament.setText(String.valueOf((int)measurement.getHF_band() + "%"));
@@ -189,6 +195,30 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
         SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM, hh:mm 'val'");
         return dateFormat.format(cal.getTime());
 
+    }
+
+    private void setLF_HF_RatioZone(float ratio) {
+        freq_card_ratio_scale.setElementPosition(ratio);
+        if (ratio >= 1.4f && ratio <= 1.6f) {
+            freq_card_ratio_meaning.setText("Ideal balance");
+            freq_card_ratio_meaning_advice.setText("Your body is feeling great, keep it up!");
+        }
+        if (ratio >= 1.61f && ratio <= 2f) {
+            freq_card_ratio_meaning.setText("Sympathetic system takes over balance");
+            freq_card_ratio_meaning_advice.setText("Your body is feeling alright! However, consider some relaxation exercises and not pushing yourself too hard today!");
+        }
+        if (ratio >= 0.5f && ratio <= 1.39f) {
+            freq_card_ratio_meaning.setText("Parasympathetic system takes over balance");
+            freq_card_ratio_meaning_advice.setText("Your body is feeling good, but you should consider doing some non-stresful activities with higher intensity during your daily schedule ");
+        }
+        if (ratio > 2f) {
+            freq_card_ratio_meaning.setText("Sympathetic system dominates");
+            freq_card_ratio_meaning_advice.setText("Your body is feeling terrible! Ratio indicates hypertonus, anxiety, stress, pressure. You should reduce your work load and physical activities!");
+        }
+        if (ratio < 0.5f) {
+            freq_card_ratio_meaning.setText("Parasympathetic system dominates");
+            freq_card_ratio_meaning_advice.setText("Your body is feeling terrible! Ratio indicates hypotonics, low energy and exhaustion. You should consider taking a day off and relaxing!");
+        }
     }
 
     private void setFonts() {
@@ -274,6 +304,9 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
         freq_card_txt_lf_after_measurement = (TextView) findViewById(R.id.freq_card_txt_lf_after_measurement);
         freq_card_txt_vlf_after_measurement = (TextView) findViewById(R.id.freq_card_txt_vlf_after_measurement);
         freq_card_txt_vhf_after_measurement = (TextView) findViewById(R.id.freq_card_txt_vhf_after_measurement);
+        freq_card_ratio_meaning = (TextView) findViewById(R.id.freq_card_ratio_meaning);
+        freq_card_ratio_meaning_advice = (TextView) findViewById(R.id.freq_card_ratio_meaning_advice);
+        freq_card_ratio_scale = (FrequencyZoneView) findViewById(R.id.freq_card_ratio_scale);
 
         //Frequency PieChart
         freq_card = (CardView) findViewById(R.id.frequency_card);
