@@ -49,8 +49,9 @@ public class FrequencyZoneView extends View {
 
 
         txt_paint = new Paint();
-        txt_paint.setColor(getResources().getColor(R.color.colorPrimaryDark));
-        txt_paint.setTextSize(40f);
+        txt_paint.setColor(Color.WHITE);
+        txt_paint.setTextSize(38f);
+
 
 
         red_to_green = resources.getDrawable(R.drawable.red_to_green_rectangle);
@@ -79,11 +80,11 @@ public class FrequencyZoneView extends View {
 
 
 
-        float width_parasymp = txt_paint.measureText("Parasympathetic");
+        float width_symp = txt_paint.measureText("Sympathetic");
         float width_balance = txt_paint.measureText("ANS Balance");
-        canvas.drawText("Sympathetic",0+width*TEXT_PADDING,50,txt_paint);
-        canvas.drawText("Parasympathetic",width-width_parasymp-(width*TEXT_PADDING),50,txt_paint);
-        canvas.drawText("ANS Balance",width/2-width_balance/2,50,txt_paint);
+        //canvas.drawText("Parasympathetic",0+width*TEXT_PADDING,45,txt_paint);
+        //canvas.drawText("Sympathetic",width-width_symp-(width*TEXT_PADDING),45,txt_paint);
+        //canvas.drawText("ANS Balance",width/2-width_balance/2,45,txt_paint);
         Log.i("TESTC", "Width-Canvas:" + width);
         Log.i("TESTC", "Height-Canvas:" + height);
     }

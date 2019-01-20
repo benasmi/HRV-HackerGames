@@ -47,6 +47,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.database.DatabaseError;
 import com.mabe.productions.hrv_madison.AdvancedWorkoutHistoryActivity;
+import com.mabe.productions.hrv_madison.FrequencyZoneView;
 import com.mabe.productions.hrv_madison.HistoryActivity;
 import com.mabe.productions.hrv_madison.HistoryRecyclerViewDataHolder;
 import com.mabe.productions.hrv_madison.MainScreenActivity;
@@ -76,6 +77,9 @@ public class DataTodayFragment extends Fragment {
     private TextView freq_card_txt_lf_after_measurement;
     private TextView freq_card_txt_vlf_after_measurement;
     private TextView freq_card_txt_vhf_after_measurement;
+    private TextView freq_card_ratio_meaning;
+    private TextView freq_card_ratio_meaning_advice;
+    private FrequencyZoneView freq_card_ratio_scale;
     private PieChart frequency_chart;
 
     //HrvCardView
@@ -223,7 +227,10 @@ public class DataTodayFragment extends Fragment {
             freq_card_txt_lf_after_measurement.setText(String.valueOf("LF: " + (int) measurement.getLF_band() + "%"));
             freq_card_txt_vlf_after_measurement.setText(String.valueOf("VLF: " + (int) measurement.getVLF_band() + "%"));
             freq_card_txt_vhf_after_measurement.setText(String.valueOf("VHF: " + (int) measurement.getVHF_band() + "%"));
-
+            float lf = measurement.getLF_band();
+            float hf = measurement.getHF_band();
+            float ratio = lf/hf;
+            setLF_HF_RatioZone(ratio);
             setFrequencyChartData(measurement.getHF_band(), measurement.getLF_band(), measurement.getVLF_band(), measurement.getVHF_band());
 
             bpm_card_hrv_average_value.setText(String.valueOf(measurement.getRmssd()));
@@ -261,23 +268,6 @@ public class DataTodayFragment extends Fragment {
             workout_done_cardview.setVisibility(View.GONE);
         }
 
-//        //RECCOMENDATION CARDVIEW
-//        switch (user.getProgramUpdateState()) {
-//
-//            case User.PROGRAM_STATE_CHANGED:
-//                break;
-//            case User.PROGRAM_STATE_DAY_OFF:
-//
-//                break;
-//            case User.PROGRAM_STATE_INVALID:
-//
-//                break;
-//            case User.PROGRAM_STATE_NOT_ENOUGH_DATA:
-//
-//
-//
-//                break;
-//        }
 
         if(hasMeasuredToday && user.getAllMeasurements().size() < 2){
             //We do not have enough data to display percentage, so current hrv is displayed
@@ -406,6 +396,34 @@ public class DataTodayFragment extends Fragment {
 
     }
 
+
+
+    private void setLF_HF_RatioZone(float ratio){
+        freq_card_ratio_scale.setElementPosition(ratio);
+        if(ratio>=1.4f && ratio<=1.6f){
+            freq_card_ratio_meaning.setText("Ideal balance");
+            freq_card_ratio_meaning_advice.setText("Your body is feeling great, keep it up!");
+        }
+        if(ratio>=1.61f && ratio<=2f){
+            freq_card_ratio_meaning.setText("Sympathetic system takes over balance");
+            freq_card_ratio_meaning_advice.setText("Your body is feeling alright! However, consider some relaxation exercises and not pushing yourself too hard today!");
+        }
+        if(ratio>=0.5f && ratio<=1.39f){
+            freq_card_ratio_meaning.setText("Parasympathetic system takes over balance");
+            freq_card_ratio_meaning_advice.setText("Your body is feeling good, but you should consider doing some non-stresful activities with higher intensity during your daily schedule ");
+        }
+        if(ratio>2f){
+            freq_card_ratio_meaning.setText("Sympathetic system dominates");
+            freq_card_ratio_meaning_advice.setText("Your body is feeling terrible! Ratio indicates hypertonus, anxiety, stress, pressure. You should reduce your work load and physical activities!");
+        }
+        if(ratio<0.5f){
+            freq_card_ratio_meaning.setText("Parasympathetic system dominates");
+            freq_card_ratio_meaning_advice.setText("Your body is feeling terrible! Ratio indicates hypotonics, low energy and exhaustion. You should consider taking a day off and relaxing!");
+        }
+
+
+    }
+
     private void settingWorkoutMap(final WorkoutMeasurements workout) {
         if (route_display_googlemap == null) {
 
@@ -500,6 +518,10 @@ public class DataTodayFragment extends Fragment {
         freq_card_txt_lf_after_measurement = view.findViewById(R.id.freq_card_txt_lf_after_measurement);
         freq_card_txt_vlf_after_measurement = view.findViewById(R.id.freq_card_txt_vlf_after_measurement);
         freq_card_txt_vhf_after_measurement = view.findViewById(R.id.freq_card_txt_vhf_after_measurement);
+        freq_card_ratio_meaning = view.findViewById(R.id.freq_card_ratio_meaning);
+        freq_card_ratio_meaning_advice = view.findViewById(R.id.freq_card_ratio_meaning_advice);
+        freq_card_ratio_scale = view.findViewById(R.id.freq_card_ratio_scale);
+
         frequency_chart = view.findViewById(R.id.chart_frequencies);
 
         //Casual modifications
@@ -693,6 +715,8 @@ public class DataTodayFragment extends Fragment {
         freq_card_txt_lf_after_measurement.setTypeface(verdana);
         freq_card_txt_vlf_after_measurement.setTypeface(verdana);
         freq_card_txt_vhf_after_measurement.setTypeface(verdana);
+        freq_card_ratio_meaning.setTypeface(verdana);
+        freq_card_ratio_meaning_advice.setTypeface(verdana);
 
         //HrvCardView
         hrv_card_txt_hrv.setTypeface(verdana);
