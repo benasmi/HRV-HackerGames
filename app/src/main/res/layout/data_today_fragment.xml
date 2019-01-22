@@ -342,54 +342,6 @@
                                     android:textColor="#fff"
                                     android:textSize="@dimen/cardview_value_txt"/>
                             </RelativeLayout>
-
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp">
-
-                                <ImageView
-                                    android:layout_width="10dp"
-                                    android:layout_height="10dp"
-                                    android:background="@drawable/vlf_circle"
-                                    android:id="@+id/VLF_color"
-                                    />
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_toRightOf="@id/VLF_color"
-                                    android:layout_marginLeft="10dp"
-                                    android:text="@string/VLF"
-                                    android:id="@+id/freq_card_txt_vlf_after_measurement"
-                                    android:textColor="#fff"
-                                    android:textSize="@dimen/cardview_value_txt"/>
-                            </RelativeLayout>
-
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp">
-
-                                <ImageView
-                                    android:layout_width="10dp"
-                                    android:layout_height="10dp"
-                                    android:background="@drawable/vhf_circle"
-                                    android:id="@+id/VHF_color"
-                                    />
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_toRightOf="@id/VHF_color"
-                                    android:layout_marginLeft="10dp"
-                                    android:text="@string/VHF"
-                                    android:id="@+id/freq_card_txt_vhf_after_measurement"
-                                    android:textColor="#fff"
-                                    android:textSize="@dimen/cardview_value_txt"/>
-                            </RelativeLayout>
-
-
                         </LinearLayout>
 
                     </LinearLayout>

@@ -17,6 +17,7 @@ import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class HistoryActivity extends AppCompatActivity {
 
@@ -147,11 +148,13 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     private void sortByDate(ArrayList<HistoryRecyclerViewDataHolder> data){
+
+        Calendar cal = Calendar.getInstance();
+
             for(int i = 0; i<data.size(); i++){
                 for(int z = 0; z<data.size()-1; z++){
-                    int day = Integer.parseInt(DateFormat.format("dd", data.get(z).getDate()).toString());
-                    int day1 = Integer.parseInt(DateFormat.format("dd", data.get(z+1).getDate()).toString());
-                    if(day>day1){
+                    boolean after = data.get(z).getDate().after(data.get(z+1).getDate());
+                    if(after){
                         HistoryRecyclerViewDataHolder temporaryItem = data.get(z+1);
                         data.set(z+1, data.get(z));
                         data.set(z, temporaryItem);

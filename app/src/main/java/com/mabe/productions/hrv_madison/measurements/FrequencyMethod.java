@@ -73,6 +73,7 @@ public class FrequencyMethod {
 
             }
 
+            /*
             if (constArrayFreq > VLF_MIN && constArrayFreq <= VLF_MAX) {
                 VLF_count += rootNumber;
 
@@ -80,13 +81,14 @@ public class FrequencyMethod {
             if (constArrayFreq > VHF_MIN && constArrayFreq <= VHF_MAX) {
                 VHF_count += rootNumber;
             }
+            */
 
         }
-        total = LF_count + VLF_count + HF_count + VHF_count;
+        total = LF_count + HF_count;
         LF_value = Math.round((LF_count/total)*100.0);
         VLF_value = Math.round((VLF_count/total)*100.0);
-        HF_value = Math.round((HF_count/total)*100.0);
-        VHF_value = Math.round((VHF_count/total)*100.0);
+        HF_value = 0;
+        VHF_value = 0;
 
 
     }

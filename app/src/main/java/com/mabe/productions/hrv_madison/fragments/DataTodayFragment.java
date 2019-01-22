@@ -75,8 +75,6 @@ public class DataTodayFragment extends Fragment {
     private TextView freq_card_txt_after_this_measure;
     private TextView freq_card_txt_hf_after_measurament;
     private TextView freq_card_txt_lf_after_measurement;
-    private TextView freq_card_txt_vlf_after_measurement;
-    private TextView freq_card_txt_vhf_after_measurement;
     private TextView freq_card_ratio_meaning;
     private TextView freq_card_ratio_meaning_advice;
     private FrequencyZoneView freq_card_ratio_scale;
@@ -220,18 +218,18 @@ public class DataTodayFragment extends Fragment {
                     }
                 }
             }
+            bpm_card_txt_date.setText(Utils.getTimeAgo(user.getLastMeasurement().getDate().getTime()));
             bpm_line_chart.animateY(2000, Easing.EasingOption.EaseInOutSine);
 
             //FREQUENCY CARDVIEW
+            freq_card_txt_freq_band_date.setText(Utils.getTimeAgo(user.getLastMeasurement().getDate().getTime()));
             freq_card_txt_hf_after_measurament.setText(String.valueOf("HF: " + (int) measurement.getHF_band() + "%"));
             freq_card_txt_lf_after_measurement.setText(String.valueOf("LF: " + (int) measurement.getLF_band() + "%"));
-            freq_card_txt_vlf_after_measurement.setText(String.valueOf("VLF: " + (int) measurement.getVLF_band() + "%"));
-            freq_card_txt_vhf_after_measurement.setText(String.valueOf("VHF: " + (int) measurement.getVHF_band() + "%"));
             float lf = measurement.getLF_band();
             float hf = measurement.getHF_band();
             float ratio = lf/hf;
             setLF_HF_RatioZone(ratio);
-            setFrequencyChartData(measurement.getHF_band(), measurement.getLF_band(), measurement.getVLF_band(), measurement.getVHF_band());
+            setFrequencyChartData(measurement.getHF_band(), measurement.getLF_band());
 
             bpm_card_hrv_average_value.setText(String.valueOf(measurement.getRmssd()));
             bpm_card_value_average.setText(String.valueOf((int) measurement.getAverage_bpm()));
@@ -310,7 +308,7 @@ public class DataTodayFragment extends Fragment {
             //WORKOUT DATA CARDVIEW
             final WorkoutMeasurements workout = user.getLastWorkout();
             if (workout != null) {
-
+                txt_workout_time_ago.setText(Utils.getTimeAgo(user.getLastMeasurement().getDate().getTime()));
                 workout_card_pace.setText(String.valueOf(workout.getAveragePace()));
                 workout_card_distance.setText(String.valueOf(workout.getDistance()));
                 workout_see_more_info_btn.setOnClickListener(new View.OnClickListener() {
@@ -516,8 +514,6 @@ public class DataTodayFragment extends Fragment {
         freq_card_txt_after_this_measure = view.findViewById(R.id.freq_card_txt_after_this_measure);
         freq_card_txt_hf_after_measurament = view.findViewById(R.id.freq_card_txt_hf_after_measurement);
         freq_card_txt_lf_after_measurement = view.findViewById(R.id.freq_card_txt_lf_after_measurement);
-        freq_card_txt_vlf_after_measurement = view.findViewById(R.id.freq_card_txt_vlf_after_measurement);
-        freq_card_txt_vhf_after_measurement = view.findViewById(R.id.freq_card_txt_vhf_after_measurement);
         freq_card_ratio_meaning = view.findViewById(R.id.freq_card_ratio_meaning);
         freq_card_ratio_meaning_advice = view.findViewById(R.id.freq_card_ratio_meaning_advice);
         freq_card_ratio_scale = view.findViewById(R.id.freq_card_ratio_scale);
@@ -713,8 +709,6 @@ public class DataTodayFragment extends Fragment {
         freq_card_txt_after_this_measure.setTypeface(verdana);
         freq_card_txt_hf_after_measurament.setTypeface(verdana);
         freq_card_txt_lf_after_measurement.setTypeface(verdana);
-        freq_card_txt_vlf_after_measurement.setTypeface(verdana);
-        freq_card_txt_vhf_after_measurement.setTypeface(verdana);
         freq_card_ratio_meaning.setTypeface(verdana);
         freq_card_ratio_meaning_advice.setTypeface(verdana);
 
@@ -774,14 +768,12 @@ public class DataTodayFragment extends Fragment {
     }
 
 
-    private void setFrequencyChartData(float hf, float lf, float vlf, float vhf) {
+    private void setFrequencyChartData(float hf, float lf) {
         //Modify Y-axis value
 
         ArrayList<PieEntry> values = new ArrayList<>();
         values.add(new PieEntry(hf, "HF"));
         values.add(new PieEntry(lf, "LF"));
-        values.add(new PieEntry(vlf, "VLF"));
-        values.add(new PieEntry(vhf, "VHF"));
 
         final PieDataSet dataSet = new PieDataSet(values, "Frequencies");
         dataSet.setSliceSpace(2f);
