@@ -40,9 +40,7 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
     private TextView freq_card_txt_after_this_measure;
     private TextView freq_card_txt_hf_after_measurament;
     private TextView freq_card_txt_lf_after_measurement;
-    private TextView freq_card_txt_vlf_after_measurement;
-    private TextView freq_card_txt_vhf_after_measurement;
-    private TextView freq_card_txt_warning;
+
     private TextView freq_card_ratio_meaning;
     private TextView freq_card_ratio_meaning_advice;
     private FrequencyZoneView freq_card_ratio_scale;
@@ -52,10 +50,7 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
     private TextView advanced_history_txt_lf_value;
     private TextView advanced_history_txt_hf;
     private TextView advanced_history_txt_hf_value;
-    private TextView advanced_history_txt_vlf;
-    private TextView advanced_history_txt_vlf_value;
-    private TextView advanced_history_txt_vhf;
-    private TextView advanced_history_txt_vhf_value;
+
 
 
     //bpm cardview
@@ -142,19 +137,14 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
     private void setUpData(Measurement measurement){
         freq_card_txt_hf_after_measurament.setText(String.valueOf((int)measurement.getHF_band() + "%"));
         freq_card_txt_lf_after_measurement.setText(String.valueOf((int)measurement.getLF_band()+ "%"));
-        freq_card_txt_vlf_after_measurement.setText(String.valueOf((int)measurement.getVLF_band()+ "%"));
-        freq_card_txt_vhf_after_measurement.setText(String.valueOf((int)measurement.getVHF_band()+ "%"));
 
         advanced_history_txt_lf_value.setText(String.valueOf((int) measurement.getLF_band()+ "%"));
         advanced_history_txt_hf_value.setText(String.valueOf((int)measurement.getHF_band()+ "%"));
-        advanced_history_txt_vlf_value.setText(String.valueOf((int)measurement.getVLF_band()+ "%"));
-        advanced_history_txt_vhf_value.setText(String.valueOf((int)measurement.getVHF_band()+ "%"));
+
 
         freq_card_txt_freq_band_date.setText(formatDate(measurement.getDate()));
         bpm_card_txt_date.setText(formatDate(measurement.getDate()));
-        if(measurement.getDuration()<4){
-            freq_card_txt_warning.setText("*!Results may be inaccurate, because you measured only " + measurement.getDuration() + " minutes. Atleast 4 minutes measurement is needed*!" );
-        }
+
 
         //INITIAL MOOD CARDVIEW
         switch (measurement.getMood()) {
@@ -234,8 +224,7 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
         freq_card_txt_after_this_measure.setTypeface(verdana);
         freq_card_txt_hf_after_measurament.setTypeface(verdana);
         freq_card_txt_lf_after_measurement.setTypeface(verdana);
-        freq_card_txt_vlf_after_measurement.setTypeface(verdana);
-        freq_card_txt_vhf_after_measurement.setTypeface(verdana);
+
 
         txt_how_do_you_feel.setTypeface(verdana);
         txt_emotion_explaining.setTypeface(verdana);
@@ -295,22 +284,17 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
         advanced_history_txt_lf_value = (TextView) findViewById(R.id.advanced_history_txt_lf_value);
         advanced_history_txt_hf = (TextView) findViewById(R.id.advanced_history_txt_hf);
         advanced_history_txt_hf_value = (TextView) findViewById(R.id.advanced_history_txt_hf_value);
-        advanced_history_txt_vlf = (TextView) findViewById(R.id.advanced_history_txt_vlf);
-        advanced_history_txt_vlf_value = (TextView) findViewById(R.id.advanced_history_txt_vlf_value);
-        advanced_history_txt_vhf = (TextView) findViewById(R.id.advanced_history_txt_vhf);
-        advanced_history_txt_vhf_value= (TextView) findViewById(R.id.advanced_history_txt_vhf_value);
+
 
         freq_card_txt_hf_after_measurament = (TextView) findViewById(R.id.freq_card_txt_hf_after_measurement);
         freq_card_txt_lf_after_measurement = (TextView) findViewById(R.id.freq_card_txt_lf_after_measurement);
-        freq_card_txt_vlf_after_measurement = (TextView) findViewById(R.id.freq_card_txt_vlf_after_measurement);
-        freq_card_txt_vhf_after_measurement = (TextView) findViewById(R.id.freq_card_txt_vhf_after_measurement);
         freq_card_ratio_meaning = (TextView) findViewById(R.id.freq_card_ratio_meaning);
         freq_card_ratio_meaning_advice = (TextView) findViewById(R.id.freq_card_ratio_meaning_advice);
         freq_card_ratio_scale = (FrequencyZoneView) findViewById(R.id.freq_card_ratio_scale);
 
         //Frequency PieChart
         freq_card = (CardView) findViewById(R.id.frequency_card);
-        freq_card_txt_warning = (TextView) findViewById(R.id.textView);
+
         freq_card_txt_freq_band = (TextView) findViewById(R.id.frequency_bands_text_view);
         freq_card_txt_freq_band_date = (TextView) findViewById(R.id.frequency_bands_measurement_date);
         freq_card_txt_after_this_measure = (TextView) findViewById(R.id.freq_card_txt_after_this_measure);

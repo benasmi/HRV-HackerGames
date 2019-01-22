@@ -483,7 +483,7 @@ public class MeasurementFragment extends Fragment {
 
                         //Saving to local db
                         Crashlytics.log("Saving measurement locally.");
-                        User.addMeasurementData(getContext(), measurement, true);
+                        User.addMeasurementData(getContext(), measurement, false);
                         //Saving to remote db
                         Crashlytics.log("Saving measurement remotely");
                         FirebaseUtils.addMeasurement(new FireMeasurement(measurement), getContext());

@@ -153,7 +153,7 @@ public class HistoryActivity extends AppCompatActivity {
 
             for(int i = 0; i<data.size(); i++){
                 for(int z = 0; z<data.size()-1; z++){
-                    boolean after = data.get(z).getDate().after(data.get(z+1).getDate());
+                    boolean after = data.get(z).getDate().before(data.get(z+1).getDate());
                     if(after){
                         HistoryRecyclerViewDataHolder temporaryItem = data.get(z+1);
                         data.set(z+1, data.get(z));

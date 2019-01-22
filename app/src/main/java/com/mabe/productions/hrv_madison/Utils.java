@@ -245,6 +245,7 @@ public class Utils {
     public static String getStringFromDate(Date date){
         SimpleDateFormat format = new SimpleDateFormat(FeedReaderDbHelper.DATE_FORMAT);
         //Log.i("TEST", "getStringFromDate: " + String.valueOf(format.format(date)));
+        Log.i("TEST", "Returnin: " + format.format(date));
         return format.format(date);
     }
 
@@ -525,11 +526,14 @@ public class Utils {
     }
 
     public static String getTimeAgo(long time) {
+        Log.i("TEST", time+"Gera data azile");
         if (time < 1000000000000L) {
             time *= 1000;
         }
 
         long now = System.currentTimeMillis();
+        Log.i("TEST", now+"Ka ce meluoji");
+
         if (time > now || time <= 0) {
             return null;
         }

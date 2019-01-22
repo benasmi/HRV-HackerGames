@@ -190,51 +190,6 @@
                                     android:textSize="@dimen/cardview_value_txt"/>
                             </RelativeLayout>
 
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp">
-
-                                <ImageView
-                                    android:layout_width="10dp"
-                                    android:layout_height="10dp"
-                                    android:background="@drawable/vlf_circle"
-                                    android:id="@+id/VLF_color"
-                                    />
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_toRightOf="@id/VLF_color"
-                                    android:layout_marginLeft="10dp"
-                                    android:text="@string/VLF"
-                                    android:id="@+id/freq_card_txt_vlf_after_measurement"
-                                    android:textColor="#fff"
-                                    android:textSize="@dimen/cardview_value_txt"/>
-                            </RelativeLayout>
-
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp">
-
-                                <ImageView
-                                    android:layout_width="10dp"
-                                    android:layout_height="10dp"
-                                    android:background="@drawable/vhf_circle"
-                                    android:id="@+id/VHF_color"
-                                    />
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_toRightOf="@id/VHF_color"
-                                    android:layout_marginLeft="10dp"
-                                    android:text="@string/VHF"
-                                    android:id="@+id/freq_card_txt_vhf_after_measurement"
-                                    android:textColor="#fff"
-                                    android:textSize="@dimen/cardview_value_txt"/>
-                            </RelativeLayout>
 
 
                         </LinearLayout>
@@ -784,70 +739,6 @@
                 android:textColor="#FFFFFF"
                 android:gravity="right"
                 android:id="@+id/advanced_history_txt_hf_value"
-                android:layout_marginRight="15dp"
-                android:layout_gravity="center"
-                />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="50dp">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:background="@drawable/ic_pie_chart"
-                android:layout_marginLeft="10dp"
-                android:layout_gravity="center"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="VLF"
-                android:textSize="17dp"
-                android:id="@+id/advanced_history_txt_vlf"
-                android:layout_marginLeft="20dp"
-                android:textColor="#FFFFFF"
-                android:layout_gravity="center"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="1-2"
-                android:textSize="17dp"
-                android:textColor="#FFFFFF"
-                android:gravity="right"
-                android:id="@+id/advanced_history_txt_vlf_value"
-                android:layout_marginRight="15dp"
-                android:layout_gravity="center"
-                />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="50dp">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:background="@drawable/ic_pie_chart"
-                android:layout_marginLeft="10dp"
-                android:layout_gravity="center"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="VHF"
-                android:id="@+id/advanced_history_txt_vhf"
-                android:textSize="17dp"
-                android:layout_marginLeft="20dp"
-                android:textColor="#FFFFFF"
-                android:layout_gravity="center"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="1-2"
-                android:textSize="17dp"
-                android:textColor="#FFFFFF"
-                android:gravity="right"
-                android:id="@+id/advanced_history_txt_vhf_value"
                 android:layout_marginRight="15dp"
                 android:layout_gravity="center"
                 />

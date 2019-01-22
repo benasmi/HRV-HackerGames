@@ -55,7 +55,7 @@
     <string name="measure_btn">Measure</string>
     <string name="failed_connection_status">Unable to connect...</string>
     <string name="connecting_to">Connecting to...</string>
-    <string name="already_measured_today_message">You have already measured today. Your data will be overwritten. Continue?</string>
+    <string name="already_measured_today_message">You have already measured today. Do you want to measure it again?</string>
     <string name="please_wait">Please wait!</string>
     <string name="measuring">Measuring...</string>
     <string name="cancel">Cancel</string>

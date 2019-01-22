@@ -86,8 +86,8 @@ public class FrequencyMethod {
         }
         total = LF_count + HF_count;
         LF_value = Math.round((LF_count/total)*100.0);
-        VLF_value = Math.round((VLF_count/total)*100.0);
-        HF_value = 0;
+        VLF_value = 0;
+        HF_value = Math.round((HF_count/total)*100.0);
         VHF_value = 0;
 
 
