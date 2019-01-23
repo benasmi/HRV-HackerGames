@@ -193,6 +193,7 @@ public class User {
         context.getSharedPreferences(FeedReaderDbHelper.SHARED_PREFS_SPORT, Context.MODE_PRIVATE).edit().clear().apply();
     }
 
+
     /**
      * Saves a new measurement to the database.
      *
@@ -203,7 +204,7 @@ public class User {
         SQLiteDatabase db = new FeedReaderDbHelper(context).getWritableDatabase();
 
         //Checking if a measurement with today's date exists
-        String todayDate = Utils.getStringFromDate(Calendar.getInstance().getTime());
+        Date todaysDate = Calendar.getInstance().getTime();
 
         String[] projection = {
                 FeedReaderDbHelper.HRV_COL_DATE,
@@ -225,15 +226,23 @@ public class User {
                 sortOrder
         );
 
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(todaysDate);
+        Calendar cal2 = Calendar.getInstance();
+
         //Executing SELECT query if overrideByDate is true
         if (cursor.moveToNext() && overrideByDate) {
             int id = cursor.getInt(
                     cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_ID));
-            String dateString = cursor.getString(
-                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_DATE));
+            Date measurementDate = Utils.getDateFromString(cursor.getString(
+                    cursor.getColumnIndexOrThrow(FeedReaderDbHelper.HRV_COL_DATE)));
+            cal2.setTime(measurementDate);
+
+            boolean sameDay = cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) &&
+                    cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
 
             //Removing existing row if measurement was made today
-            if (dateString.equals(todayDate)) {
+            if (sameDay) {
                 db.delete(FeedReaderDbHelper.HRV_DATA_TABLE_NAME, FeedReaderDbHelper.HRV_COL_ID + "=" + id, null);
             }
 
