@@ -78,6 +78,9 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
     private TextView advanced_history_txt_card_date;
     private CardView advanced_history_card;
 
+    private CardView bpm_card;
+    private CardView pulse_distribution_card;
+
     //BPM card
     private TextView average_bpm_value_history;
     private TextView max_bpm_history_value;
@@ -125,7 +128,6 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
 
 
         initialiseViews();
-        bpm_lineChart();
         setUpData(workout);
         settingWorkoutMap(workout);
         setFonts();
@@ -166,6 +168,8 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
             }
         });
 
+        bpm_card = (CardView) findViewById(R.id.bpm_card);
+        pulse_distribution_card = (CardView) findViewById(R.id.bpm_distribution_history);
 
         //Bpm card
         average_bpm_value_history = (TextView) findViewById(R.id.average_bpm_value_history);
@@ -202,13 +206,22 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
 
     private void setUpData(WorkoutMeasurements workout){
 
-        //BPM card
-        average_bpm_value_history.setText((int) workout.getAverage_bpm() + "");
-        max_bpm_history_value.setText(String.valueOf(getHighestBpm(workout)));
+        if(workout.getBpm_data().length != 0){
+            //BPM card
+            bpm_lineChart();
 
-        int bpmValues[] = workout.getBpm_data();
-        for (int i = 0; i < bpmValues.length; i++) {
+            average_bpm_value_history.setText((int) workout.getAverage_bpm() + "");
+            max_bpm_history_value.setText(String.valueOf(getHighestBpm(workout)));
+
+            int bpmValues[] = workout.getBpm_data();
+            for (int i = 0; i < bpmValues.length; i++) {
                 addEntryBpm(bpmValues[i], getHighestBpm(workout));
+
+            }
+
+        }else{
+            pulse_distribution_card.setVisibility(View.GONE);
+            bpm_card.setVisibility(View.GONE);
         }
 
         //Pulse zone distribution card
