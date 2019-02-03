@@ -308,7 +308,7 @@ public class DataTodayFragment extends Fragment {
             //WORKOUT DATA CARDVIEW
             final WorkoutMeasurements workout = user.getLastWorkout();
             if (workout != null) {
-                txt_workout_time_ago.setText(Utils.getTimeAgo(user.getLastMeasurement().getDate().getTime()));
+                txt_workout_time_ago.setText(Utils.getTimeAgo(user.getLastWorkout().getDate().getTime()));
                 workout_card_pace.setText(String.valueOf(workout.getAveragePace()));
                 workout_card_distance.setText(String.valueOf(workout.getDistance()));
                 workout_see_more_info_btn.setOnClickListener(new View.OnClickListener() {
