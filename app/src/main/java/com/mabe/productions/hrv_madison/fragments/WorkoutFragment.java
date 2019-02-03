@@ -78,7 +78,7 @@ public class WorkoutFragment extends Fragment {
     private static final long VIBRATE_DURATION_CONNECTION_LOST = 5000l;
     private static final int PERMISSION_GPS_REQUEST = 0;
 
-    public static final long WARMUP_DURATION = 30000L;
+    public static final long WARMUP_DURATION = 300000L;
 
     private CircularProgressBar progressbar_duration;
     private TextView txt_calories_burned;

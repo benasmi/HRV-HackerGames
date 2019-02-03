@@ -2,12 +2,6 @@ package com.mabe.productions.hrv_madison.measurements;
 
 import java.util.ArrayList;
 
-/**
- * Created by Martynas on 2018-02-27.
- */
-
-
-
 public class BPM {
 
     private ArrayList<Integer> bpmList = new ArrayList<>();
@@ -21,6 +15,9 @@ public class BPM {
     }
 
     public float getAverageBpm(){
+        if(bpmList.size() == 0){
+            return 0;
+        }
         int sum = 0;
         for(int bpm : bpmList){
             sum+=bpm;
