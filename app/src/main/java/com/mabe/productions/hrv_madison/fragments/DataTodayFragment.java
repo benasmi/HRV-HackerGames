@@ -7,20 +7,25 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.CardView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.baoyz.widget.PullRefreshLayout;
@@ -58,6 +63,7 @@ import com.mabe.productions.hrv_madison.firebase.FireWorkout;
 import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
+import com.tooltip.Tooltip;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -67,6 +73,7 @@ import java.util.List;
 public class DataTodayFragment extends Fragment {
 
     private PullRefreshLayout pull_refresh_layout;
+    private ScrollView scrollview;
 
     //FrequencyCardView
     private CardView freq_card;
@@ -79,6 +86,7 @@ public class DataTodayFragment extends Fragment {
     private TextView freq_card_ratio_meaning_advice;
     private FrequencyZoneView freq_card_ratio_scale;
     private PieChart frequency_chart;
+    private AppCompatImageButton imgButton_frequencies_info;
 
     //HrvCardView
     private CardView hrv_card;
@@ -102,6 +110,7 @@ public class DataTodayFragment extends Fragment {
     private TextView bpm_card_value_average;
     private TextView bpm_card_txt_hrv_average_value;
     private TextView bpm_card_hrv_average_value;
+    private AppCompatImageButton imgButton_rmssd_info;
 
 
     //Daily reccomendation cardview
@@ -113,6 +122,9 @@ public class DataTodayFragment extends Fragment {
     private TextView reccomendation_txt_verbal_recommendation;
     private ImageView reccomendation_img_arrow;
     private TextView reccomendation_todays_program_explanation;
+    private AppCompatImageButton imgButton_hrv_info;
+    private AppCompatImageButton imgButton_duration_info;
+    private AppCompatImageButton imgButton_intensity_info;
 
     //How do you feel? cardview
     private CardView feeling_cardview;
@@ -136,7 +148,8 @@ public class DataTodayFragment extends Fragment {
     private TextView workout_card_distance;
     private TextView workout_card_calories;
     private AppCompatButton workout_see_more_info_btn;
-    private GoogleMap route_display_googlemap; //We may need this one in the future
+    private GoogleMap route_display_googlemap;
+    private AppCompatImageButton imgButton_workout_card_info;
 
     //First time layout
     private LinearLayout no_measured_today_layout;
@@ -149,6 +162,30 @@ public class DataTodayFragment extends Fragment {
     private AppCompatButton reccomendation_btn_start_workout;
     private AppCompatButton button_history;
     private ImageView img_back_arrow;
+
+    public Tooltip tooltip;
+
+    private View.OnClickListener createTooltipListener(@StringRes final int message){
+
+        return new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                if(tooltip != null)
+                    tooltip.dismiss();
+
+                tooltip = new Tooltip.Builder(view)
+                        .setText(getResources().getString(message))
+                        .setDismissOnClick(true)
+                        .setBackgroundColor(getActivity().getResources().getColor(R.color.colorAccent))
+                        .setTextColor(getActivity().getResources().getColor(R.color.white))
+                        .setCornerRadius(7f)
+                        .setGravity(Gravity.TOP)
+                        .show();
+            }
+        };
+    }
 
     public DataTodayFragment() {
         // Required empty public constructor
@@ -517,8 +554,10 @@ public class DataTodayFragment extends Fragment {
         freq_card_ratio_meaning = view.findViewById(R.id.freq_card_ratio_meaning);
         freq_card_ratio_meaning_advice = view.findViewById(R.id.freq_card_ratio_meaning_advice);
         freq_card_ratio_scale = view.findViewById(R.id.freq_card_ratio_scale);
+        imgButton_frequencies_info = view.findViewById(R.id.imgButton_frequency_info);
 
         frequency_chart = view.findViewById(R.id.chart_frequencies);
+
 
         //Casual modifications
         frequency_chart.setUsePercentValues(true);
@@ -558,6 +597,7 @@ public class DataTodayFragment extends Fragment {
         bpm_card_value_average = (TextView) view.findViewById(R.id.bpm_value);
         bpm_card_txt_hrv_average_value = (TextView) view.findViewById(R.id.bpm_card_txt_hrv_average_value);
         bpm_card_hrv_average_value = (TextView) view.findViewById(R.id.bpm_card_hrv_average_value);
+        imgButton_rmssd_info = view.findViewById(R.id.imgButton_rmssd_info);
 
 
         //Reccomendation cardview
@@ -570,6 +610,9 @@ public class DataTodayFragment extends Fragment {
         reccomendation_img_arrow = view.findViewById(R.id.reccomendation_arrow_img);
         reccomendation_todays_program_explanation = view.findViewById(R.id.txt_todays_program_explanation);
         reccomendation_btn_start_workout = view.findViewById(R.id.startWorkout);
+        imgButton_hrv_info = view.findViewById(R.id.imgButton_hrv_info);
+        imgButton_duration_info = view.findViewById(R.id.imgButton_duration_info);
+        imgButton_intensity_info = view.findViewById(R.id.imgButton_intensity_info);
         reccomendation_btn_start_workout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -607,7 +650,7 @@ public class DataTodayFragment extends Fragment {
         workout_see_more_info_btn = view.findViewById(R.id.more_info_workout_btn);
         txt_workout_data = view.findViewById(R.id.workout_index_text_view);
         txt_workout_time_ago = view.findViewById(R.id.workout_index_measurement_date);
-
+        imgButton_workout_card_info = view.findViewById(R.id.imgButton_workout_card_info);
 
 
         feeling_cardview.setTranslationY(Utils.getScreenHeight(getContext()));
@@ -686,6 +729,25 @@ public class DataTodayFragment extends Fragment {
             @Override
             public void onRefresh() {
                 fetchDataOnce();
+            }
+        });
+
+        imgButton_duration_info.setOnClickListener(createTooltipListener(R.string.duration_info));
+        imgButton_hrv_info.setOnClickListener(createTooltipListener(R.string.hrv_info));
+        imgButton_intensity_info.setOnClickListener(createTooltipListener(R.string.intensity_info));
+        imgButton_rmssd_info.setOnClickListener(createTooltipListener(R.string.rmssd_info));
+        imgButton_workout_card_info.setOnClickListener(createTooltipListener(R.string.workout_card_info));
+        imgButton_frequencies_info.setOnClickListener(createTooltipListener(R.string.frequencies_info));
+
+        scrollview = view.findViewById(R.id.data_today_fragment_scrollview);
+        scrollview.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                if(tooltip != null){
+                    if(tooltip.isShowing()){
+                        tooltip.dismiss();
+                    }
+                }
             }
         });
     }

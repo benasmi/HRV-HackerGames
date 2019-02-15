@@ -482,9 +482,6 @@ public class WorkoutFragment extends Fragment {
         @Override
         public void onClick(View view) {
 
-            //todo: nejudinti mapso
-            //todo: paspaudus back griztama i intro
-
             AlertDialog.Builder builder;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 builder = new AlertDialog.Builder(getContext(), R.style.AppThemeDialog);

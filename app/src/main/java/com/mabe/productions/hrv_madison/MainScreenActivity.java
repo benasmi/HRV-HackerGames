@@ -157,8 +157,8 @@ public class MainScreenActivity extends AppCompatActivity {
         bottomNavigation.setInactiveColor(Color.parseColor("#ffffff"));
 
 
-   //     bottomNavigation.setForceTint(true);
-    //    bottomNavigation.setTranslucentNavigationEnabled(true);
+   //   bottomNavigation.setForceTint(true);
+    //  bottomNavigation.setTranslucentNavigationEnabled(true);
         //bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
         //bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_HIDE);
@@ -181,6 +181,9 @@ public class MainScreenActivity extends AppCompatActivity {
                 }
                 if(viewPagerAdapter.measurementFragment.infoHrvFinger !=null && viewPagerAdapter.measurementFragment.infoHrvFinger.isShowing()){
                         viewPagerAdapter.measurementFragment.infoHrvFinger.dismiss();
+                }
+                if(viewPagerAdapter.dataTodayFragment.tooltip != null){
+                    viewPagerAdapter.dataTodayFragment.tooltip.dismiss();
                 }
             }
 

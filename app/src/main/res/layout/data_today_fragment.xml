@@ -9,7 +9,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/data_today_fragment_scrollview">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -245,6 +246,16 @@
                         android:layout_below="@+id/frequency_bands_text_view"
                         android:textColor="#bdc3c7"/>
 
+                    <android.support.v7.widget.AppCompatImageButton
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@color/transparent"
+                        android:scaleType="fitCenter"
+                        android:layout_alignParentRight="true"
+                        android:id="@+id/imgButton_frequency_info"
+                        android:src="@drawable/ic_info_icon"
+                        />
+
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
@@ -295,6 +306,8 @@
                                 android:gravity="left"
                                 android:id="@+id/freq_card_txt_after_this_measure"
                                 android:paddingBottom="5dp"/>
+
+
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
@@ -477,15 +490,35 @@
                         android:layout_weight="1"
                         android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/txt_average_rmssd"
-                            android:id="@+id/bpm_card_txt_hrv_average_value"
-                            android:textSize="@dimen/cardview_pink_explain_txt"
-                            android:layout_gravity="center"
-                            android:textColor="#F62459"
-                            />
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/txt_average_rmssd"
+                                android:id="@+id/bpm_card_txt_hrv_average_value"
+                                android:textSize="@dimen/cardview_pink_explain_txt"
+                                android:layout_gravity="center"
+                                android:textColor="#F62459"
+                                />
+
+                            <android.support.v7.widget.AppCompatImageButton
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:background="@color/transparent"
+                                android:scaleType="fitCenter"
+                                android:id="@+id/imgButton_rmssd_info"
+                                android:layout_marginLeft="5dp"
+                                android:src="@drawable/ic_info_icon"
+                                />
+
+                        </LinearLayout>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -542,11 +575,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="10dp">
+
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:src="@drawable/ic_appicon_heart"
                         android:id="@+id/workout_index_icon_img"/>
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -557,6 +592,7 @@
                         android:textColor="#fff"
                         android:layout_alignParentTop="true"
                         android:id="@+id/workout_index_text_view"/>
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -568,6 +604,17 @@
                         android:layout_below="@+id/workout_index_text_view"
                         android:textColor="#bdc3c7"/>
 
+
+                    <android.support.v7.widget.AppCompatImageButton
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@color/transparent"
+                        android:scaleType="fitCenter"
+                        android:layout_alignParentRight="true"
+                        android:id="@+id/imgButton_workout_card_info"
+                        android:layout_marginLeft="5dp"
+                        android:src="@drawable/ic_info_icon"
+                        />
                 </RelativeLayout>
 
 
@@ -1079,15 +1126,32 @@
                             android:layout_weight="1"
                             android:layout_height="0px">
 
-                            <TextView
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Today's HRV"
-                                android:id="@+id/txt_explaing_todays_hrv"
-                                android:textColor="@color/white"
-                                android:textStyle="italic"
+                                android:orientation="horizontal">
 
-                                />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Today's HRV"
+                                    android:textColor="@color/white"
+                                    android:textStyle="italic"
+                                    android:id="@+id/txt_explaining_todays_hrv"
+
+                                    />
+
+                                <android.support.v7.widget.AppCompatImageButton
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:background="@color/transparent"
+                                    android:scaleType="fitCenter"
+                                    android:id="@+id/imgButton_hrv_info"
+                                    android:layout_marginLeft="5dp"
+                                    android:src="@drawable/ic_info_icon"
+                                    />
+
+                            </LinearLayout>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -1127,15 +1191,33 @@
                             android:layout_marginTop="5dp"
                             android:layout_height="0px">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Workout duration"
-                                android:id="@+id/txt_explaining_todays_workout_duration"
-                                android:textColor="@color/white"
-                                android:textStyle="italic"
 
-                                />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Workout duration"
+                                    android:textColor="@color/white"
+                                    android:textStyle="italic"
+                                    android:id="@+id/txt_explaining_todays_workout_duration"
+
+                                    />
+
+                                <android.support.v7.widget.AppCompatImageButton
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:background="@color/transparent"
+                                    android:scaleType="fitCenter"
+                                    android:id="@+id/imgButton_duration_info"
+                                    android:layout_marginLeft="5dp"
+                                    android:src="@drawable/ic_info_icon"
+                                    />
+
+                            </LinearLayout>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -1173,15 +1255,33 @@
                             android:orientation="vertical">
 
 
-                            <TextView
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Intensity"
-                                android:textColor="@color/white"
-                                android:textStyle="italic"
-                                android:id="@+id/txt_explaining_todays_intensity"
+                                android:orientation="horizontal">
 
-                                />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Intensity"
+                                    android:textColor="@color/white"
+                                    android:textStyle="italic"
+                                    android:id="@+id/txt_explaining_todays_intensity"
+
+                                    />
+
+                                <android.support.v7.widget.AppCompatImageButton
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:background="@color/transparent"
+                                    android:scaleType="fitCenter"
+                                    android:id="@+id/imgButton_intensity_info"
+                                    android:layout_marginLeft="5dp"
+                                    android:src="@drawable/ic_info_icon"
+                                    />
+
+                            </LinearLayout>
+
 
                             <LinearLayout
                                 android:layout_width="match_parent"

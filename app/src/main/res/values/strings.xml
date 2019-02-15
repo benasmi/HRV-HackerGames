@@ -125,6 +125,12 @@
     <string name="warmup">Warmup</string>
     <string name="bpm_data_after_workout">Workout BPM data</string>
     <string name="txt_max_bpm_history">Max BPM</string>
+    <string name="duration_info">The reccomended duration of your workout\nbased on your HRV!</string>
+    <string name="hrv_info">Your hrv today in comparison to the last time you measured</string>
+    <string name="intensity_info">The reccomended pulse range of your workout.</string>
+    <string name="rmssd_info">RMSSD is a measure used to assess heart rate variability (HRV)</string>
+    <string name="workout_card_info">Basic information about your last workout.</string>
+    <string name="frequencies_info">Spectral analysis of your measurements enables us to analyze your nervous system\'s condition.</string>
 
 </resources>
 

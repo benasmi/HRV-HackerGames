@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    >
+<RelativeLayout
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/login_background"
     tools:context="com.mabe.productions.hrv_madison.FrequentlyAskedActivity">
 
@@ -82,5 +87,32 @@
         android:id="@+id/txt_where_hrv_used_answer_faq"
         android:layout_below="@+id/txt_where_hrv_used_faq" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="What is sympathetic/parasympathetic nervous system?"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textSize="30dp"
+        android:id="@+id/txt_what_is_nervous_system"
+        android:layout_below="@+id/txt_where_hrv_used_answer_faq"
+        android:layout_marginTop="20dp"
+
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sympathetic is responsible for the response commonly referred to as 'fight or flight,' while parasympathetic is referred to as 'rest and digest.'"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textSize="20dp"
+        android:padding="10dp"
+        android:layout_marginTop="5dp"
+        android:id="@+id/txt_what_is_nervous_system_answer"
+        android:layout_below="@+id/txt_what_is_nervous_system" />
 
 </RelativeLayout>
+
+
+</ScrollView>
