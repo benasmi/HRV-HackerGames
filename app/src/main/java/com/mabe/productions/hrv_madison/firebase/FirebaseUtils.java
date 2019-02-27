@@ -17,7 +17,6 @@ import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,9 +32,10 @@ public class FirebaseUtils {
     /**
      * Adds (or queues to add) the measurement to remote db. This also
      * updates the locally saved measurement's remote db id.
+     *
      * @param measurement Measurement to save remotely
      */
-    public static void addMeasurement(FireMeasurement measurement, Context context){
+    public static void addMeasurement(FireMeasurement measurement, Context context) {
         DatabaseReference measurementsTable = FirebaseDatabase.getInstance().getReference().child(MEASUREMENTS_TABLE);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String key = measurementsTable.push().getKey();
@@ -43,9 +43,9 @@ public class FirebaseUtils {
         Crashlytics.log("Measurement's remote database key: " + key);
 
         String uid;
-        try{
+        try {
             uid = user.getUid();
-        }catch(NullPointerException e){
+        } catch (NullPointerException e) {
             uid = "null";
         }
         Crashlytics.log("User's UID: " + uid);
@@ -60,17 +60,20 @@ public class FirebaseUtils {
 
     /**
      * Updates the measurement remotely
+     *
      * @param measurement The new measurement
      */
-    public static void updateMeasurement(Measurement measurement){
+    public static void updateMeasurement(Measurement measurement) {
         String key = measurement.getRemoteDbId();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference measurementsTable = FirebaseDatabase.getInstance().getReference().child(MEASUREMENTS_TABLE);
         measurementsTable.child(user.getUid()).child(key).setValue(new FireMeasurement(measurement));
     }
 
-
-    public static void updateIntervalProgram(float duration, long[] workout_intervals, int[] running_pulse_zones, int[] walking_pulse_zones, int activity_streak){
+    /**
+     * Updates the interval program remotely
+     */
+    public static void updateIntervalProgram(float duration, long[] workout_intervals, int[] running_pulse_zones, int[] walking_pulse_zones, int activity_streak) {
         final FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
         final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference(USERS_TABLE_RUNNING + "/" + user.getUid());
@@ -82,7 +85,11 @@ public class FirebaseUtils {
         fireDatabase.child("activity_streak").setValue(activity_streak);
     }
 
-    public static void addWorkout(FireWorkout workout){
+    /**
+     * Adds (or queues to add) a workout to the remote database
+     * @param workout The workout to be added.
+     */
+    public static void addWorkout(FireWorkout workout) {
         DatabaseReference workoutsTable = FirebaseDatabase.getInstance().getReference().child(WORKOUTS_TABLE);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String key = workoutsTable.push().getKey();
@@ -90,7 +97,12 @@ public class FirebaseUtils {
         workoutsTable.child(user.getUid()).child(key).setValue(workout);
     }
 
-    public static void fetchMeasurements(final OnMeasurementFetchListener finishListener, boolean onlyFetchOnce){
+    /**
+     * Fetches all measurements from the remote database.
+     * @param finishListener The listener to be called after fetching is finished.
+     * @param onlyFetchOnce If true, the listener will not be called when measurements table is updated or changed.
+     */
+    public static void fetchMeasurements(final OnMeasurementFetchListener finishListener, boolean onlyFetchOnce) {
 
         ValueEventListener listener = new ValueEventListener() {
             @Override
@@ -99,7 +111,7 @@ public class FirebaseUtils {
 
                 ArrayList<Measurement> measurements = new ArrayList<>();
 
-                for(DataSnapshot measurement : dataSnapshot.getChildren()){
+                for (DataSnapshot measurement : dataSnapshot.getChildren()) {
                     Measurement localMeasurement = new Measurement(measurement.getValue(FireMeasurement.class));
                     localMeasurement.setRemoteDbId(measurement.getKey());
 
@@ -118,14 +130,20 @@ public class FirebaseUtils {
 
         DatabaseReference measurementsTable = FirebaseDatabase.getInstance().getReference().child(MEASUREMENTS_TABLE).child(user.getUid());
 
-        if(onlyFetchOnce){
+        if (onlyFetchOnce) {
             measurementsTable.addListenerForSingleValueEvent(listener);
-        }else{
+        } else {
             measurementsTable.addValueEventListener(listener);
         }
 
     }
-    public static void fetchWorkouts(final OnWorkoutFetchListener finishListener, boolean onlyFetchOnce){
+
+    /**
+     * Fetches all workouts from the remote database.
+     * @param finishListener The listener to be called after fetching is finished.
+     * @param onlyFetchOnce If true, the listener will not be called when workouts table is updated or changed.
+     */
+    public static void fetchWorkouts(final OnWorkoutFetchListener finishListener, boolean onlyFetchOnce) {
 
         ValueEventListener listener = new ValueEventListener() {
             @Override
@@ -133,7 +151,7 @@ public class FirebaseUtils {
 
                 ArrayList<FireWorkout> workouts = new ArrayList<>();
 
-                for(DataSnapshot workout : dataSnapshot.getChildren()){
+                for (DataSnapshot workout : dataSnapshot.getChildren()) {
                     workouts.add(workout.getValue(FireWorkout.class));
                 }
                 finishListener.onSuccess(workouts);
@@ -149,15 +167,19 @@ public class FirebaseUtils {
 
         DatabaseReference workoutsTable = FirebaseDatabase.getInstance().getReference().child(WORKOUTS_TABLE).child(user.getUid());
 
-        if(onlyFetchOnce){
+        if (onlyFetchOnce) {
             workoutsTable.addListenerForSingleValueEvent(listener);
-        }else{
+        } else {
             workoutsTable.addValueEventListener(listener);
         }
 
     }
 
-    public static void getGlobalUserInstance(final OnGlobalUserDoneFetchListener finishListener){
+    /**
+     * Fetches a global user instance in the form of #FireGlobalUser
+     * @param finishListener The listener to be called after fetching is finished.
+     */
+    public static void getGlobalUserInstance(final OnGlobalUserDoneFetchListener finishListener) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         DatabaseReference specificUser = FirebaseDatabase.getInstance().getReference(FirebaseUtils.USERS_TABLE_GLOBAL + "/" + user.getUid());
@@ -178,9 +200,13 @@ public class FirebaseUtils {
 
     }
 
-    public static void getUserFromFirebase(final OnUserDoneFetchListener finishListener){
+    /**
+     * Fetches a local user instance in the form of #FireUser
+     * @param finishListener The listener to be called after fetching is finished.
+     */
+    public static void getUserFromFirebase(final OnUserDoneFetchListener finishListener) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference specificUser = FirebaseDatabase.getInstance().getReference( USERS_TABLE_RUNNING + "/"+user.getUid());
+        DatabaseReference specificUser = FirebaseDatabase.getInstance().getReference(USERS_TABLE_RUNNING + "/" + user.getUid());
         ValueEventListener listener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -198,6 +224,10 @@ public class FirebaseUtils {
         specificUser.addListenerForSingleValueEvent(listener);
     }
 
+    /**
+     * Saves the date of the first generated weekly program remotely.
+     * @param firstWeeklyDate The date to be saved.
+     */
     public static void saveFirstWeeklyProgramDate(String firstWeeklyDate) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final DatabaseReference userTable = FirebaseDatabase.getInstance().getReference(USERS_TABLE_RUNNING + "/" + user.getUid());
@@ -207,31 +237,40 @@ public class FirebaseUtils {
 
     public static abstract class OnMeasurementFetchListener {
         public abstract void onSuccess(List<Measurement> measurements);
+
         public abstract void onFailure(DatabaseError error);
     }
+
     public static abstract class OnGlobalUserDoneFetchListener {
         public abstract void onSuccess(FireGlobalUser globalUser);
+
         public abstract void onFailure(DatabaseError error);
     }
+
     public static abstract class OnWorkoutFetchListener {
         public abstract void onSuccess(List<FireWorkout> workouts);
+
         public abstract void onFailure(DatabaseError error);
     }
+
     public static abstract class OnInitialDoneFetchListener {
         public abstract void onSuccess(boolean isInitialDone);
+
         public abstract void onFailure(DatabaseError error);
     }
 
     public static abstract class OnUserDoneFetchListener {
         public abstract void onSuccess(FireUser fireUser);
+
         public abstract void onFailure(DatabaseError error);
     }
 
 
     /**
      * Adds new user to the remote database.
+     * @param name The full name of the user.
      */
-    public static void addUser(String name){
+    public static void addUser(String name) {
         DatabaseReference usersTable = FirebaseDatabase.getInstance().getReference(USERS_TABLE_GLOBAL);
 
         FirebaseUser fireUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -244,27 +283,30 @@ public class FirebaseUtils {
         String email = fireUser.getEmail();
 
         String displayname = name;
-        if(displayname == null){
+        if (displayname == null) {
             displayname = fireUser.getDisplayName();
         }
         usersTable.child(identifier).child("email").setValue(email);
         usersTable.child(identifier).child("displayname").setValue(displayname);
     }
 
-    public static void isInitialDone(final OnInitialDoneFetchListener finishListener){
+    /**
+     * Checks if user has done initial activity and physical condition evaluation.
+     * @param finishListener The listener which will be called when fetching is completed.
+     */
+    public static void isInitialDone(final OnInitialDoneFetchListener finishListener) {
 
         FirebaseUser fireUser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference specificUser = FirebaseDatabase.getInstance().getReference(USERS_TABLE_RUNNING + "/"+fireUser.getUid());
+        DatabaseReference specificUser = FirebaseDatabase.getInstance().getReference(USERS_TABLE_RUNNING + "/" + fireUser.getUid());
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
-
                 boolean doneInitial;
 
-                try{
+                try {
                     doneInitial = dataSnapshot.child("doneInitial").getValue(Boolean.class);
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     doneInitial = false;
                 }
 

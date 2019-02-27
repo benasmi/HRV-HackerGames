@@ -25,7 +25,7 @@ public class BluetoothGattService extends Service {
     private BluetoothGatt gatt;
     private BluetoothDevice device;
     public static final String ACTION_CONNECTED = "CONNECTED_TO_GAAT";
-    public static final String ACTION_DISCONNECTED = "DISCONNECTED_FROM_GAAT";
+    public static final String ACTION_DISCONNECTED = "DISCONNECTED_FROM_GATT";
     public static final String ACTION_RECEIVING_DATA = "RECEIVING_DATA";
 
     final ArrayList<Integer> rrList = new ArrayList<Integer>();
@@ -34,17 +34,14 @@ public class BluetoothGattService extends Service {
     private static UUID HEART_RATE_MEASUREMENT_CHAR_UUID = Utils.convertFromInteger(0x2A37);
     private static UUID HEART_RATE_CONTROL_POINT_CHAR_UUID = Utils.convertFromInteger(0x2A39);
     private static UUID CLIENT_CHARACTERISTIC_CONFIG_UUID = Utils.convertFromInteger(0x2902);
-    private static String TAG = "TEST";
+    private static String TAG = "GATT_INFO";
 
     public static boolean isGattDeviceConnected = false;
+
     @Override
     public IBinder onBind(Intent intent) {
-
-
-
         return null;
     }
-
 
 
     @Override
@@ -56,7 +53,7 @@ public class BluetoothGattService extends Service {
         //and decides to (for some reason) connect to another device,
         //the gatt callbacks are still fired from the old device.
         //closing the gatt service if it's already running solves this problem.
-        if(gatt != null){
+        if (gatt != null) {
             gatt.close();
             isGattDeviceConnected = false;
         }
@@ -67,7 +64,7 @@ public class BluetoothGattService extends Service {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(!isGattDeviceConnected){
+                if (!isGattDeviceConnected) {
                     gatt.close();
                     LocalBroadcastManager.getInstance(BluetoothGattService.this).sendBroadcast(new Intent(ACTION_DISCONNECTED));
                 }
@@ -79,28 +76,26 @@ public class BluetoothGattService extends Service {
     }
 
 
-
     BluetoothGattCallback gattCallback = new BluetoothGattCallback() {
+
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
 
-            if(newState == BluetoothProfile.STATE_CONNECTED){
+            if (newState == BluetoothProfile.STATE_CONNECTED) {
                 gatt.discoverServices();
-            }else{
+            } else {
                 LocalBroadcastManager.getInstance(BluetoothGattService.this).sendBroadcast(new Intent(ACTION_DISCONNECTED));
                 isGattDeviceConnected = false;
             }
 
         }
 
-        
+
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
 
             isGattDeviceConnected = true;
-            LocalBroadcastManager.getInstance(BluetoothGattService.this).sendBroadcast(new Intent(ACTION_CONNECTED).putExtra("BT_DEVICE",device));
-
-
+            LocalBroadcastManager.getInstance(BluetoothGattService.this).sendBroadcast(new Intent(ACTION_CONNECTED).putExtra("BT_DEVICE", device));
 
             BluetoothGattCharacteristic characteristic =
                     gatt.getService(HEART_RATE_SERVICE_UUID)
@@ -141,9 +136,7 @@ public class BluetoothGattService extends Service {
             double energy = extractEnergyExpended(characteristic);
             int intervals[] = extractBeatToBeatInterval(characteristic);
 
-
-            LocalBroadcastManager.getInstance(BluetoothGattService.this).sendBroadcast(new Intent(ACTION_RECEIVING_DATA).putExtra("RR_intervals",intervals).putExtra("BPM",heartRate));
-
+            LocalBroadcastManager.getInstance(BluetoothGattService.this).sendBroadcast(new Intent(ACTION_RECEIVING_DATA).putExtra("RR_intervals", intervals).putExtra("BPM", heartRate));
 
             super.onCharacteristicChanged(gatt, characteristic);
         }
@@ -154,18 +147,18 @@ public class BluetoothGattService extends Service {
             BluetoothGattCharacteristic characteristic) {
 
         int flag = characteristic.getProperties();
-//        Log.d(TAG, "Heart rate flag: " + flag);
+        Log.d(TAG, "Heart rate flag: " + flag);
         int format = -1;
         // Heart rate bit number format
         if ((flag & 0x01) != 0) {
             format = BluetoothGattCharacteristic.FORMAT_UINT16;
-//            Log.d(TAG, "Heart rate format UINT16.");
+            Log.d(TAG, "Heart rate format UINT16.");
         } else {
             format = BluetoothGattCharacteristic.FORMAT_UINT8;
-//            Log.d(TAG, "Heart rate format UINT8.");
+            Log.d(TAG, "Heart rate format UINT8.");
         }
         final int heartRate = characteristic.getIntValue(format, 1);
-//        Log.d(TAG, String.format("Received heart rate: %d", heartRate));
+        Log.d(TAG, String.format("Received heart rate: %d", heartRate));
         return heartRate;
     }
 
@@ -176,17 +169,17 @@ public class BluetoothGattService extends Service {
         int format = -1;
         // Sensor contact status
         if ((flag & 0x02) != 0) {
-//            Log.d(TAG, "Heart rate sensor contact info exists");
+            Log.d(TAG, "Heart rate sensor contact info exists");
             if ((flag & 0x04) != 0) {
-//                Log.d(TAG, "Heart rate sensor contact is ON");
+                Log.d(TAG, "Heart rate sensor contact is ON");
             } else {
-//                Log.d(TAG, "Heart rate sensor contact is OFF");
+                Log.d(TAG, "Heart rate sensor contact is OFF");
             }
-        } else  {
-//            Log.d(TAG, "Heart rate sensor contact info doesn't exists");
+        } else {
+            Log.d(TAG, "Heart rate sensor contact info doesn't exists");
         }
-        //final int heartRate = characteristic.getIntValue(format, 1);
-        //Log.d(TAG, String.format("Received heart rate: %d", heartRate));
+        final int heartRate = characteristic.getIntValue(format, 1);
+        Log.d(TAG, String.format("Received heart rate: %d", heartRate));
         return 0.0d;
     }
 
@@ -197,19 +190,19 @@ public class BluetoothGattService extends Service {
         int format = -1;
         // Energy calculation status
         if ((flag & 0x08) != 0) {
-//            Log.d(TAG, "Heart rate energy calculation exists.");
+            Log.d(TAG, "Heart rate energy calculation exists.");
         } else {
-//            Log.d(TAG, "Heart rate energy calculation doesn't exists.");
+            Log.d(TAG, "Heart rate energy calculation doesn't exists.");
         }
-        //final int heartRate = characteristic.getIntValue(format, 1);
-        //Log.d(TAG, String.format("Received heart rate: %d", heartRate));
+        final int heartRate = characteristic.getIntValue(format, 1);
+        Log.d(TAG, String.format("Received heart rate: %d", heartRate));
         return 0.0d;
     }
 
     private static int[] extractBeatToBeatInterval(
             BluetoothGattCharacteristic characteristic) {
 
-        int emptyArray[]={};
+        int emptyArray[] = {};
         int flag = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 0);
         int format = -1;
         int energy = -1;
@@ -229,15 +222,15 @@ public class BluetoothGattService extends Service {
             // calories present
             energy = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16, offset);
             offset += 2;
-            Log.d(TAG, "Received energy: {}"+ energy);
+            Log.d(TAG, "Received energy: {}" + energy);
         }
-        if ((flag & 0x16) != 0){
+        if ((flag & 0x16) != 0) {
             // RR stuff.
-           Log.d(TAG, "RR stuff found at offset: "+ offset);
-            Log.d(TAG, "RR length: "+ (characteristic.getValue()).length);
+            Log.d(TAG, "RR stuff found at offset: " + offset);
+            Log.d(TAG, "RR length: " + (characteristic.getValue()).length);
             rr_count = ((characteristic.getValue()).length - offset) / 2;
-            Log.d(TAG, "RR length: "+ (characteristic.getValue()).length);
-            Log.d(TAG, "rr_count: "+ rr_count);
+            Log.d(TAG, "RR length: " + (characteristic.getValue()).length);
+            Log.d(TAG, "rr_count: " + rr_count);
             if (rr_count > 0) {
                 int[] mRr_values = new int[rr_count];
                 for (int i = 0; i < rr_count; i++) {
@@ -250,14 +243,7 @@ public class BluetoothGattService extends Service {
             }
         }
 
-
         Log.d(TAG, "No RR data on this update: ");
         return emptyArray;
     }
-
-
-
-
-
-
 }

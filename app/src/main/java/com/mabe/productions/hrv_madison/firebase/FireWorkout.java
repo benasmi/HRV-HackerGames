@@ -19,34 +19,34 @@ public class FireWorkout {
     private String running_pulse_zones;
     private String walking_pulse_zones;
 
-    public FireWorkout(){
+    public FireWorkout() {
 
     }
 
-    public FireWorkout(WorkoutMeasurements workoutMeasurements){
-        this.date             = Utils.getStringFromDate(workoutMeasurements.getDate());
+    public FireWorkout(WorkoutMeasurements workoutMeasurements) {
+        this.date = Utils.getStringFromDate(workoutMeasurements.getDate());
         this.workout_duration = workoutMeasurements.getWorkout_duration();
-        this.average_bpm      = workoutMeasurements.getAverage_bpm();
-        this.bpm_data         = FeedReaderDbHelper.intArrayToString(workoutMeasurements.getBpm_data());
-        this.pace_data        = FeedReaderDbHelper.floatArrayToString(workoutMeasurements.getPace_data());
-        this.route            = FeedReaderDbHelper.routeToString(workoutMeasurements.getRoute());
-        this.calories_burned  = workoutMeasurements.getCalories_burned();
-        this.distance         = workoutMeasurements.getDistance();
+        this.average_bpm = workoutMeasurements.getAverage_bpm();
+        this.bpm_data = FeedReaderDbHelper.intArrayToString(workoutMeasurements.getBpm_data());
+        this.pace_data = FeedReaderDbHelper.floatArrayToString(workoutMeasurements.getPace_data());
+        this.route = FeedReaderDbHelper.routeToString(workoutMeasurements.getRoute());
+        this.calories_burned = workoutMeasurements.getCalories_burned();
+        this.distance = workoutMeasurements.getDistance();
         this.workout_intervals = FeedReaderDbHelper.longArrayToString(workoutMeasurements.getExercise().getWorkoutIntervals());
         this.running_pulse_zones = FeedReaderDbHelper.intArrayToString(workoutMeasurements.getExercise().getRunningPulseZones());
         this.walking_pulse_zones = FeedReaderDbHelper.intArrayToString(workoutMeasurements.getExercise().getWalkingPulseZones());
     }
 
     public FireWorkout(String date, float workout_duration, float average_bpm, String bpm_data, String pace_data, String route, float calories_burned, float distance, String workout_intervals, String running_pulse_zones, String walking_pulse_zones) {
-        this.date                = date;
-        this.workout_duration    = workout_duration;
-        this.average_bpm         = average_bpm;
-        this.bpm_data            = bpm_data;
-        this.pace_data           = pace_data;
-        this.route               = route;
-        this.calories_burned     = calories_burned;
-        this.distance            = distance;
-        this.workout_intervals   = workout_intervals;
+        this.date = date;
+        this.workout_duration = workout_duration;
+        this.average_bpm = average_bpm;
+        this.bpm_data = bpm_data;
+        this.pace_data = pace_data;
+        this.route = route;
+        this.calories_burned = calories_burned;
+        this.distance = distance;
+        this.workout_intervals = workout_intervals;
         this.running_pulse_zones = running_pulse_zones;
         this.walking_pulse_zones = walking_pulse_zones;
     }

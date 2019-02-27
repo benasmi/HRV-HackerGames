@@ -1,20 +1,14 @@
 package com.mabe.productions.hrv_madison;
 
 import android.app.KeyguardManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.PixelFormat;
 import android.os.IBinder;
-import android.os.Parcelable;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -24,9 +18,6 @@ import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
 
-/**
- * Created by Benas on 5/1/2018.
- */
 
 public class GoogleMapService extends Service {
 
@@ -67,22 +58,21 @@ public class GoogleMapService extends Service {
 //                                                    locationPendingIntent);
 
 
-
         myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
 
 
     }
 
 
-    private void aquireWakelock(){
+    private void aquireWakelock() {
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                                                                  GPS_WAKELOCK_TAG);
+                GPS_WAKELOCK_TAG);
         wakeLock.acquire();
     }
 
-    private void releaseWakelock(){
-        if(wakeLock.isHeld()){
+    private void releaseWakelock() {
+        if (wakeLock.isHeld()) {
             wakeLock.release();
         }
     }
@@ -100,7 +90,7 @@ public class GoogleMapService extends Service {
             Log.i("TEST", "Getting results...");
 
             //If accuraccy is shit do not add to locationResults Array
-            if(locationResult.getLastLocation().getAccuracy() > 50){
+            if (locationResult.getLastLocation().getAccuracy() > 50) {
                 Log.i("TEST", "Location not accurate enough: " + locationResult.getLastLocation().getAccuracy() + "m");
                 return;
             }
@@ -109,7 +99,7 @@ public class GoogleMapService extends Service {
             locationArrayList.add(locationResult);
 
             //If screen is locked, keep on adding and don't send any data
-            if( myKM.inKeyguardRestrictedInputMode()) {
+            if (myKM.inKeyguardRestrictedInputMode()) {
                 //it is locked
                 return;
             }
@@ -120,8 +110,7 @@ public class GoogleMapService extends Service {
             //Clear arrayList after sending, to start adding new data
             locationArrayList.clear();
 
-            }
-
+        }
 
 
     };

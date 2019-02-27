@@ -1,11 +1,7 @@
 package com.mabe.productions.hrv_madison.FingerHRV;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -13,11 +9,7 @@ import android.view.View;
 import com.mabe.productions.hrv_madison.R;
 
 
-
 public class HeartbeatView extends View {
-
-    private static final Matrix matrix = new Matrix();
-    private static final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     private static Drawable greenDrawable = null;
     private static Drawable redDrawable = null;
@@ -27,16 +19,15 @@ public class HeartbeatView extends View {
 
     public HeartbeatView(Context context, AttributeSet attr) {
         super(context, attr);
-
         greenDrawable = getResources().getDrawable(R.drawable.ic_heart_white_hrv_finger);
         redDrawable = getResources().getDrawable(R.drawable.ic_heart);
     }
 
     public HeartbeatView(Context context) {
         super(context);
-
         greenDrawable = getResources().getDrawable(R.drawable.ic_heart_white_hrv_finger);
-        redDrawable = getResources().getDrawable(R.drawable.ic_heart);    }
+        redDrawable = getResources().getDrawable(R.drawable.ic_heart);
+    }
 
     /**
      * {@inheritDoc}
@@ -58,9 +49,9 @@ public class HeartbeatView extends View {
         if (canvas == null) throw new NullPointerException();
 
         Drawable d = null;
-        if (HeartRateMonitor.getCurrent() == HeartRateMonitor.TYPE.GREEN){
+        if (HeartRateMonitor.getCurrent() == HeartRateMonitor.TYPE.GREEN) {
             d = greenDrawable;
-        }else{
+        } else {
             d = redDrawable;
         }
         d.setBounds(canvas.getClipBounds());

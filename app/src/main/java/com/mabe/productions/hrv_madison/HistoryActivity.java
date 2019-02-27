@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -43,7 +42,7 @@ public class HistoryActivity extends AppCompatActivity {
         workouts = user.getAllWorkouts();
         measurements = user.getAllMeasurements();
 
-        combineMeasurementsAndWorkouts(measurements,workouts);
+        combineMeasurementsAndWorkouts(measurements, workouts);
         sortByDate(adapterDataSet);
 
         initialiseViews();
@@ -51,15 +50,10 @@ public class HistoryActivity extends AppCompatActivity {
 
     }
 
-    private void initialiseViews(){
-
-
-        //Date currentTime = Calendar.getInstance().getTime();
-        //Log.i("TEST", String.valueOf(currentTime));
+    private void initialiseViews() {
 
         Animation left_to_right = AnimationUtils.loadAnimation(this, R.anim.left_to_right);
         Animation left_to_right_d = AnimationUtils.loadAnimation(this, R.anim.left_to_right_delay);
-
 
 
         recyclerview_history = (RecyclerView) findViewById(R.id.history_recyler);
@@ -97,7 +91,7 @@ public class HistoryActivity extends AppCompatActivity {
         txt_history.startAnimation(left_to_right_d);
     }
 
-    private void setFonts(){
+    private void setFonts() {
         Typeface futura = Typeface.createFromAsset(getAssets(),
                 "fonts/futura_light.ttf");
 
@@ -105,62 +99,60 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
 
+    private void combineMeasurementsAndWorkouts(ArrayList<Measurement> measurements, ArrayList<WorkoutMeasurements> workouts) {
 
-
-    private void combineMeasurementsAndWorkouts(ArrayList<Measurement> measurements, ArrayList<WorkoutMeasurements> workouts){
-
-        for(WorkoutMeasurements workout: workouts){
-            adapterDataSet.add(0,new HistoryRecyclerViewDataHolder(
+        for (WorkoutMeasurements workout : workouts) {
+            adapterDataSet.add(0, new HistoryRecyclerViewDataHolder(
                     workout.getExercise()
-                    ,workout.getUnique_id()
-                    ,workout.getDate()
-                    ,workout.getWorkout_duration()
-                    ,workout.getAverage_bpm()
-                    ,workout.getBpm_data()
-                    ,workout.getPace_data()
-                    ,workout.getRoute()
-                    ,workout.getCalories_burned()
-                    ,workout.getDistance()
-                    ,0));
+                    , workout.getUnique_id()
+                    , workout.getDate()
+                    , workout.getWorkout_duration()
+                    , workout.getAverage_bpm()
+                    , workout.getBpm_data()
+                    , workout.getPace_data()
+                    , workout.getRoute()
+                    , workout.getCalories_burned()
+                    , workout.getDistance()
+                    , 0));
         }
 
-        for(Measurement measurement: measurements){
-            adapterDataSet.add(0,new HistoryRecyclerViewDataHolder(
+        for (Measurement measurement : measurements) {
+            adapterDataSet.add(0, new HistoryRecyclerViewDataHolder(
                     measurement.getDate()
-                    ,measurement.getDuration()
-                    ,measurement.getRmssd()
-                    ,measurement.getLn_rmssd()
-                    ,measurement.getLowest_rmssd()
-                    ,measurement.getHighest_rmssd()
-                    ,measurement.getLowest_bpm()
-                    ,measurement.getHighest_bpm()
-                    ,measurement.getAverage_bpm()
-                    ,measurement.getLF_band()
-                    ,measurement.getVLF_band()
-                    ,measurement.getVHF_band()
-                    ,measurement.getHF_band()
-                    ,measurement.getBpm_data()
-                    ,measurement.getRmssd_data()
-                    ,measurement.getUniqueId()
-                    ,measurement.getMood()
-                    ,measurement.getHrv(),1));
+                    , measurement.getDuration()
+                    , measurement.getRmssd()
+                    , measurement.getLn_rmssd()
+                    , measurement.getLowest_rmssd()
+                    , measurement.getHighest_rmssd()
+                    , measurement.getLowest_bpm()
+                    , measurement.getHighest_bpm()
+                    , measurement.getAverage_bpm()
+                    , measurement.getLF_band()
+                    , measurement.getVLF_band()
+                    , measurement.getVHF_band()
+                    , measurement.getHF_band()
+                    , measurement.getBpm_data()
+                    , measurement.getRmssd_data()
+                    , measurement.getUniqueId()
+                    , measurement.getMood()
+                    , measurement.getHrv(), 1));
         }
     }
 
-    private void sortByDate(ArrayList<HistoryRecyclerViewDataHolder> data){
+    private void sortByDate(ArrayList<HistoryRecyclerViewDataHolder> data) {
 
         Calendar cal = Calendar.getInstance();
 
-            for(int i = 0; i<data.size(); i++){
-                for(int z = 0; z<data.size()-1; z++){
-                    boolean after = data.get(z).getDate().before(data.get(z+1).getDate());
-                    if(after){
-                        HistoryRecyclerViewDataHolder temporaryItem = data.get(z+1);
-                        data.set(z+1, data.get(z));
-                        data.set(z, temporaryItem);
-                    }
+        for (int i = 0; i < data.size(); i++) {
+            for (int z = 0; z < data.size() - 1; z++) {
+                boolean after = data.get(z).getDate().before(data.get(z + 1).getDate());
+                if (after) {
+                    HistoryRecyclerViewDataHolder temporaryItem = data.get(z + 1);
+                    data.set(z + 1, data.get(z));
+                    data.set(z, temporaryItem);
                 }
             }
+        }
 
     }
 

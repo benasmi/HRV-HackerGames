@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -41,7 +40,7 @@ public class IntroInitialMaxDuration extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.intro_initial_max_duration_activity);
-        Utils.changeNotifBarColor(Color.parseColor("#3e5266"),getWindow());
+        Utils.changeNotifBarColor(Color.parseColor("#3e5266"), getWindow());
 
         //Saving intro progress
         initializeViews();
@@ -49,7 +48,7 @@ public class IntroInitialMaxDuration extends AppCompatActivity {
     }
 
 
-    private void initializeViews(){
+    private void initializeViews() {
 
 
         Animation anim_txt_value = AnimationUtils.loadAnimation(this, R.anim.fade_in);
@@ -91,7 +90,7 @@ public class IntroInitialMaxDuration extends AppCompatActivity {
 
     }
 
-    private void setFonts(){
+    private void setFonts() {
 
         Typeface verdana = Typeface.createFromAsset(getAssets(),
                 "fonts/futura_light.ttf");
@@ -103,29 +102,27 @@ public class IntroInitialMaxDuration extends AppCompatActivity {
     }
 
     public void startMain(View view) {
-    if(!clickedOnce){
-        clickedOnce=true;
-        if(maxDur<=15){
-            clickedOnce = false;
-            Toast.makeText(IntroInitialMaxDuration.this,"Pasirinkite didesnį periodą, negu 15min!", Toast.LENGTH_LONG).show();
-        }else{
+        if (!clickedOnce) {
+            clickedOnce = true;
+            if (maxDur <= 15) {
+                clickedOnce = false;
+                Toast.makeText(IntroInitialMaxDuration.this, "Pasirinkite didesnį periodą, negu 15min!", Toast.LENGTH_LONG).show();
+            } else {
 
-            FirebaseAuth mAuth = FirebaseAuth.getInstance();
-            FirebaseUser user = mAuth.getCurrentUser();
-            final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference(FirebaseUtils.USERS_TABLE_RUNNING + "/" + user.getUid());            fireDatabase.child("doneInitial").setValue(true);
-            fireDatabase.child("maxDuration").setValue((float) maxDur);
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                FirebaseUser user = mAuth.getCurrentUser();
+                final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference(FirebaseUtils.USERS_TABLE_RUNNING + "/" + user.getUid());
+                fireDatabase.child("doneInitial").setValue(true);
+                fireDatabase.child("maxDuration").setValue((float) maxDur);
 
-            Utils.saveToSharedPrefs(this,FeedReaderDbHelper.FIELD_BASE_DURATION, (float) maxDur,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-            Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_DONE_INITIAL, true, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_BASE_DURATION, (float) maxDur, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_DONE_INITIAL, true, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
 
-            new CustomLoadingDialog(this, "Loading").show();
+                new CustomLoadingDialog(this, "Loading").show();
 
-            startActivity(new Intent(this, MainScreenActivity.class));
+                startActivity(new Intent(this, MainScreenActivity.class));
+            }
         }
-    }
-
-
-
 
 
     }

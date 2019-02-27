@@ -4,9 +4,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.Context;
 
-/**
- * Created by Benas on 9/7/2016.
- */
 public class ViewPagerAdapter extends android.support.v4.app.FragmentPagerAdapter {
 
     public MeasurementFragment measurementFragment;
@@ -23,7 +20,7 @@ public class ViewPagerAdapter extends android.support.v4.app.FragmentPagerAdapte
     @Override
     public Fragment getItem(int position) {
 
-        switch (position){
+        switch (position) {
             case 0:
                 return measurementFragment;
 

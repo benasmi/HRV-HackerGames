@@ -2,10 +2,6 @@ package com.mabe.productions.hrv_madison.bluetooth;
 
 import android.bluetooth.BluetoothDevice;
 
-/**
- * Created by Martynas on 2018-02-16.
- */
-
 public class DeviceViewInfo {
 
     private boolean isNearby;

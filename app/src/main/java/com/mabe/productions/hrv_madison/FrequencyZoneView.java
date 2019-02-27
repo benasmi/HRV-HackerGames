@@ -1,17 +1,14 @@
 package com.mabe.productions.hrv_madison;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 
 public class FrequencyZoneView extends View {
@@ -23,12 +20,6 @@ public class FrequencyZoneView extends View {
 
     private final int PULSE_ZONE_ELEMET_SELECTOR_WIDTH = 40; //10px screen's padding
     private final int PULSE_ZONE_ELEMET_SELECTOR_HEIGHT_PADDING = 15; //10px screen's padding
-
-    /*
-    private final float SYMPATETIC_POSITION_X = 0.05f;
-    private final float PARASYMPATETIC_POSITION_X = 0.75f;
-    private final float BALANCE_POSITION_X = 0.4f;
-*/
     private final float TEXT_PADDING = 0.02f;
 
 
@@ -41,17 +32,14 @@ public class FrequencyZoneView extends View {
     private Paint txt_paint;
 
 
-
     public FrequencyZoneView(Context context, AttributeSet st) {
         super(context, st);
         Resources resources = getContext().getResources();
 
 
-
         txt_paint = new Paint();
         txt_paint.setColor(Color.WHITE);
         txt_paint.setTextSize(38f);
-
 
 
         red_to_green = resources.getDrawable(R.drawable.red_to_green_rectangle);
@@ -69,15 +57,14 @@ public class FrequencyZoneView extends View {
         int height = canvas.getHeight();
         int width = canvas.getWidth();
 
-        red_to_green.setBounds(0,0,(int)(width*RED_TO_GREEN_WIDTH),(int) (height*BAR_HEIGHT));
+        red_to_green.setBounds(0, 0, (int) (width * RED_TO_GREEN_WIDTH), (int) (height * BAR_HEIGHT));
         red_to_green.draw(canvas);
-        green.setBounds((int)(width*RED_TO_GREEN_WIDTH),0,(int)(width*GREEN_WIDTH)+(int)(width*RED_TO_GREEN_WIDTH),(int) (height*BAR_HEIGHT));
+        green.setBounds((int) (width * RED_TO_GREEN_WIDTH), 0, (int) (width * GREEN_WIDTH) + (int) (width * RED_TO_GREEN_WIDTH), (int) (height * BAR_HEIGHT));
         green.draw(canvas);
-        green_to_red.setBounds((int)(width*RED_TO_GREEN_WIDTH)+(int)(width*GREEN_WIDTH) ,0,(int)((width*GREEN_TO_RED_WIDTH)+(width*RED_TO_GREEN_WIDTH)+(width*GREEN_WIDTH)),(int) (height*BAR_HEIGHT));
+        green_to_red.setBounds((int) (width * RED_TO_GREEN_WIDTH) + (int) (width * GREEN_WIDTH), 0, (int) ((width * GREEN_TO_RED_WIDTH) + (width * RED_TO_GREEN_WIDTH) + (width * GREEN_WIDTH)), (int) (height * BAR_HEIGHT));
         green_to_red.draw(canvas);
-        elementSelector.setBounds((int) (getWidth()*multiplier)-PULSE_ZONE_ELEMET_SELECTOR_WIDTH, (int) ((height*BAR_HEIGHT)+PULSE_ZONE_ELEMET_SELECTOR_HEIGHT_PADDING), (int) (getWidth()*multiplier + PULSE_ZONE_ELEMET_SELECTOR_WIDTH),height);
+        elementSelector.setBounds((int) (getWidth() * multiplier) - PULSE_ZONE_ELEMET_SELECTOR_WIDTH, (int) ((height * BAR_HEIGHT) + PULSE_ZONE_ELEMET_SELECTOR_HEIGHT_PADDING), (int) (getWidth() * multiplier + PULSE_ZONE_ELEMET_SELECTOR_WIDTH), height);
         elementSelector.draw(canvas);
-
 
 
         float width_symp = txt_paint.measureText("Sympathetic");
@@ -89,27 +76,25 @@ public class FrequencyZoneView extends View {
         Log.i("TESTC", "Height-Canvas:" + height);
     }
 
-    public void setElementPosition(float ratio){
-        float calcPercentage = ratio*100/2.5f;
-        multiplier = calculatePercentage(calcPercentage/100f);
+    public void setElementPosition(float ratio) {
+        float calcPercentage = ratio * 100 / 2.5f;
+        multiplier = calculatePercentage(calcPercentage / 100f);
 
     }
 
 
-
-    private double calculatePercentage(float x){
-       if(x<=0.2){
-            return 5f*x/3f;
-       }
-       if(x>0.2 && x<0.8){
-            return (5f*x/9f)+(2f/9f);
-       }
-       if(x>=0.8){
-            return (5f*x/3f)-2f/3f;
-       }
-       return 0;
+    private double calculatePercentage(float x) {
+        if (x <= 0.2) {
+            return 5f * x / 3f;
+        }
+        if (x > 0.2 && x < 0.8) {
+            return (5f * x / 9f) + (2f / 9f);
+        }
+        if (x >= 0.8) {
+            return (5f * x / 3f) - 2f / 3f;
+        }
+        return 0;
     }
-
 
 
 }

@@ -8,7 +8,6 @@ import android.support.graphics.drawable.Animatable2Compat;
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -29,7 +28,7 @@ public class IntroInitialPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.intro_initial_page_activity);
-        Utils.changeNotifBarColor(Color.parseColor("#3e5266"),getWindow());
+        Utils.changeNotifBarColor(Color.parseColor("#3e5266"), getWindow());
         initializeViews();
         setFonts();
 
@@ -68,19 +67,19 @@ public class IntroInitialPage extends AppCompatActivity {
         animatedIconVectorIntro.start();
     }
 
-    private void setFonts(){
+    private void setFonts() {
 
         Typeface verdana = Typeface.createFromAsset(getAssets(),
                 "fonts/futura_light.ttf");
 
 
         txt_request_info_explanation.setTypeface(verdana);
-    }//
+    }
 
-    private void initializeViews(){
+    private void initializeViews() {
 
 
-        Animation start_btn = AnimationUtils.loadAnimation(this,R.anim.bottom_to_top_delay);
+        Animation start_btn = AnimationUtils.loadAnimation(this, R.anim.bottom_to_top_delay);
         Animation img_anim = AnimationUtils.loadAnimation(this, R.anim.fade_in);
         Animation request_anim = AnimationUtils.loadAnimation(this, R.anim.fade_in_delay);
 
@@ -92,7 +91,6 @@ public class IntroInitialPage extends AppCompatActivity {
         img.startAnimation(img_anim);
         btn_start.startAnimation(start_btn);
     }
-
 
 
     public void start(View view) {

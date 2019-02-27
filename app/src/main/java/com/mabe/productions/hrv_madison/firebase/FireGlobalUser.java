@@ -1,11 +1,16 @@
 package com.mabe.productions.hrv_madison.firebase;
 
+/**
+ * This class represents the database structure of a the global user table row.
+ * See documentation for more info.
+ */
+
 public class FireGlobalUser {
 
     private String displayname;
     private String email;
 
-    public FireGlobalUser(){
+    public FireGlobalUser() {
 
     }
 

@@ -1,9 +1,5 @@
 package com.mabe.productions.hrv_madison.measurements;
 
-/**
- * Created by Benas on 2/23/2018.
- */
-
 import java.util.Objects;
 
 public class Complex {
@@ -20,7 +16,7 @@ public class Complex {
     public String toString() {
         if (im == 0) return re + "";
         if (re == 0) return im + "i";
-        if (im <  0) return re + " - " + (-im) + "i";
+        if (im < 0) return re + " - " + (-im) + "i";
         return re + " + " + im + "i";
     }
 
@@ -70,13 +66,18 @@ public class Complex {
 
     // return a new Complex object whose value is the reciprocal of this
     public Complex reciprocal() {
-        double scale = re*re + im*im;
+        double scale = re * re + im * im;
         return new Complex(re / scale, -im / scale);
     }
 
     // return the real or imaginary part
-    public double re() { return re; }
-    public double im() { return im; }
+    public double re() {
+        return re;
+    }
+
+    public double im() {
+        return im;
+    }
 
     // return a / b
     public Complex divides(Complex b) {
@@ -105,7 +106,6 @@ public class Complex {
     }
 
 
-
     // a static version of plus
     public static Complex plus(Complex a, Complex b) {
         double real = a.re + b.re;
@@ -126,25 +126,5 @@ public class Complex {
     public int hashCode() {
         return Objects.hash(re, im);
     }
-
-    // sample client for testing
-//    public static void main(String[] args) {
-//        Complex a = new Complex(5.0, 6.0);
-//        Complex b = new Complex(-3.0, 4.0);
-//
-//        StdOut.println("a            = " + a);
-//        StdOut.println("b            = " + b);
-//        StdOut.println("Re(a)        = " + a.re());
-//        StdOut.println("Im(a)        = " + a.im());
-//        StdOut.println("b + a        = " + b.plus(a));
-//        StdOut.println("a - b        = " + a.minus(b));
-//        StdOut.println("a * b        = " + a.times(b));
-//        StdOut.println("b * a        = " + b.times(a));
-//        StdOut.println("a / b        = " + a.divides(b));
-//        StdOut.println("(a / b) * b  = " + a.divides(b).times(b));
-//        StdOut.println("conj(a)      = " + a.conjugate());
-//        StdOut.println("|a|          = " + a.abs());
-//        StdOut.println("tan(a)       = " + a.tan());
-//    }
 
 }

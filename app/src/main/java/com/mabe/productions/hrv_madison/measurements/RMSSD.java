@@ -1,12 +1,7 @@
 package com.mabe.productions.hrv_madison.measurements;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 
-/**
- * Created by Benas on 2/15/2018.
- */
 
 public class RMSSD {
 
@@ -15,7 +10,7 @@ public class RMSSD {
 
     public int calculateRMSSD() {
 
-        int rmssd=0;
+        int rmssd = 0;
         int rrSum = 0;
         int inverse = 0;
         int i = 0;
@@ -23,9 +18,9 @@ public class RMSSD {
         if (rrList.size() >= 2) {
 
 
-            for ( i = 2 ; i < rrList.size(); i++) {
+            for (i = 2; i < rrList.size(); i++) {
 
-                rrSum = (rrList.get(i-1) - rrList.get(i));
+                rrSum = (rrList.get(i - 1) - rrList.get(i));
                 rrSum = rrSum * rrSum;
                 tempSum = tempSum + rrSum;
             }
@@ -39,65 +34,65 @@ public class RMSSD {
         return rmssd;
     }
 
-    public int getRmssd(){
-        return rmssdList.get(rmssdList.size() > 0 ? rmssdList.size()-1 : 0);
+    public int getRmssd() {
+        return rmssdList.get(rmssdList.size() > 0 ? rmssdList.size() - 1 : 0);
     }
 
 
-
-    public void clear(){
+    public void clear() {
         rmssdList.clear();
         rrList.clear();
     }
 
 
-    public void addIntervals(int [] intervals){
+    public void addIntervals(int[] intervals) {
 
-            for(int i = 0; i<intervals.length; i++){
-                rrList.add(intervals[i]);
-            }
-    }
-    public void addInterval(int interval){
-            rrList.add(interval);
+        for (int i = 0; i < intervals.length; i++) {
+            rrList.add(intervals[i]);
+        }
     }
 
-    public int getLowestRmssd(){
+    public void addInterval(int interval) {
+        rrList.add(interval);
+    }
+
+    public int getLowestRmssd() {
         int lowest_rmssd = rmssdList.get(0);
 
-        for(int rmssd : rmssdList){
+        for (int rmssd : rmssdList) {
             lowest_rmssd = rmssd < lowest_rmssd ? rmssd : lowest_rmssd;
         }
 
         return lowest_rmssd;
     }
 
-    public float getLnRmssd(){
+    public float getLnRmssd() {
 
-        return (float) Math.log(rmssdList.get(rmssdList.size()-1));
+        return (float) Math.log(rmssdList.get(rmssdList.size() - 1));
     }
 
-    public int getHrv(){
+    public int getHrv() {
 
-        int HRV = (int) (getLnRmssd()*15.5f);
-        if(HRV<=0){
+        int HRV = (int) (getLnRmssd() * 15.5f);
+        if (HRV <= 0) {
             return 0;
         }
         return HRV;
     }
 
-    public int getHighestRmssd(){
+    public int getHighestRmssd() {
         int highest_rmssd = rmssdList.get(0);
 
-        for(int rmssd : rmssdList){
+        for (int rmssd : rmssdList) {
             highest_rmssd = rmssd > highest_rmssd ? rmssd : highest_rmssd;
         }
 
         return highest_rmssd;
     }
 
-    public int[] getRMSSDValues(){
+    public int[] getRMSSDValues() {
         int[] values = new int[rmssdList.size()];
-        for(int i = 0; i < values.length; i++){
+        for (int i = 0; i < values.length; i++) {
             values[i] = rmssdList.get(i);
         }
         return values;

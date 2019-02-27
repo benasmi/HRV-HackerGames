@@ -10,12 +10,6 @@ import com.mabe.productions.hrv_madison.firebase.FireWorkout;
 
 import java.util.Date;
 
-/**
- * Created by Martynas on 2018-03-17.
- */
-
-
-
 public class WorkoutMeasurements {
 
     private int unique_id;
@@ -41,28 +35,29 @@ public class WorkoutMeasurements {
         this.distance = distance;
         this.exercise = exercise;
     }
-    public WorkoutMeasurements(Exercise exercise, Date date, float workout_duration,  float average_bpm, int[] bpm_data, float[] pace_data, LatLng[] route, float calories_burned, float distance) {
-        this.date             = date;
+
+    public WorkoutMeasurements(Exercise exercise, Date date, float workout_duration, float average_bpm, int[] bpm_data, float[] pace_data, LatLng[] route, float calories_burned, float distance) {
+        this.date = date;
         this.workout_duration = workout_duration;
-        this.average_bpm      = average_bpm;
-        this.bpm_data         = bpm_data;
-        this.pace_data        = pace_data;
-        this.route            = route;
-        this.calories_burned  = calories_burned;
-        this.distance         = distance;
-        this.exercise         = exercise;
+        this.average_bpm = average_bpm;
+        this.bpm_data = bpm_data;
+        this.pace_data = pace_data;
+        this.route = route;
+        this.calories_burned = calories_burned;
+        this.distance = distance;
+        this.exercise = exercise;
     }
 
-    public WorkoutMeasurements(FireWorkout workout){
+    public WorkoutMeasurements(FireWorkout workout) {
 
-        this.date             = Utils.getDateFromString(workout.getDate());
+        this.date = Utils.getDateFromString(workout.getDate());
         this.workout_duration = workout.getWorkout_duration();
-        this.average_bpm      = workout.getAverage_bpm();
-        this.bpm_data         = FeedReaderDbHelper.getIntArrayFromString(workout.getBpm_data());
-        this.pace_data        = FeedReaderDbHelper.getFloatArrayFromString(workout.getPace_data());
-        this.route            = FeedReaderDbHelper.getRouteFromString(workout.getRoute());
-        this.calories_burned  = workout.getCalories_burned();
-        this.distance         = workout.getDistance();
+        this.average_bpm = workout.getAverage_bpm();
+        this.bpm_data = FeedReaderDbHelper.getIntArrayFromString(workout.getBpm_data());
+        this.pace_data = FeedReaderDbHelper.getFloatArrayFromString(workout.getPace_data());
+        this.route = FeedReaderDbHelper.getRouteFromString(workout.getRoute());
+        this.calories_burned = workout.getCalories_burned();
+        this.distance = workout.getDistance();
 
         this.exercise = new Exercise();
         this.exercise.setRunningPulseZones(FeedReaderDbHelper.getIntArrayFromString(workout.getRunning_pulse_zones()));
@@ -72,8 +67,7 @@ public class WorkoutMeasurements {
     }
 
 
-
-    public ContentValues getContentValues(){
+    public ContentValues getContentValues() {
         ContentValues values = new ContentValues();
         values.put(FeedReaderDbHelper.WORKOUT_COL_AVERAGE_BPM, getAverage_bpm());
         values.put(FeedReaderDbHelper.WORKOUT_COL_DATE, Utils.getStringFromDate(getDate()));
@@ -125,16 +119,16 @@ public class WorkoutMeasurements {
 
     public float getAveragePace() {
 
-        if(pace_data.length == 0){
+        if (pace_data.length == 0) {
             return 0;
         }
 
         float totalPace = 0;
-        for(float pace : pace_data){
-            totalPace+=pace;
+        for (float pace : pace_data) {
+            totalPace += pace;
         }
 
-        return Math.round(totalPace*100f/(float) pace_data.length)/100f;
+        return Math.round(totalPace * 100f / (float) pace_data.length) / 100f;
     }
 
 

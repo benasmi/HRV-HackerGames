@@ -10,10 +10,6 @@ import com.mabe.productions.hrv_madison.firebase.FireMeasurement;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * Created by Martynas on 2018-02-28.
- */
-
 public class Measurement {
 
 
@@ -38,28 +34,28 @@ public class Measurement {
     private String remoteDbId;
 
     public Measurement(Date date, int rmssd, float ln_rmssd, float lowest_rmssd, float highest_rmssd, float lowest_bpm, float highest_bpm, float average_bpm, float LF_band, float VLF_band, float VHF_band, float HF_band, int[] bpm_data, int[] rmssd_data, int duration, @Nullable int uniqueId, int mood, int hrv, String remoteDbId) {
-        this.date          = date;
-        this.rmssd         = rmssd;
-        this.ln_rmssd      = ln_rmssd;
-        this.lowest_rmssd  = lowest_rmssd;
+        this.date = date;
+        this.rmssd = rmssd;
+        this.ln_rmssd = ln_rmssd;
+        this.lowest_rmssd = lowest_rmssd;
         this.highest_rmssd = highest_rmssd;
-        this.lowest_bpm    = lowest_bpm;
-        this.highest_bpm   = highest_bpm;
-        this.average_bpm   = average_bpm;
-        this.LF_band       = LF_band;
-        this.VLF_band      = VLF_band;
-        this.VHF_band      = VHF_band;
-        this.HF_band       = HF_band;
-        this.bpm_data      = bpm_data;
-        this.rmssd_data    = rmssd_data;
-        this.duration      = duration;
-        this.uniqueId      = uniqueId;
-        this.mood          = mood;
-        this.hrv           = hrv;
-        this.remoteDbId    = remoteDbId;
+        this.lowest_bpm = lowest_bpm;
+        this.highest_bpm = highest_bpm;
+        this.average_bpm = average_bpm;
+        this.LF_band = LF_band;
+        this.VLF_band = VLF_band;
+        this.VHF_band = VHF_band;
+        this.HF_band = HF_band;
+        this.bpm_data = bpm_data;
+        this.rmssd_data = rmssd_data;
+        this.duration = duration;
+        this.uniqueId = uniqueId;
+        this.mood = mood;
+        this.hrv = hrv;
+        this.remoteDbId = remoteDbId;
     }
 
-    public Measurement(RMSSD rmssd, FrequencyMethod frequencies, BPM bpm, int duration, Date date){
+    public Measurement(RMSSD rmssd, FrequencyMethod frequencies, BPM bpm, int duration, Date date) {
         this.rmssd = rmssd.getRmssd();
         this.hrv = rmssd.getHrv();
         this.ln_rmssd = rmssd.getLnRmssd();
@@ -79,7 +75,7 @@ public class Measurement {
         this.date = date;
     }
 
-    public Measurement(FireMeasurement fireMeasurement){
+    public Measurement(FireMeasurement fireMeasurement) {
         this.rmssd = fireMeasurement.getRmssd();
         this.hrv = fireMeasurement.getHrv();
         this.ln_rmssd = fireMeasurement.getLn_rmssd();
@@ -98,7 +94,6 @@ public class Measurement {
         this.duration = fireMeasurement.getDuration();
         this.mood = fireMeasurement.getMood();
     }
-
 
 
     public int getHrv() {
@@ -164,14 +159,16 @@ public class Measurement {
     public int[] getBpm_data() {
         return bpm_data;
     }
+
     public int[] getRmssd_data() {
         return rmssd_data;
     }
 
-    public void setMood(final int mood){
+    public void setMood(final int mood) {
         this.mood = mood;
     }
-    public int getMood(){
+
+    public int getMood() {
         return mood;
     }
 
@@ -188,9 +185,9 @@ public class Measurement {
     }
 
     /*
-    * Just a useful method, that fills in all ContentValues from a given Measurement instance
-    */
-    public ContentValues getContentValues(){
+     * Just a useful method, that fills in all ContentValues from a given Measurement instance
+     */
+    public ContentValues getContentValues() {
 
         ContentValues values = new ContentValues();
         values.put(FeedReaderDbHelper.HRV_COL_RMSSD, getRmssd());

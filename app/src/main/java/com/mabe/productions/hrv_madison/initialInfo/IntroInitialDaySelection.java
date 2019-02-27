@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,8 +19,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.mabe.productions.hrv_madison.MainScreenActivity;
-import com.mabe.productions.hrv_madison.PulseZoneView;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.UserOptionsPanelActivity;
 import com.mabe.productions.hrv_madison.Utils;
@@ -48,31 +45,20 @@ public class IntroInitialDaySelection extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.intro_initial_day_selection);
-        Utils.changeNotifBarColor(Color.parseColor("#3e5266"),getWindow());
+        Utils.changeNotifBarColor(Color.parseColor("#3e5266"), getWindow());
         fromOptions = getIntent().getExtras().getBoolean("FromOptions");
         initializeViews();
         setFonts();
-        if(fromOptions){
-            for(int i = 0; i<week_days.length; i++){
-                Log.i("Weeks", "Pasirinkta: " + week_days[i]);
-            }
+        if (fromOptions) {
+            week_days = Utils.readFromSharedPrefs_boolarray(IntroInitialDaySelection.this, FeedReaderDbHelper.FIELD_WEEK_DAYS, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
 
-            week_days = Utils.readFromSharedPrefs_boolarray(IntroInitialDaySelection.this,FeedReaderDbHelper.FIELD_WEEK_DAYS, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-
-            Log.i("Weeks", "Po nuskaitymo");
-
-            for(int i = 0; i<week_days.length; i++){
-                Log.i("Weeks", "Pasirinkta: " + week_days[i]);
-            }
-
-
-            btn_monday.setBackgroundResource(week_days[0] ?  R.drawable.login_button_gradient: R.drawable.login_socialmedia);
-            btn_tuesday.setBackgroundResource(week_days[1] ? R.drawable.login_button_gradient: R.drawable.login_socialmedia );
-            btn_wednesday.setBackgroundResource(week_days[2] ? R.drawable.login_button_gradient :  R.drawable.login_socialmedia);
-            btn_thursday.setBackgroundResource(week_days[3] ?  R.drawable.login_button_gradient : R.drawable.login_socialmedia );
-            btn_friday.setBackgroundResource(week_days[4] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia );
-            btn_saturday.setBackgroundResource(week_days[5] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia );
-            btn_sunday.setBackgroundResource(week_days[6] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia );
+            btn_monday.setBackgroundResource(week_days[0] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia);
+            btn_tuesday.setBackgroundResource(week_days[1] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia);
+            btn_wednesday.setBackgroundResource(week_days[2] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia);
+            btn_thursday.setBackgroundResource(week_days[3] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia);
+            btn_friday.setBackgroundResource(week_days[4] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia);
+            btn_saturday.setBackgroundResource(week_days[5] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia);
+            btn_sunday.setBackgroundResource(week_days[6] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia);
 
             btn_continue.setText("Done");
         }
@@ -81,7 +67,7 @@ public class IntroInitialDaySelection extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 v.setBackgroundResource(week_days[0] ? R.drawable.login_socialmedia : R.drawable.login_button_gradient);
-                week_days[0]=!week_days[0];
+                week_days[0] = !week_days[0];
             }
         });
 
@@ -89,7 +75,7 @@ public class IntroInitialDaySelection extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 v.setBackgroundResource(week_days[1] ? R.drawable.login_socialmedia : R.drawable.login_button_gradient);
-                week_days[1]=!week_days[1];
+                week_days[1] = !week_days[1];
             }
         });
 
@@ -97,7 +83,7 @@ public class IntroInitialDaySelection extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 v.setBackgroundResource(week_days[2] ? R.drawable.login_socialmedia : R.drawable.login_button_gradient);
-                week_days[2]=!week_days[2];
+                week_days[2] = !week_days[2];
             }
         });
 
@@ -105,7 +91,7 @@ public class IntroInitialDaySelection extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 v.setBackgroundResource(week_days[3] ? R.drawable.login_socialmedia : R.drawable.login_button_gradient);
-                week_days[3]=!week_days[3];
+                week_days[3] = !week_days[3];
             }
         });
 
@@ -113,7 +99,7 @@ public class IntroInitialDaySelection extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 v.setBackgroundResource(week_days[4] ? R.drawable.login_socialmedia : R.drawable.login_button_gradient);
-                week_days[4]=!week_days[4];
+                week_days[4] = !week_days[4];
             }
         });
 
@@ -121,7 +107,7 @@ public class IntroInitialDaySelection extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 v.setBackgroundResource(week_days[5] ? R.drawable.login_socialmedia : R.drawable.login_button_gradient);
-                week_days[5]=!week_days[5];
+                week_days[5] = !week_days[5];
             }
         });
 
@@ -129,16 +115,14 @@ public class IntroInitialDaySelection extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 v.setBackgroundResource(week_days[6] ? R.drawable.login_socialmedia : R.drawable.login_button_gradient);
-                week_days[6]=!week_days[6];
+                week_days[6] = !week_days[6];
             }
         });
 
     }
 
 
-
-
-    private void setFonts(){
+    private void setFonts() {
 
         Typeface verdana = Typeface.createFromAsset(getAssets(),
                 "fonts/futura_light.ttf");
@@ -154,9 +138,9 @@ public class IntroInitialDaySelection extends AppCompatActivity {
 
     }
 
-    private void initializeViews(){
+    private void initializeViews() {
 
-        Animation anim_question_what_days =  AnimationUtils.loadAnimation(this, R.anim.top_to_bottom);
+        Animation anim_question_what_days = AnimationUtils.loadAnimation(this, R.anim.top_to_bottom);
         Animation anim_right_to_left = AnimationUtils.loadAnimation(this, R.anim.right_to_left);
         Animation anim_left_to_right = AnimationUtils.loadAnimation(this, R.anim.left_to_right);
         Animation anim_btn_continue = AnimationUtils.loadAnimation(this, R.anim.fade_in_delay);
@@ -185,13 +169,12 @@ public class IntroInitialDaySelection extends AppCompatActivity {
         btn_continue.startAnimation(anim_btn_continue);
 
 
-
     }
 
     public void start(View view) {
         int selectedCount = 0;
-        for(int i = 0; i < week_days.length; i++){
-            if(week_days[i]){
+        for (int i = 0; i < week_days.length; i++) {
+            if (week_days[i]) {
                 selectedCount++;
             }
         }
@@ -201,46 +184,40 @@ public class IntroInitialDaySelection extends AppCompatActivity {
         final FirebaseUser user = mAuth.getCurrentUser();
         final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference(FirebaseUtils.USERS_TABLE_RUNNING + "/" + user.getUid());
 
-        if(selectedCount < 2) {
+        if (selectedCount < 2) {
             Toast.makeText(this, R.string.select_at_least_two_days, Toast.LENGTH_LONG).show();
             return;
         }
 
-        if(selectedCount>4){
+        if (selectedCount > 4) {
             Utils.buildAlertDialogPrompt(this, "Are you sure with your days selection?", "It's not healthy to workout more than 4 days for begginers. Are you sure with your selections?", "Continue", "Cancel", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     fireDatabase.child("workout_days").setValue(FeedReaderDbHelper.weekDaysToString(week_days));
                     Utils.saveToSharedPrefs(IntroInitialDaySelection.this, FeedReaderDbHelper.FIELD_WEEK_DAYS, week_days, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-                    if(fromOptions){
+                    if (fromOptions) {
                         startActivity(new Intent(IntroInitialDaySelection.this, UserOptionsPanelActivity.class));
                         IntroInitialDaySelection.this.finish();
 
-                    }else{
+                    } else {
                         startActivity(new Intent(IntroInitialDaySelection.this, IntroInitialMaxDuration.class));
 
                     }
                 }
-            },null);
+            }, null);
             return;
-        }
-
-        for(int i = 0; i<week_days.length; i++){
-            Log.i("Weeks", "Pasirinkta: " + week_days[i]);
         }
 
         Utils.saveToSharedPrefs(IntroInitialDaySelection.this, FeedReaderDbHelper.FIELD_WEEK_DAYS, week_days, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
         fireDatabase.child("workout_days").setValue(FeedReaderDbHelper.weekDaysToString(week_days));
-        if(fromOptions){
+        if (fromOptions) {
             startActivity(new Intent(IntroInitialDaySelection.this, UserOptionsPanelActivity.class));
             IntroInitialDaySelection.this.finish();
 
-        }else{
+        } else {
             startActivity(new Intent(IntroInitialDaySelection.this, IntroInitialMaxDuration.class));
 
         }
-
-
 
 
     }

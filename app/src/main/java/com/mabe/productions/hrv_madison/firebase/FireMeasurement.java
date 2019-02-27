@@ -6,7 +6,6 @@ import com.mabe.productions.hrv_madison.measurements.Measurement;
 
 public class FireMeasurement {
 
-
     private String date;
     private int duration;
     private int rmssd;
@@ -25,11 +24,11 @@ public class FireMeasurement {
     private int mood;
     private int hrv;
 
-    public FireMeasurement(){
+    public FireMeasurement() {
 
     }
 
-    public FireMeasurement(Measurement measurement){
+    public FireMeasurement(Measurement measurement) {
         this.date = Utils.getStringFromDate(measurement.getDate());
         this.duration = measurement.getDuration();
         this.rmssd = measurement.getRmssd();

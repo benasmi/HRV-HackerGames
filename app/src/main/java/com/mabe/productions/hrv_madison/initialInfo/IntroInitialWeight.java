@@ -36,27 +36,27 @@ public class IntroInitialWeight extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.intro_initial_weight_activity);
-        Utils.changeNotifBarColor(Color.parseColor("#3e5266"),getWindow());
+        Utils.changeNotifBarColor(Color.parseColor("#3e5266"), getWindow());
         fromOptions = getIntent().getExtras().getBoolean("FromOptions");
         initializeViews();
         setFonts();
 
-        if(fromOptions){
+        if (fromOptions) {
             float weight = Utils.readFromSharedPrefs_float(IntroInitialWeight.this, FeedReaderDbHelper.FIELD_WEIGHT, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-            txt_value.setText((int)weight+"");
-            weight_picker.setValue((int)weight);
+            txt_value.setText((int) weight + "");
+            weight_picker.setValue((int) weight);
             btn_continue.setText("Done");
         }
 
 
     }
 
-    private void setFonts(){
+    private void setFonts() {
 
 
         Typeface verdana = Typeface.createFromAsset(getAssets(),
                 "fonts/futura_light.ttf");
-  ;
+        ;
 
         txt_value.setTypeface(verdana);
         txt_text_kg.setTypeface(verdana);
@@ -64,9 +64,9 @@ public class IntroInitialWeight extends AppCompatActivity {
 
     }
 
-    private void initializeViews(){
+    private void initializeViews() {
 
-        Animation anim_txt_text_kg =  AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        Animation anim_txt_text_kg = AnimationUtils.loadAnimation(this, R.anim.fade_in);
         Animation anim_txt_value = AnimationUtils.loadAnimation(this, R.anim.fade_in);
         Animation anim_txt_how_heavy = AnimationUtils.loadAnimation(this, R.anim.left_to_right);
         Animation anim_weight_picker = AnimationUtils.loadAnimation(this, R.anim.right_to_left);
@@ -95,23 +95,24 @@ public class IntroInitialWeight extends AppCompatActivity {
     }
 
     public void start(View view) {
-        Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_WEIGHT,Float.parseFloat(txt_value.getText().toString()),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+        Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_WEIGHT, Float.parseFloat(txt_value.getText().toString()), FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
 
-        float height = Utils.readFromSharedPrefs_float(this,FeedReaderDbHelper.FIELD_HEIGHT,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-        float KMI = height/Utils.readFromSharedPrefs_float(this,FeedReaderDbHelper.FIELD_WEIGHT,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+        float height = Utils.readFromSharedPrefs_float(this, FeedReaderDbHelper.FIELD_HEIGHT, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+        float KMI = height / Utils.readFromSharedPrefs_float(this, FeedReaderDbHelper.FIELD_WEIGHT, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
-        final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference(FirebaseUtils.USERS_TABLE_RUNNING + "/" + user.getUid());        fireDatabase.child("kmi").setValue(KMI);
+        final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference(FirebaseUtils.USERS_TABLE_RUNNING + "/" + user.getUid());
+        fireDatabase.child("kmi").setValue(KMI);
         fireDatabase.child("weight").setValue(Float.parseFloat(txt_value.getText().toString()));
 
-        Utils.saveToSharedPrefs(this,FeedReaderDbHelper.FIELD_KMI,KMI,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+        Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_KMI, KMI, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
 
-        if(fromOptions){
+        if (fromOptions) {
             startActivity(new Intent(this, UserOptionsPanelActivity.class));
             IntroInitialWeight.this.finish();
 
-        }else{
+        } else {
             startActivity(new Intent(this, IntroInitialGender.class));
         }
 

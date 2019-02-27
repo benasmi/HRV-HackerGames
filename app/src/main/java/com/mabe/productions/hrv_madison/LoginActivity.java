@@ -175,7 +175,7 @@ public class LoginActivity extends AppCompatActivity {
         String email = editText_username.getText().toString();
         String password = editText_password.getText().toString();
 
-        if(email.isEmpty() || password.isEmpty()){
+        if (email.isEmpty() || password.isEmpty()) {
             return;
         }
 
@@ -195,7 +195,7 @@ public class LoginActivity extends AppCompatActivity {
                             FirebaseAuth mAuth = FirebaseAuth.getInstance();
                             FirebaseUser user = mAuth.getCurrentUser();
 
-                            if(!user.isEmailVerified()){
+                            if (!user.isEmailVerified()) {
                                 Crashlytics.log("E-mail is unverified.");
                                 Toast.makeText(LoginActivity.this, "Your email is unverified!", Toast.LENGTH_LONG).show();
                                 return;
@@ -298,8 +298,9 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * Authenticates FirebaseUser with gmail {@link GoogleSignInAccount}.
      * After successful authentication the following is done:
-     *      If user has filled out initial data, it is fetched, and {@link MainScreenActivity} is launched.
-     *      If user has not filled out initial data, {@link IntroInitialPage} is launched.
+     * If user has filled out initial data, it is fetched, and {@link MainScreenActivity} is launched.
+     * If user has not filled out initial data, {@link IntroInitialPage} is launched.
+     *
      * @param acct The {@link GoogleSignInAccount}, that is used for authentication
      */
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
@@ -316,8 +317,9 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * Authenticates FirebaseUser with facebook AccessToken.
      * After successful authentication the following is done:
-     *      If user has filled out initial data, it is fetched, and {@link MainScreenActivity} is launched.
-     *      If user has not filled out initial data, {@link IntroInitialPage} is launched.
+     * If user has filled out initial data, it is fetched, and {@link MainScreenActivity} is launched.
+     * If user has not filled out initial data, {@link IntroInitialPage} is launched.
+     *
      * @param token The facebook {@link AccessToken}, that is used for authentication
      */
     private void firebaseAuthWithFacebook(AccessToken token) {
@@ -334,15 +336,16 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Fetches and saves the global user information (email, displayname) locally
-     * @param showProgressDialog If true, a progress dialog is shown
+     *
+     * @param showProgressDialog            If true, a progress dialog is shown
      * @param startFetchingInitialInfoAfter If true, getInitialUserInformation(boolean) method is called after
      */
-    private void getGlobalUserInformation(boolean showProgressDialog, final boolean startFetchingInitialInfoAfter){
+    private void getGlobalUserInformation(boolean showProgressDialog, final boolean startFetchingInitialInfoAfter) {
         Crashlytics.log("Downloading global user data.");
 
         final CustomLoadingDialog dialog = new CustomLoadingDialog(LoginActivity.this, "Loading your data");
 
-        if(showProgressDialog){
+        if (showProgressDialog) {
             dialog.show();
         }
 
@@ -353,7 +356,7 @@ public class LoginActivity extends AppCompatActivity {
                 Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_EMAIL, globalUser.getEmail(), FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
                 progressDialog.dismiss();
 
-                if(startFetchingInitialInfoAfter){
+                if (startFetchingInitialInfoAfter) {
                     getInitialUserInformation(true);
                 }
             }
@@ -370,20 +373,20 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * This method gets initial user information (height, weight, etc.) from the
      * database, and saves it locally (SharedPreferences).
-     *
+     * <p>
      * It runs on assumption that initial user information exists in remote database.
-     *
+     * <p>
      * After data is saved locally, MainScreenActivity is started.
      *
      * @param showProgressDialog If true, progress dialog is shown while data is being fetched.
      */
-    private void getInitialUserInformation(boolean showProgressDialog){
+    private void getInitialUserInformation(boolean showProgressDialog) {
 
         Crashlytics.log("Downloading initial user info.");
 
         final CustomLoadingDialog dialog = new CustomLoadingDialog(LoginActivity.this, "Loading your data");
 
-        if(showProgressDialog){
+        if (showProgressDialog) {
             dialog.show();
         }
 
@@ -392,19 +395,19 @@ public class LoginActivity extends AppCompatActivity {
             public void onSuccess(FireUser fireUser) {
                 Crashlytics.log("Saving initial user info to shared prefs.");
 
-                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_ACTIVITY_STREAK, fireUser.getActivity_streak(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_INITIAL_DURATION, fireUser.getBase_duration(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_KMI, fireUser.getKmi(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_BIRTHDAY, fireUser.getBirthday(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_GENDER, fireUser.getGender(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_HEIGHT, fireUser.getHeight(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_ACTIVITY_INDEX, fireUser.getActivity_index(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_WEIGHT, fireUser.getWeight(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_BASE_DURATION, fireUser.getMaxDuration(),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_WEEK_DAYS, FeedReaderDbHelper.getWeeksFromString(fireUser.getWorkout_days()),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_ACTIVITY_STREAK, fireUser.getActivity_streak(), FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_INITIAL_DURATION, fireUser.getBase_duration(), FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_KMI, fireUser.getKmi(), FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_BIRTHDAY, fireUser.getBirthday(), FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_GENDER, fireUser.getGender(), FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_HEIGHT, fireUser.getHeight(), FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_ACTIVITY_INDEX, fireUser.getActivity_index(), FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_WEIGHT, fireUser.getWeight(), FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_BASE_DURATION, fireUser.getMaxDuration(), FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_WEEK_DAYS, FeedReaderDbHelper.getWeeksFromString(fireUser.getWorkout_days()), FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
                 Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_WEEKLY_PROGRAM_GENERATED_DATE, fireUser.getFirst_weekly_Date(), FeedReaderDbHelper.SHARED_PREFS_SPORT);
 
-                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_WORKOUT_INTERVALS, fireUser.getWorkout_intervals() , FeedReaderDbHelper.SHARED_PREFS_SPORT);
+                Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_WORKOUT_INTERVALS, fireUser.getWorkout_intervals(), FeedReaderDbHelper.SHARED_PREFS_SPORT);
                 Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_RUNNING_PULSE_ZONES, fireUser.getRunning_pulse_zones(), FeedReaderDbHelper.SHARED_PREFS_SPORT);
                 Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_WALKING_PULSE_ZONES, fireUser.getWalking_pulse_zones(), FeedReaderDbHelper.SHARED_PREFS_SPORT);
                 Utils.saveToSharedPrefs(LoginActivity.this, FeedReaderDbHelper.FIELD_DURATION, fireUser.getWorkout_duration(), FeedReaderDbHelper.SHARED_PREFS_SPORT);
@@ -460,7 +463,7 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(DatabaseError error) {
                             loadingDialog.dismiss();
-                            Log.i("TEST",  error.getCode() + ": " + error.getDetails() + "\n" + error.getMessage());
+                            Log.i("TEST", error.getCode() + ": " + error.getDetails() + "\n" + error.getMessage());
                             Toast.makeText(LoginActivity.this, "Please check your connection!", Toast.LENGTH_LONG).show();
                         }
                     });

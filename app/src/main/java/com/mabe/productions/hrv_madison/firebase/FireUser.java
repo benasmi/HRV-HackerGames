@@ -1,9 +1,5 @@
 package com.mabe.productions.hrv_madison.firebase;
 
-/**
- * Created by Benas on 8/7/2018.
- */
-
 public class FireUser {
 
     private String id;
@@ -59,7 +55,7 @@ public class FireUser {
         this.first_weekly_Date = first_weekly_Date;
     }
 
-    public FireUser(){
+    public FireUser() {
 
     }
 

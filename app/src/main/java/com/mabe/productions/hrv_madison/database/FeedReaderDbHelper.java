@@ -3,7 +3,6 @@ package com.mabe.productions.hrv_madison.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -11,33 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 public class FeedReaderDbHelper extends SQLiteOpenHelper {
-
-    /*
-     * HRV-Madison SQLite database architecture
-     *
-     * LF/HF/VHF columns are to be added later
-     * ###########################
-     * #        HRV DATA         #
-     * ###########################
-     * #  ID  #  DATE  #  RMSSD  #
-     * ###########################
-     * gitlab.org
-     * #############################################################################################################################################################################
-     * #                                                                    HRV DATA                                                                                  # JSON array #
-     * #############################################################################################################################################################################
-     * #  ID  #  RMSSD  #  LN_RMSSD  #  LOWEST_RMSSD  #  HIGHEST_RMSSD  #  LOWEST_BPM  #  HIGHEST_BPM  #  AVERAGE_BPM  #  LF_BAND  #  VLF_BAND  #  VHF_BAND  #  DATE  #  BPM data  #
-     * #############################################################################################################################################################################
-     *
-     *
-     *
-     * BPM data row is a json array converted to string, that contains bpm values as integers
-     *
-     * Initial user data is stored in SharedPreference, called user_data
-     *
-     */
 
     public static final String DATE_FORMAT = "dd-MM-yyyy HH:mm:ss";
 
@@ -77,7 +50,6 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     public static final String FIELD_WALKING_PULSE_ZONES = "walking_pulse_zones";
     public static final String FIELD_LAST_TIME_GENERATED_WEEKLY = "last_weekly_generated_date";
     public static final String FIELD_WEEKLY_PROGRAM_GENERATED_DATE = "first_weekly_generated_date";
-
 
     public final static String HRV_COL_RMSSD = "RMSSD";
     public final static String HRV_COL_LN_RMSSD = "LN_RMSSD";
@@ -124,7 +96,6 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
                     FeedReaderDbHelper.HRV_COL_RMSSD + " INTEGER)";
 
 
-
     public static final String WORKOUT_COL_ID = "id";
     public static final String WORKOUT_COL_DATE = "date";
     public static final String WORKOUT_COL_DURATION = "duration";
@@ -166,28 +137,32 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     }
 
     public void onCreate(SQLiteDatabase db) {
-        Log.i("TEST", "Creating tables...");
         db.execSQL(SQL_CREATE_HRV_DATA_TABLE_ENTRIES);
         db.execSQL(SQL_CREATE_WORKOUT_DATA_TABLE_ENTRIES);
     }
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // This database is only a cache for online data, so its upgrade policy is
-        // to simply to discard the data and start over
 
-       // db.execSQL(SQL_DELETE_ENTRIES);
-        //onCreate(db);
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
+
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
     }
 
-    public static int[] getIntArrayFromString(String jsonArray){
+    /**
+     * Returns an array of ints, extracted from a given string of
+     * JSONArray.
+     * Intended to be used with {@link #intArrayToString(int[])}
+     *
+     * @param jsonArray The string JSONArrray to extract data from
+     * @return An array of integers extracted from the string.
+     */
+    public static int[] getIntArrayFromString(String jsonArray) {
         try {
             JSONArray array = new JSONArray(jsonArray);
 
             int[] bpmValues = new int[array.length()];
 
-            for(int i = 0; i < array.length(); i++){
+            for (int i = 0; i < array.length(); i++) {
                 bpmValues[i] = array.getInt(i);
             }
 
@@ -199,13 +174,21 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         return null;
     }
 
-    public static float[] getFloatArrayFromString(String jsonArray){
+    /**
+     * Returns an array of floats, extracted from a given string of
+     * JSONArray.
+     * Intended to be used with {@link #floatArrayToString(float[])}
+     *
+     * @param jsonArray The string JSONArrray to extract data from
+     * @return An array of floats extracted from the string.
+     */
+    public static float[] getFloatArrayFromString(String jsonArray) {
         try {
             JSONArray array = new JSONArray(jsonArray);
 
             float[] bpmValues = new float[array.length()];
 
-            for(int i = 0; i < array.length(); i++){
+            for (int i = 0; i < array.length(); i++) {
                 bpmValues[i] = (float) array.getDouble(i);
             }
 
@@ -217,13 +200,21 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         return null;
     }
 
-    public static long[] getLongArrayFromString(String jsonArray){
+    /**
+     * Returns an array of longs, extracted from a given string of
+     * JSONArray.
+     * Intended to be used with {@link #longArrayToString(long[])}
+     *
+     * @param jsonArray The string JSONArrray to extract data from
+     * @return An array of longs extracted from the string.
+     */
+    public static long[] getLongArrayFromString(String jsonArray) {
         try {
             JSONArray array = new JSONArray(jsonArray);
 
             long[] values = new long[array.length()];
 
-            for(int i = 0; i < array.length(); i++){
+            for (int i = 0; i < array.length(); i++) {
                 values[i] = (long) array.getLong(i);
             }
 
@@ -238,19 +229,20 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     /**
      * Converts a integer array to a JSON array and returns it as string.
      * Intended to be used to store arrays in the database.
+     *
      * @param values The values to convert to string array.
      * @return A JSONArray as string containing given values.
      */
-    public static String intArrayToString(int[] values){
+    public static String intArrayToString(int[] values) {
 
         JSONArray array = new JSONArray();
 
-        try{
-            for(int i = 0; i < values.length; i++){
+        try {
+            for (int i = 0; i < values.length; i++) {
                 array.put(i, values[i]);
             }
             return array.toString();
-        }catch(JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
@@ -262,19 +254,20 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     /**
      * Converts a float array to a JSON array and returns it as string.
      * Intended to be used to store arrays in the database.
+     *
      * @param values The values to convert to string array.
      * @return A JSONArray as string containing given values.
      */
-    public static String floatArrayToString(float[] values){
+    public static String floatArrayToString(float[] values) {
 
         JSONArray array = new JSONArray();
 
-        try{
-            for(int i = 0; i < values.length; i++){
+        try {
+            for (int i = 0; i < values.length; i++) {
                 array.put(i, (double) values[i]);
             }
             return array.toString();
-        }catch(JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
@@ -284,19 +277,20 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     /**
      * Converts a long array to a JSON array and returns it as string.
      * Intended to be used to store arrays in the database.
+     *
      * @param values The values to convert to string array.
      * @return A JSONArray as string containing given values.
      */
-    public static String longArrayToString(long[] values){
+    public static String longArrayToString(long[] values) {
 
         JSONArray array = new JSONArray();
 
-        try{
-            for(int i = 0; i < values.length; i++){
+        try {
+            for (int i = 0; i < values.length; i++) {
                 array.put(i, (long) values[i]);
             }
             return array.toString();
-        }catch(JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
@@ -311,12 +305,12 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
      * @param data The string JSONArrray to extract data from
      * @return An array of LatLng points extracted from the string.
      */
-    public static LatLng[] getRouteFromString(String data){
+    public static LatLng[] getRouteFromString(String data) {
         try {
             JSONArray array = new JSONArray(data);
             LatLng[] locationArray = new LatLng[array.length()];
 
-            for(int i = 0; i < array.length(); i++){
+            for (int i = 0; i < array.length(); i++) {
                 JSONObject obj = array.getJSONObject(i);
                 double latitude = obj.getDouble("latitude");
                 double longtitude = obj.getDouble("longtitude");
@@ -341,11 +335,11 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
      * @param points The points to convert to string.
      * @return A JSONArray, that is converted to string, with JSONObjects that contain longtitude and latitude values.
      */
-    public static String routeToString(LatLng[] points){
+    public static String routeToString(LatLng[] points) {
 
         JSONArray array = new JSONArray();
 
-        for(int i = 0; i < points.length; i++){
+        for (int i = 0; i < points.length; i++) {
             JSONObject locationObj = new JSONObject();
             LatLng currentLocation = points[i];
 
@@ -361,11 +355,18 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         return array.toString();
     }
 
-    public static String weekDaysToString(boolean[] weekdays){
+    /**
+     * Converts a boolean array to a JSON array and returns it as string.
+     * Intended to be used to store arrays in the database.
+     *
+     * @param weekdays The values to convert to string array.
+     * @return A JSONArray as string containing given values.
+     */
+    public static String weekDaysToString(boolean[] weekdays) {
 
         JSONArray array = new JSONArray();
 
-        for(int i = 0; i < weekdays.length; i++){
+        for (int i = 0; i < weekdays.length; i++) {
             JSONObject locationObj = new JSONObject();
             boolean weekday = weekdays[i];
 
@@ -380,12 +381,20 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         return array.toString();
     }
 
-    public static boolean[] getWeeksFromString(String data){
+    /**
+     * Returns an array of booleans, extracted from a given string of
+     * JSONArray with JSONObjects that contain booleans with "weekday" labels.
+     * Intended to be used with {@link #weekDaysToString(boolean[])}
+     *
+     * @param data The string JSONArrray to extract data from
+     * @return An array of booleans points extracted from the string.
+     */
+    public static boolean[] getWeeksFromString(String data) {
         try {
             JSONArray array = new JSONArray(data);
             boolean[] weekDays = new boolean[array.length()];
 
-            for(int i = 0; i < array.length(); i++){
+            for (int i = 0; i < array.length(); i++) {
                 JSONObject obj = array.getJSONObject(i);
                 boolean day = obj.getBoolean("weekday");
 
@@ -400,9 +409,6 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
         return null;
     }
-
-
-
 
 
 }

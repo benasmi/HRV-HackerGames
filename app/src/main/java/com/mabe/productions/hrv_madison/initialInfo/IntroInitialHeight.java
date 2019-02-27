@@ -31,26 +31,27 @@ public class IntroInitialHeight extends AppCompatActivity {
     private Button btn_continue;
 
     private boolean fromOptions;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.intro_initial_height_activity);
-        Utils.changeNotifBarColor(Color.parseColor("#3e5266"),getWindow());
+        Utils.changeNotifBarColor(Color.parseColor("#3e5266"), getWindow());
         fromOptions = getIntent().getExtras().getBoolean("FromOptions");
         initializeViews();
         setFonts();
 
-        if(fromOptions){
+        if (fromOptions) {
             float height = Utils.readFromSharedPrefs_float(IntroInitialHeight.this, FeedReaderDbHelper.FIELD_HEIGHT, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-            heightValuePicker.setValue(height,100f,300f,1);
+            heightValuePicker.setValue(height, 100f, 300f, 1);
             btn_continue.setText("Done");
-            txt_value.setText(""+(int)height);
+            txt_value.setText("" + (int) height);
         }
 
     }
 
 
-    private void initializeViews(){
+    private void initializeViews() {
 
         Animation anim_txt_how_tall = AnimationUtils.loadAnimation(this, R.anim.right_to_left);
         Animation anim_heightValuePicker = AnimationUtils.loadAnimation(this, R.anim.left_to_right);
@@ -68,7 +69,7 @@ public class IntroInitialHeight extends AppCompatActivity {
         heightValuePicker.setOnValueChangeListener(new RulerView.OnValueChangeListener() {
             @Override
             public void onValueChange(float value) {
-                txt_value.setText(String.valueOf( (int) value));
+                txt_value.setText(String.valueOf((int) value));
             }
         });
 
@@ -80,7 +81,7 @@ public class IntroInitialHeight extends AppCompatActivity {
         txt_text_cm.startAnimation(anim_txt_text_cm);
     }
 
-    private void setFonts(){
+    private void setFonts() {
 
 
         Typeface verdana = Typeface.createFromAsset(getAssets(),
@@ -94,18 +95,18 @@ public class IntroInitialHeight extends AppCompatActivity {
 
     public void start(View view) {
 
-        Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_HEIGHT,Float.parseFloat(txt_value.getText().toString()),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+        Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_HEIGHT, Float.parseFloat(txt_value.getText().toString()), FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference(FirebaseUtils.USERS_TABLE_RUNNING + "/" + user.getUid());
         fireDatabase.child("height").setValue(Float.parseFloat(txt_value.getText().toString()));
 
-        if(fromOptions){
+        if (fromOptions) {
             startActivity(new Intent(this, UserOptionsPanelActivity.class));
             IntroInitialHeight.this.finish();
 
-        }else{
+        } else {
             startActivity(new Intent(this, IntroInitialWeight.class));
         }
 

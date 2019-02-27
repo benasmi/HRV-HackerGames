@@ -67,7 +67,6 @@ public class MainScreenActivity extends AppCompatActivity {
     public static boolean isTTSAvailable = false;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +79,7 @@ public class MainScreenActivity extends AppCompatActivity {
         wind.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
         setContentView(R.layout.activity_main_screen);
-        Utils.changeNotifBarColor(Color.parseColor("#2c3e50"),getWindow());
+        Utils.changeNotifBarColor(Color.parseColor("#2c3e50"), getWindow());
 
         user = User.getUser(this);
 
@@ -91,12 +90,12 @@ public class MainScreenActivity extends AppCompatActivity {
 
         //Setting toolbar text
         String deviceName = Utils.readFromSharedPrefs_string(this, FeedReaderDbHelper.BT_FIELD_DEVICE_NAME, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-        if(!deviceName.equals("")){
+        if (!deviceName.equals("")) {
             txt_toolbar_device_status.setText(deviceName);
         }
 
         //todo: remove this if statement at some point
-        if(user.getUsername() == ""){
+        if (user.getUsername() == "") {
             txt_toolbar_username.setText("Name unknown");
 
             //The global user info has not been downloaded, so we need to fetch it
@@ -122,14 +121,14 @@ public class MainScreenActivity extends AppCompatActivity {
         textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int i) {
-                if(i == TextToSpeech.SUCCESS){
+                if (i == TextToSpeech.SUCCESS) {
                     isTTSAvailable = true;
                     Log.i("TTS", "Success!");
                     int result = textToSpeech.setLanguage(Locale.ENGLISH);
-                    if(result==TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED){
+                    if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Log.i("TTS", "Not supported language!");
                     }
-                }else{
+                } else {
                     Log.i("TTS", "Failed to initialize!");
                 }
             }
@@ -144,13 +143,13 @@ public class MainScreenActivity extends AppCompatActivity {
         moveTaskToBack(true);
     }
 
-    public static void setDisplayOnLockscreen(boolean displayOnLockscreen, Activity activity){
+    public static void setDisplayOnLockscreen(boolean displayOnLockscreen, Activity activity) {
         Window wind = activity.getWindow();
-        if(displayOnLockscreen){
+        if (displayOnLockscreen) {
             wind.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
             wind.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
             wind.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-        }else{
+        } else {
             wind.clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
             wind.clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
             wind.clearFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
@@ -158,8 +157,8 @@ public class MainScreenActivity extends AppCompatActivity {
     }
 
 
-    private void setupBottomBar(){
-        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.measure, R.drawable.ic_stopwatch,R.color.colorAccent);
+    private void setupBottomBar() {
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.measure, R.drawable.ic_stopwatch, R.color.colorAccent);
         AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.today, R.drawable.ic_circle_chart, R.color.colorAccent);
         AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.workout, R.drawable.ic_sand_clock, R.color.colorAccent);
 
@@ -174,7 +173,7 @@ public class MainScreenActivity extends AppCompatActivity {
 
 
         bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#2c3e50"));
-       // bottomNavigation.setBehaviorTranslationEnabled(true);
+        // bottomNavigation.setBehaviorTranslationEnabled(true);
 
         //bottomNavigation.manageFloatingActionButtonBehavior(floatingActionButton);
 
@@ -182,8 +181,8 @@ public class MainScreenActivity extends AppCompatActivity {
         bottomNavigation.setInactiveColor(Color.parseColor("#ffffff"));
 
 
-   //   bottomNavigation.setForceTint(true);
-    //  bottomNavigation.setTranslucentNavigationEnabled(true);
+        //   bottomNavigation.setForceTint(true);
+        //  bottomNavigation.setTranslucentNavigationEnabled(true);
         //bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
         //bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_HIDE);
@@ -195,19 +194,19 @@ public class MainScreenActivity extends AppCompatActivity {
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                if(viewPagerAdapter.workoutFragment.infoDuration !=null && viewPagerAdapter.workoutFragment.infoDuration.isShowing()){
+                if (viewPagerAdapter.workoutFragment.infoDuration != null && viewPagerAdapter.workoutFragment.infoDuration.isShowing()) {
                     viewPagerAdapter.workoutFragment.infoDuration.dismiss();
                 }
-                if(viewPagerAdapter.workoutFragment.infoPulse !=null && viewPagerAdapter.workoutFragment.infoPulse.isShowing()){
+                if (viewPagerAdapter.workoutFragment.infoPulse != null && viewPagerAdapter.workoutFragment.infoPulse.isShowing()) {
                     viewPagerAdapter.workoutFragment.infoPulse.dismiss();
                 }
-                if(viewPagerAdapter.workoutFragment.infoVibration !=null && viewPagerAdapter.workoutFragment.infoVibration.isShowing()){
+                if (viewPagerAdapter.workoutFragment.infoVibration != null && viewPagerAdapter.workoutFragment.infoVibration.isShowing()) {
                     viewPagerAdapter.workoutFragment.infoVibration.dismiss();
                 }
-                if(viewPagerAdapter.measurementFragment.infoHrvFinger !=null && viewPagerAdapter.measurementFragment.infoHrvFinger.isShowing()){
-                        viewPagerAdapter.measurementFragment.infoHrvFinger.dismiss();
+                if (viewPagerAdapter.measurementFragment.infoHrvFinger != null && viewPagerAdapter.measurementFragment.infoHrvFinger.isShowing()) {
+                    viewPagerAdapter.measurementFragment.infoHrvFinger.dismiss();
                 }
-                if(viewPagerAdapter.dataTodayFragment.tooltip != null){
+                if (viewPagerAdapter.dataTodayFragment.tooltip != null) {
                     viewPagerAdapter.dataTodayFragment.tooltip.dismiss();
                 }
             }
@@ -232,7 +231,8 @@ public class MainScreenActivity extends AppCompatActivity {
             }
         });
         bottomNavigation.setOnNavigationPositionListener(new AHBottomNavigation.OnNavigationPositionListener() {
-            @Override public void onPositionChange(int y) {
+            @Override
+            public void onPositionChange(int y) {
                 viewpager.setCurrentItem(y);
             }
         });
@@ -241,17 +241,17 @@ public class MainScreenActivity extends AppCompatActivity {
     }
 
 
-    BroadcastReceiver  broadcastReceiver = new BroadcastReceiver() {
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            switch (intent.getAction()){
+            switch (intent.getAction()) {
                 case BluetoothGattService.ACTION_CONNECTED:
                     BluetoothDevice device = intent.getParcelableExtra("BT_DEVICE");
                     txt_toolbar_device_status.setText(device.getName());
                     Log.i("TEST", "ACTION_CONNECTED");
                     Log.i("TEST", "About to start measurement immediately");
                     //If the measure button has already been pressed, starting the measurement automatically.
-                    if(viewPagerAdapter.measurementFragment.shouldStartMeasurementImmediately){
+                    if (viewPagerAdapter.measurementFragment.shouldStartMeasurementImmediately) {
                         Log.i("TEST", "Starting measurement immediately");
                         viewPagerAdapter.measurementFragment.startMeasuring();
                         viewPagerAdapter.measurementFragment.shouldStartMeasurementImmediately = false;
@@ -284,20 +284,17 @@ public class MainScreenActivity extends AppCompatActivity {
     };
 
 
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
     }
 
-    private void initializeViews(){
+    private void initializeViews() {
 
-        Animation top_down_device  = AnimationUtils.loadAnimation(this,R.anim.top_down_device);
-        Animation top_down_login  = AnimationUtils.loadAnimation(this,R.anim.top_down_login);
-        Animation top_down_add  = AnimationUtils.loadAnimation(this,R.anim.top_down_add);
-        Animation top_down_question  = AnimationUtils.loadAnimation(this,R.anim.top_down_ask);
-
+        Animation top_down_device = AnimationUtils.loadAnimation(this, R.anim.top_down_device);
+        Animation top_down_login = AnimationUtils.loadAnimation(this, R.anim.top_down_login);
+        Animation top_down_add = AnimationUtils.loadAnimation(this, R.anim.top_down_add);
+        Animation top_down_question = AnimationUtils.loadAnimation(this, R.anim.top_down_ask);
 
 
         //Toolbar
@@ -306,9 +303,9 @@ public class MainScreenActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         txt_toolbar_device_status = toolbar.findViewById(R.id.toolbar_title);
         txt_toolbar_username = toolbar.findViewById(R.id.toolbar_username);
-        img_toolbar_login =  toolbar.findViewById(R.id.img_login);
+        img_toolbar_login = toolbar.findViewById(R.id.img_login);
         img_toolbar_add_device = toolbar.findViewById(R.id.img_add_device);
-        img_toolbar_ask =  toolbar.findViewById(R.id.imag_ask);
+        img_toolbar_ask = toolbar.findViewById(R.id.imag_ask);
 
         bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
         viewpager = (ViewPager) findViewById(R.id.viewpager);
@@ -320,11 +317,10 @@ public class MainScreenActivity extends AppCompatActivity {
         img_toolbar_ask.startAnimation(top_down_question);
 
 
-
     }
 
-    private void registerReceiver(){
-        if(!isReceiverRegistered) {
+    private void registerReceiver() {
+        if (!isReceiverRegistered) {
 
             IntentFilter filter = new IntentFilter();
             filter.addAction(BluetoothGattService.ACTION_CONNECTED);
@@ -337,9 +333,7 @@ public class MainScreenActivity extends AppCompatActivity {
     }
 
 
-
-
-    private void setFonts(){
+    private void setFonts() {
         Typeface futura = Typeface.createFromAsset(getAssets(),
                 "fonts/futura_light.ttf");
         Typeface corbel = Typeface.createFromAsset(getAssets(),
@@ -355,7 +349,7 @@ public class MainScreenActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION) {
+        if (requestCode == PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION) {
             if (Utils.isBluetoothEnabled()) {
 
                 LeDevicesDialog dialog = new LeDevicesDialog(this);
@@ -370,7 +364,7 @@ public class MainScreenActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Please enable bluetooth!", Toast.LENGTH_LONG).show(); //TODO: add a nice dialog or something
             }
-        }else if (requestCode == MeasurementFragment.MY_CAMERA_REQUEST_CODE) {
+        } else if (requestCode == MeasurementFragment.MY_CAMERA_REQUEST_CODE) {
 
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
@@ -384,14 +378,14 @@ public class MainScreenActivity extends AppCompatActivity {
 
     public void addDevice(View view) {
 
-        if(ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) !=  PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
-        }else{
-            if(Utils.isBluetoothEnabled()){
+        } else {
+            if (Utils.isBluetoothEnabled()) {
                 new LeDevicesDialog(this);
-            }else{
+            } else {
                 Toast.makeText(this, "Please enable bluetooth!", Toast.LENGTH_LONG).show(); //TODO: add a nice dialog or something
             }
         }
@@ -399,7 +393,7 @@ public class MainScreenActivity extends AppCompatActivity {
 
     }
 
-    public void faqActivity(View view){
+    public void faqActivity(View view) {
         startActivity(new Intent(MainScreenActivity.this, FrequentlyAskedActivity.class));
     }
 
@@ -411,7 +405,7 @@ public class MainScreenActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(textToSpeech!=null){
+        if (textToSpeech != null) {
             textToSpeech.stop();
             textToSpeech.shutdown();
         }

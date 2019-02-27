@@ -52,7 +52,7 @@ public class IntroInitialActivityIndex extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.intro_initial_activity_index);
-        Utils.changeNotifBarColor(Color.parseColor("#3e5266"),getWindow());
+        Utils.changeNotifBarColor(Color.parseColor("#3e5266"), getWindow());
 
         initializeViews();
         setFonts();
@@ -60,9 +60,9 @@ public class IntroInitialActivityIndex extends AppCompatActivity {
         rng_activity_index.setOnSlideListener(new RangeSliderView.OnSlideListener() {
             @Override
             public void onSlide(int index) {
-                i_training_intensity = index+1;
+                i_training_intensity = index + 1;
 
-                switch(index){
+                switch (index) {
                     case 0:
                         txt_training_intensity_explanation.setText(R.string.training_intensity_0);
                         break;
@@ -86,8 +86,8 @@ public class IntroInitialActivityIndex extends AppCompatActivity {
         rng_training_frequency.setOnSlideListener(new RangeSliderView.OnSlideListener() {
             @Override
             public void onSlide(int index) {
-                i_training_frequency = index+1;
-                switch(index){
+                i_training_frequency = index + 1;
+                switch (index) {
                     case 0:
                         txt_training_frequency_explanation.setText(R.string.training_frequency_0);
                         break;
@@ -110,8 +110,8 @@ public class IntroInitialActivityIndex extends AppCompatActivity {
         rng_training_duration.setOnSlideListener(new RangeSliderView.OnSlideListener() {
             @Override
             public void onSlide(int index) {
-                i_training_duration = index+1;
-                switch(index){
+                i_training_duration = index + 1;
+                switch (index) {
                     case 0:
                         txt_training_duration_explanation.setText(R.string.training_duration_0);
                         break;
@@ -129,7 +129,7 @@ public class IntroInitialActivityIndex extends AppCompatActivity {
         });
     }
 
-    private void initializeViews(){
+    private void initializeViews() {
 
 
         Animation anim_txt_top_down = AnimationUtils.loadAnimation(this, R.anim.top_to_bottom);
@@ -170,11 +170,11 @@ public class IntroInitialActivityIndex extends AppCompatActivity {
 
     }
 
-    private void setFonts(){
+    private void setFonts() {
 
 
         Typeface futura = Typeface.createFromAsset(getAssets(),
-                                                   "fonts/futura_light.ttf");
+                "fonts/futura_light.ttf");
         txt_training_duration_question.setTypeface(futura);
         txt_training_duration_explanation.setTypeface(futura);
 
@@ -188,37 +188,37 @@ public class IntroInitialActivityIndex extends AppCompatActivity {
 
 
     public void next(View view) {
-        int activity_index = i_training_duration*i_training_frequency*i_training_intensity;
-        Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_ACTIVITY_INDEX, activity_index,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+        int activity_index = i_training_duration * i_training_frequency * i_training_intensity;
+        Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_ACTIVITY_INDEX, activity_index, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
         setUpProgram(activity_index);
         startActivity(new Intent(this, IntroInitialInfoBirthday.class));
 
 
     }
 
-    private void setUpProgram(int activity_index){
+    private void setUpProgram(int activity_index) {
         int activity_streak = 0;
         float initial_workout_duration = 15;
 
         //Active person - skips to 5th week
-        if(activity_index>=20){
+        if (activity_index >= 20) {
             initial_workout_duration = 25;
             activity_streak = 4;
         }
 
         User.saveProgram(this, initial_workout_duration, User.WEEKLY_INTERVAL_PROGRAM[activity_streak], activity_streak);
-        Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_ACTIVITY_STREAK, activity_streak,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-        Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_INITIAL_DURATION, initial_workout_duration,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+        Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_ACTIVITY_STREAK, activity_streak, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+        Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_INITIAL_DURATION, initial_workout_duration, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
 
-        if(user.getUid() == null){
+        if (user.getUid() == null) {
             Toast.makeText(this, "Sorry, something went wrong!", Toast.LENGTH_LONG).show();
             startActivity(new Intent(this, LoginActivity.class));
             return;
         }
-        DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference(FirebaseUtils.USERS_TABLE_RUNNING + "/"+user.getUid());
+        DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference(FirebaseUtils.USERS_TABLE_RUNNING + "/" + user.getUid());
         fireDatabase.child("activity_streak").setValue(activity_streak);
         fireDatabase.child("base_duration").setValue(initial_workout_duration);
         fireDatabase.child("activity_index").setValue(activity_index);

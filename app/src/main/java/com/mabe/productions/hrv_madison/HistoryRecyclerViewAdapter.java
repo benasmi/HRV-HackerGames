@@ -16,24 +16,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-
-/**
- * Created by Benas on 7/31/2018.
- */
-
 public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecyclerViewAdapter.MyAdapterHolder> {
 
     private ArrayList<HistoryRecyclerViewDataHolder> data;
     private Context context;
 
 
-
     public HistoryRecyclerViewAdapter(ArrayList<HistoryRecyclerViewDataHolder> data, Context context) {
         this.data = data;
         this.context = context;
     }
-
-
 
 
     @Override
@@ -48,28 +40,27 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         final HistoryRecyclerViewDataHolder item = data.get(position);
 
 
-        switch (card_type){
+        switch (card_type) {
             //Workout
             case 0:
-                holder.recycler_workout_txt_duration.setText((int)(item.getWorkout_duration()/1000/60) + " min running");
+                holder.recycler_workout_txt_duration.setText((int) (item.getWorkout_duration() / 1000 / 60) + " min running");
                 holder.recycler_workout_txt_date.setText(showDate(item.getDate()));
                 setFadeAnimation(holder.recycler_view_workout_cardview);
                 break;
 
             //Measurement
             case 1:
-                holder.recycler_measurement_txt_duration.setText("Duration: " + String.valueOf(item.getDuration())+ " min");
+                holder.recycler_measurement_txt_duration.setText("Duration: " + String.valueOf(item.getDuration()) + " min");
                 holder.recycler_measurement_txt_date.setText(showDate(item.getDate()));
                 setFadeAnimation(holder.recycler_view_measurement_cardview);
                 break;
         }
 
 
-
     }
 
 
-    private String showDate(Date date){
+    private String showDate(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM");
@@ -95,7 +86,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         HistoryRecyclerViewAdapter.MyAdapterHolder holder;
         LayoutInflater layoutInflater = LayoutInflater.from(context);
 
-        switch (viewType){
+        switch (viewType) {
             //post layout
             case 0:
                 view = layoutInflater.inflate(R.layout.recyclerview_running, parent, false);
@@ -113,9 +104,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
     }
 
 
-
-
-    public class MyAdapterHolder extends RecyclerView.ViewHolder{
+    public class MyAdapterHolder extends RecyclerView.ViewHolder {
 
         //Workout
         private TextView recycler_workout_txt_card_title;
@@ -134,8 +123,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
             super(itemView);
 
 
-
-            switch (viewType){
+            switch (viewType) {
 
                 //Workout
                 case 0:
@@ -144,7 +132,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
                     recycler_workout_txt_date = itemView.findViewById(R.id.recycler_workout_txt_date);
                     recycler_view_workout_cardview = itemView.findViewById(R.id.recycler_view_workout_cardview);
 
-                   recycler_view_workout_cardview.setOnClickListener(new View.OnClickListener() {
+                    recycler_view_workout_cardview.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             Log.i("recycler", "DataRec: " + String.valueOf(data.get(getAdapterPosition()).getWorkout_duration()));
@@ -165,7 +153,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
                     recycler_view_measurement_cardview.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            context.startActivity(new Intent(context, AdvancedMeasurementHistoryActivity.class).putExtra("Measurement",data.get(getAdapterPosition())).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                            context.startActivity(new Intent(context, AdvancedMeasurementHistoryActivity.class).putExtra("Measurement", data.get(getAdapterPosition())).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                         }
                     });
                     break;
@@ -173,8 +161,6 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
 
         }
     }
-
-
 
 
 }

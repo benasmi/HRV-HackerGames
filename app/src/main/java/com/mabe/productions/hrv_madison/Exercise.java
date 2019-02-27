@@ -3,7 +3,7 @@ package com.mabe.productions.hrv_madison;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Exercise implements Parcelable{
+public class Exercise implements Parcelable {
 
     /*
      * The intervals of workout's walk/run ratio.
@@ -11,9 +11,9 @@ public class Exercise implements Parcelable{
      * {walking_duration, running_duration, walking_duration, running_duration...}
      * Specified in seconds
      */
-    private long[] workout_intervals =  new long[0];
-    private int[] running_pulse_zones  =  {3, 4};
-    private int[] walking_pulse_zones  =  {1, 2};
+    private long[] workout_intervals = new long[0];
+    private int[] running_pulse_zones = {3, 4};
+    private int[] walking_pulse_zones = {1, 2};
 
 
     //{0,0} - Running always;

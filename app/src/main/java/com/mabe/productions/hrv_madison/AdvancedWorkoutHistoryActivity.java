@@ -12,25 +12,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.CardView;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.TranslateAnimation;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.budiyev.android.circularprogressbar.CircularProgressBar;
 import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -44,18 +38,15 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.zxing.client.result.TextParsedResult;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 import com.tooltip.Tooltip;
 
@@ -117,14 +108,14 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
 
     public Tooltip tooltip;
 
-    private View.OnClickListener createTooltipListener(@StringRes final int message){
+    private View.OnClickListener createTooltipListener(@StringRes final int message) {
 
         return new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
 
-                if(tooltip != null)
+                if (tooltip != null)
                     tooltip.dismiss();
 
                 tooltip = new Tooltip.Builder(view)
@@ -149,14 +140,14 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
         HistoryRecyclerViewDataHolder parcel = getIntent().getExtras().getParcelable("Workout");
         WorkoutMeasurements workout = new WorkoutMeasurements(
                 parcel.getExercise()
-                ,parcel.getDate()
-                ,parcel.getWorkout_duration()
-                ,parcel.getAverage_bpm()
-                ,parcel.getBpm_data()
-                ,parcel.getPace_data()
-                ,parcel.getRoute()
-                ,parcel.getCalories_burned()
-                ,parcel.getDistance());
+                , parcel.getDate()
+                , parcel.getWorkout_duration()
+                , parcel.getAverage_bpm()
+                , parcel.getBpm_data()
+                , parcel.getPace_data()
+                , parcel.getRoute()
+                , parcel.getCalories_burned()
+                , parcel.getDistance());
 
 
         initialiseViews();
@@ -167,17 +158,16 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
 
     }
 
-    private void setFonts(){
+    private void setFonts() {
 
         Typeface verdana = Typeface.createFromAsset(getAssets(),
                 "fonts/futura_light.ttf");
         txt_loading.setTypeface(verdana);
 
 
-
     }
 
-    private void initialiseViews(){
+    private void initialiseViews() {
 
 
         Animation bottom_to_top = AnimationUtils.loadAnimation(this, R.anim.bottom_to_top);
@@ -187,8 +177,8 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
         scrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
             @Override
             public void onScrollChanged() {
-                if(tooltip != null){
-                    if(tooltip.isShowing()){
+                if (tooltip != null) {
+                    if (tooltip.isShowing()) {
                         tooltip.dismiss();
                     }
                 }
@@ -248,9 +238,9 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
         advanced_history_data_layout.startAnimation(bottom_to_top);
     }
 
-    private void setUpData(WorkoutMeasurements workout){
+    private void setUpData(WorkoutMeasurements workout) {
 
-        if(workout.getBpm_data().length != 0){
+        if (workout.getBpm_data().length != 0) {
             //BPM card
             bpm_lineChart();
 
@@ -263,7 +253,7 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
 
             }
 
-        }else{
+        } else {
             pulse_distribution_card.setVisibility(View.GONE);
             bpm_card.setVisibility(View.GONE);
         }
@@ -276,19 +266,19 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
         pulse_zone_lineChart(percentages);
 
         //Other info
-        advanced_history_txt_card_duration.setText((int)(workout.getWorkout_duration()/1000/60) + " min running");
+        advanced_history_txt_card_duration.setText((int) (workout.getWorkout_duration() / 1000 / 60) + " min running");
         advanced_history_txt_card_date.setText(formatDate(workout.getDate()));
-        advanced_history_txt_calories_value.setText(workout.getCalories_burned()==0 ? "-" : String.valueOf(workout.getCalories_burned()) + " Kcal");
-        advanced_history_txt_bpm_value.setText(String.valueOf(workout.getAverage_bpm()== 0 ? "-" : workout.getAverage_bpm()));
+        advanced_history_txt_calories_value.setText(workout.getCalories_burned() == 0 ? "-" : String.valueOf(workout.getCalories_burned()) + " Kcal");
+        advanced_history_txt_bpm_value.setText(String.valueOf(workout.getAverage_bpm() == 0 ? "-" : workout.getAverage_bpm()));
         advanced_history_txt_pace_value.setText(String.valueOf(workout.getAveragePace()) + " m/s");
         advanced_history_txt_distance_value.setText(String.valueOf(workout.getDistance()) + " km");
 
         int minPulseZone = workout.getExercise().getMinimumPulseZone();
         int maxPulseZone = workout.getExercise().getMaximumPulseZone();
-        if(minPulseZone == maxPulseZone){
+        if (minPulseZone == maxPulseZone) {
             advanced_history_txt_intensity_value.setText(minPulseZone + Utils.getNumberSuffix(minPulseZone));
-        }else{
-            advanced_history_txt_intensity_value.setText(minPulseZone +  Utils.getNumberSuffix(minPulseZone) + "-" + maxPulseZone + Utils.getNumberSuffix(maxPulseZone));
+        } else {
+            advanced_history_txt_intensity_value.setText(minPulseZone + Utils.getNumberSuffix(minPulseZone) + "-" + maxPulseZone + Utils.getNumberSuffix(maxPulseZone));
         }
 
 
@@ -296,6 +286,7 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
         imgButton_distribution.setOnClickListener(createTooltipListener(R.string.pulse_distribution));
 
     }
+
     private void addEntryBpm(int hr, int max_points) {
 
         LineData data = chart_bpm_history.getData();
@@ -422,13 +413,12 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
 
         //BPM DATA SET
         ArrayList<BarEntry> singleValueList = new ArrayList<>();
-        singleValueList.add(new BarEntry(0,pulse_zone_distribution[0]));
-        singleValueList.add(new BarEntry(1,pulse_zone_distribution[1]));
-        singleValueList.add(new BarEntry(2,pulse_zone_distribution[2]));
-        singleValueList.add(new BarEntry(3,pulse_zone_distribution[3]));
-        singleValueList.add(new BarEntry(4,pulse_zone_distribution[4]));
+        singleValueList.add(new BarEntry(0, pulse_zone_distribution[0]));
+        singleValueList.add(new BarEntry(1, pulse_zone_distribution[1]));
+        singleValueList.add(new BarEntry(2, pulse_zone_distribution[2]));
+        singleValueList.add(new BarEntry(3, pulse_zone_distribution[3]));
+        singleValueList.add(new BarEntry(4, pulse_zone_distribution[4]));
         BarDataSet set = new BarDataSet(singleValueList, "HR");
-
 
 
         //Set label count to 5 as we are displaying 5 star rating
@@ -452,10 +442,10 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
 
     }
 
-    public int getHighestBpm(WorkoutMeasurements workout){
+    public int getHighestBpm(WorkoutMeasurements workout) {
         int highest_bpm = workout.getBpm_data()[0];
 
-        for(int bpm : workout.getBpm_data()){
+        for (int bpm : workout.getBpm_data()) {
             highest_bpm = bpm > highest_bpm ? bpm : highest_bpm;
         }
 
@@ -463,7 +453,7 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
     }
 
 
-    private String formatDate(Date date){
+    private String formatDate(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM, hh:mm 'val'");
@@ -475,48 +465,47 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
     private void settingWorkoutMap(final WorkoutMeasurements workout) {
 
 
-
-            map_fragment.getMapAsync(new OnMapReadyCallback() {
-                @Override
-                public void onMapReady(final GoogleMap googleMap) {
-
+        map_fragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(final GoogleMap googleMap) {
 
 
-                    googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-                        @Override
-                        public void onMapLoaded() {
-                            map_frame_layout.setVisibility(View.GONE);
-                            loading_progress.hide();
+                googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                    @Override
+                    public void onMapLoaded() {
+                        map_frame_layout.setVisibility(View.GONE);
+                        loading_progress.hide();
 
 
-                            route_display_googlemap = googleMap;
+                        route_display_googlemap = googleMap;
 
-                            try {
+                        try {
 
-                                googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(AdvancedWorkoutHistoryActivity.this, R.raw.dark_google_map));
+                            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(AdvancedWorkoutHistoryActivity.this, R.raw.dark_google_map));
 
-                            } catch (Resources.NotFoundException e) {
-                                Log.e("GMAPS", "Can't find style. Error: ", e);
-                            }
-
-                            map_fragment.getView().setClickable(false);
-                            displayMapRoute(workout.getRoute());
+                        } catch (Resources.NotFoundException e) {
+                            Log.e("GMAPS", "Can't find style. Error: ", e);
                         }
-                    });
+
+                        map_fragment.getView().setClickable(false);
+                        displayMapRoute(workout.getRoute());
+                    }
+                });
 
 
-                }
-            });
+            }
+        });
 
     }
 
     /**
      * Returns the percentage of time the user has been in each pulse zone
-     * @param hr_max The maximum heart rate of a user
+     *
+     * @param hr_max   The maximum heart rate of a user
      * @param bpm_data The heart rate data
      * @return The percentage of time the user has been in each pulse zone.
      */
-    private static int[] getPulseZonePercentages(int hr_max, int[] bpm_data){
+    private static int[] getPulseZonePercentages(int hr_max, int[] bpm_data) {
 
         int zone_1_data_count = 0;
         int zone_2_data_count = 0;
@@ -524,31 +513,31 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
         int zone_4_data_count = 0;
         int zone_5_data_count = 0;
 
-        for(int i = 0; i < bpm_data.length; i++){
+        for (int i = 0; i < bpm_data.length; i++) {
 
-            if(bpm_data[i] > Utils.getPulseZoneBounds(1, hr_max)[0] && bpm_data[i] < Utils.getPulseZoneBounds(1, hr_max)[1]){
+            if (bpm_data[i] > Utils.getPulseZoneBounds(1, hr_max)[0] && bpm_data[i] < Utils.getPulseZoneBounds(1, hr_max)[1]) {
                 zone_1_data_count++;
             }
-            if(bpm_data[i] > Utils.getPulseZoneBounds(2, hr_max)[0] && bpm_data[i] < Utils.getPulseZoneBounds(2, hr_max)[1]){
+            if (bpm_data[i] > Utils.getPulseZoneBounds(2, hr_max)[0] && bpm_data[i] < Utils.getPulseZoneBounds(2, hr_max)[1]) {
                 zone_2_data_count++;
             }
-            if(bpm_data[i] > Utils.getPulseZoneBounds(3, hr_max)[0] && bpm_data[i] < Utils.getPulseZoneBounds(3, hr_max)[1]){
+            if (bpm_data[i] > Utils.getPulseZoneBounds(3, hr_max)[0] && bpm_data[i] < Utils.getPulseZoneBounds(3, hr_max)[1]) {
                 zone_3_data_count++;
             }
-            if(bpm_data[i] > Utils.getPulseZoneBounds(4, hr_max)[0] && bpm_data[i] < Utils.getPulseZoneBounds(4, hr_max)[1]){
+            if (bpm_data[i] > Utils.getPulseZoneBounds(4, hr_max)[0] && bpm_data[i] < Utils.getPulseZoneBounds(4, hr_max)[1]) {
                 zone_4_data_count++;
             }
-            if(bpm_data[i] > Utils.getPulseZoneBounds(5, hr_max)[0] && bpm_data[i] < Utils.getPulseZoneBounds(5, hr_max)[1]){
+            if (bpm_data[i] > Utils.getPulseZoneBounds(5, hr_max)[0] && bpm_data[i] < Utils.getPulseZoneBounds(5, hr_max)[1]) {
                 zone_5_data_count++;
             }
 
         }
 
-        int zone1Percentage = (int) ((zone_1_data_count * 100f)/ (float) (zone_1_data_count + zone_2_data_count + zone_3_data_count + zone_4_data_count + zone_5_data_count));
-        int zone2Percentage = (int) ((zone_2_data_count * 100f)/ (float) (zone_1_data_count + zone_2_data_count + zone_3_data_count + zone_4_data_count + zone_5_data_count));
-        int zone3Percentage = (int) ((zone_3_data_count * 100f)/ (float) (zone_1_data_count + zone_2_data_count + zone_3_data_count + zone_4_data_count + zone_5_data_count));
-        int zone4Percentage = (int) ((zone_4_data_count * 100f)/ (float) (zone_1_data_count + zone_2_data_count + zone_3_data_count + zone_4_data_count + zone_5_data_count));
-        int zone5Percentage = (int) ((zone_5_data_count * 100f)/ (float) (zone_1_data_count + zone_2_data_count + zone_3_data_count + zone_4_data_count + zone_5_data_count));
+        int zone1Percentage = (int) ((zone_1_data_count * 100f) / (float) (zone_1_data_count + zone_2_data_count + zone_3_data_count + zone_4_data_count + zone_5_data_count));
+        int zone2Percentage = (int) ((zone_2_data_count * 100f) / (float) (zone_1_data_count + zone_2_data_count + zone_3_data_count + zone_4_data_count + zone_5_data_count));
+        int zone3Percentage = (int) ((zone_3_data_count * 100f) / (float) (zone_1_data_count + zone_2_data_count + zone_3_data_count + zone_4_data_count + zone_5_data_count));
+        int zone4Percentage = (int) ((zone_4_data_count * 100f) / (float) (zone_1_data_count + zone_2_data_count + zone_3_data_count + zone_4_data_count + zone_5_data_count));
+        int zone5Percentage = (int) ((zone_5_data_count * 100f) / (float) (zone_1_data_count + zone_2_data_count + zone_3_data_count + zone_4_data_count + zone_5_data_count));
 
         return new int[]{zone1Percentage, zone2Percentage, zone3Percentage, zone4Percentage, zone5Percentage};
     }
@@ -587,6 +576,7 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
         route_display_googlemap.animateCamera(cu);
 
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -595,7 +585,6 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
             map_fragment.onResume();
         }
     }
-
 
 
     @Override

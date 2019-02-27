@@ -16,17 +16,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.mabe.productions.hrv_madison.Exercise;
-import com.mabe.productions.hrv_madison.MainScreenActivity;
 import com.mabe.productions.hrv_madison.R;
-import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 public class IntroInitialInfoBirthday extends AppCompatActivity {
 
@@ -38,7 +33,7 @@ public class IntroInitialInfoBirthday extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.intro_initial_info_birthday_activity);
-        Utils.changeNotifBarColor(Color.parseColor("#3e5266"),getWindow());
+        Utils.changeNotifBarColor(Color.parseColor("#3e5266"), getWindow());
 
         initializeViews();
         setFonts();
@@ -46,9 +41,9 @@ public class IntroInitialInfoBirthday extends AppCompatActivity {
     }
 
 
-    private void initializeViews(){
+    private void initializeViews() {
 
-        Animation anim_txt_when_is_your_birthday =  AnimationUtils.loadAnimation(this, R.anim.top_to_bottom);
+        Animation anim_txt_when_is_your_birthday = AnimationUtils.loadAnimation(this, R.anim.top_to_bottom);
         Animation anim_picker_date = AnimationUtils.loadAnimation(this, R.anim.fade_in_delay);
         Animation anim_btn_continue = AnimationUtils.loadAnimation(this, R.anim.bottom_to_top_delay);
 
@@ -65,7 +60,7 @@ public class IntroInitialInfoBirthday extends AppCompatActivity {
     }
 
 
-    private void setFonts(){
+    private void setFonts() {
 
         Typeface verdana = Typeface.createFromAsset(getAssets(),
                 "fonts/futura_light.ttf");
@@ -77,15 +72,16 @@ public class IntroInitialInfoBirthday extends AppCompatActivity {
     public void start(View view) {
         int day = picker_date.getDayOfMonth();
         int month = picker_date.getMonth();
-        int year =  picker_date.getYear();
+        int year = picker_date.getYear();
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day);
 
-        Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_BIRTHDAY,Utils.getStringFromDate(calendar.getTime()),FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+        Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_BIRTHDAY, Utils.getStringFromDate(calendar.getTime()), FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
-        final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference(FirebaseUtils.USERS_TABLE_RUNNING + "/" + user.getUid());        fireDatabase.child("birthday").setValue(Utils.getStringFromDate(calendar.getTime()));
+        final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference(FirebaseUtils.USERS_TABLE_RUNNING + "/" + user.getUid());
+        fireDatabase.child("birthday").setValue(Utils.getStringFromDate(calendar.getTime()));
 
 
         startActivity(new Intent(this, IntroInitialDaySelection.class));

@@ -49,8 +49,6 @@ import java.util.TimerTask;
 
 public class HeartRateMonitor extends Activity {
 
-
-    private static final int CAMERA_PERMISSION_REQUEST = 2;
     private TextView hrv_txt;
     private TextView txt_info;
     private static final String TAG = "HeartRateMonitor";
@@ -71,9 +69,12 @@ public class HeartRateMonitor extends Activity {
     private static final int averageArraySize = 4;
     private static final int[] averageArray = new int[averageArraySize];
     private boolean startedMeasurement = true;
+
     public static enum TYPE {
         GREEN, RED
-    };
+    }
+
+    ;
 
     private static TYPE currentType = TYPE.GREEN;
 
@@ -119,6 +120,7 @@ public class HeartRateMonitor extends Activity {
         startTime = System.currentTimeMillis();
         chart_hr = findViewById(R.id.chart_hr);
         txt_info = findViewById(R.id.info_txt);
+
         //Customizing HR chart
         chart_hr.setData(new LineData());
         chart_hr.getLineData().setDrawValues(false);
@@ -135,16 +137,13 @@ public class HeartRateMonitor extends Activity {
         chart_hr.getXAxis().setDrawLabels(false);
         chart_hr.setTouchEnabled(false);
         chart_hr.setViewPortOffsets(0f, 0f, 0f, 0f);
-        //chart_hr.setAutoScaleMinMaxEnabled(true);
-        preview = (SurfaceView) findViewById(R.id.preview);
-
+        preview = findViewById(R.id.preview);
 
         setUpSurfaceHolder();
 
-
         image = findViewById(R.id.image);
-        bpm_txt = (TextView) findViewById(R.id.text);
-        hrv_txt = (TextView) findViewById(R.id.hrv_txt);
+        bpm_txt = findViewById(R.id.text);
+        hrv_txt = findViewById(R.id.hrv_txt);
         progressbar_time_left = findViewById(R.id.measurement_progress_bar);
         txt_time_left = findViewById(R.id.txt_time_left);
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -152,7 +151,7 @@ public class HeartRateMonitor extends Activity {
 
     }
 
-    private void setUpSurfaceHolder(){
+    private void setUpSurfaceHolder() {
         previewHolder = preview.getHolder();
         previewHolder.addCallback(surfaceCallback);
         previewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -160,14 +159,12 @@ public class HeartRateMonitor extends Activity {
 
     }
 
-    public static void changeNotifBarColor(int color, Window window){
-
+    public static void changeNotifBarColor(int color, Window window) {
         if (Build.VERSION.SDK_INT >= 21) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(color);
         }
-
     }
 
     /**
@@ -184,16 +181,11 @@ public class HeartRateMonitor extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             wakeLock.acquire();
-
             camera = Camera.open();
-
             startTime = System.currentTimeMillis();
         }
-
-
     }
 
     /**
@@ -202,14 +194,12 @@ public class HeartRateMonitor extends Activity {
     @Override
     public void onPause() {
         super.onPause();
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             wakeLock.release();
-
             camera.setPreviewCallback(null);
             camera.stopPreview();
             camera.release();
             camera = null;
-
         }
     }
 
@@ -230,17 +220,12 @@ public class HeartRateMonitor extends Activity {
             Camera.Size size = cam.getParameters().getPreviewSize();
             if (size == null) throw new NullPointerException();
 
-
-
-
-            //if (!processing.compareAndSet(false, true)) return;
-
             int width = size.width;
             int height = size.height;
 
             int imgAvg = ImageProcessing.decodeYUV420SPtoRedAvg(data.clone(), height, width);
 
-            if(imgAvg < 200){
+            if (imgAvg < 200) {
                 isMeasuring = false;
                 startedMeasurement = true;
                 txt_info.setText("No finger detected!");
@@ -253,21 +238,18 @@ public class HeartRateMonitor extends Activity {
                 bpm_txt.setText("-");
                 cancelTimer();
                 return;
-            }else{
-                if(isMeasuring){
-                    txt_info.setText("Measuring... Try to stay still and queit");
-                }else{
-                    txt_info.setText("Adjusting. Please keep your finger steady");
+            } else {
+                if (isMeasuring) {
+                    txt_info.setText("Measuring... Try to stay still and quiet.");
+                } else {
+                    txt_info.setText("Adjusting. Please keep your finger steady.");
                 }
 
             }
 
-
             startTimer();
 
-
-
-            addEntry(imgAvg,getApplicationContext());
+            addEntry(imgAvg, getApplicationContext());
 
             if (imgAvg == 0 || imgAvg == 255) {
                 return;
@@ -306,7 +288,7 @@ public class HeartRateMonitor extends Activity {
         }
     };
 
-    private static void addEntry(int hr,Context context) {
+    private static void addEntry(int hr, Context context) {
         LineData data = chart_hr.getData();
         LineDataSet set = (LineDataSet) data.getDataSetByIndex(0);
         if (set == null) {
@@ -343,49 +325,47 @@ public class HeartRateMonitor extends Activity {
     private static ArrayList<Long> samples = new ArrayList();
     private static final int SAMPLE_SIZE = 20;
 
-    private void beat(){
-        if(samples.size() < SAMPLE_SIZE){
-            samples.add(System.currentTimeMillis()-startTime);
+    private void beat() {
+        if (samples.size() < SAMPLE_SIZE) {
+            samples.add(System.currentTimeMillis() - startTime);
             return;
-        }else if(samples.size() == SAMPLE_SIZE){
-            samples.add(System.currentTimeMillis()-startTime);
+        } else if (samples.size() == SAMPLE_SIZE) {
+            samples.add(System.currentTimeMillis() - startTime);
             samples.remove(0);
         }
 
         long firstSampleTime = samples.get(0);
-        long lastSampleTime = samples.get(samples.size()-1);
+        long lastSampleTime = samples.get(samples.size() - 1);
         long timePassed = lastSampleTime - firstSampleTime;
 
-        int bpm = (int) ( samples.size() / ((double) timePassed/60000d) );
-        int period = (int) (samples.get(samples.size()-1)-samples.get(samples.size()-2));
-        //int interval = (int) (60000d/(double)bpm);
+        int bpm = (int) (samples.size() / ((double) timePassed / 60000d));
+        int period = (int) (samples.get(samples.size() - 1) - samples.get(samples.size() - 2));
 
-        int interval = (int) (lastSampleTime - samples.get(samples.size()-2));
+        int interval = (int) (lastSampleTime - samples.get(samples.size() - 2));
 
-        if(period < 300){
+        if (period < 300) {
             return;
         }
 
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             v.vibrate(VibrationEffect.createOneShot(5, 1));
-        }else{
+        } else {
             //deprecated in API 26
             v.vibrate(50);
         }
 
-        Log.i("RRTEST", String.valueOf(interval));
         rmssd.addInterval(interval);
         rmssd.calculateRMSSD();
         frequencyMethod.add_to_freq_array(interval);
         HeartRateMonitor.bpm.addBPM(bpm);
 
-        if(startedMeasurement){
+        if (startedMeasurement) {
             isMeasuring = true;
             startedMeasurement = false;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 v.vibrate(VibrationEffect.createOneShot(50, 1));
-            }else{
+            } else {
                 //deprecated in API 26
                 v.vibrate(500);
             }
@@ -473,7 +453,7 @@ public class HeartRateMonitor extends Activity {
     }
 
     private void startTimer() {
-        if(isTimerRunning){
+        if (isTimerRunning) {
             return;
         }
 
@@ -490,17 +470,17 @@ public class HeartRateMonitor extends Activity {
         @Override
         public void run() {
 
-            if(!isTimerRunning)
+            if (!isTimerRunning)
                 return;
 
-            timePassed+=TIMER_STEP;
+            timePassed += TIMER_STEP;
 
             //Measurement time has passed
-            if(timePassed >= MEASUREMENT_DURATION){
+            if (timePassed >= MEASUREMENT_DURATION) {
                 cancelTimer();
                 timer.cancel();
-                Utils.speak("Your measurement is finished and saved successfuly!");
-                Measurement measurement = new Measurement(rmssd, frequencyMethod, bpm, (int) (MEASUREMENT_DURATION/60000), Calendar.getInstance().getTime());
+                Utils.speak("Your measurement is finished and saved successfully!");
+                Measurement measurement = new Measurement(rmssd, frequencyMethod, bpm, (int) (MEASUREMENT_DURATION / 60000), Calendar.getInstance().getTime());
 
                 FirebaseUtils.addMeasurement(new FireMeasurement(measurement), HeartRateMonitor.this);
                 User.addMeasurementData(HeartRateMonitor.this, measurement, false);
@@ -512,7 +492,7 @@ public class HeartRateMonitor extends Activity {
                         HeartRateMonitor.this.finish();
                     }
                 });
-            }else { //User is yet to finish the measurement
+            } else { //User is yet to finish the measurement
 
                 runOnUiThread(new Runnable() {
                     @Override
@@ -536,16 +516,16 @@ public class HeartRateMonitor extends Activity {
     /**
      * Sets the progressbar_time_left progress.
      *
-     * @param timeTotal  the time workout is going to last
+     * @param timeTotal    the time workout is going to last
      * @param timeProgress time, that has already passed
-     * @param reverse If true, progress is displayed in opposite colors
+     * @param reverse      If true, progress is displayed in opposite colors
      */
     private void setProgressBarDuration(long timeTotal, long timeProgress, boolean reverse) {
         float multiplier = ((float) timeProgress) / ((float) timeTotal);
 
-        if(reverse){
+        if (reverse) {
             progressbar_time_left.setProgress((int) (100 - multiplier * 100));
-        }else{
+        } else {
             progressbar_time_left.setProgress((int) (multiplier * 100));
         }
     }

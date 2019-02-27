@@ -3,13 +3,9 @@ package com.mabe.productions.hrv_madison;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
-import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.CardView;
-import android.text.format.DateFormat;
-import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -29,7 +25,6 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
-import com.tooltip.Tooltip;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -56,7 +51,6 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
     private TextView advanced_history_txt_lf_value;
     private TextView advanced_history_txt_hf;
     private TextView advanced_history_txt_hf_value;
-
 
 
     //bpm cardview
@@ -100,8 +94,6 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
     private TextView toolbar_title_advanced;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,44 +103,42 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
         HistoryRecyclerViewDataHolder parcel = getIntent().getExtras().getParcelable("Measurement");
         Measurement measurement = new Measurement(
                 parcel.getDate()
-                ,parcel.getRmssd()
-                ,parcel.getLn_rmssd()
-                ,parcel.getLowest_rmssd()
-                ,parcel.getHighest_rmssd()
-                ,parcel.getLowest_bpm()
-                ,parcel.getHighest_bpm()
-                ,parcel.getAverage_bpm()
-                ,parcel.getLF_band()
-                ,parcel.getVLF_band()
-                ,parcel.getVHF_band()
-                ,parcel.getHF_band()
-                ,parcel.getBpm_data()
-                ,parcel.getRmssd_data()
-                ,parcel.getDuration()
-                ,parcel.getUnique_id()
-                ,parcel.getMood()
-                ,parcel.getHrv(),
+                , parcel.getRmssd()
+                , parcel.getLn_rmssd()
+                , parcel.getLowest_rmssd()
+                , parcel.getHighest_rmssd()
+                , parcel.getLowest_bpm()
+                , parcel.getHighest_bpm()
+                , parcel.getAverage_bpm()
+                , parcel.getLF_band()
+                , parcel.getVLF_band()
+                , parcel.getVHF_band()
+                , parcel.getHF_band()
+                , parcel.getBpm_data()
+                , parcel.getRmssd_data()
+                , parcel.getDuration()
+                , parcel.getUnique_id()
+                , parcel.getMood()
+                , parcel.getHrv(),
                 null);
-
 
 
         initialiseViews();
         setFonts();
         bpm_lineChart();
         addDataToBPMChart(measurement);
-        setFrequencyChartData(measurement.getHF_band(),measurement.getLF_band(),measurement.getVLF_band(),measurement.getVHF_band());
+        setFrequencyChartData(measurement.getHF_band(), measurement.getLF_band(), measurement.getVLF_band(), measurement.getVHF_band());
         setUpData(measurement);
-        setLF_HF_RatioZone(measurement.getLF_band()/measurement.getHF_band());
+        setLF_HF_RatioZone(measurement.getLF_band() / measurement.getHF_band());
     }
 
 
+    private void setUpData(Measurement measurement) {
+        freq_card_txt_hf_after_measurament.setText(String.valueOf((int) measurement.getHF_band() + "%"));
+        freq_card_txt_lf_after_measurement.setText(String.valueOf((int) measurement.getLF_band() + "%"));
 
-    private void setUpData(Measurement measurement){
-        freq_card_txt_hf_after_measurament.setText(String.valueOf((int)measurement.getHF_band() + "%"));
-        freq_card_txt_lf_after_measurement.setText(String.valueOf((int)measurement.getLF_band()+ "%"));
-
-        advanced_history_txt_lf_value.setText(String.valueOf((int) measurement.getLF_band()+ "%"));
-        advanced_history_txt_hf_value.setText(String.valueOf((int)measurement.getHF_band()+ "%"));
+        advanced_history_txt_lf_value.setText(String.valueOf((int) measurement.getLF_band() + "%"));
+        advanced_history_txt_hf_value.setText(String.valueOf((int) measurement.getHF_band() + "%"));
 
 
         freq_card_txt_freq_band_date.setText(formatDate(measurement.getDate()));
@@ -174,21 +164,21 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
                 break;
         }
 
-        bpm_card_value_average.setText(String.valueOf((int)measurement.getAverage_bpm()));
+        bpm_card_value_average.setText(String.valueOf((int) measurement.getAverage_bpm()));
         bpm_card_hrv_average_value.setText(String.valueOf(measurement.getRmssd()));
 
 
         advanced_history_txt_rmssd_value.setText(String.valueOf(measurement.getRmssd()));
         advanced_history_txt_lnrmssd_value.setText(String.valueOf(measurement.getLn_rmssd()));
         advanced_history_txt_hrv_value.setText(String.valueOf(measurement.getHrv()));
-        advanced_history_txt_bpm_value.setText(String.valueOf((int)measurement.getAverage_bpm()));
+        advanced_history_txt_bpm_value.setText(String.valueOf((int) measurement.getAverage_bpm()));
 
         advanced_history_txt_card_date.setText(formatDate(measurement.getDate()));
         advanced_history_txt_card_duration.setText(measurement.getDuration() + " min measurement");
 
     }
 
-    private String formatDate(Date date){
+    private String formatDate(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM, hh:mm 'val'");
@@ -196,25 +186,25 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
 
     }
 
-    private void setLF_HF_RatioZone(float ratio){
+    private void setLF_HF_RatioZone(float ratio) {
         freq_card_ratio_scale.setElementPosition(ratio);
-        if(ratio>=1.4f && ratio<=1.6f){
+        if (ratio >= 1.4f && ratio <= 1.6f) {
             freq_card_ratio_meaning.setText("Ideal balance!");
             freq_card_ratio_meaning_advice.setText("Your body is feeling great, keep it up!");
         }
-        if(ratio>=1.61f && ratio<=2f){
+        if (ratio >= 1.61f && ratio <= 2f) {
             freq_card_ratio_meaning.setText("Your body starts to feel stressed!");
             freq_card_ratio_meaning_advice.setText("Consider some relaxation exercises and not pushing yourself too hard today!");
         }
-        if(ratio>=0.5f && ratio<=1.39f){
+        if (ratio >= 0.5f && ratio <= 1.39f) {
             freq_card_ratio_meaning.setText("Your body is recovering!");
             freq_card_ratio_meaning_advice.setText("Consider doing some non-stresful activities with higher intensity during your daily schedule ");
         }
-        if(ratio>2f){
+        if (ratio > 2f) {
             freq_card_ratio_meaning.setText("Your body is under pressure!");
             freq_card_ratio_meaning_advice.setText("Ratio indicates anxiety, stress, pressure. You should reduce your work load and physical activities!");
         }
-        if(ratio<0.5f){
+        if (ratio < 0.5f) {
             freq_card_ratio_meaning.setText("Your body is exhausted!");
             freq_card_ratio_meaning_advice.setText("Ratio indicates low energy and exhaustion. You should consider taking a day off and relaxing!");
         }
@@ -271,10 +261,9 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
         bpm_line_chart.setViewPortOffsets(0f, 0f, 0f, 0f);
 
 
-
     }
 
-    private void initialiseViews(){
+    private void initialiseViews() {
 
         Animation left_to_right = AnimationUtils.loadAnimation(this, R.anim.left_to_right);
         Animation left_to_right_d = AnimationUtils.loadAnimation(this, R.anim.left_to_right_delay);
@@ -334,9 +323,8 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
         frequency_chart.animateY(1000, Easing.EasingOption.EaseInOutCubic);
 
 
-
         //BPM PieChart
-        bpm_card = (CardView)findViewById(R.id.bpm_card);
+        bpm_card = (CardView) findViewById(R.id.bpm_card);
         bpm_line_chart = (LineChart) findViewById(R.id.chart_bpm);
         bpm_card_txt_bpm = (TextView) findViewById(R.id.bpm_index_text_view);
         bpm_card_txt_date = (TextView) findViewById(R.id.bpm_index_measurement_date);
@@ -350,8 +338,8 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
         txt_how_do_you_feel = (TextView) findViewById(R.id.txt_how_do_you_feel);
         txt_emotion_explaining = (TextView) findViewById(R.id.txt_emotion_explaining);
         img_negatively_excited = (ImageView) findViewById(R.id.img_negatively_excited);
-        img_negatively_mellow =(ImageView) findViewById(R.id.img_negatively_mellow);
-        img_neutral = (ImageView )findViewById(R.id.img_neutral);
+        img_negatively_mellow = (ImageView) findViewById(R.id.img_negatively_mellow);
+        img_neutral = (ImageView) findViewById(R.id.img_neutral);
         img_positively_mellow = (ImageView) findViewById(R.id.img_positively_mellow);
         img_positively_excited = (ImageView) findViewById(R.id.img_positively_excited);
 
@@ -383,8 +371,8 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
         });
 
 
-
     }
+
     private void setFrequencyChartData(float hf, float lf, float vlf, float vhf) {
         //Modify Y-axis value
 
@@ -414,6 +402,7 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
         Legend legend = frequency_chart.getLegend();
         legend.setEnabled(false);
     }
+
     private void addEntryBpm(int hr, int max_points) {
 
         LineData data = bpm_line_chart.getData();
@@ -504,7 +493,7 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
 
     }
 
-    private void addDataToBPMChart(Measurement measurement){
+    private void addDataToBPMChart(Measurement measurement) {
         //Setting bpm/hrv data
         if (measurement != null) {
             int bpmValues[] = measurement.getBpm_data();

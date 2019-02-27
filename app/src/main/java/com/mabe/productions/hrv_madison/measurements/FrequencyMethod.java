@@ -6,10 +6,6 @@ import com.crashlytics.android.Crashlytics;
 
 import java.util.ArrayList;
 
-/**
- * Created by Benas on 2/23/2018.
- */
-
 public class FrequencyMethod {
 
     public final static double HF_MIN = 0.15;
@@ -38,16 +34,16 @@ public class FrequencyMethod {
     double VHF_count = 0;
     double total = 0;
 
-    double HF_value=0;
-    double LF_value=0;
-    double VLF_value=0;
-    double VHF_value=0;
+    double HF_value = 0;
+    double LF_value = 0;
+    double VLF_value = 0;
+    double VHF_value = 0;
 
 
-    public void calculate_frequencies(int beatsFFT){
-        double []freqArray = new double[beatsFFT];
-        for(int i = 0; i<beatsFFT; i++){
-            freqArray[i] = (double)i/(double)beatsFFT;
+    public void calculate_frequencies(int beatsFFT) {
+        double[] freqArray = new double[beatsFFT];
+        for (int i = 0; i < beatsFFT; i++) {
+            freqArray[i] = (double) i / (double) beatsFFT;
             //Log.i("TEST", "Const: " + freqArray[i]);
         }
 
@@ -73,21 +69,11 @@ public class FrequencyMethod {
 
             }
 
-            /*
-            if (constArrayFreq > VLF_MIN && constArrayFreq <= VLF_MAX) {
-                VLF_count += rootNumber;
-
-            }
-            if (constArrayFreq > VHF_MIN && constArrayFreq <= VHF_MAX) {
-                VHF_count += rootNumber;
-            }
-            */
-
         }
         total = LF_count + HF_count;
-        LF_value = Math.round((LF_count/total)*100.0);
+        LF_value = Math.round((LF_count / total) * 100.0);
         VLF_value = 0;
-        HF_value = Math.round((HF_count/total)*100.0);
+        HF_value = Math.round((HF_count / total) * 100.0);
         VHF_value = 0;
 
 
@@ -110,18 +96,17 @@ public class FrequencyMethod {
     }
 
 
-
-    public void add_to_freq_array(int interval){
+    public void add_to_freq_array(int interval) {
         double Hz = 0;
 
-        if(interval!=0){
-            Hz = 1/((float)interval/1000f);
+        if (interval != 0) {
+            Hz = 1 / ((float) interval / 1000f);
             Log.i("DATA", "HZ: " + Hz);
         }
         hrv_data.add(new Complex(Hz, 0));
 
         //Checking if number of data points is power of two
-        if(hrv_data.size() > 1 && ((hrv_data.size() & (hrv_data.size() - 1)) == 0)){
+        if (hrv_data.size() > 1 && ((hrv_data.size() & (hrv_data.size() - 1)) == 0)) {
             calculate_frequencies(hrv_data.size());
             Crashlytics.log("Calculating frequencies.");
         }
@@ -131,7 +116,7 @@ public class FrequencyMethod {
 
     }
 
-    public void clearData(){
+    public void clearData() {
         hrv_data.clear();
     }
 }

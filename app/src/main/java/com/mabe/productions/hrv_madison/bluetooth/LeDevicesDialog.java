@@ -2,7 +2,6 @@ package com.mabe.productions.hrv_madison.bluetooth;
 
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
@@ -29,11 +28,8 @@ import android.widget.TextView;
 import com.mabe.productions.hrv_madison.R;
 
 import java.util.ArrayList;
-import java.util.Set;
 
-
-public class LeDevicesDialog{
-
+public class LeDevicesDialog {
 
     private final long SCAN_PERIOD = 10000;
 
@@ -48,12 +44,10 @@ public class LeDevicesDialog{
     public DevicesAdapter adapter;
     private SharedPreferences devicePreference;
 
-    private boolean isReceiverRegistered=false;
+    private boolean isReceiverRegistered = false;
 
+    public LeDevicesDialog(Context context) {
 
-
-
-    public LeDevicesDialog(Context context){
         this.context = context;
         registerReceiver();
 
@@ -69,28 +63,16 @@ public class LeDevicesDialog{
         devicePreference = context.getSharedPreferences("SavedDevice", Context.MODE_PRIVATE);
 
         setupDialog();
-        //addBondedDevices();
     }
 
-    public void setOnCancelListener(DialogInterface.OnCancelListener onCancelListener){
+    public void setOnCancelListener(DialogInterface.OnCancelListener onCancelListener) {
         dialog.setOnCancelListener(onCancelListener);
     }
-
-
-
-    private void addBondedDevices(){
-        Set<BluetoothDevice> all_devices = mBluetoothAdapter.getBondedDevices();
-        for(BluetoothDevice device: all_devices){
-            DeviceViewInfo deviceInfo = new DeviceViewInfo(false, true, false, device);
-            adapter.devices.add(deviceInfo);
-        }
-    }
-
 
     private BroadcastReceiver mGattServerReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            switch (intent.getAction()){
+            switch (intent.getAction()) {
                 case BluetoothGattService.ACTION_CONNECTED:
                     BluetoothDevice device = intent.getParcelableExtra("BT_DEVICE");
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -98,30 +80,30 @@ public class LeDevicesDialog{
                     }
                     String MAC_adress = device.getAddress();
                     String device_name = device.getName();
-                    devicePreference.edit().putString("MAC_adress",MAC_adress).commit();
-                    devicePreference.edit().putString("device_name",device_name).commit();
+                    devicePreference.edit().putString("MAC_adress", MAC_adress).apply();
+                    devicePreference.edit().putString("device_name", device_name).apply();
 
                     dialog.cancel();
                     break;
 
                 case BluetoothGattService.ACTION_DISCONNECTED:
-                    devicePreference.edit().clear().commit();
+                    devicePreference.edit().clear().apply();
                     break;
             }
 
-            for(int i = 0; i < adapter.devices.size(); i++){
+            for (int i = 0; i < adapter.devices.size(); i++) {
                 adapter.devices.get(i).setInProgress(false);
             }
 
 
-            for(int i = 0; i < adapter.devices.size(); i++){
+            for (int i = 0; i < adapter.devices.size(); i++) {
                 adapter.devices.get(i).setInProgress(false);
                 adapter.notifyDataSetChanged();
             }
         }
     };
 
-    private void setupDialog(){
+    private void setupDialog() {
 
         //Setting up dialog and it's properties
         dialog = new Dialog(context);
@@ -157,16 +139,14 @@ public class LeDevicesDialog{
 
                     //If device is already present, adding connectivity icon
                     boolean isDevicePresent = false;
-                    for(int i = 0; i < adapter.devices.size(); i++){
-                        if(adapter.devices.get(i).getDevice().equals(device)){
+                    for (int i = 0; i < adapter.devices.size(); i++) {
+                        if (adapter.devices.get(i).getDevice().equals(device)) {
                             adapter.devices.get(i).setNearby(true);
                             isDevicePresent = true;
                         }
                     }
 
-
-
-                    if(!isDevicePresent && device.getName()!=null){
+                    if (!isDevicePresent && device.getName() != null) {
                         Log.i("Devices", "" + device.getName() + "?" + device.getAddress());
                         adapter.devices.add(new DeviceViewInfo(true, false, false, device));
                     }
@@ -174,11 +154,11 @@ public class LeDevicesDialog{
                 }
             };
 
-    private void toggleScanning(boolean isScanning){
+    private void toggleScanning(boolean isScanning) {
 
         this.isScanning = isScanning;
 
-        if(isScanning){
+        if (isScanning) {
 
             IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
             context.registerReceiver(mBluetoothScannerReceiver, filter);
@@ -193,10 +173,8 @@ public class LeDevicesDialog{
                 }
             }, SCAN_PERIOD);
 
-        }else{
-
+        } else {
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
-
         }
 
     }
@@ -212,14 +190,14 @@ public class LeDevicesDialog{
 
                 //If device is already present, adding connectivity icon
                 boolean isDevicePresent = false;
-                for(int i = 0; i < adapter.devices.size(); i++){
-                    if(adapter.devices.get(i).getDevice().equals(device)){
+                for (int i = 0; i < adapter.devices.size(); i++) {
+                    if (adapter.devices.get(i).getDevice().equals(device)) {
                         adapter.devices.get(i).setNearby(true);
                         isDevicePresent = true;
                     }
                 }
 
-                if(!isDevicePresent){
+                if (!isDevicePresent) {
                     adapter.devices.add(new DeviceViewInfo(true, false, false, device));
                 }
                 adapter.notifyDataSetChanged();
@@ -228,9 +206,9 @@ public class LeDevicesDialog{
         }
     };
 
-    private class DevicesAdapter extends BaseAdapter{
+    private class DevicesAdapter extends BaseAdapter {
 
-        ArrayList<DeviceViewInfo>  devices = new ArrayList<DeviceViewInfo>();
+        ArrayList<DeviceViewInfo> devices = new ArrayList<DeviceViewInfo>();
 
         @Override
         public int getCount() {
@@ -273,13 +251,13 @@ public class LeDevicesDialog{
             txt_device_name.setText(deviceInfo.getDevice().getName());
             txt_device_id.setText(deviceInfo.getDevice().getAddress());
 
-            if(deviceInfo.isBonded()){
+            if (deviceInfo.isBonded()) {
                 img_bond_indicator.setVisibility(View.VISIBLE);
             }
-            if(deviceInfo.isNearby()){
+            if (deviceInfo.isNearby()) {
                 img_connectivity_indicator.setVisibility(View.VISIBLE);
             }
-            if(deviceInfo.isInProgress()){
+            if (deviceInfo.isInProgress()) {
                 img_progress_indicator.setVisibility(View.VISIBLE);
             }
 
@@ -289,8 +267,8 @@ public class LeDevicesDialog{
 
     }
 
-    private void registerReceiver(){
-        if(!isReceiverRegistered) {
+    private void registerReceiver() {
+        if (!isReceiverRegistered) {
 
             IntentFilter filter = new IntentFilter();
             filter.addAction(BluetoothGattService.ACTION_CONNECTED);

@@ -86,7 +86,7 @@ public class User {
                     new Exercise(
                             new long[]{0}, //Walk/Run intervals
                             new int[]{}, //Running pulse zones
-                            new int[]{1, 2} //W0lking pulse zones
+                            new int[]{1, 2} //Walking pulse zones
                     ),
 
                     new Exercise(
@@ -167,6 +167,7 @@ public class User {
 
     /**
      * This will remove all the measurements saved in the database.
+     * @param context The current context.
      */
     public static void removeAllMeasurements(Context context) {
         SQLiteDatabase db = new FeedReaderDbHelper(context).getWritableDatabase();
@@ -176,6 +177,7 @@ public class User {
 
     /**
      * This will remove all the workouts saved in the database.
+     * @param context The current context.
      */
     public static void removeAllWorkouts(Context context) {
         SQLiteDatabase db = new FeedReaderDbHelper(context).getWritableDatabase();
@@ -186,8 +188,8 @@ public class User {
 
     /**
      * This will remove all the personal data saved in shared preferences.
+     * @param context The current context.
      */
-
     public static void removeAllPersonalData(Context context) {
         context.getSharedPreferences(FeedReaderDbHelper.SHARED_PREFS_USER_DATA, Context.MODE_PRIVATE).edit().clear().apply();
         context.getSharedPreferences(FeedReaderDbHelper.SHARED_PREFS_SPORT, Context.MODE_PRIVATE).edit().clear().apply();
@@ -199,7 +201,6 @@ public class User {
      *
      * @param overrideByDate If true, existing table row with today's date is overridden.
      */
-
     public static void addMeasurementData(Context context, Measurement measurement, boolean overrideByDate) {
         SQLiteDatabase db = new FeedReaderDbHelper(context).getWritableDatabase();
 
@@ -257,7 +258,11 @@ public class User {
 
     }
 
-
+    /**
+     * Returns all workouts of a week that has passed.
+     * @param week_difference_amount The amount of weeks in the past the target week is.
+     * @return A list of workouts.
+     */
     public ArrayList<WorkoutMeasurements> getLastWeeksWorkouts(int week_difference_amount) {
         Calendar calendar = Calendar.getInstance();
         ArrayList<WorkoutMeasurements> lastWeekWorkouts = new ArrayList<>();
@@ -290,7 +295,6 @@ public class User {
      *
      * @param overrideByDate If true, existing table row with today's date is overridden.
      */
-
     public static void addWorkoutData(Context context, WorkoutMeasurements workout, boolean overrideByDate) {
         SQLiteDatabase db = new FeedReaderDbHelper(context).getWritableDatabase();
 
@@ -375,6 +379,7 @@ public class User {
 
     /**
      * Fetches all measurements from the database and populates measurements list
+     * @param context The current context.
      */
     private void getAllMeasurementsFromDb(Context context) {
 
@@ -473,7 +478,8 @@ public class User {
     }
 
     /**
-     * Fetches all workouts from the database and populates workouts list
+     * Fetches all workouts from the database and populates workouts list.
+     * @param context The current context.
      */
     private void getAllWorkoutsFromDb(Context context) {
 
@@ -562,11 +568,9 @@ public class User {
             todaysDate.setTime(workouts.get(i).getDate());
             int measurementDate = todaysDate.get(Calendar.DAY_OF_YEAR);
             if (today == measurementDate) {
-                Log.i("MEASUREMENTS", "FOUND WORKOUT");
                 return workouts.get(i);
             }
         }
-        Log.i("MEASUREMENTS", "WORKOUT NOT FOUND");
         return null;
     }
 
@@ -619,7 +623,7 @@ public class User {
 
     /**
      * Fetches data from the database and returns an instance of a user
-     *
+     * @param context The current context.
      * @return FireUser instance
      */
     public static User getUser(Context context) {
@@ -662,12 +666,7 @@ public class User {
             user.generateWeeklyProgram(context);
             User.saveProgram(context, user.getWorkoutDuration(), user.getExercise(), user.getActivityStreak());
         }
-/*
-        Calendar calendar = Calendar.getInstance();
-        for(int i = 0; i<user.workouts.size(); i++){
-           Log.i("TEST", String.valueOf(Utils.dayDifference(calendar.getTime(), user.workouts.get(i).getDate())));
-        }
-*/
+
         user.generateDailyReccomendation(context);
 
 
@@ -715,7 +714,6 @@ public class User {
 
         if (firstWeeklyDate == null) {
             first_time = true;
-            Log.i("TEST", "FireUser first ever generated program");
             firstWeeklyDate = calendar.getTime();
             Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_WEEKLY_PROGRAM_GENERATED_DATE, Utils.getStringFromDate(firstWeeklyDate), FeedReaderDbHelper.SHARED_PREFS_SPORT);
             FirebaseUtils.saveFirstWeeklyProgramDate(Utils.getStringFromDate(firstWeeklyDate));
@@ -726,12 +724,10 @@ public class User {
 
         int weekDiff = Utils.weekDifference(firstWeeklyDate, calendar.getTime());
         if (weekDiff >= 1) {
-            Log.i("TEST", "One or more weeks have passed --> Generate program");
             firstWeeklyDate = calendar.getTime();
             Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_WEEKLY_PROGRAM_GENERATED_DATE, Utils.getStringFromDate(firstWeeklyDate), FeedReaderDbHelper.SHARED_PREFS_SPORT);
             return true;
         }
-        Log.i("TEST", "Same week");
         return false;
     }
 
@@ -740,9 +736,9 @@ public class User {
      * Sets pulse_zone and workout_duration based on weekly program algorithm.
      * The program is saved to the database.
      *
+     * @param context The current context.
      * @return Weekly program verbal information
      */
-
     public String generateWeeklyProgram(Context context) {
         ArrayList<WorkoutMeasurements> last_week_workouts = getLastWeeksWorkouts(1);
         ArrayList<WorkoutMeasurements> second_last_week_workouts = getLastWeeksWorkouts(2);
@@ -754,13 +750,11 @@ public class User {
 
         //Nesportavo dvi sav arba daugiau
         if (last_week_workouts.size() < 2 && second_last_week_workouts.size() < 2) {
-            Log.i("TEST", "Žmogau, mažai sportuoji ---> Pradėk nuo nulio");
             activity_streak = 0;
             Utils.buildAlertDialogPrompt(context, "Weekly program status!", "Zero activity of 2 or more weeks has been detected, hence program starts from the beggining. " + String.valueOf(activity_streak + 1) + Utils.getNumberSuffix(activity_streak + 1) + " week out of 11", "Close", "", null, null);
             exercise = WEEKLY_INTERVAL_PROGRAM[0];
         } else {
             if (last_week_workouts.size() >= 2) {
-                Log.i("TEST", "Žmogau, gerai sportuoji ---> Neesi čainikas");
                 if (last_week_hrv >= second_last_week_hrv * 0.85) {
                     activity_streak++;
                     if (activity_streak < WEEKLY_INTERVAL_PROGRAM.length) {
@@ -776,8 +770,6 @@ public class User {
                             workout_duration = exercise.getRunningPulseZones()[0] == 5 ? max_duration : INITIAL_WORKOUT_DURATION;
 
                             exercise.setRunningPulseZones(new int[]{Math.min(exercise.getRunningPulseZones()[0] + 1, 5), Math.min(exercise.getRunningPulseZones()[1] + 1, 5)});
-//                            pulse_zone++;
-//                            pulse_zone = Math.min(pulse_zone,5);
                             Utils.buildAlertDialogPrompt(context, "Weekly program status!", "Great! We have increased your pulse zone!", "Close", "", null, null);
 
                         } else {
@@ -789,7 +781,6 @@ public class User {
                 } else {
                     Utils.buildAlertDialogPrompt(context, "Weekly program status!", "Your HRV has decreased, therefore we reccomend you repeat this week. Currently you are on " + String.valueOf(activity_streak + 1) + " week out of 11", "Close", "", null, null);
                 }
-//                saveProgram(context,workout_duration,pulse_zone,null);
             } else {
                 Utils.buildAlertDialogPrompt(context, "Weekly program status!", "Last week you didn't show any activity, so keeping you on the same week. Currently you are on week: " + String.valueOf(activity_streak + 1) + " out of 11", "Close", "", null, null);
             }
@@ -802,6 +793,8 @@ public class User {
     /**
      * Alters the weekly program based on current_hrv and yesterday_hrv.
      * workout_duration, verbal_reccomendation and pulse_zone values are changed
+     *
+     * @param context The current context.
      */
     public void generateDailyReccomendation(Context context) {
         Calendar c = Calendar.getInstance();
@@ -843,11 +836,7 @@ public class User {
         minBaselineHrv = baselineHrv - hrvBias;
         maxBaselineHrv = baselineHrv + hrvBias;
 
-        //If no yesterday data is present
-        //TODO: do some deciding on this one
         if (yesterday_hrv == 0 || current_hrv == 0) {
-//                yesterday_hrv = baselineHrv;
-            //yesterday_hrv = current_hrv;
             program_update_state = PROGRAM_STATE_NOT_ENOUGH_DATA;
             verbal_reccomendation = "Not enough data to generate reasonable workout plan";
             return;
@@ -857,13 +846,7 @@ public class User {
 
         workout_duration *= percentageChange;
 
-        for (int i = 0; i < week_days.length; i++) {
-            Log.i("TEST", "week day " + i + week_days[i]);
-        }
-
-
         if (!week_days[dayOfWeek]) {
-            Log.i("TEST", "Šiandien jums poilsio diena");
             verbal_reccomendation = "Šiandien rekomenduojame pailsėti";
             return;
         }
@@ -878,19 +861,14 @@ public class User {
 
                 if (percentageChange <= MINIMAL_HRV_INCREASE) {
                     program_update_state = PROGRAM_STATE_CHANGED;
-                    Log.i("TEST", "detected minimal hrv increase");
                     verbal_reccomendation = "No significant change in your HRV, so your training plan is not altered";
                     return;
                 }
                 if (percentageChange <= MEDIOCRE_HRV_INCREASE) {
 
-                    Log.i("TEST", "mediocre hrv increase");
                     verbal_reccomendation = "Your HRV has increased,in comparison to last time. Upgrading your workout!";
                     return;
                 }
-
-                //hrv has greatly increased
-                Log.i("TEST", "hrv has greatly increased");
                 verbal_reccomendation = "Incredible! Seems like you've been feeling great lately. Increasing training difficulty!";
                 return;
 
@@ -902,27 +880,22 @@ public class User {
 
                 if (percentageChange >= MINIMAL_HRV_DECREASE) {
                     program_update_state = PROGRAM_STATE_CHANGED;
-                    Log.i("TEST", "detected minimal hrv decrease");
                     verbal_reccomendation = "No significant change in your HRV, so your training plan is not altered";
                     return;
                 }
 
                 if (percentageChange >= MEDIOCRE_HRV_DECREASE) {
-                    Log.i("TEST", "detected mediocre hrv decrease");
                     verbal_reccomendation = "Your HRV has decreased,in comparison to last time: Downgrading your workout!";
                     return;
                 }
 
-
-                Log.i("TEST", "detected great hrv decrease");
                 verbal_reccomendation = "Your HRV has drastically decreased. You should take a day off.";
                 return;
             }
 
 
         } else {
-            program_update_state = PROGRAM_STATE_NOT_ENOUGH_DATA; //todo: do some deciding (hrv out of bounds)
-            Log.i("TEST", "Jusu hrv neatitinka normu");
+            program_update_state = PROGRAM_STATE_NOT_ENOUGH_DATA;
             verbal_reccomendation = "Jūsų hrv neatitinka normų";
             return;
         }

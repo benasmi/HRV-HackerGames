@@ -70,7 +70,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-//todo: card view animations and title snaping like 'prisiuk antraste'
 public class DataTodayFragment extends Fragment {
 
     private PullRefreshLayout pull_refresh_layout;
@@ -166,14 +165,14 @@ public class DataTodayFragment extends Fragment {
 
     public Tooltip tooltip;
 
-    private View.OnClickListener createTooltipListener(@StringRes final int message){
+    private View.OnClickListener createTooltipListener(@StringRes final int message) {
 
         return new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
 
-                if(tooltip != null)
+                if (tooltip != null)
                     tooltip.dismiss();
 
                 tooltip = new Tooltip.Builder(view)
@@ -265,7 +264,7 @@ public class DataTodayFragment extends Fragment {
             freq_card_txt_lf_after_measurement.setText(String.valueOf("LF: " + (int) measurement.getLF_band() + "%"));
             float lf = measurement.getLF_band();
             float hf = measurement.getHF_band();
-            float ratio = lf/hf;
+            float ratio = lf / hf;
             setLF_HF_RatioZone(ratio);
             setFrequencyChartData(measurement.getHF_band(), measurement.getLF_band());
 
@@ -292,7 +291,6 @@ public class DataTodayFragment extends Fragment {
             }
 
 
-
         } else {
             //Show: ---> no measurement layout
             no_measured_today_layout.setVisibility(View.VISIBLE);
@@ -305,38 +303,37 @@ public class DataTodayFragment extends Fragment {
         }
 
 
-        if(hasMeasuredToday && user.getAllMeasurements().size() < 2){
+        if (hasMeasuredToday && user.getAllMeasurements().size() < 2) {
             //We do not have enough data to display percentage, so current hrv is displayed
             reccomendation_txt_hrv_increase.setText(String.valueOf((int) user.getCurrentHrv()));
             reccomendation_img_arrow.setImageResource(R.drawable.ic_appicon_rectangle);
             reccomendation_txt_hrv_increase.setTextColor(Color.parseColor("#ffffff"));
-        }else if(!hasMeasuredToday){
+        } else if (!hasMeasuredToday) {
             //FireUser has not measured today, asking him to do so.
             reccomendation_txt_hrv_increase.setText("Please measure\nyour HRV!");
             reccomendation_img_arrow.setImageResource(R.drawable.ic_question);
             reccomendation_txt_hrv_increase.setTextColor(Color.parseColor("#ffffff"));
-        }else{
+        } else {
             //FireUser has measured today and there is plenty of data to display percentage.
             setReccomendationCardPercentage(user.getLatestHrvRatio());
         }
 
 
-        if(!user.getWeekDays()[Utils.getDayOfWeek(Calendar.getInstance())]){
+        if (!user.getWeekDays()[Utils.getDayOfWeek(Calendar.getInstance())]) {
             reccomendation_txt_verbal_recommendation.setText("We reccomend you to take a day off!");
         }
 
         int minPulseZone = user.getExercise().getMinimumPulseZone();
         int maxPulseZone = user.getExercise().getMaximumPulseZone();
-        if(minPulseZone == maxPulseZone){
+        if (minPulseZone == maxPulseZone) {
             reccomendation_txt_pulse_zone.setText(minPulseZone + Utils.getNumberSuffix(minPulseZone) + " pulse zone");
-        }else{
-            reccomendation_txt_pulse_zone.setText(minPulseZone +  Utils.getNumberSuffix(minPulseZone) + "-" + maxPulseZone + Utils.getNumberSuffix(maxPulseZone) + "\npulse zone");
+        } else {
+            reccomendation_txt_pulse_zone.setText(minPulseZone + Utils.getNumberSuffix(minPulseZone) + "-" + maxPulseZone + Utils.getNumberSuffix(maxPulseZone) + "\npulse zone");
         }
         reccomendation_txt_todays_program.setText(user.getWorkoutSessionType());
         reccomendation_todays_program_explanation.setText(user.getVerbalSessionExplanation());
         reccomendation_txt_duration.setText(String.valueOf((int) user.getWorkoutDuration()) + " " + getString(
                 R.string.min));
-
 
 
         if (hasWorkedOutToday) {
@@ -367,26 +364,26 @@ public class DataTodayFragment extends Fragment {
     }
 
 
-    private void setUpFirebaseListeners(){
+    private void setUpFirebaseListeners() {
         pull_refresh_layout.setRefreshing(true);
         FirebaseUtils.fetchMeasurements(measurementFetchListener, false);
         FirebaseUtils.fetchWorkouts(workoutFetchListener, false);
     }
 
-    private void fetchDataOnce(){
+    private void fetchDataOnce() {
         pull_refresh_layout.setRefreshing(true);
         FirebaseUtils.fetchMeasurements(measurementFetchListener, true);
         FirebaseUtils.fetchWorkouts(workoutFetchListener, true);
     }
 
-    private FirebaseUtils.OnMeasurementFetchListener measurementFetchListener = new FirebaseUtils.OnMeasurementFetchListener(){
+    private FirebaseUtils.OnMeasurementFetchListener measurementFetchListener = new FirebaseUtils.OnMeasurementFetchListener() {
 
         @Override
         public void onSuccess(List<Measurement> measurements) {
 
             User.removeAllMeasurements(getContext());
 
-            for(Measurement measurement : measurements){
+            for (Measurement measurement : measurements) {
                 User.addMeasurementData(getContext(), measurement, false);
             }
 
@@ -407,7 +404,7 @@ public class DataTodayFragment extends Fragment {
         @Override
         public void onSuccess(List<FireWorkout> workouts) {
             User.removeAllWorkouts(getContext());
-            for(FireWorkout fireWorkout : workouts){
+            for (FireWorkout fireWorkout : workouts) {
                 WorkoutMeasurements workout = new WorkoutMeasurements(fireWorkout);
                 User.addWorkoutData(getContext(), workout, false);
             }
@@ -433,26 +430,25 @@ public class DataTodayFragment extends Fragment {
     }
 
 
-
-    private void setLF_HF_RatioZone(float ratio){
+    private void setLF_HF_RatioZone(float ratio) {
         freq_card_ratio_scale.setElementPosition(ratio);
-        if(ratio>=1.4f && ratio<=1.6f){
+        if (ratio >= 1.4f && ratio <= 1.6f) {
             freq_card_ratio_meaning.setText("Ideal balance!");
             freq_card_ratio_meaning_advice.setText("Your body is feeling great, keep it up!");
         }
-        if(ratio>=1.61f && ratio<=2f){
+        if (ratio >= 1.61f && ratio <= 2f) {
             freq_card_ratio_meaning.setText("Your body starts to feel stressed!");
             freq_card_ratio_meaning_advice.setText("Consider some relaxation exercises and not pushing yourself too hard today!");
         }
-        if(ratio>=0.5f && ratio<=1.39f){
+        if (ratio >= 0.5f && ratio <= 1.39f) {
             freq_card_ratio_meaning.setText("Your body is recovering!");
             freq_card_ratio_meaning_advice.setText("Consider doing some non-stresful activities with higher intensity during your daily schedule ");
         }
-        if(ratio>2f){
+        if (ratio > 2f) {
             freq_card_ratio_meaning.setText("Your body is under pressure!");
             freq_card_ratio_meaning_advice.setText("Ratio indicates anxiety, stress, pressure. You should reduce your work load and physical activities!");
         }
-        if(ratio<0.5f){
+        if (ratio < 0.5f) {
             freq_card_ratio_meaning.setText("Your body is exhausted!");
             freq_card_ratio_meaning_advice.setText("Ratio indicates low energy and exhaustion. You should consider taking a day off and relaxing!");
         }
@@ -712,7 +708,7 @@ public class DataTodayFragment extends Fragment {
         test_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                User.addMeasurementData(getContext(),new Measurement(Calendar.getInstance().getTime(),50,50,50,50,50,50,50,50,50,50,50,new int[]{5,4,3},new int[]{5,4,3},2,0,4,Integer.valueOf(test_edittext.getText().toString()), null),true);
+                User.addMeasurementData(getContext(), new Measurement(Calendar.getInstance().getTime(), 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, new int[]{5, 4, 3}, new int[]{5, 4, 3}, 2, 0, 4, Integer.valueOf(test_edittext.getText().toString()), null), true);
             }
         });
 
@@ -744,8 +740,8 @@ public class DataTodayFragment extends Fragment {
         scrollview.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
             @Override
             public void onScrollChanged() {
-                if(tooltip != null){
-                    if(tooltip.isShowing()){
+                if (tooltip != null) {
+                    if (tooltip.isShowing()) {
                         tooltip.dismiss();
                     }
                 }

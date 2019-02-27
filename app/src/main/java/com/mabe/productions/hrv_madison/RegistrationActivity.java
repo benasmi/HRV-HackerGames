@@ -63,14 +63,14 @@ public class RegistrationActivity extends AppCompatActivity {
         startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
     }
 
-    private void setFonts(){
+    private void setFonts() {
         Typeface futura = Typeface.createFromAsset(getAssets(),
                 "fonts/futura_light.ttf");
 
         txt_terms.setTypeface(futura);
     }
 
-    private void initializeViews(){
+    private void initializeViews() {
         Animation anim_txt_top_down = AnimationUtils.loadAnimation(this, R.anim.top_to_bottom);
         Animation anim_left_to_right = AnimationUtils.loadAnimation(this, R.anim.left_to_right);
         Animation anim_right_to_left = AnimationUtils.loadAnimation(this, R.anim.right_to_left);
@@ -117,37 +117,36 @@ public class RegistrationActivity extends AppCompatActivity {
         String repeat_password = register_repeat_password.getText().toString();
 
 
-
         String estring = "Please enter a valid email address";
         ForegroundColorSpan fgcspan = new ForegroundColorSpan(Color.BLACK);
         SpannableStringBuilder ssbuilder = new SpannableStringBuilder(estring);
         ssbuilder.setSpan(fgcspan, 0, estring.length(), 0);
 
-        if(name.equals("")){
+        if (name.equals("")) {
             register_name_input.setError("First name is required"); // show error
             return;
-        }else{
+        } else {
             register_name_input.setError(null);
         }
 
-        if(!isEmailValid(username)){
+        if (!isEmailValid(username)) {
             register_username_input.setError("Enter valid email");
             return;
-        }else{
+        } else {
             register_username_input.setError(null);
         }
 
-        if(password.length()<8){
+        if (password.length() < 8) {
             register_password_input.setError("Password must contain atleast 8 characters");
             return;
-        }else{
+        } else {
             register_password_input.setError(null);
         }
 
-        if(!password.equals(repeat_password)){
+        if (!password.equals(repeat_password)) {
             register_repeat_password_input.setError("Passwords do not match");
             return;
-        }else{
+        } else {
             register_repeat_password_input.setError(null);
         }
 
@@ -169,21 +168,19 @@ public class RegistrationActivity extends AppCompatActivity {
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
                                 }
-                            },null);
+                            }, null);
 
 
                         } else {
 
                             Toast.makeText(RegistrationActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                return;
+                            return;
 
                         }
 
 
                     }
                 });
-
-
 
 
     }

@@ -5,14 +5,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.mabe.productions.hrv_madison.FingerHRV.HeartRateMonitor;
 import com.mabe.productions.hrv_madison.initialInfo.IntroInitialDaySelection;
 import com.mabe.productions.hrv_madison.initialInfo.IntroInitialHeight;
 import com.mabe.productions.hrv_madison.initialInfo.IntroInitialWeight;
@@ -22,6 +19,7 @@ public class UserOptionsPanelActivity extends AppCompatActivity {
 
     private Button btn_logout;
     private ImageView img_back_arrow;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,13 +36,9 @@ public class UserOptionsPanelActivity extends AppCompatActivity {
         });
 
 
-
-
-
-
     }
 
-    private void initializeViews(){
+    private void initializeViews() {
 
         btn_logout = (Button) findViewById(R.id.btn_logout);
         img_back_arrow = (ImageView) findViewById(R.id.img_back_arrow);
@@ -78,17 +72,17 @@ public class UserOptionsPanelActivity extends AppCompatActivity {
 
     public void changeWorkoutDays(View view) {
         UserOptionsPanelActivity.this.finish();
-        startActivity(new Intent(UserOptionsPanelActivity.this, IntroInitialDaySelection.class).putExtra("FromOptions",true));
+        startActivity(new Intent(UserOptionsPanelActivity.this, IntroInitialDaySelection.class).putExtra("FromOptions", true));
     }
 
     public void changeHeight(View view) {
 
-        startActivity(new Intent(UserOptionsPanelActivity.this, IntroInitialHeight.class).putExtra("FromOptions",true));
+        startActivity(new Intent(UserOptionsPanelActivity.this, IntroInitialHeight.class).putExtra("FromOptions", true));
         UserOptionsPanelActivity.this.finish();
     }
 
     public void changeWeight(View view) {
-        startActivity(new Intent(UserOptionsPanelActivity.this, IntroInitialWeight.class).putExtra("FromOptions",true));
+        startActivity(new Intent(UserOptionsPanelActivity.this, IntroInitialWeight.class).putExtra("FromOptions", true));
         UserOptionsPanelActivity.this.finish();
 
     }

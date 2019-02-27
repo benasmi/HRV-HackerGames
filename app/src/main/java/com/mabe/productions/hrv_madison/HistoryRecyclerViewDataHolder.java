@@ -8,17 +8,7 @@ import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 
 import java.util.Date;
 
-/**
- * Created by Benas on 7/31/2018.
- */
-
-public class HistoryRecyclerViewDataHolder implements Parcelable  {
-
-
-    /*
-     * average_bpm, bpm_data, durationand date is used for both measurements and workouts
-     */
-
+public class HistoryRecyclerViewDataHolder implements Parcelable {
 
     //HRV MEASUREMENT DATA
     private Date date;
@@ -51,7 +41,6 @@ public class HistoryRecyclerViewDataHolder implements Parcelable  {
 
 
     private int viewType = 0;
-
 
 
     public HistoryRecyclerViewDataHolder(Exercise exercise, int unique_id, Date date, float workout_duration, float average_bpm, int[] bpm_data, float[] pace_data, LatLng[] route, float calories_burned, float distance, int viewType) {
@@ -103,8 +92,6 @@ public class HistoryRecyclerViewDataHolder implements Parcelable  {
         this.hrv = hrv;
         this.viewType = viewType;
     }
-
-
 
 
     protected HistoryRecyclerViewDataHolder(Parcel in) {

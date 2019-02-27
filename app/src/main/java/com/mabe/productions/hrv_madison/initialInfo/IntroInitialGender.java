@@ -37,19 +37,15 @@ public class IntroInitialGender extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.intro_initial_gender_activity);
-        Utils.changeNotifBarColor(Color.parseColor("#3e5266"),getWindow());
+        Utils.changeNotifBarColor(Color.parseColor("#3e5266"), getWindow());
 
         initializeViews();
         setFonts();
 
 
-
-
-
-
     }
 
-    private void initializeViews(){
+    private void initializeViews() {
 
         Animation anim_img_male = AnimationUtils.loadAnimation(this, R.anim.top_to_bottom);
         Animation anim_img_female = AnimationUtils.loadAnimation(this, R.anim.bottom_to_top);
@@ -66,7 +62,7 @@ public class IntroInitialGender extends AppCompatActivity {
         img_male.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                img_male.setImageResource(R.drawable.ic_superior_selected);
+                img_male.setImageResource(R.drawable.ic_male_selected);
                 img_female.setImageResource(R.drawable.ic_female);
                 selectedGender = User.GENDER_MALE;
             }
@@ -75,7 +71,7 @@ public class IntroInitialGender extends AppCompatActivity {
         img_female.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                img_male.setImageResource(R.drawable.ic_superior);
+                img_male.setImageResource(R.drawable.ic_male);
                 img_female.setImageResource(R.drawable.ic_female_selected);
                 selectedGender = User.GENDER_FEMALE;
             }
@@ -89,7 +85,7 @@ public class IntroInitialGender extends AppCompatActivity {
     }
 
 
-    private void setFonts(){
+    private void setFonts() {
 
         Typeface futura = Typeface.createFromAsset(getAssets(),
                 "fonts/futura_light.ttf");
@@ -97,19 +93,19 @@ public class IntroInitialGender extends AppCompatActivity {
         txt_question.setTypeface(futura);
 
 
-
     }
 
     public void start(View view) {
-        if(selectedGender!=-1){
-            Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_GENDER, selectedGender,FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+        if (selectedGender != -1) {
+            Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_GENDER, selectedGender, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
 
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
             FirebaseUser user = mAuth.getCurrentUser();
-            final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference(FirebaseUtils.USERS_TABLE_RUNNING + "/" + user.getUid());            fireDatabase.child("gender").setValue(selectedGender);
+            final DatabaseReference fireDatabase = FirebaseDatabase.getInstance().getReference(FirebaseUtils.USERS_TABLE_RUNNING + "/" + user.getUid());
+            fireDatabase.child("gender").setValue(selectedGender);
 
             startActivity(new Intent(this, IntroInitialActivityIndex.class));
-        }else{
+        } else {
             Toast.makeText(this, R.string.please_select_gender, Toast.LENGTH_LONG).show();
         }
     }
