@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/activity_workout_history"
+    android:id="@+id/activity_advanced_workout_history_scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -332,6 +332,15 @@
                         android:textColor="#fff"
                         android:layout_alignParentTop="true"
                         android:id="@+id/bpm_distribution_textview"/>
+                    <android.support.v7.widget.AppCompatImageButton
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@color/transparent"
+                        android:scaleType="fitCenter"
+                        android:layout_alignParentRight="true"
+                        android:id="@+id/imgButton_distribution"
+                        android:src="@drawable/ic_info_icon"
+                        />
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

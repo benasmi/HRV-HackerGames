@@ -5,15 +5,19 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
+import android.support.annotation.StringRes;
 import android.support.v4.widget.ContentLoadingProgressBar;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.CardView;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
@@ -21,6 +25,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.budiyev.android.circularprogressbar.CircularProgressBar;
@@ -39,6 +44,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -51,6 +57,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.zxing.client.result.TextParsedResult;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
+import com.tooltip.Tooltip;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -66,7 +73,7 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
     private RelativeLayout map_frame_layout;
     private ContentLoadingProgressBar loading_progress;
     private TextView txt_loading;
-
+    private ScrollView scrollView;
 
     //Toolbar
     private ImageView img_back_arrow;
@@ -106,6 +113,31 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
     private TextView advanced_history_txt_intensity;
     private TextView advanced_history_txt_intensity_value;
 
+    private AppCompatImageButton imgButton_distribution;
+
+    public Tooltip tooltip;
+
+    private View.OnClickListener createTooltipListener(@StringRes final int message){
+
+        return new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                if(tooltip != null)
+                    tooltip.dismiss();
+
+                tooltip = new Tooltip.Builder(view)
+                        .setText(getResources().getString(message))
+                        .setDismissOnClick(true)
+                        .setBackgroundColor(getResources().getColor(R.color.colorAccent))
+                        .setTextColor(getResources().getColor(R.color.white))
+                        .setCornerRadius(7f)
+                        .setGravity(Gravity.TOP)
+                        .show();
+            }
+        };
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,6 +183,18 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
         Animation bottom_to_top = AnimationUtils.loadAnimation(this, R.anim.bottom_to_top);
         Animation left_to_right = AnimationUtils.loadAnimation(this, R.anim.left_to_right);
         Animation left_to_right_d = AnimationUtils.loadAnimation(this, R.anim.left_to_right_delay);
+        scrollView = (ScrollView) findViewById(R.id.activity_advanced_workout_history_scroll);
+        scrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                if(tooltip != null){
+                    if(tooltip.isShowing()){
+                        tooltip.dismiss();
+                    }
+                }
+            }
+        });
+
 
         txt_loading = (TextView) findViewById(R.id.txt_loading);
         toolbar_txt = (TextView) findViewById(R.id.toolbar_title_advanced);
@@ -246,6 +290,10 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
         }else{
             advanced_history_txt_intensity_value.setText(minPulseZone +  Utils.getNumberSuffix(minPulseZone) + "-" + maxPulseZone + Utils.getNumberSuffix(maxPulseZone));
         }
+
+
+        imgButton_distribution = (AppCompatImageButton) findViewById(R.id.imgButton_distribution);
+        imgButton_distribution.setOnClickListener(createTooltipListener(R.string.pulse_distribution));
 
     }
     private void addEntryBpm(int hr, int max_points) {

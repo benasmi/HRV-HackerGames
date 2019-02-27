@@ -656,7 +656,8 @@ public class WorkoutFragment extends Fragment {
                     vibrationTimer.cancel();
                 }
                 cancelTimer();
-                txt_exercise_indicator.setVisibility(View.GONE);
+                txt_exercise_indicator.setText("Duration");
+                txt_exercise_indicator.setVisibility(View.VISIBLE);
                 layout_workout_name.setVisibility(View.VISIBLE);
                 workout_tab_running_gif.setVisibility(View.INVISIBLE);
                 layout_pulse_zone.setVisibility(View.GONE);

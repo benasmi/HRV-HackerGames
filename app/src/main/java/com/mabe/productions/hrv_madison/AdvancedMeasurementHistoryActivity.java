@@ -3,10 +3,13 @@ package com.mabe.productions.hrv_madison;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.CardView;
 import android.text.format.DateFormat;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -18,6 +21,7 @@ import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -25,6 +29,7 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
+import com.tooltip.Tooltip;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,6 +45,7 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
     private TextView freq_card_txt_after_this_measure;
     private TextView freq_card_txt_hf_after_measurament;
     private TextView freq_card_txt_lf_after_measurement;
+
 
     private TextView freq_card_ratio_meaning;
     private TextView freq_card_ratio_meaning_advice;
@@ -92,6 +98,9 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
 
     private ImageView img_back_arrow;
     private TextView toolbar_title_advanced;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,28 +196,30 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
 
     }
 
-    private void setLF_HF_RatioZone(float ratio) {
+    private void setLF_HF_RatioZone(float ratio){
         freq_card_ratio_scale.setElementPosition(ratio);
-        if (ratio >= 1.4f && ratio <= 1.6f) {
-            freq_card_ratio_meaning.setText("Ideal balance");
+        if(ratio>=1.4f && ratio<=1.6f){
+            freq_card_ratio_meaning.setText("Ideal balance!");
             freq_card_ratio_meaning_advice.setText("Your body is feeling great, keep it up!");
         }
-        if (ratio >= 1.61f && ratio <= 2f) {
-            freq_card_ratio_meaning.setText("Sympathetic system takes over balance");
-            freq_card_ratio_meaning_advice.setText("Your body is feeling alright! However, consider some relaxation exercises and not pushing yourself too hard today!");
+        if(ratio>=1.61f && ratio<=2f){
+            freq_card_ratio_meaning.setText("Your body starts to feel stressed!");
+            freq_card_ratio_meaning_advice.setText("Consider some relaxation exercises and not pushing yourself too hard today!");
         }
-        if (ratio >= 0.5f && ratio <= 1.39f) {
-            freq_card_ratio_meaning.setText("Parasympathetic system takes over balance");
-            freq_card_ratio_meaning_advice.setText("Your body is feeling good, but you should consider doing some non-stresful activities with higher intensity during your daily schedule ");
+        if(ratio>=0.5f && ratio<=1.39f){
+            freq_card_ratio_meaning.setText("Your body is recovering!");
+            freq_card_ratio_meaning_advice.setText("Consider doing some non-stresful activities with higher intensity during your daily schedule ");
         }
-        if (ratio > 2f) {
-            freq_card_ratio_meaning.setText("Sympathetic system dominates");
-            freq_card_ratio_meaning_advice.setText("Your body is feeling terrible! Ratio indicates hypertonus, anxiety, stress, pressure. You should reduce your work load and physical activities!");
+        if(ratio>2f){
+            freq_card_ratio_meaning.setText("Your body is under pressure!");
+            freq_card_ratio_meaning_advice.setText("Ratio indicates anxiety, stress, pressure. You should reduce your work load and physical activities!");
         }
-        if (ratio < 0.5f) {
-            freq_card_ratio_meaning.setText("Parasympathetic system dominates");
-            freq_card_ratio_meaning_advice.setText("Your body is feeling terrible! Ratio indicates hypotonics, low energy and exhaustion. You should consider taking a day off and relaxing!");
+        if(ratio<0.5f){
+            freq_card_ratio_meaning.setText("Your body is exhausted!");
+            freq_card_ratio_meaning_advice.setText("Ratio indicates low energy and exhaustion. You should consider taking a day off and relaxing!");
         }
+
+
     }
 
     private void setFonts() {
@@ -252,6 +263,11 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
         bpm_line_chart.getAxisRight().setDrawLabels(false);
         bpm_line_chart.getXAxis().setDrawLabels(false);
         bpm_line_chart.setTouchEnabled(false);
+        bpm_line_chart.getAxisLeft().setLabelCount(10, true);
+        bpm_line_chart.getAxisLeft().setDrawLabels(true);
+        bpm_line_chart.setAutoScaleMinMaxEnabled(true);
+        bpm_line_chart.getAxisLeft().setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+        bpm_line_chart.getAxisLeft().setTextColor(Color.WHITE);
         bpm_line_chart.setViewPortOffsets(0f, 0f, 0f, 0f);
 
 
@@ -365,6 +381,8 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
                 AdvancedMeasurementHistoryActivity.this.finish();
             }
         });
+
+
 
     }
     private void setFrequencyChartData(float hf, float lf, float vlf, float vhf) {

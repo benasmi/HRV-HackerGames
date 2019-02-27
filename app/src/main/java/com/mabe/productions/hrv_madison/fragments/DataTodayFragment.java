@@ -33,6 +33,7 @@ import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -436,24 +437,24 @@ public class DataTodayFragment extends Fragment {
     private void setLF_HF_RatioZone(float ratio){
         freq_card_ratio_scale.setElementPosition(ratio);
         if(ratio>=1.4f && ratio<=1.6f){
-            freq_card_ratio_meaning.setText("Ideal balance");
+            freq_card_ratio_meaning.setText("Ideal balance!");
             freq_card_ratio_meaning_advice.setText("Your body is feeling great, keep it up!");
         }
         if(ratio>=1.61f && ratio<=2f){
-            freq_card_ratio_meaning.setText("Sympathetic system takes over balance");
-            freq_card_ratio_meaning_advice.setText("Your body is feeling alright! However, consider some relaxation exercises and not pushing yourself too hard today!");
+            freq_card_ratio_meaning.setText("Your body starts to feel stressed!");
+            freq_card_ratio_meaning_advice.setText("Consider some relaxation exercises and not pushing yourself too hard today!");
         }
         if(ratio>=0.5f && ratio<=1.39f){
-            freq_card_ratio_meaning.setText("Parasympathetic system takes over balance");
-            freq_card_ratio_meaning_advice.setText("Your body is feeling good, but you should consider doing some non-stresful activities with higher intensity during your daily schedule ");
+            freq_card_ratio_meaning.setText("Your body is recovering!");
+            freq_card_ratio_meaning_advice.setText("Consider doing some non-stresful activities with higher intensity during your daily schedule ");
         }
         if(ratio>2f){
-            freq_card_ratio_meaning.setText("Sympathetic system dominates");
-            freq_card_ratio_meaning_advice.setText("Your body is feeling terrible! Ratio indicates hypertonus, anxiety, stress, pressure. You should reduce your work load and physical activities!");
+            freq_card_ratio_meaning.setText("Your body is under pressure!");
+            freq_card_ratio_meaning_advice.setText("Ratio indicates anxiety, stress, pressure. You should reduce your work load and physical activities!");
         }
         if(ratio<0.5f){
-            freq_card_ratio_meaning.setText("Parasympathetic system dominates");
-            freq_card_ratio_meaning_advice.setText("Your body is feeling terrible! Ratio indicates hypotonics, low energy and exhaustion. You should consider taking a day off and relaxing!");
+            freq_card_ratio_meaning.setText("Your body is exhausted!");
+            freq_card_ratio_meaning_advice.setText("Ratio indicates low energy and exhaustion. You should consider taking a day off and relaxing!");
         }
 
 
@@ -807,6 +808,12 @@ public class DataTodayFragment extends Fragment {
         bpm_line_chart.getAxisRight().setDrawLabels(false);
         bpm_line_chart.getXAxis().setDrawLabels(false);
         bpm_line_chart.setTouchEnabled(false);
+        bpm_line_chart.setViewPortOffsets(0f, 0f, 0f, 0f);
+        bpm_line_chart.getAxisLeft().setLabelCount(10, true);
+        bpm_line_chart.getAxisLeft().setDrawLabels(true);
+        bpm_line_chart.setAutoScaleMinMaxEnabled(true);
+        bpm_line_chart.getAxisLeft().setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+        bpm_line_chart.getAxisLeft().setTextColor(Color.WHITE);
         bpm_line_chart.setViewPortOffsets(0f, 0f, 0f, 0f);
 
         //Reccomendation cardview

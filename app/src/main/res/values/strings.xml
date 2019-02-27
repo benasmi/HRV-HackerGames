@@ -131,6 +131,7 @@
     <string name="rmssd_info">RMSSD is a measure used to assess heart rate variability (HRV)</string>
     <string name="workout_card_info">Basic information about your last workout.</string>
     <string name="frequencies_info">Spectral analysis of your measurements enables us to analyze your nervous system\'s condition.</string>
+    <string name="pulse_distribution">Pulse zone is simply a range of heart rate. These ranges vary based on your age, weight and gender. This graph shows what pulse zones your heart rate was in during the workout.</string>
 
 </resources>
 

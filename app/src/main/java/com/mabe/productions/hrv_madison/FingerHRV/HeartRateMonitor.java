@@ -70,7 +70,7 @@ public class HeartRateMonitor extends Activity {
     private static int averageIndex = 0;
     private static final int averageArraySize = 4;
     private static final int[] averageArray = new int[averageArraySize];
-
+    private boolean startedMeasurement = true;
     public static enum TYPE {
         GREEN, RED
     };
@@ -95,7 +95,7 @@ public class HeartRateMonitor extends Activity {
     private boolean isTimerRunning;
     private static final long TIMER_STEP = 1000L;
     private static final long MEASUREMENT_DURATION = 60000L;
-
+    private boolean isMeasuring = false;
 
     /**
      * {@inheritDoc}
@@ -241,6 +241,8 @@ public class HeartRateMonitor extends Activity {
             int imgAvg = ImageProcessing.decodeYUV420SPtoRedAvg(data.clone(), height, width);
 
             if(imgAvg < 200){
+                isMeasuring = false;
+                startedMeasurement = true;
                 txt_info.setText("No finger detected!");
                 chart_hr.getLineData().clearValues();
                 rmssd.clear();
@@ -252,7 +254,12 @@ public class HeartRateMonitor extends Activity {
                 cancelTimer();
                 return;
             }else{
-                txt_info.setText("Measuring...\nTry to stay still and quiet!");
+                if(isMeasuring){
+                    txt_info.setText("Measuring... Try to stay still and queit");
+                }else{
+                    txt_info.setText("Adjusting. Please keep your finger steady");
+                }
+
             }
 
 
@@ -373,6 +380,16 @@ public class HeartRateMonitor extends Activity {
         frequencyMethod.add_to_freq_array(interval);
         HeartRateMonitor.bpm.addBPM(bpm);
 
+        if(startedMeasurement){
+            isMeasuring = true;
+            startedMeasurement = false;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                v.vibrate(VibrationEffect.createOneShot(50, 1));
+            }else{
+                //deprecated in API 26
+                v.vibrate(500);
+            }
+        }
 
         bpm_txt.setText(String.valueOf((int) bpm));
         hrv_txt.setText(String.valueOf(rmssd.getHrv()));
