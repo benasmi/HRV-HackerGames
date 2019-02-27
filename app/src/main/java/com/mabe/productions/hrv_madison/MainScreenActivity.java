@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -42,6 +43,8 @@ import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.fragments.MeasurementFragment;
 import com.mabe.productions.hrv_madison.fragments.ViewPagerAdapter;
 
+import java.util.Locale;
+
 public class MainScreenActivity extends AppCompatActivity {
 
     public static final int PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
@@ -59,6 +62,11 @@ public class MainScreenActivity extends AppCompatActivity {
     private AHBottomNavigation bottomNavigation;
     private ViewPager viewpager;
     public static User user;
+
+    public static TextToSpeech textToSpeech;
+    public static boolean isTTSAvailable = false;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +117,23 @@ public class MainScreenActivity extends AppCompatActivity {
         }
 
         txt_toolbar_username.setText(user.getUsername());
+
+
+        textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+                if(i == TextToSpeech.SUCCESS){
+                    isTTSAvailable = true;
+                    Log.i("TTS", "Success!");
+                    int result = textToSpeech.setLanguage(Locale.ENGLISH);
+                    if(result==TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED){
+                        Log.i("TTS", "Not supported language!");
+                    }
+                }else{
+                    Log.i("TTS", "Failed to initialize!");
+                }
+            }
+        });
 
     }
 
@@ -386,6 +411,10 @@ public class MainScreenActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(textToSpeech!=null){
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
         finish();
         Runtime.getRuntime().gc();
     }

@@ -15,6 +15,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.PowerManager;
 import android.os.Vibrator;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -54,6 +55,13 @@ public class Utils {
      * @param hr_max The user's maximum heart rate.
      * @return Pulse zone bounds using the following format: int[]{min_pulse_zone, max_pulse_zone}
      */
+
+    public static void speak(String text){
+        if(MainScreenActivity.isTTSAvailable && MainScreenActivity.textToSpeech!=null){
+            MainScreenActivity.textToSpeech.speak(text,TextToSpeech.QUEUE_FLUSH,null);
+        }
+    }
+
     public static int[] getPulseZoneBounds(int[] required_pulse_zones, float hr_max){
 
         int min_pulse = 0;

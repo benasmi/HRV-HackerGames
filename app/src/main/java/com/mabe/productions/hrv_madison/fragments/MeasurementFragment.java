@@ -111,6 +111,7 @@ public class MeasurementFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.measurement_fragment, container, false);
         //Initializing the mediaplayer in this method, so that we don't need to reload the sound later
@@ -392,6 +393,9 @@ public class MeasurementFragment extends Fragment {
     }
 
     public void startMeasuring(){
+
+        Utils.speak("Measurement will take " + measurement_duration.getValue() + " minutes!");
+
         Crashlytics.log("Starting the measurement.");
         failureIntervalTimes=0;
         currentMeasurementState = STATE_MEASURING;
@@ -480,7 +484,7 @@ public class MeasurementFragment extends Fragment {
                         mediaPlayer.start();
 
                         Measurement measurement = new Measurement(hrv, fft, bpm, measurement_duration.getValue(), Calendar.getInstance().getTime());
-
+                        Utils.speak("Measurement is finished and saved successfuly!");
                         //Saving to local db
                         Crashlytics.log("Saving measurement locally.");
                         User.addMeasurementData(getContext(), measurement, false);

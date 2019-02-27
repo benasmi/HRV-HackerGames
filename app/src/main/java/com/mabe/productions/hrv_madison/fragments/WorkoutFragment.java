@@ -307,7 +307,7 @@ public class WorkoutFragment extends Fragment {
     }
 
     private void startedWorkoutAnimations() {
-
+        Utils.speak("Your workout has been started! Warm-up!");
         workout_tab_running_gif.startAnimation(anim_running_man_left_to_right);
         img_stop.startAnimation(anim_left_to_right);
         img_pause.startAnimation(anim_right_to_left);
@@ -317,6 +317,7 @@ public class WorkoutFragment extends Fragment {
     }
 
     private void timeEndedAnimations() {
+        Utils.speak("Your planned workout time has ended!");
         btn_toggle.startAnimation(anim_top_to_bottom_delay);
     }
 

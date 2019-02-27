@@ -34,6 +34,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
+import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.firebase.FireMeasurement;
 import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.measurements.BPM;
@@ -481,7 +482,7 @@ public class HeartRateMonitor extends Activity {
             if(timePassed >= MEASUREMENT_DURATION){
                 cancelTimer();
                 timer.cancel();
-
+                Utils.speak("Your measurement is finished and saved successfuly!");
                 Measurement measurement = new Measurement(rmssd, frequencyMethod, bpm, (int) (MEASUREMENT_DURATION/60000), Calendar.getInstance().getTime());
 
                 FirebaseUtils.addMeasurement(new FireMeasurement(measurement), HeartRateMonitor.this);
