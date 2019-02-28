@@ -78,7 +78,7 @@ public class MeasurementFragment extends Fragment {
     private TextView txt_time_left;
     private MediaPlayer mediaPlayer;
     private TextView txt_line_chart_label;
-    private TextView measure_with_camera;
+    private AppCompatButton measure_with_camera;
 
     private int failureIntervalTimes = 0;
 

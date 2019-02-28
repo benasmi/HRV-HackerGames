@@ -14,6 +14,9 @@ public class FrequentlyAskedActivity extends AppCompatActivity {
     private TextView txt_what_hrv_represents_faq;
     private TextView txt_where_hrv_used_faq;
     private TextView txt_where_hrv_used_answer_faq;
+    private TextView txt_what_is_nervous_system;
+    private TextView txt_what_is_nervous_system_answer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,8 @@ public class FrequentlyAskedActivity extends AppCompatActivity {
         txt_what_hrv_represents_faq = (TextView) findViewById(R.id.txt_what_hrv_represents_faq);
         txt_where_hrv_used_faq = (TextView) findViewById(R.id.txt_where_hrv_used_faq);
         txt_where_hrv_used_answer_faq = (TextView) findViewById(R.id.txt_where_hrv_used_answer_faq);
+        txt_what_is_nervous_system = (TextView) findViewById(R.id.txt_what_is_nervous_system);
+        txt_what_is_nervous_system_answer = (TextView) findViewById(R.id.txt_what_is_nervous_system_answer);
     }
 
     private void setFonts() {
@@ -44,5 +49,7 @@ public class FrequentlyAskedActivity extends AppCompatActivity {
         txt_what_hrv_represents_faq.setTypeface(futura);
         txt_where_hrv_used_faq.setTypeface(futura);
         txt_where_hrv_used_answer_faq.setTypeface(futura);
+        txt_what_is_nervous_system.setTypeface(futura);
+        txt_what_is_nervous_system_answer.setTypeface(futura);
     }
 }

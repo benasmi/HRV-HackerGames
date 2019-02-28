@@ -32,7 +32,6 @@
         android:gravity="center"
         android:textSize="20dp"
         android:padding="10dp"
-        android:layout_marginTop="5dp"
         android:id="@+id/txt_what_is_hrv_answer_faq"
         android:layout_below="@+id/txt_what_is_hrv_faq" />
 
@@ -57,7 +56,6 @@
         android:gravity="center"
         android:textSize="20dp"
         android:padding="10dp"
-        android:layout_marginTop="5dp"
         android:id="@+id/txt_what_hrv_represents_answer_faq"
         android:layout_below="@+id/txt_what_hrv_represents_faq" />
 
@@ -83,7 +81,6 @@
         android:gravity="center"
         android:textSize="20dp"
         android:padding="10dp"
-        android:layout_marginTop="5dp"
         android:id="@+id/txt_where_hrv_used_answer_faq"
         android:layout_below="@+id/txt_where_hrv_used_faq" />
 
@@ -108,7 +105,6 @@
         android:gravity="center"
         android:textSize="20dp"
         android:padding="10dp"
-        android:layout_marginTop="5dp"
         android:id="@+id/txt_what_is_nervous_system_answer"
         android:layout_below="@+id/txt_what_is_nervous_system" />
 

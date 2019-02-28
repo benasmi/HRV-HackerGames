@@ -97,7 +97,6 @@
         <android.support.v7.widget.AppCompatButton
             android:layout_width="180dp"
             android:layout_height="35dp"
-            android:layout_marginTop="10dp"
             android:textSize="15dp"
             android:textAllCaps="false"
             android:layout_gravity="center"
@@ -112,16 +111,19 @@
             android:layout_height="wrap_content">
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Measure with phone camera"
-                android:gravity="center"
-                android:textColor="#FFF"
-                android:layout_centerHorizontal="true"
-                android:id="@+id/measure_with_camera"
+            <android.support.v7.widget.AppCompatButton
+                android:layout_width="180dp"
+                android:layout_height="35dp"
+                android:layout_marginTop="10dp"
                 android:textSize="15dp"
-                android:layout_margin="10dp"/>
+                android:textAllCaps="false"
+                android:layout_gravity="center"
+                android:layout_centerHorizontal="true"
+                android:onClick="startMeasuring"
+                android:id="@+id/measure_with_camera"
+                android:textColor="#FFF"
+                android:background="@drawable/login_button_gradient"
+                android:text="@string/measure_with_camera"/>
 
             <android.support.v7.widget.AppCompatImageButton
                 android:layout_width="20dp"
