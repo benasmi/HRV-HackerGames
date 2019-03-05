@@ -40,7 +40,6 @@ public class GoogleMapService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        Log.i("TEST", "Creating service...");
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         LocationRequest mLocationRequest = LocationRequest.create();
@@ -87,14 +86,11 @@ public class GoogleMapService extends Service {
     private LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
-            Log.i("TEST", "Getting results...");
 
             //If accuraccy is shit do not add to locationResults Array
             if (locationResult.getLastLocation().getAccuracy() > 50) {
-                Log.i("TEST", "Location not accurate enough: " + locationResult.getLastLocation().getAccuracy() + "m");
                 return;
             }
-            Log.i("TEST", "Location accuracy is reasonable: " + locationResult.getLastLocation().getAccuracy() + "m");
             //If accuraccy is good add to locationResults Array
             locationArrayList.add(locationResult);
 

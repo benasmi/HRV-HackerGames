@@ -212,7 +212,6 @@ public class MeasurementFragment extends Fragment {
         btn_start_measuring.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 //Cia tiesiog tuos state patikrinti ir paziureti, ka tas mygtukas turi daryti dabar is vienos is triju galimybiu
                 switch (currentMeasurementState) {
 
@@ -356,7 +355,7 @@ public class MeasurementFragment extends Fragment {
         txt_line_chart_label.setTypeface(futura);
     }
 
-    //Method to receive data from GAT SERVER if connected.
+    //Method to receive data from GATT SERVER if connected.
     public void onMeasurement(int heartRate, int[] intervals) {
         this.hearRate = heartRate;
         interval_values = intervals;
@@ -364,7 +363,6 @@ public class MeasurementFragment extends Fragment {
 
         if (intervals.length == 0) {
             failureIntervalTimes++;
-            Log.i("TEST", "FailureIntervals: " + failureIntervalTimes);
         }
         if (failureIntervalTimes == 10) {
 
@@ -382,12 +380,11 @@ public class MeasurementFragment extends Fragment {
         txt_hr_value.setText("" + heartRate);
         addEntry(heartRate);
 
-
     }
 
     public void startMeasuring() {
 
-        Utils.speak("Measurement will take " + measurement_duration.getValue() + " minutes!");
+        Utils.speak("Measurement will take " + measurement_duration.getValue() + " minute" + (measurement_duration.getValue() > 1 ? "s" : "") + "!");
 
         Crashlytics.log("Starting the measurement.");
         failureIntervalTimes = 0;
@@ -434,13 +431,7 @@ public class MeasurementFragment extends Fragment {
 
                 //Calculating FrequencyDomainMethod: 'times' has to be power of 2
                 for (int i = 0; i < interval_values.length; i++) {
-//                            times++;
                     fft.add_to_freq_array(interval_values[i]);
-//                            if(times==16 || times == 64 || times==256){
-//                                Log.i("DATA",""+times);
-//                                fft.calculate_frequencies(times);
-//
-//                            }
                 }
 
                 long duration = measurement_duration.getValue() * 60000;
@@ -459,10 +450,6 @@ public class MeasurementFragment extends Fragment {
 
                 //Calculating HRV
                 hrv.addIntervals(interval_values);
-
-                for (int interval : interval_values) {
-                    Log.i("RRTEST", String.valueOf(interval));
-                }
                 bpm.addBPM(hearRate);
                 //Seting values
                 txt_hrv_value.setText(String.valueOf(hrv.getHrv()));

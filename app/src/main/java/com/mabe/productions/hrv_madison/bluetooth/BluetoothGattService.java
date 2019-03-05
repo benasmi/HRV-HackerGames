@@ -132,8 +132,8 @@ public class BluetoothGattService extends Service {
             // This is special handling for the Heart Rate Measurement profile. Data
             // parsing is carried out as per profile specifications.
             int heartRate = extractHeartRate(characteristic);
-            double contact = extractContact(characteristic);
-            double energy = extractEnergyExpended(characteristic);
+            /*double contact = extractContact(characteristic);
+            double energy = extractEnergyExpended(characteristic);*/
             int intervals[] = extractBeatToBeatInterval(characteristic);
 
             LocalBroadcastManager.getInstance(BluetoothGattService.this).sendBroadcast(new Intent(ACTION_RECEIVING_DATA).putExtra("RR_intervals", intervals).putExtra("BPM", heartRate));

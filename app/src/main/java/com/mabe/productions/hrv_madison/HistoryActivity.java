@@ -66,11 +66,6 @@ public class HistoryActivity extends AppCompatActivity {
         layout_manager = new LinearLayoutManager(this);
         recyclerview_history.setLayoutManager(layout_manager);
 
-        Log.i("TEST1", "AdapterDataSet: " + String.valueOf(adapterDataSet.size()));
-        Log.i("TEST1", "Workouts: " + String.valueOf(workouts.size()));
-        Log.i("TEST1", "Measurements: " + String.valueOf(measurements.size()));
-
-
         recyclerView_adapter = new HistoryRecyclerViewAdapter(adapterDataSet, this);
         recyclerview_history.setAdapter(recyclerView_adapter);
 

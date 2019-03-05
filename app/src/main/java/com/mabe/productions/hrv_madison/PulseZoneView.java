@@ -44,7 +44,6 @@ public class PulseZoneView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         float progress = getProgressPercentage();
-        Log.i("TEST", "DrawProgress: " + progress);
         int width = canvas.getWidth();
         int height = canvas.getHeight();
 

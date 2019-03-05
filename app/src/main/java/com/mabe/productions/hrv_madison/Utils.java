@@ -534,13 +534,11 @@ public class Utils {
     }
 
     public static String getTimeAgo(long time) {
-        Log.i("TEST", time + "Gera data azile");
         if (time < 1000000000000L) {
             time *= 1000;
         }
 
         long now = System.currentTimeMillis();
-        Log.i("TEST", now + "Ka ce meluoji");
 
         if (time > now || time <= 0) {
             return null;

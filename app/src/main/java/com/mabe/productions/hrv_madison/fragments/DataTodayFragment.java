@@ -394,7 +394,6 @@ public class DataTodayFragment extends Fragment {
 
         @Override
         public void onFailure(DatabaseError error) {
-            Log.i("TEST", "Failure: " + error.getMessage());
             pull_refresh_layout.setRefreshing(false);
         }
     };

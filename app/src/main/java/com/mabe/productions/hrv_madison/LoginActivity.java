@@ -329,7 +329,6 @@ public class LoginActivity extends AppCompatActivity {
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
 
-        Log.i("TEST", "token: " + token.getToken());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, facebookGmailListener);
     }
@@ -463,7 +462,6 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(DatabaseError error) {
                             loadingDialog.dismiss();
-                            Log.i("TEST", error.getCode() + ": " + error.getDetails() + "\n" + error.getMessage());
                             Toast.makeText(LoginActivity.this, "Please check your connection!", Toast.LENGTH_LONG).show();
                         }
                     });
@@ -472,7 +470,6 @@ public class LoginActivity extends AppCompatActivity {
 
             } else {
                 Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                Log.i("TEST", task.getException().getMessage());
 
             }
 

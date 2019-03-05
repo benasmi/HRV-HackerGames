@@ -307,7 +307,7 @@ public class WorkoutFragment extends Fragment {
     }
 
     private void startedWorkoutAnimations() {
-        Utils.speak("Your workout has been started! Warm-up!");
+        Utils.speak("Your workout has been started! Warm-up state!");
         workout_tab_running_gif.startAnimation(anim_running_man_left_to_right);
         img_stop.startAnimation(anim_left_to_right);
         img_pause.startAnimation(anim_right_to_left);
@@ -377,7 +377,6 @@ public class WorkoutFragment extends Fragment {
      * GPS is on
      * Pulsometer is connected
      * If pulsometer is not connected, prompting user with a dialog.
-     * <p>
      * If all conditions are met, workout is started via {@link #setState(int)}
      */
     private void startWorkout() {
@@ -522,7 +521,6 @@ public class WorkoutFragment extends Fragment {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             vibrateState = isChecked;
             Utils.saveToSharedPrefs(getContext(), FeedReaderDbHelper.FIELD_VIBRATION_INDICATION, vibrateState, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-            Log.i("TEST", "VIBRATE_STATE: " + vibrateState);
         }
     };
 
@@ -674,7 +672,6 @@ public class WorkoutFragment extends Fragment {
                 img_pause.setVisibility(View.GONE);
                 img_stop.setVisibility(View.GONE);
                 layout_workout_progress.setVisibility(View.GONE);
-                Log.i("TEST", "Setting progressBar duration in setState()...");
                 setProgressBarDuration(1, 1, true);
                 editText_minutes.setEnabled(true);
                 editText_seconds.setEnabled(true);
@@ -792,12 +789,10 @@ public class WorkoutFragment extends Fragment {
                                 //double speed = ((System.currentTimeMillis() - lastLocationUpdate) / (1000d * 60d * 60d)) / distance;
                                 double speed = currentResult.getLastLocation().getSpeed() * 3.6d; //in km/h
                                 txt_current_pace.setText(String.valueOf(Math.round(currentResult.getLastLocation().getSpeed() * 100d) / 100d));
-                                //Log.i("TEST", "Estimated movement speed: " + speed + "km/h\nGiven movement speed: " + locationResult.getLastLocation().getSpeed()*3.6d + "km/h");
                                 if (speed <= MAX_REASONABLE_SPEED && speed >= MIN_REASONABLE_SPEED) {
                                     route.add(lastLocation);
                                     paceData.add(currentResult.getLastLocation().getSpeed());
                                     totalDistance += distance;
-                                    Log.i("TEST", "total distance: " + totalDistance);
                                     txt_distance.setText(String.valueOf(Math.round(totalDistance * 100d) / 100d));
                                 }
                             } else {
@@ -1187,7 +1182,6 @@ public class WorkoutFragment extends Fragment {
         } else if (hrPercentage > 90 && hrPercentage <= 100) {
             pulseZone = 5;
         }
-        Log.i("TEST", "HRMAX: " + HRMax + " | " + "BPM: " + heartRate + " | " + "hrPercentage: " + hrPercentage + " | " + "pulseZone: " + pulseZone);
         return pulseZone;
     }
 

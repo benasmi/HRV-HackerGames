@@ -367,11 +367,9 @@ public class User {
             todaysDate.setTime(measurements.get(i).getDate());
             int measurementDate = todaysDate.get(Calendar.DAY_OF_YEAR);
             if (today == measurementDate) {
-                Log.i("MEASUREMENTS", "MEASUREAMENT FOUND");
                 return measurements.get(i);
             }
         }
-        Log.i("MEASUREMENTS", "MEASUREMENT NOT FOUND");
         return null;
 
     }
@@ -384,7 +382,6 @@ public class User {
     private void getAllMeasurementsFromDb(Context context) {
 
         ArrayList<Measurement> measurementList = new ArrayList<>();
-        Log.i("TEST", "I'm about to create the database please be nice and dont crash thanks xoxo");
         SQLiteDatabase db = new FeedReaderDbHelper(context).getWritableDatabase();
 
 
@@ -538,10 +535,6 @@ public class User {
         db.close();
 
         workouts = workoutList;
-
-        for (int i = 0; i < workouts.size(); i++) {
-            Log.i("TEST", String.valueOf(workouts.get(i).getDate()));
-        }
 
     }
 

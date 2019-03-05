@@ -135,7 +135,6 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
                     recycler_view_workout_cardview.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Log.i("recycler", "DataRec: " + String.valueOf(data.get(getAdapterPosition()).getWorkout_duration()));
 
                             context.startActivity(new Intent(context, AdvancedWorkoutHistoryActivity.class).putExtra("Workout", data.get(getAdapterPosition())).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                         }

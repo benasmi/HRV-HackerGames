@@ -62,7 +62,6 @@ public class SplashScreenActivity extends AppCompatActivity {
                     FirebaseUtils.isInitialDone(new FirebaseUtils.OnInitialDoneFetchListener() {
                         @Override
                         public void onSuccess(boolean isInitialDone) {
-                            Log.i("auth", "SplashOnInitial: " + String.valueOf(isInitialDone));
                             if (isInitialDone) {
                                 startActivity(new Intent(SplashScreenActivity.this, MainScreenActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                             } else {

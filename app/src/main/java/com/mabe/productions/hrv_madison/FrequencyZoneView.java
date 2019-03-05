@@ -72,8 +72,6 @@ public class FrequencyZoneView extends View {
         //canvas.drawText("Parasympathetic",0+width*TEXT_PADDING,45,txt_paint);
         //canvas.drawText("Sympathetic",width-width_symp-(width*TEXT_PADDING),45,txt_paint);
         //canvas.drawText("ANS Balance",width/2-width_balance/2,45,txt_paint);
-        Log.i("TESTC", "Width-Canvas:" + width);
-        Log.i("TESTC", "Height-Canvas:" + height);
     }
 
     public void setElementPosition(float ratio) {

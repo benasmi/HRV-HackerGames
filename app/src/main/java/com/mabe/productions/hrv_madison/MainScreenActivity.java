@@ -123,13 +123,7 @@ public class MainScreenActivity extends AppCompatActivity {
             public void onInit(int i) {
                 if (i == TextToSpeech.SUCCESS) {
                     isTTSAvailable = true;
-                    Log.i("TTS", "Success!");
                     int result = textToSpeech.setLanguage(Locale.ENGLISH);
-                    if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                        Log.i("TTS", "Not supported language!");
-                    }
-                } else {
-                    Log.i("TTS", "Failed to initialize!");
                 }
             }
         });
@@ -248,11 +242,8 @@ public class MainScreenActivity extends AppCompatActivity {
                 case BluetoothGattService.ACTION_CONNECTED:
                     BluetoothDevice device = intent.getParcelableExtra("BT_DEVICE");
                     txt_toolbar_device_status.setText(device.getName());
-                    Log.i("TEST", "ACTION_CONNECTED");
-                    Log.i("TEST", "About to start measurement immediately");
                     //If the measure button has already been pressed, starting the measurement automatically.
                     if (viewPagerAdapter.measurementFragment.shouldStartMeasurementImmediately) {
-                        Log.i("TEST", "Starting measurement immediately");
                         viewPagerAdapter.measurementFragment.startMeasuring();
                         viewPagerAdapter.measurementFragment.shouldStartMeasurementImmediately = false;
                     }
@@ -262,21 +253,16 @@ public class MainScreenActivity extends AppCompatActivity {
                     break;
 
                 case BluetoothGattService.ACTION_DISCONNECTED:
-                    Log.i("TEST", "ACTION_DISCONNECTED");
                     txt_toolbar_device_status.setText(R.string.no_device);
                     viewPagerAdapter.measurementFragment.disconnected();
                     viewPagerAdapter.workoutFragment.disconnected();
                     break;
 
                 case BluetoothGattService.ACTION_RECEIVING_DATA:
-
-                    //Log.i("TEST", "ACTION_RECEIVING_DATA");
-
                     int intervals[] = intent.getExtras().getIntArray("RR_intervals");
                     int bpm = intent.getExtras().getInt("BPM");
                     viewPagerAdapter.measurementFragment.onMeasurement(bpm, intervals);
                     viewPagerAdapter.workoutFragment.onMeasurement(bpm);
-                    //Log.i("TEST", "ACTION_RECEIVING_DATA" + "BPM: " + bpm + " | " + "RMSSD: " + String.valueOf(hrv.calculateRMSSD()));
                     break;
 
             }

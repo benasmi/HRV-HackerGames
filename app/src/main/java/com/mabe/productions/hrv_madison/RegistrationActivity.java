@@ -159,8 +159,6 @@ public class RegistrationActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
 
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Log.i("auth", user.getEmail());
-                            Log.i("auth", user.getUid());
                             FirebaseUtils.addUser(register_name.getText().toString().trim());
                             user.sendEmailVerification();
                             Utils.buildAlertDialogPrompt(RegistrationActivity.this, "Success!", "Successful registration. To login, please verify your email adress", "Ok", "", new DialogInterface.OnClickListener() {

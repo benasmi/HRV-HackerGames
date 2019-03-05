@@ -147,7 +147,6 @@ public class LeDevicesDialog {
                     }
 
                     if (!isDevicePresent && device.getName() != null) {
-                        Log.i("Devices", "" + device.getName() + "?" + device.getAddress());
                         adapter.devices.add(new DeviceViewInfo(true, false, false, device));
                     }
                     adapter.notifyDataSetChanged();
