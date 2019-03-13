@@ -30,22 +30,23 @@ public class IntroInitialWeight extends AppCompatActivity {
     private TextView txt_text_kg;
     private Button btn_continue;
 
-    private boolean fromOptions;
+    private boolean fromOptions = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.intro_initial_weight_activity);
-        Utils.changeNotifBarColor(Color.parseColor("#3e5266"), getWindow());
-        fromOptions = getIntent().getExtras().getBoolean("FromOptions");
+        Utils.changeNotifBarColor(getResources().getColor(R.color.colorPrimaryDark), getWindow());
         initializeViews();
         setFonts();
 
-        if (fromOptions) {
-            float weight = Utils.readFromSharedPrefs_float(IntroInitialWeight.this, FeedReaderDbHelper.FIELD_WEIGHT, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-            txt_value.setText((int) weight + "");
-            weight_picker.setValue((int) weight);
-            btn_continue.setText("Done");
+        if(getIntent().getExtras() != null){
+            if(fromOptions = getIntent().getExtras().getBoolean("FromOptions")){
+                float weight = Utils.readFromSharedPrefs_float(IntroInitialWeight.this, FeedReaderDbHelper.FIELD_WEIGHT, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                txt_value.setText((int) weight + "");
+                weight_picker.setValue((int) weight);
+                btn_continue.setText("Done");
+            }
         }
 
 

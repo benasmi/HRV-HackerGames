@@ -30,22 +30,23 @@ public class IntroInitialHeight extends AppCompatActivity {
     private RulerView heightValuePicker;
     private Button btn_continue;
 
-    private boolean fromOptions;
+    private boolean fromOptions = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.intro_initial_height_activity);
-        Utils.changeNotifBarColor(Color.parseColor("#3e5266"), getWindow());
-        fromOptions = getIntent().getExtras().getBoolean("FromOptions");
+        Utils.changeNotifBarColor(getResources().getColor(R.color.colorPrimaryDark), getWindow());
+
         initializeViews();
         setFonts();
-
-        if (fromOptions) {
-            float height = Utils.readFromSharedPrefs_float(IntroInitialHeight.this, FeedReaderDbHelper.FIELD_HEIGHT, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
-            heightValuePicker.setValue(height, 100f, 300f, 1);
-            btn_continue.setText("Done");
-            txt_value.setText("" + (int) height);
+        if(getIntent().getExtras() != null){
+            if(fromOptions = getIntent().getExtras().getBoolean("FromOptions")){
+                float height = Utils.readFromSharedPrefs_float(IntroInitialHeight.this, FeedReaderDbHelper.FIELD_HEIGHT, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+                heightValuePicker.setValue(height, 100f, 300f, 1);
+                btn_continue.setText("Done");
+                txt_value.setText("" + (int) height);
+            }
         }
 
     }

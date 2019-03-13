@@ -45,22 +45,26 @@ public class IntroInitialDaySelection extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.intro_initial_day_selection);
-        Utils.changeNotifBarColor(Color.parseColor("#3e5266"), getWindow());
-        fromOptions = getIntent().getExtras().getBoolean("FromOptions");
+        Utils.changeNotifBarColor(getResources().getColor(R.color.colorPrimaryDark), getWindow());
+
+
         initializeViews();
         setFonts();
-        if (fromOptions) {
-            week_days = Utils.readFromSharedPrefs_boolarray(IntroInitialDaySelection.this, FeedReaderDbHelper.FIELD_WEEK_DAYS, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+        if(getIntent().getExtras() != null){
+            if(fromOptions = getIntent().getExtras().getBoolean("FromOptions")){
 
-            btn_monday.setBackgroundResource(week_days[0] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia);
-            btn_tuesday.setBackgroundResource(week_days[1] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia);
-            btn_wednesday.setBackgroundResource(week_days[2] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia);
-            btn_thursday.setBackgroundResource(week_days[3] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia);
-            btn_friday.setBackgroundResource(week_days[4] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia);
-            btn_saturday.setBackgroundResource(week_days[5] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia);
-            btn_sunday.setBackgroundResource(week_days[6] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia);
+                week_days = Utils.readFromSharedPrefs_boolarray(IntroInitialDaySelection.this, FeedReaderDbHelper.FIELD_WEEK_DAYS, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
 
-            btn_continue.setText("Done");
+                btn_monday.setBackgroundResource(week_days[0] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia);
+                btn_tuesday.setBackgroundResource(week_days[1] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia);
+                btn_wednesday.setBackgroundResource(week_days[2] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia);
+                btn_thursday.setBackgroundResource(week_days[3] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia);
+                btn_friday.setBackgroundResource(week_days[4] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia);
+                btn_saturday.setBackgroundResource(week_days[5] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia);
+                btn_sunday.setBackgroundResource(week_days[6] ? R.drawable.login_button_gradient : R.drawable.login_socialmedia);
+
+                btn_continue.setText("Done");
+            }
         }
 
         btn_monday.setOnClickListener(new View.OnClickListener() {
