@@ -3,6 +3,10 @@ package com.mabe.productions.hrv_madison.fragments;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.Context;
+import android.support.v4.view.ViewPager;
+
+import com.mabe.productions.hrv_madison.FingerHRV.HeartRateMonitor;
+import com.mabe.productions.hrv_madison.R;
 
 public class ViewPagerAdapter extends android.support.v4.app.FragmentPagerAdapter {
 

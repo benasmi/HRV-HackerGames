@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -16,6 +17,8 @@ import android.os.PowerManager.WakeLock;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -32,11 +35,14 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.mabe.productions.hrv_madison.MainScreenActivity;
 import com.mabe.productions.hrv_madison.R;
 import com.mabe.productions.hrv_madison.User;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.firebase.FireMeasurement;
 import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
+import com.mabe.productions.hrv_madison.fragments.DataTodayFragment;
+import com.mabe.productions.hrv_madison.fragments.ViewPagerAdapter;
 import com.mabe.productions.hrv_madison.measurements.BPM;
 import com.mabe.productions.hrv_madison.measurements.FrequencyMethod;
 import com.mabe.productions.hrv_madison.measurements.Measurement;
@@ -52,6 +58,7 @@ public class HeartRateMonitor extends Activity {
     private TextView hrv_txt;
     private TextView txt_info;
     private static final String TAG = "HeartRateMonitor";
+
 
     private SurfaceView preview = null;
     private SurfaceHolder previewHolder = null;
@@ -95,7 +102,7 @@ public class HeartRateMonitor extends Activity {
     private long timePassed;
     private boolean isTimerRunning;
     private static final long TIMER_STEP = 1000L;
-    private static final long MEASUREMENT_DURATION = 60000L;
+    private static long MEASUREMENT_DURATION = 60000L;
     private boolean isMeasuring = false;
 
     /**
@@ -107,6 +114,9 @@ public class HeartRateMonitor extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_heart_rate_monitor);
 
+
+        MEASUREMENT_DURATION = (getIntent().getExtras().getInt("MeasurementDuration")) * 60000L;
+
         ImageView img_back_arrow = findViewById(R.id.img_back_arrow);
         img_back_arrow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,10 +126,13 @@ public class HeartRateMonitor extends Activity {
             }
         });
 
+
+
         changeNotifBarColor(Color.parseColor("#2c3e50"), getWindow());
         startTime = System.currentTimeMillis();
         chart_hr = findViewById(R.id.chart_hr);
         txt_info = findViewById(R.id.info_txt);
+
 
         //Customizing HR chart
         chart_hr.setData(new LineData());
@@ -195,17 +208,38 @@ public class HeartRateMonitor extends Activity {
     public void onPause() {
         super.onPause();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            wakeLock.release();
-            camera.setPreviewCallback(null);
-            camera.stopPreview();
-            camera.release();
-            camera = null;
+
+            if(wakeLock.isHeld()){
+                wakeLock.release();
+
+            }
+            if(camera != null){
+                camera.setPreviewCallback(null);
+                camera.stopPreview();
+                camera.release();
+                camera = null;
+            }
+
         }
     }
 
     @Override
     public void onBackPressed() {
-        timer.cancel();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            if(wakeLock.isHeld()){
+                wakeLock.release();
+            }
+            if(camera != null){
+                camera.setPreviewCallback(null);
+                camera.stopPreview();
+                camera.release();
+                camera = null;
+            }
+
+        }
+        if(timer!=null){
+            timer.cancel();
+        }
         finish();
     }
 
@@ -466,6 +500,7 @@ public class HeartRateMonitor extends Activity {
 
     }
 
+
     private TimerTask timerTask = new TimerTask() {
         @Override
         public void run() {
@@ -484,6 +519,7 @@ public class HeartRateMonitor extends Activity {
 
                 FirebaseUtils.addMeasurement(new FireMeasurement(measurement), HeartRateMonitor.this);
                 User.addMeasurementData(HeartRateMonitor.this, measurement, false);
+                startActivity(new Intent(HeartRateMonitor.this, MainScreenActivity.class));
 
                 runOnUiThread(new Runnable() {
                     @Override

@@ -13,11 +13,13 @@ import android.graphics.drawable.GradientDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.graphics.drawable.Animatable2Compat;
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatButton;
@@ -56,6 +58,7 @@ import com.mabe.productions.hrv_madison.measurements.RMSSD;
 import com.shawnlin.numberpicker.NumberPicker;
 import com.tooltip.Tooltip;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -195,15 +198,33 @@ public class MeasurementFragment extends Fragment {
         measure_with_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (ContextCompat.checkSelfPermission(MeasurementFragment.this.getContext(), android.Manifest.permission.CAMERA)
-                        == PackageManager.PERMISSION_DENIED) {
-                    requestPermissions(new String[]{Manifest.permission.CAMERA},
-                            MY_CAMERA_REQUEST_CODE);
-                } else {
-                    startActivity(new Intent(MeasurementFragment.this.getContext(), HeartRateMonitor.class));
+                if(measurement_duration.getValue()>1){
+                    Utils.buildAlertDialogPrompt(getContext(), "Warning!", "We recommend selecting 1 minute measurement. Longer measurement durations with camera and flashlight can damage your fingertip!", "Measure", "Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if (ContextCompat.checkSelfPermission(MeasurementFragment.this.getContext(), android.Manifest.permission.CAMERA)
+                                    == PackageManager.PERMISSION_DENIED) {
+                                requestPermissions(new String[]{Manifest.permission.CAMERA},
+                                        MY_CAMERA_REQUEST_CODE);
+                            } else {
+                                startActivity(new Intent(MeasurementFragment.this.getContext(), HeartRateMonitor.class).putExtra("MeasurementDuration",measurement_duration.getValue()));
+                            }
+                        }
+                    }, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                                return;
+                        }
+                    });
+                }else{
+                    if (ContextCompat.checkSelfPermission(MeasurementFragment.this.getContext(), android.Manifest.permission.CAMERA)
+                            == PackageManager.PERMISSION_DENIED) {
+                        requestPermissions(new String[]{Manifest.permission.CAMERA},
+                                MY_CAMERA_REQUEST_CODE);
+                    } else {
+                        startActivity(new Intent(MeasurementFragment.this.getContext(), HeartRateMonitor.class).putExtra("MeasurementDuration",measurement_duration.getValue()));
+                    }
                 }
-
-
             }
         });
 
@@ -216,7 +237,18 @@ public class MeasurementFragment extends Fragment {
                 switch (currentMeasurementState) {
 
                     case STATE_MEASURING:
-                        cancelMeasurement();
+                        Utils.buildAlertDialogPrompt(getContext(), "Cancel measurement", "Do you really want to cancel this measurement?", "Yes", "Keep measuring!", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                cancelMeasurement();
+                            }
+                        }, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        });
+
                         break;
 
                     case STATE_WAITING_TO_MEASURE:
