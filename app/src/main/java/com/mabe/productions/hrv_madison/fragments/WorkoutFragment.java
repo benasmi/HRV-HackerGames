@@ -736,7 +736,7 @@ public class WorkoutFragment extends Fragment {
                 }
 
                 startTimer();
-
+                calories_burned = 0;
 
                 break;
 
