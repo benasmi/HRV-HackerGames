@@ -269,6 +269,9 @@ public class WorkoutFragment extends Fragment {
         pulseZone_switch.setOnCheckedChangeListener(selectVibrationListener);
         pulseZone_switch.setChecked(Utils.readFromSharedPrefs_bool(getContext(), FeedReaderDbHelper.FIELD_VIBRATION_INDICATION, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
         vibrateState = pulseZone_switch.isChecked();
+
+        Utils.hideKeyboardAfterClickaway(editText_minutes, getContext());
+        Utils.hideKeyboardAfterClickaway(editText_seconds, getContext());
     }
 
 

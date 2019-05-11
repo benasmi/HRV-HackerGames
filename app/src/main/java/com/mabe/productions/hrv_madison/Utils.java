@@ -21,8 +21,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
 
 import com.google.android.gms.maps.model.LatLng;
@@ -43,6 +45,31 @@ public class Utils {
     private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
 
 
+
+    /**
+     * Simply hides the keyboard
+     * @param view The edittext that called the keyboard
+     * @param context The current context
+     */
+    public static void hideKeyboard(View view, Context context) {
+        InputMethodManager inputMethodManager =(InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    /**
+     * Adds a listener that hides the keyboard after it's clicked away
+     * Make sure that the activity's root view is clickable and focusable
+     * @param view The edittext that called the keyboard
+     * @param context The current context
+     */
+    public static void hideKeyboardAfterClickaway(View view, final Context context){
+        view.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                Utils.hideKeyboard(view, context);
+            }
+        });
+    }
 
     public static void speak(String text) {
         if (MainScreenActivity.isTTSAvailable && MainScreenActivity.textToSpeech != null) {

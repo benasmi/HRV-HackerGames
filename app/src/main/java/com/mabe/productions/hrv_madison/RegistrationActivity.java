@@ -104,6 +104,11 @@ public class RegistrationActivity extends AppCompatActivity {
         img_back_arrow.startAnimation(left_to_right);
         toolbar_title_registration.startAnimation(left_to_right_d);
 
+        Utils.hideKeyboardAfterClickaway(register_name, this);
+        Utils.hideKeyboardAfterClickaway(register_username, this);
+        Utils.hideKeyboardAfterClickaway(register_password, this);
+        Utils.hideKeyboardAfterClickaway(register_repeat_password, this);
+
     }
 
     boolean isEmailValid(CharSequence email) {
@@ -150,10 +155,15 @@ public class RegistrationActivity extends AppCompatActivity {
             register_repeat_password_input.setError(null);
         }
 
+        //Showing a custom progress dialog
+        final CustomLoadingDialog loadingDialog = new CustomLoadingDialog(RegistrationActivity.this, "Creating an account");
+        loadingDialog.show();
+
         mAuth.createUserWithEmailAndPassword(username, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        loadingDialog.dismiss();
                         if (task.isSuccessful()) {
 
                             // Sign in success, update UI with the signed-in user's information

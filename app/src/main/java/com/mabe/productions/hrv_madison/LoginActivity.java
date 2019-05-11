@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -51,10 +52,11 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 2;
     private TextView txt_slogan;
-    private TextView txt_noAccount;
     private EditText editText_username;
     private EditText editText_password;
     private Button btn_login;
+    private AppCompatButton registerButton;
+
     private ImageButton imgBtn_facebook;
     private ImageButton imgBtn_google;
     private ImageView circle;
@@ -123,12 +125,12 @@ public class LoginActivity extends AppCompatActivity {
 
 
         txt_slogan = (TextView) findViewById(R.id.slogan);
-        txt_noAccount = (TextView) findViewById(R.id.noAccount);
         editText_username = (EditText) findViewById(R.id.usernameEditText);
         editText_password = (EditText) findViewById(R.id.passwordEditText);
         imgBtn_facebook = (ImageButton) findViewById(R.id.login_facebook);
         imgBtn_google = (ImageButton) findViewById(R.id.login_googlePlus);
         btn_login = (Button) findViewById(R.id.buttonLogin);
+        registerButton = (AppCompatButton) findViewById(R.id.noAccount);
         circle = (ImageView) findViewById(R.id.circleDot);
         img_login_appicon = (ImageView) findViewById(R.id.imageView);
 
@@ -136,18 +138,15 @@ public class LoginActivity extends AppCompatActivity {
         imgBtn_facebook.startAnimation(left_to_right);
         imgBtn_google.startAnimation(right_to_left);
         btn_login.startAnimation(bottom_to_top);
-        txt_noAccount.startAnimation(top_to_bottom);
+        registerButton.startAnimation(bottom_to_top);
         circle.startAnimation(fade_in);
         editText_username.startAnimation(fade_in_delay);
         editText_password.startAnimation(fade_in_delay);
         txt_slogan.startAnimation(top_to_bottom_delay);
 
-        txt_noAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(LoginActivity.this, RegistrationActivity.class));
-            }
-        });
+
+        Utils.hideKeyboardAfterClickaway(editText_username, this);
+        Utils.hideKeyboardAfterClickaway(editText_password, this);
 
     }
 
@@ -164,7 +163,11 @@ public class LoginActivity extends AppCompatActivity {
         btn_login.setTypeface(futura);
         editText_username.setTypeface(futura);
         editText_password.setTypeface(futura);
-        txt_noAccount.setTypeface(verdana);
+    }
+
+
+    public void register(View view){
+        startActivity(new Intent(LoginActivity.this, RegistrationActivity.class));
     }
 
     public void login(View view) {
@@ -430,6 +433,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onComplete(@NonNull Task<AuthResult> task) {
 
+            progressDialog.dismiss();
             if (task.isSuccessful()) {
 
                 boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
@@ -473,7 +477,6 @@ public class LoginActivity extends AppCompatActivity {
 
             }
 
-            progressDialog.dismiss();
 
 
         }
