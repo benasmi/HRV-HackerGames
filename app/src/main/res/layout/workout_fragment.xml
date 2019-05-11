@@ -1,698 +1,707 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-      android:clickable="true"
-                  android:focusableInTouchMode="true"
-    android:focusable="true"
-                android:background="@drawable/login_background"
-              android:layout_height="match_parent">
-
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:clickable="true"
+        android:focusableInTouchMode="true"
+        android:focusable="true"
+        android:background="@drawable/login_background"
+        android:layout_height="match_parent">
 
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="160dp"
-            android:layout_marginTop="10dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <com.budiyev.android.circularprogressbar.CircularProgressBar
-                android:id="@+id/progress_bar_duration"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_width="200dp"
-                android:layout_height="match_parent"
-                app:animateProgress="true"
-                app:backgroundStrokeColor="#fff"
-                app:backgroundStrokeWidth="5dp"
-                app:drawBackgroundStroke="true"
-                android:keepScreenOn="true"
-                app:foregroundStrokeCap="butt"
-                app:foregroundStrokeColor="@color/colorAccent"
-                app:foregroundStrokeWidth="5dp"
-                app:indeterminate="false"
-                app:indeterminateRotationAnimationDuration="1200"
-                app:indeterminateSweepAnimationDuration="600"
-                app:indeterminateMinimumAngle="45"
-                app:maximum="100"
-                app:progress="0"
-                app:progressAnimationDuration="100"
-                app:startAngle="270"/>
 
             <RelativeLayout
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                >
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_marginTop="10dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Walking"
-                    android:textStyle="italic"
-                    android:layout_marginBottom="-15dp"
-                    android:id="@+id/exercise_textview"
-                    android:layout_alignBottom="@+id/time_layout"
+                <com.budiyev.android.circularprogressbar.CircularProgressBar
+                    android:id="@+id/progress_bar_duration"
                     android:layout_centerHorizontal="true"
-                    android:textColor="#fff"
-                    android:textSize="22dp"/>
+                    android:layout_centerVertical="true"
+                    android:layout_width="200dp"
+                    android:layout_height="match_parent"
+                    app:animateProgress="true"
+                    app:backgroundStrokeColor="#fff"
+                    app:backgroundStrokeWidth="5dp"
+                    app:drawBackgroundStroke="true"
+                    android:keepScreenOn="true"
+                    app:foregroundStrokeCap="butt"
+                    app:foregroundStrokeColor="@color/colorAccent"
+                    app:foregroundStrokeWidth="5dp"
+                    app:indeterminate="false"
+                    app:indeterminateRotationAnimationDuration="1200"
+                    app:indeterminateSweepAnimationDuration="600"
+                    app:indeterminateMinimumAngle="45"
+                    app:maximum="100"
+                    app:progress="0"
+                    app:progressAnimationDuration="100"
+                    app:startAngle="270"/>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:id="@+id/time_layout"
-                    android:orientation="horizontal">
+                    >
 
-
-                    <!--TODO: fix edittext behavior !-->
-                    <EditText
-                        android:layout_width="wrap_content"
-                        android:text="00"
-                        android:inputType="number"
-                        android:selectAllOnFocus="true"
-                        android:id="@+id/edittext_minutes"
-                        android:maxLength="3"
-                        android:textColor="#fff"
-                        android:textSize="30sp"
-                        android:background="@android:color/transparent"
-                        android:layout_height="wrap_content"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="Walking"
+                        android:textStyle="italic"
+                        android:layout_marginBottom="-15dp"
+                        android:id="@+id/exercise_textview"
+                        android:layout_alignBottom="@+id/time_layout"
+                        android:layout_centerHorizontal="true"
                         android:textColor="#fff"
-                        android:textSize="30sp"
-                        android:text=":"/>
+                        android:textSize="22dp"/>
 
-                    <EditText
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:textColor="#fff"
-                        android:inputType="number"
-                        android:id="@+id/edittext_seconds"
-                        android:maxLength="2"
-                        android:selectAllOnFocus="true"
-                        android:textSize="30sp"
-                        android:background="@android:color/transparent"
-                        android:text="00"
-                        android:layout_height="wrap_content"/>
-
-                </LinearLayout>
-
-               <pl.droidsonroids.gif.GifImageView
-                   android:layout_width="50dp"
-                   android:layout_height="50dp"
-                   android:src="@drawable/human"
-                   android:layout_below="@+id/time_layout"
-                   android:layout_marginTop="50dp"
-                   android:layout_centerHorizontal="true"
-                   android:id="@+id/workout_tab_running_gif"
-                   />
-
-            </RelativeLayout>
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:id="@+id/time_layout"
+                        android:orientation="horizontal">
 
 
+                        <!--TODO: fix edittext behavior !-->
+                        <EditText
+                            android:layout_width="wrap_content"
+                            android:text="00"
+                            android:inputType="number"
+                            android:selectAllOnFocus="true"
+                            android:id="@+id/edittext_minutes"
+                            android:maxLength="3"
+                            android:imeOptions="actionDone"
+                            android:textColor="#fff"
+                            android:textSize="30sp"
+                            android:background="@android:color/transparent"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#fff"
+                            android:textSize="30sp"
+                            android:text=":"/>
 
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_toLeftOf="@+id/progress_bar_duration"
-                android:src="@drawable/ic_pause_button"
-                android:layout_marginRight="-10dp"
-                android:id="@+id/img_pause_workout"
-                android:clickable="true"
-                android:layout_alignBottom="@+id/progress_bar_duration"/>
+                        <EditText
+                            android:layout_width="wrap_content"
+                            android:textColor="#fff"
+                            android:inputType="number"
+                            android:id="@+id/edittext_seconds"
+                            android:maxLength="2"
+                            android:imeOptions="actionDone"
+                            android:selectAllOnFocus="true"
+                            android:textSize="30sp"
+                            android:background="@android:color/transparent"
+                            android:text="00"
+                            android:layout_height="wrap_content"/>
 
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_toRightOf="@+id/progress_bar_duration"
-                android:src="@drawable/ic_stop_button"
-                android:id="@+id/img_stop_workout"
-                android:clickable="true"
-                android:layout_marginLeft="-10dp"
-                android:layout_alignBottom="@+id/progress_bar_duration"/>
+                    </LinearLayout>
 
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:id="@+id/workout_progress_layout"
-            android:weightSum="3"
-            android:visibility="gone"
-            android:layout_marginTop="30dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-
-            <LinearLayout
-                android:layout_width="0px"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginRight="4dp"
-                android:layout_marginLeft="4dp"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_fire_icon"
-                        android:layout_marginRight="5dp"
+                    <pl.droidsonroids.gif.GifImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/human"
+                        android:layout_below="@+id/time_layout"
+                        android:layout_marginTop="50dp"
+                        android:layout_centerHorizontal="true"
+                        android:id="@+id/workout_tab_running_gif"
                         />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:textColor="#fff"
-                        android:textSize="@dimen/workout_progress_title_size"
-                        android:text="Calories"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/workout_progress_number_size"
-                        android:textColor="#fff"
-                        android:gravity="bottom"
-                        android:id="@+id/calories_burned"
-                        android:text="-"/>
+                </RelativeLayout>
 
 
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="-5dp"
-                    android:textSize="@dimen/workout_progress_unit_size"
-                    android:gravity="top"
-                    android:textStyle="italic"
-                    android:layout_gravity="center"
-                    android:textColor="#fff"
-                    android:text="KCal"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0px"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginRight="4dp"
-                android:layout_marginLeft="4dp"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_speedometer"
-                        android:layout_marginRight="5dp"
-                        />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:textColor="#fff"
-                        android:textSize="@dimen/workout_progress_title_size"
-                        android:text="Pace"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/workout_progress_number_size"
-                        android:textColor="#fff"
-                        android:gravity="bottom"
-                        android:id="@+id/running_pace"
-                        android:text="-"/>
-
-
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="-5dp"
-                    android:textSize="@dimen/workout_progress_unit_size"
-                    android:gravity="top"
-                    android:textStyle="italic"
-                    android:layout_gravity="center"
-                    android:textColor="#fff"
-                    android:text="m/s"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0px"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginRight="4dp"
-                android:layout_marginLeft="4dp"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_map_marker"
-                        android:layout_marginRight="5dp"
-                        />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:textColor="#fff"
-                        android:textSize="@dimen/workout_progress_title_size"
-                        android:text="Distance"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/workout_progress_number_size"
-                        android:textColor="#fff"
-                        android:gravity="bottom"
-                        android:id="@+id/distance_run"
-                        android:text="-"/>
-
-
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="-5dp"
-                    android:textSize="@dimen/workout_progress_unit_size"
-                    android:gravity="top"
-                    android:textStyle="italic"
-                    android:layout_gravity="center"
-                    android:textColor="#fff"
-                    android:text="km"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:id="@+id/layout_workout_name"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Intervals session"
-                android:gravity="center"
-                android:id="@+id/txt_workout_name"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold"
-                android:textSize="30dp"
-                android:layout_gravity="center"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="17dp"
-                android:textColor="@color/colorAccent"
-                android:id="@+id/txt_workout_name_explaining"
-                android:gravity="center"
-                android:text="1min running + 2min walking"
-                />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:id="@+id/layout_reccomended_workout"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:layout_marginTop="25dp"
-
-            >
-
-            <RelativeLayout
-                android:layout_width="0px"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:id="@+id/layout_duration">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:text="Duration"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:textSize="25dp"
-                    android:id="@+id/txt_reccomended_duration"
-                    />
-
-                <android.support.v7.widget.AppCompatImageButton
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@color/transparent"
-                    android:scaleType="fitCenter"
-                    android:id="@+id/imgButton_view_duration_info"
-                    android:src="@drawable/ic_info_icon"
-                    android:layout_toEndOf="@+id/txt_reccomended_duration"
-                    android:layout_alignBottom="@+id/txt_reccomended_duration"
-                    android:layout_alignTop="@+id/txt_reccomended_duration"
-                    android:layout_marginLeft="5dp"
-                    />
 
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/ic_clock"
-                    android:id="@+id/workout_clock_icon"
-                    android:layout_below="@+id/txt_reccomended_duration"
-                    android:layout_alignStart="@+id/txt_reccomended_duration"
-                    />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="5dp"
-                    android:orientation="vertical"
-                    android:layout_toEndOf="@+id/workout_clock_icon"
-                    android:layout_below="@+id/txt_reccomended_duration">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="0px"
-                        android:text="15"
-                        android:textSize="25dp"
-                        android:id="@+id/reccomended_duration"
-                        android:textColor="#FFFFFF"
-                        android:layout_weight="4"/>
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="0px"
-                        android:layout_weight="3"
-                        android:textSize="14dp"
-                        android:text="minutes"
-                        android:id="@+id/txt_minutes"
-
-                        android:textColor="#FFFFFF"
-                        />
-                </LinearLayout>
-
-            </RelativeLayout>
-
-
-            <RelativeLayout
-                android:layout_width="0px"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:id="@+id/layout_pulse">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:text="Intensity"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:textSize="25dp"
-                    android:id="@+id/txt_reccomended_pulse"
-                    />
-
-
-                <android.support.v7.widget.AppCompatImageButton
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@color/transparent"
-                    android:scaleType="fitCenter"
-                    android:id="@+id/imgButton_view_pulse_info"
-                    android:src="@drawable/ic_info_icon"
-                    android:layout_toEndOf="@+id/txt_reccomended_pulse"
-                    android:layout_alignBottom="@+id/txt_reccomended_pulse"
-                    android:layout_alignTop="@+id/txt_reccomended_pulse"
-                    android:layout_marginLeft="5dp"
-                    />
+                    android:layout_toLeftOf="@+id/progress_bar_duration"
+                    android:src="@drawable/ic_pause_button"
+                    android:layout_marginRight="-10dp"
+                    android:id="@+id/img_pause_workout"
+                    android:clickable="true"
+                    android:layout_alignBottom="@+id/progress_bar_duration"/>
 
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/ic_workout_pulse_icon"
-                    android:id="@+id/workout_pulse_icon"
-                    android:layout_below="@+id/txt_reccomended_pulse"
-                    android:layout_alignStart="@+id/txt_reccomended_pulse"
-                    />
+                    android:layout_toRightOf="@+id/progress_bar_duration"
+                    android:src="@drawable/ic_stop_button"
+                    android:id="@+id/img_stop_workout"
+                    android:clickable="true"
+                    android:layout_marginLeft="-10dp"
+                    android:layout_alignBottom="@+id/progress_bar_duration"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:id="@+id/workout_progress_layout"
+                android:weightSum="3"
+                android:visibility="gone"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="5dp"
-                    android:orientation="vertical"
-                    android:layout_toEndOf="@+id/workout_pulse_icon"
-                    android:layout_below="@+id/txt_reccomended_pulse">
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginLeft="4dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="15dp"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/ic_fire_icon"
+                            android:layout_marginRight="5dp"
+                            />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:textColor="#fff"
+                            android:textSize="@dimen/workout_progress_title_size"
+                            android:text="Calories"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/workout_progress_number_size"
+                            android:textColor="#fff"
+                            android:gravity="bottom"
+                            android:id="@+id/calories_burned"
+                            android:text="-"/>
+
+
+                    </LinearLayout>
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="0px"
-                        android:text="2nd"
-                        android:id="@+id/reccomended_pulse_zone"
-                        android:textColor="#FFFFFF"
-                        android:textSize="25dp"
-                        android:layout_weight="4"/>
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="0px"
-                        android:layout_weight="3"
-                        android:text="zone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="-5dp"
+                        android:textSize="@dimen/workout_progress_unit_size"
                         android:gravity="top"
-                        android:id="@+id/txt_pulse_zone"
-                        android:textColor="#FFFFFF"
+                        android:textStyle="italic"
+                        android:layout_gravity="center"
+                        android:textColor="#fff"
+                        android:text="KCal"/>
 
-                        android:textSize="14dp"
-                        />
                 </LinearLayout>
 
-            </RelativeLayout>
+                <LinearLayout
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginLeft="4dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="15dp"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/ic_speedometer"
+                            android:layout_marginRight="5dp"
+                            />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:textColor="#fff"
+                            android:textSize="@dimen/workout_progress_title_size"
+                            android:text="Speed"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/workout_progress_number_size"
+                            android:textColor="#fff"
+                            android:gravity="bottom"
+                            android:id="@+id/running_pace"
+                            android:text="-"/>
+
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="-5dp"
+                        android:textSize="@dimen/workout_progress_unit_size"
+                        android:gravity="top"
+                        android:textStyle="italic"
+                        android:layout_gravity="center"
+                        android:textColor="#fff"
+                        android:text="m/s"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginLeft="4dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="15dp"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/ic_map_marker"
+                            android:layout_marginRight="5dp"
+                            />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:textColor="#fff"
+                            android:textSize="@dimen/workout_progress_title_size"
+                            android:text="Distance"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/workout_progress_number_size"
+                            android:textColor="#fff"
+                            android:gravity="bottom"
+                            android:id="@+id/distance_run"
+                            android:text="-"/>
+
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="-5dp"
+                        android:textSize="@dimen/workout_progress_unit_size"
+                        android:gravity="top"
+                        android:textStyle="italic"
+                        android:layout_gravity="center"
+                        android:textColor="#fff"
+                        android:text="km"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:id="@+id/layout_workout_name"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Intervals session"
+                    android:gravity="center"
+                    android:id="@+id/txt_workout_name"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:textSize="30dp"
+                    android:layout_gravity="center"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="17dp"
+                    android:textColor="@color/colorAccent"
+                    android:id="@+id/txt_workout_name_explaining"
+                    android:gravity="center"
+                    android:text="1min running + 2min walking"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/layout_reccomended_workout"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:layout_marginTop="25dp"
+
+                >
+
+                <RelativeLayout
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:id="@+id/layout_duration">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:text="Duration"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:textSize="25dp"
+                        android:id="@+id/txt_reccomended_duration"
+                        />
+
+                    <android.support.v7.widget.AppCompatImageButton
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@color/transparent"
+                        android:scaleType="fitCenter"
+                        android:id="@+id/imgButton_view_duration_info"
+                        android:src="@drawable/ic_info_icon"
+                        android:layout_toEndOf="@+id/txt_reccomended_duration"
+                        android:layout_alignBottom="@+id/txt_reccomended_duration"
+                        android:layout_alignTop="@+id/txt_reccomended_duration"
+                        android:layout_marginLeft="5dp"
+                        />
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/ic_clock"
+                        android:id="@+id/workout_clock_icon"
+                        android:layout_below="@+id/txt_reccomended_duration"
+                        android:layout_alignStart="@+id/txt_reccomended_duration"
+                        />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="5dp"
+                        android:orientation="vertical"
+                        android:layout_toEndOf="@+id/workout_clock_icon"
+                        android:layout_below="@+id/txt_reccomended_duration">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0px"
+                            android:text="15"
+                            android:textSize="25dp"
+                            android:id="@+id/reccomended_duration"
+                            android:textColor="#FFFFFF"
+                            android:layout_weight="4"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0px"
+                            android:layout_weight="3"
+                            android:textSize="14dp"
+                            android:text="minutes"
+                            android:id="@+id/txt_minutes"
+
+                            android:textColor="#FFFFFF"
+                            />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:id="@+id/layout_pulse">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:text="Intensity"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:textSize="25dp"
+                        android:id="@+id/txt_reccomended_pulse"
+                        />
+
+
+                    <android.support.v7.widget.AppCompatImageButton
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@color/transparent"
+                        android:scaleType="fitCenter"
+                        android:id="@+id/imgButton_view_pulse_info"
+                        android:src="@drawable/ic_info_icon"
+                        android:layout_toEndOf="@+id/txt_reccomended_pulse"
+                        android:layout_alignBottom="@+id/txt_reccomended_pulse"
+                        android:layout_alignTop="@+id/txt_reccomended_pulse"
+                        android:layout_marginLeft="5dp"
+                        />
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/ic_workout_pulse_icon"
+                        android:id="@+id/workout_pulse_icon"
+                        android:layout_below="@+id/txt_reccomended_pulse"
+                        android:layout_alignStart="@+id/txt_reccomended_pulse"
+                        />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="5dp"
+                        android:orientation="vertical"
+                        android:layout_toEndOf="@+id/workout_pulse_icon"
+                        android:layout_below="@+id/txt_reccomended_pulse">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0px"
+                            android:text="2nd"
+                            android:id="@+id/reccomended_pulse_zone"
+                            android:textColor="#FFFFFF"
+                            android:textSize="25dp"
+                            android:layout_weight="4"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0px"
+                            android:layout_weight="3"
+                            android:text="zone"
+                            android:gravity="top"
+                            android:id="@+id/txt_pulse_zone"
+                            android:textColor="#FFFFFF"
+
+                            android:textSize="14dp"
+                            />
+                    </LinearLayout>
+
+                </RelativeLayout>
 
 
 
-        </LinearLayout>
+            </LinearLayout>
 
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:id="@+id/layout_pulse_by_vibration_switch"
-            android:layout_gravity="center">
-
-            <android.support.v7.widget.SwitchCompat
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/switch_pulse_zone"
+                android:orientation="horizontal"
+                android:id="@+id/layout_pulse_by_vibration_switch"
+                android:layout_gravity="center">
+
+                <android.support.v7.widget.SwitchCompat
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/switch_pulse_zone"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Indicate pulse zone by vibrating"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="#FFFFFF"
+                    android:id="@+id/txt_vibrate_or_not"
+                    />
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@color/transparent"
+                    android:scaleType="fitCenter"
+                    android:id="@+id/imgButton_info_about_vibration"
+                    android:src="@drawable/ic_info_icon"
+                    android:layout_marginLeft="5dp"
+                    />
+            </LinearLayout>
+
+            <android.support.v7.widget.AppCompatButton
+                android:layout_width="200dp"
+                android:layout_height="35dp"
+                android:layout_marginTop="10dp"
+                android:textSize="15dp"
+                android:layout_gravity="center"
+                android:id="@+id/button_personalised_workout"
+                android:textColor="#FFF"
+                android:textAllCaps="false"
+                android:background="@drawable/login_socialmedia"
+                android:text="Personalize"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Your workout is personolized"
+                android:visibility="gone"
+                android:id="@+id/txt_personolized_workout"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp"
                 />
+            <android.support.v7.widget.AppCompatButton
+                android:layout_width="200dp"
+                android:layout_height="35dp"
+                android:textAllCaps="false"
+                android:layout_marginTop="10dp"
+                android:textSize="15dp"
+                android:layout_gravity="center"
+                android:onClick="startWorkout"
+                android:id="@+id/button_start_workout"
+                android:textColor="#FFF"
+                android:background="@drawable/login_button_gradient"
+                android:text="Start training"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Indicate pulse zone by vibrating"
-                android:layout_marginLeft="5dp"
-                android:textColor="#FFFFFF"
-                android:id="@+id/txt_vibrate_or_not"
+                android:text="*Today is your day-off. You should take a break!"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:id="@+id/txt_warning_day_off"
+                android:textSize="17dp"
                 />
 
-            <android.support.v7.widget.AppCompatImageButton
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:background="@color/transparent"
-                android:scaleType="fitCenter"
-                android:id="@+id/imgButton_info_about_vibration"
-                android:src="@drawable/ic_info_icon"
-                android:layout_marginLeft="5dp"
-                />
+
         </LinearLayout>
 
-        <android.support.v7.widget.AppCompatButton
-            android:layout_width="200dp"
-            android:layout_height="35dp"
-            android:layout_marginTop="10dp"
-            android:textSize="15dp"
-            android:layout_gravity="center"
-            android:id="@+id/button_personalised_workout"
-            android:textColor="#FFF"
-            android:textAllCaps="false"
-            android:background="@drawable/login_socialmedia"
-            android:text="Personalize"/>
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Your workout is personolized"
-            android:visibility="gone"
-            android:id="@+id/txt_personolized_workout"
-            android:gravity="center"
-            android:textColor="#FFFFFF"
-            android:textSize="20dp"
-            />
-        <android.support.v7.widget.AppCompatButton
-            android:layout_width="200dp"
-            android:layout_height="35dp"
-            android:textAllCaps="false"
-            android:layout_marginTop="10dp"
-            android:textSize="15dp"
-            android:layout_gravity="center"
-            android:onClick="startWorkout"
-            android:id="@+id/button_start_workout"
-            android:textColor="#FFF"
-            android:background="@drawable/login_button_gradient"
-            android:text="Start training"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="*Today is your day-off. You should take a break!"
-            android:textColor="@color/white"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:id="@+id/txt_warning_day_off"
-            android:textSize="17dp"
-            />
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="5dp"
-        android:visibility="visible"
-        android:id="@+id/layout_pulse_zone"
-        >
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Intensity"
-            android:textColor="@color/white"
-            android:gravity="center"
-            android:textSize="25dp"
-            android:layout_margin="5dp"
-            android:id="@+id/txt_intensity"
-            />
-
-        <com.mabe.productions.hrv_madison.PulseZoneView
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
+            android:orientation="vertical"
             android:layout_marginTop="5dp"
             android:visibility="visible"
-            android:id="@+id/pulse_zone_progress"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Pulse is too low!"
-            android:textColor="@color/white"
-            android:gravity="center"
-            android:textSize="18dp"
-            android:visibility="gone"
-            android:id="@+id/txt_intensity_status"
-            />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/layout_bpm"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:gravity="bottom"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:visibility="visible">
+            android:id="@+id/layout_pulse_zone"
+            >
 
             <TextView
-                android:id="@+id/workout_bpm"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="bottom"
-                android:text=" - "
-                android:textColor="#fff"
-                android:textSize="60dp"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Intensity"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:textSize="25dp"
+                android:layout_margin="5dp"
+                android:id="@+id/txt_intensity"
+                />
+
+            <com.mabe.productions.hrv_madison.PulseZoneView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginTop="5dp"
+                android:visibility="visible"
+                android:id="@+id/pulse_zone_progress"
+                />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="bottom"
-                android:paddingBottom="5dp"
-                android:text="BPM"
-                android:textColor="#fff"
-
-                android:textSize="30sp"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Pulse is too low!"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:textSize="18dp"
+                android:visibility="gone"
+                android:id="@+id/txt_intensity_status"
+                />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/txt_connection_status_workout"
+
+        <LinearLayout
+            android:id="@+id/layout_bpm"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text=""
-            android:textColor="#fff"
-            android:textSize="15sp"/>
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:gravity="bottom"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/workout_bpm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:text=" - "
+                    android:textColor="#fff"
+                    android:textSize="60dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:paddingBottom="5dp"
+                    android:text="BPM"
+                    android:textColor="#fff"
+
+                    android:textSize="30sp"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txt_connection_status_workout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text=""
+                android:textColor="#fff"
+                android:textSize="15sp"/>
+
+
+        </LinearLayout>
 
 
     </LinearLayout>
-
-
-</LinearLayout>
+</ScrollView>
