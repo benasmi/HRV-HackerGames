@@ -38,6 +38,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -1091,7 +1092,8 @@ public class WorkoutFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (editText_minutes.getSelectionStart() == 2) {
-                    editText_seconds.requestFocus();
+                    //editText_seconds.requestFocus();
+                    editText_minutes.clearFocus();
                 }
             }
 
@@ -1100,6 +1102,21 @@ public class WorkoutFragment extends Fragment {
 
             }
         });
+
+        TextView.OnEditorActionListener editorListener = new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId== EditorInfo.IME_ACTION_DONE){
+                    //Clear focus here from the edittext
+                    v.clearFocus();
+                }
+                return false;
+            }
+        };
+
+        editText_seconds.setOnEditorActionListener(editorListener);
+        editText_minutes.setOnEditorActionListener(editorListener);
+
         editText_seconds.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -1115,6 +1132,7 @@ public class WorkoutFragment extends Fragment {
 
                 if (Integer.parseInt(s.subSequence(0, 1).toString()) >= 6) {
                     editText_seconds.setText("00");
+                    editText_seconds.setSelection(0, 2);
                 }
 
                 if (editText_seconds.getSelectionStart() == 2) {
@@ -1129,7 +1147,6 @@ public class WorkoutFragment extends Fragment {
             }
         });
     }
-
 
     /*
      * Calculates the calories burned.
