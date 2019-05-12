@@ -182,6 +182,7 @@ public class DataTodayFragment extends Fragment {
                         .setTextColor(getActivity().getResources().getColor(R.color.white))
                         .setCornerRadius(7f)
                         .setGravity(Gravity.TOP)
+                        .setCancelable(true)
                         .show();
             }
         };

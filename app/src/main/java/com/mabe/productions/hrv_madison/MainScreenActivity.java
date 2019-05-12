@@ -71,7 +71,6 @@ public class MainScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         Window wind = getWindow();
 
         //wind.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
