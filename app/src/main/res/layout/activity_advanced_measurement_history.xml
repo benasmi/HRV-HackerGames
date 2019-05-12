@@ -417,7 +417,7 @@
                         android:layout_width="0px"
                         android:layout_height="65dp"
                         android:padding="12dp"
-                        android:src="@drawable/ic_neutral_selected"
+                        android:src="@drawable/ic_neutral"
                         android:id="@+id/img_neutral"
                         android:layout_weight="1"/>
                     <ImageView
@@ -439,7 +439,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Possitively mellow"
+                    android:text="Positively mellow"
                     android:gravity="center"
                     android:id="@+id/txt_emotion_explaining"
                     android:textColor="@color/colorAccent"

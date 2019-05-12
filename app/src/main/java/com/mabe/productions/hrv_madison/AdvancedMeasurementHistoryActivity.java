@@ -133,6 +133,7 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
     }
 
 
+
     private void setUpData(Measurement measurement) {
         freq_card_txt_hf_after_measurament.setText(String.valueOf((int) measurement.getHF_band() + "%"));
         freq_card_txt_lf_after_measurement.setText(String.valueOf((int) measurement.getLF_band() + "%"));
@@ -148,19 +149,24 @@ public class AdvancedMeasurementHistoryActivity extends AppCompatActivity {
         //INITIAL MOOD CARDVIEW
         switch (measurement.getMood()) {
             case User.MOOD_NEGATIVELY_EXCITED:
-                img_negatively_excited.callOnClick();
+                img_negatively_excited.setImageResource(R.drawable.ic_negatively_excited_selected);
+                txt_emotion_explaining.setText(R.string.negatively_excited);
                 break;
             case User.MOOD_NEGATIVELY_MELLOW:
-                img_negatively_mellow.callOnClick();
+                img_negatively_mellow.setImageResource(R.drawable.ic_negatively_mellow_selected);
+                txt_emotion_explaining.setText(R.string.negatively_mellow);
                 break;
             case User.MOOD_NEUTRAL:
-                img_neutral.callOnClick();
+                img_neutral.setImageResource(R.drawable.ic_neutral_selected);
+                txt_emotion_explaining.setText(R.string.neutral);
                 break;
             case User.MOOD_POSITIVELY_MELLOW:
-                img_positively_mellow.callOnClick();
+                img_positively_mellow.setImageResource(R.drawable.ic_positively_mellow_selected);
+                txt_emotion_explaining.setText(R.string.positively_mellow);
                 break;
             case User.MOOD_POSITIVELY_EXCITED:
-                img_positively_excited.callOnClick();
+                img_positively_excited.setImageResource(R.drawable.ic_positively_excited_selected);
+                txt_emotion_explaining.setText(R.string.positively_excited);
                 break;
         }
 
