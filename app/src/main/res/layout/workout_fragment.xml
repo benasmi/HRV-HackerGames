@@ -635,8 +635,8 @@
             <com.mabe.productions.hrv_madison.PulseZoneView
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_marginTop="5dp"
                 android:visibility="visible"
                 android:id="@+id/pulse_zone_progress"

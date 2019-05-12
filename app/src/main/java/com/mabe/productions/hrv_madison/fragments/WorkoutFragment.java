@@ -14,6 +14,7 @@ import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
@@ -30,7 +31,6 @@ import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.KeyListener;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -661,6 +661,7 @@ public class WorkoutFragment extends Fragment {
                 layout_workout_name.setVisibility(View.VISIBLE);
                 workout_tab_running_gif.setVisibility(View.INVISIBLE);
                 layout_pulse_zone.setVisibility(View.GONE);
+
                 txt_warning_dayoff.setVisibility(Utils.checkDayOffStatus(getContext()) == true ? View.GONE : View.VISIBLE);
                 pulseTracker.clear();
                 paceData.clear();
