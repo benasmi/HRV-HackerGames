@@ -67,13 +67,12 @@ import java.util.Date;
 public class MeasurementFragment extends Fragment {
 
     public static final int MY_CAMERA_REQUEST_CODE = 5;
-    public static boolean IS_MEASURING = false;
     private static NumberPicker measurement_duration;
-    private  TextView txt_hr;
-    private  TextView txt_hrv;
-    private  TextView txt_hr_value;
-    private  ImageView imgButton_view_hrv_finger_info;
-    private  TextView txt_hrv_value;
+    private TextView txt_hr;
+    private TextView txt_hrv;
+    private TextView txt_hr_value;
+    private ImageView imgButton_view_hrv_finger_info;
+    private TextView txt_hrv_value;
     public TextView txt_connection_status;
     private static AppCompatButton btn_start_measuring;
     private ProgressBar progressbar_measurement;
@@ -116,6 +115,7 @@ public class MeasurementFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
 
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.measurement_fragment, container, false);
         //Initializing the mediaplayer in this method, so that we don't need to reload the sound later
@@ -153,6 +153,7 @@ public class MeasurementFragment extends Fragment {
 
 
     private void initializeViews(View view) {
+
         img_breathing_indicator = view.findViewById(R.id.breathing_indicator);
         txt_line_chart_label = view.findViewById(R.id.txt_line_chart_label);
         txt_line_chart_label.setVisibility(View.INVISIBLE);
@@ -444,7 +445,7 @@ public class MeasurementFragment extends Fragment {
 
     public void startMeasuring() {
 
-        IS_MEASURING = true;
+        WorkoutFragment.disabledWorkoutFragment();
         Utils.speak("Measurement will take " + measurement_duration.getValue() + " minute" + (measurement_duration.getValue() > 1 ? "s" : "") + "!");
 
         Crashlytics.log("Starting the measurement.");
@@ -518,11 +519,11 @@ public class MeasurementFragment extends Fragment {
 
             @Override
             public void onFinish() {
-                IS_MEASURING = false;
                 Crashlytics.log("Measurement is finished.");
 
                 //Playing the ending sound
                 mediaPlayer.start();
+                WorkoutFragment.enableWorkoutFragment();
 
                 Measurement measurement = new Measurement(hrv, fft, bpm, measurement_duration.getValue(), Calendar.getInstance().getTime());
                 Utils.speak("Measurement is finished and saved successfuly!");
@@ -605,7 +606,7 @@ public class MeasurementFragment extends Fragment {
     }
 
     private void cancelMeasurement() {
-        IS_MEASURING = false;
+        WorkoutFragment.enableWorkoutFragment();
         Crashlytics.log("Measurement is cancelled.");
         currentMeasurementState = STATE_WAITING_TO_MEASURE;
         MainScreenActivity.setDisplayOnLockscreen(false, getActivity());
@@ -614,7 +615,6 @@ public class MeasurementFragment extends Fragment {
         }
         hrv.clear();
         bpm.clear();
-        ;
         fft.clearData();
         measurement_duration.setEnabled(true);
         btn_start_measuring.setText(R.string.measure_btn);

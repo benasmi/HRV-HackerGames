@@ -62,6 +62,7 @@ import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.firebase.FireWorkout;
 import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.measurements.BPM;
+import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 import com.tooltip.Tooltip;
 
@@ -79,9 +80,8 @@ public class WorkoutFragment extends Fragment {
     private static final long VIBRATE_DURATION_CONNECTION_LOST = 5000l;
     private static final int PERMISSION_GPS_REQUEST = 0;
 
-    public static boolean IS_WORKING_OUT = false;
     public static final long WARMUP_DURATION = 300000L;
-
+    //public static final long WARMUP_DURATION = 6000L;
     private static CircularProgressBar progressbar_duration;
     private static EditText editText_seconds;
     private static EditText editText_minutes;
@@ -459,7 +459,6 @@ public class WorkoutFragment extends Fragment {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             setState(STATE_WORKING_OUT);
-                            IS_WORKING_OUT = true;
                         }
                     },
                     null
@@ -644,7 +643,6 @@ public class WorkoutFragment extends Fragment {
                         public void onClick(DialogInterface dialog, int which) {
 
                             runThread = false;
-                            IS_WORKING_OUT = false;
                             setState(STATE_BEFORE_WORKOUT);
                         }
                     },
@@ -677,12 +675,11 @@ public class WorkoutFragment extends Fragment {
             FirebaseUtils.addWorkout(new FireWorkout(workout));
 
             setState(STATE_BEFORE_WORKOUT);
-            IS_WORKING_OUT = true;
             ViewPager parentViewPager = getActivity().findViewById(R.id.viewpager);
             ViewPagerAdapter adapter = (ViewPagerAdapter) parentViewPager.getAdapter();
             adapter.dataTodayFragment.updateData(getContext());
             parentViewPager.setCurrentItem(1);
-
+            MeasurementFragment.enableMeasurementFragment();
 
         }
     };
@@ -711,6 +708,8 @@ public class WorkoutFragment extends Fragment {
                 if (vibrationTimer != null) {
                     vibrationTimer.cancel();
                 }
+
+                MeasurementFragment.enableMeasurementFragment();
                 cancelTimer();
                 txt_exercise_indicator.setText("Duration");
                 txt_exercise_indicator.setVisibility(View.VISIBLE);
@@ -766,6 +765,7 @@ public class WorkoutFragment extends Fragment {
                     startedWorkoutAnimations();
                 }
 
+                MeasurementFragment.disableMeasurementFragment();
                 setWalkingRunningState(0L);
                 txt_exercise_indicator.setVisibility(View.VISIBLE);
                 layout_workout_name.setVisibility(View.GONE);

@@ -202,17 +202,6 @@ public class MainScreenActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if(WorkoutFragment.IS_WORKING_OUT && position==0){
-                    MeasurementFragment.disableMeasurementFragment();
-                }else{
-                    MeasurementFragment.enableMeasurementFragment();
-                }
-
-                if(MeasurementFragment.IS_MEASURING && position==2){
-                    WorkoutFragment.disabledWorkoutFragment();
-                }else{
-                    WorkoutFragment.enableWorkoutFragment();
-                }
 
                 bottomNavigation.setCurrentItem(position);
             }
