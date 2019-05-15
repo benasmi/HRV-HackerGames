@@ -230,7 +230,7 @@ public class LoginActivity extends AppCompatActivity {
                                         if (isInitialDone) {
                                             Crashlytics.log("User has done initial activity evaluation.");
                                             //User has done the initial questionnaire. Downloading it's data, and launching MainScreenActivity afterwards.
-                                            getGlobalUserInformation(false, true);
+                                            getGlobalUserInformation(true, true);
                                         } else {
                                             //User has not filled out the initial questionnaire. Opening IntroInitialPage for the user to do so.
                                             Crashlytics.log("User has not done initial activity evaluation");
@@ -358,7 +358,7 @@ public class LoginActivity extends AppCompatActivity {
                 progressDialog.dismiss();
 
                 if (startFetchingInitialInfoAfter) {
-                    getInitialUserInformation(false);
+                    getInitialUserInformation(true);
                 }
             }
 
