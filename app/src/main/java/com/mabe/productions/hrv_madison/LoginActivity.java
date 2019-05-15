@@ -210,9 +210,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             if (isNew) {
                                 //In this case, we know for sure that user hasn't provided us with initial information.
-                                //FirebaseUtils.addUser();
                                 Crashlytics.log("User is new as determined by getAdditionalUserInfo().isNewUser().");
-
                                 startActivity(new Intent(LoginActivity.this, IntroInitialPage.class));
                             } else {
 
@@ -223,6 +221,7 @@ public class LoginActivity extends AppCompatActivity {
                                 final CustomLoadingDialog loadingDialog = new CustomLoadingDialog(LoginActivity.this, "Checking your account status");
                                 loadingDialog.show();
                                 Crashlytics.log("Checking if user has done initial activity evaluation.");
+
                                 FirebaseUtils.isInitialDone(new FirebaseUtils.OnInitialDoneFetchListener() {
                                     @Override
                                     public void onSuccess(boolean isInitialDone) {
@@ -231,7 +230,7 @@ public class LoginActivity extends AppCompatActivity {
                                         if (isInitialDone) {
                                             Crashlytics.log("User has done initial activity evaluation.");
                                             //User has done the initial questionnaire. Downloading it's data, and launching MainScreenActivity afterwards.
-                                            getGlobalUserInformation(true, true);
+                                            getGlobalUserInformation(false, true);
                                         } else {
                                             //User has not filled out the initial questionnaire. Opening IntroInitialPage for the user to do so.
                                             Crashlytics.log("User has not done initial activity evaluation");
@@ -347,7 +346,7 @@ public class LoginActivity extends AppCompatActivity {
 
         final CustomLoadingDialog dialog = new CustomLoadingDialog(LoginActivity.this, "Loading your data");
 
-        if (showProgressDialog) {
+        if (showProgressDialog && !isFinishing()) {
             dialog.show();
         }
 
@@ -359,7 +358,7 @@ public class LoginActivity extends AppCompatActivity {
                 progressDialog.dismiss();
 
                 if (startFetchingInitialInfoAfter) {
-                    getInitialUserInformation(true);
+                    getInitialUserInformation(false);
                 }
             }
 
@@ -388,7 +387,7 @@ public class LoginActivity extends AppCompatActivity {
 
         final CustomLoadingDialog dialog = new CustomLoadingDialog(LoginActivity.this, "Loading your data");
 
-        if (showProgressDialog) {
+        if (showProgressDialog && !isFinishing()) {
             dialog.show();
         }
 

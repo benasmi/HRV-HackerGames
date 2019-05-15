@@ -263,6 +263,30 @@ public class Utils {
     }
 
 
+    public static void ViewPagerAlertDialogPrompt(boolean cancelable, Context context, String title, String message, String positiveButtonText, String negativeButtonText, @Nullable DialogInterface.OnClickListener positiveButtonListener, @Nullable DialogInterface.OnClickListener negativeButtonListener) {
+        AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(context, R.style.AppThemeDialog);
+        } else {
+            builder = new AlertDialog.Builder(context);
+        }
+        builder.setTitle(title)
+                .setCancelable(cancelable)
+                .setMessage(message)
+                .setPositiveButton(positiveButtonText, positiveButtonListener != null ? positiveButtonListener : new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(negativeButtonText, negativeButtonListener != null ? negativeButtonListener : new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+
     public static boolean isBluetoothEnabled() {
         final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         return (bluetoothAdapter != null && bluetoothAdapter.isEnabled());

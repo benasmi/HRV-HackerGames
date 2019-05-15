@@ -67,21 +67,22 @@ import java.util.Date;
 public class MeasurementFragment extends Fragment {
 
     public static final int MY_CAMERA_REQUEST_CODE = 5;
-    private NumberPicker measurement_duration;
-    private TextView txt_hr;
-    private TextView txt_hrv;
-    private TextView txt_hr_value;
-    private ImageView imgButton_view_hrv_finger_info;
-    private TextView txt_hrv_value;
+    public static boolean IS_MEASURING = false;
+    private static NumberPicker measurement_duration;
+    private static TextView txt_hr;
+    private static TextView txt_hrv;
+    private static TextView txt_hr_value;
+    private static ImageView imgButton_view_hrv_finger_info;
+    private static TextView txt_hrv_value;
     public TextView txt_connection_status;
-    private AppCompatButton btn_start_measuring;
+    private static AppCompatButton btn_start_measuring;
     private ProgressBar progressbar_measurement;
     private ImageView img_breathing_indicator;
     private LineChart chart_hr;
     private TextView txt_time_left;
     private MediaPlayer mediaPlayer;
     private TextView txt_line_chart_label;
-    private AppCompatButton measure_with_camera;
+    public static AppCompatButton measure_with_camera;
 
     private int failureIntervalTimes = 0;
 
@@ -122,6 +123,54 @@ public class MeasurementFragment extends Fragment {
         initializeViews(view);
         setFonts();
         return view;
+    }
+
+    public static void disableMeasurementFragment(){
+        measurement_duration.setEnabled(false);
+        measurement_duration.setAlpha(0.4f);
+
+        measure_with_camera.setEnabled(false);
+        measure_with_camera.setAlpha(0.4f);
+
+        btn_start_measuring.setEnabled(false);
+        btn_start_measuring.setAlpha(0.4f);
+
+        txt_hr.setEnabled(false);
+        txt_hr.setAlpha(0.4f);
+
+        txt_hrv.setEnabled(false);
+        txt_hrv.setAlpha(0.4f);
+
+
+        txt_hr_value.setEnabled(false);
+        txt_hr_value.setAlpha(0.4f);
+
+        txt_hrv_value.setEnabled(false);
+        txt_hrv_value.setAlpha(0.4f);
+
+    }
+
+    public static void enableMeasurementFragment(){
+        measurement_duration.setEnabled(true);
+        measurement_duration.setAlpha(1);
+
+        measure_with_camera.setEnabled(true);
+        measure_with_camera.setAlpha(1);
+
+        btn_start_measuring.setEnabled(true);
+        btn_start_measuring.setAlpha(1);
+
+        txt_hr.setEnabled(true);
+        txt_hr.setAlpha(1);
+
+        txt_hrv.setEnabled(true);
+        txt_hrv.setAlpha(1);
+
+        txt_hr_value.setEnabled(true);
+        txt_hr_value.setAlpha(1);
+
+        txt_hrv_value.setEnabled(true);
+        txt_hrv_value.setAlpha(1);
     }
 
 
@@ -417,6 +466,7 @@ public class MeasurementFragment extends Fragment {
 
     public void startMeasuring() {
 
+        IS_MEASURING = true;
         Utils.speak("Measurement will take " + measurement_duration.getValue() + " minute" + (measurement_duration.getValue() > 1 ? "s" : "") + "!");
 
         Crashlytics.log("Starting the measurement.");
@@ -490,6 +540,7 @@ public class MeasurementFragment extends Fragment {
 
             @Override
             public void onFinish() {
+                IS_MEASURING = false;
                 Crashlytics.log("Measurement is finished.");
 
                 //Playing the ending sound
@@ -522,6 +573,7 @@ public class MeasurementFragment extends Fragment {
 
 
     public void disconnected() {
+
         currentMeasurementState = STATE_WAITING_TO_MEASURE;
         cancelMeasurement();
         txt_connection_status.setText(R.string.failed_connection_status);
@@ -575,6 +627,7 @@ public class MeasurementFragment extends Fragment {
     }
 
     private void cancelMeasurement() {
+        IS_MEASURING = false;
         Crashlytics.log("Measurement is cancelled.");
         currentMeasurementState = STATE_WAITING_TO_MEASURE;
         MainScreenActivity.setDisplayOnLockscreen(false, getActivity());

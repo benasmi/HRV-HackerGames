@@ -79,20 +79,24 @@ public class WorkoutFragment extends Fragment {
     private static final long VIBRATE_DURATION_CONNECTION_LOST = 5000l;
     private static final int PERMISSION_GPS_REQUEST = 0;
 
+    public static boolean IS_WORKING_OUT = false;
     public static final long WARMUP_DURATION = 300000L;
 
-    private CircularProgressBar progressbar_duration;
+    private static CircularProgressBar progressbar_duration;
+    private static EditText editText_seconds;
+    private static EditText editText_minutes;
+    private static TextView txt_exercise_indicator;
+    private static AppCompatButton btn_toggle;
+    private static AppCompatButton button_personalised_workout;
+    private static SwitchCompat pulseZone_switch;
+
+
     private TextView txt_calories_burned;
     private TextView txt_current_pace;
     private TextView txt_distance;
-    private TextView txt_exercise_indicator;
     private TextView txt_warning_dayoff;
     private TextView txt_bpm;
-    private EditText editText_seconds;
-    private EditText editText_minutes;
     public TextView txt_connection_status;
-    private AppCompatButton btn_toggle;
-    private AppCompatButton button_personalised_workout;
     private ImageView img_pause;
     private ImageView img_stop;
     private LinearLayout layout_workout_progress;
@@ -104,7 +108,6 @@ public class WorkoutFragment extends Fragment {
     private LinearLayout layout_pulse_by_vibration_switch;
     private LinearLayout layout_workout_name;
     private PulseZoneView pulseZoneView;
-    private SwitchCompat pulseZone_switch;
 
     private TextView txt_reccomended_duration;
     private TextView txt_reccomended_pulse;
@@ -220,6 +223,53 @@ public class WorkoutFragment extends Fragment {
         }
     }
 
+    public static void disabledWorkoutFragment(){
+        progressbar_duration.setEnabled(false);
+        progressbar_duration.setAlpha(0.4f);
+
+        editText_minutes.setEnabled(false);
+        editText_minutes.setAlpha(0.4f);
+
+        editText_seconds.setEnabled(false);
+        editText_seconds.setAlpha(0.4f);
+
+        txt_exercise_indicator.setEnabled(false);
+        txt_exercise_indicator.setAlpha(0.4f);
+
+        btn_toggle.setEnabled(false);
+        btn_toggle.setAlpha(0.4f);
+
+        button_personalised_workout.setEnabled(false);
+        button_personalised_workout.setAlpha(0.4f);
+
+        pulseZone_switch.setEnabled(false);
+        pulseZone_switch.setAlpha(0.4f);
+
+    }
+
+    public static void enableWorkoutFragment(){
+        progressbar_duration.setEnabled(true);
+        progressbar_duration.setAlpha(1);
+
+        editText_minutes.setEnabled(true);
+        editText_minutes.setAlpha(1);
+
+        editText_seconds.setEnabled(true);
+        editText_seconds.setAlpha(1);
+
+        txt_exercise_indicator.setEnabled(true);
+        txt_exercise_indicator.setAlpha(1);
+
+        btn_toggle.setEnabled(true);
+        btn_toggle.setAlpha(1);
+
+        button_personalised_workout.setEnabled(true);
+        button_personalised_workout.setAlpha(1);
+
+        pulseZone_switch.setEnabled(true);
+        pulseZone_switch.setAlpha(1);
+    }
+
     private void initializeViews(View rootView) {
         txt_workout_name = rootView.findViewById(R.id.txt_workout_name);
         txt_workout_name_explanation = rootView.findViewById(R.id.txt_workout_name_explaining);
@@ -321,6 +371,7 @@ public class WorkoutFragment extends Fragment {
     }
 
     private void timeEndedAnimations() {
+
         Utils.speak("Your planned workout time has ended!");
         btn_toggle.startAnimation(anim_top_to_bottom_delay);
     }
@@ -408,6 +459,7 @@ public class WorkoutFragment extends Fragment {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             setState(STATE_WORKING_OUT);
+                            IS_WORKING_OUT = true;
                         }
                     },
                     null
@@ -592,7 +644,7 @@ public class WorkoutFragment extends Fragment {
                         public void onClick(DialogInterface dialog, int which) {
 
                             runThread = false;
-
+                            IS_WORKING_OUT = false;
                             setState(STATE_BEFORE_WORKOUT);
                         }
                     },
@@ -625,6 +677,7 @@ public class WorkoutFragment extends Fragment {
             FirebaseUtils.addWorkout(new FireWorkout(workout));
 
             setState(STATE_BEFORE_WORKOUT);
+            IS_WORKING_OUT = true;
             ViewPager parentViewPager = getActivity().findViewById(R.id.viewpager);
             ViewPagerAdapter adapter = (ViewPagerAdapter) parentViewPager.getAdapter();
             adapter.dataTodayFragment.updateData(getContext());

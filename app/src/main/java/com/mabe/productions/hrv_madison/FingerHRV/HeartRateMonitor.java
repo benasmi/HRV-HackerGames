@@ -519,13 +519,13 @@ public class HeartRateMonitor extends Activity {
 
                 FirebaseUtils.addMeasurement(new FireMeasurement(measurement), HeartRateMonitor.this);
                 User.addMeasurementData(HeartRateMonitor.this, measurement, false);
-                startActivity(new Intent(HeartRateMonitor.this, MainScreenActivity.class));
+
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         Toast.makeText(HeartRateMonitor.this, "Measurement was successful!", Toast.LENGTH_LONG).show();
-                        HeartRateMonitor.this.finish();
+                        startActivity(new Intent(HeartRateMonitor.this, MainScreenActivity.class));
                     }
                 });
             } else { //User is yet to finish the measurement

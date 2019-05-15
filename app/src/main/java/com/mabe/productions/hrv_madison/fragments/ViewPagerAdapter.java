@@ -39,6 +39,7 @@ public class ViewPagerAdapter extends android.support.v4.app.FragmentPagerAdapte
         return null;
     }
 
+
     @Override
     public int getCount() {
 

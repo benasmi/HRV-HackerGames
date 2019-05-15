@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView
+    android:layout_width="match_parent"
+    android:background="@drawable/login_background"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent">
+
+<RelativeLayout
     android:id="@+id/activity_login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
     android:focusableInTouchMode="true"
     android:focusable="true"
-    android:background="@drawable/login_background"
     tools:context="com.mabe.productions.hrv_madison.LoginActivity">
 
     <TextView
@@ -135,4 +141,6 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
+
 </RelativeLayout>
+</ScrollView>

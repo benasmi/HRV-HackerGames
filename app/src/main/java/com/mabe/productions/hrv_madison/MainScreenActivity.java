@@ -42,6 +42,7 @@ import com.mabe.productions.hrv_madison.firebase.FireGlobalUser;
 import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.fragments.MeasurementFragment;
 import com.mabe.productions.hrv_madison.fragments.ViewPagerAdapter;
+import com.mabe.productions.hrv_madison.fragments.WorkoutFragment;
 
 import java.util.Locale;
 
@@ -166,19 +167,12 @@ public class MainScreenActivity extends AppCompatActivity {
 
 
         bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#2c3e50"));
-        // bottomNavigation.setBehaviorTranslationEnabled(true);
 
-        //bottomNavigation.manageFloatingActionButtonBehavior(floatingActionButton);
 
         bottomNavigation.setAccentColor(Color.parseColor("#F62459"));
         bottomNavigation.setInactiveColor(Color.parseColor("#ffffff"));
 
-
-        //   bottomNavigation.setForceTint(true);
-        //  bottomNavigation.setTranslucentNavigationEnabled(true);
-        //bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
         bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
-        //bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_HIDE);
         bottomNavigation.setColored(false);
         bottomNavigation.setCurrentItem(1);
         viewpager.setCurrentItem(1);
@@ -205,8 +199,21 @@ public class MainScreenActivity extends AppCompatActivity {
             }
 
 
+
             @Override
             public void onPageSelected(int position) {
+                if(WorkoutFragment.IS_WORKING_OUT && position==0){
+                    MeasurementFragment.disableMeasurementFragment();
+                }else{
+                    MeasurementFragment.enableMeasurementFragment();
+                }
+
+                if(MeasurementFragment.IS_MEASURING && position==2){
+                    WorkoutFragment.disabledWorkoutFragment();
+                }else{
+                    WorkoutFragment.enableWorkoutFragment();
+                }
+
                 bottomNavigation.setCurrentItem(position);
             }
 
