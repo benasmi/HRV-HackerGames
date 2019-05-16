@@ -1,121 +1,271 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/login_background"
-    android:orientation="vertical">
+    >
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/userpanel_toolbar"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="#2c3e50"
-        android:elevation="4dp"
-        >
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/userpanel_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#2c3e50"
+            android:elevation="4dp">
 
 
+            <ImageView
+                android:id="@+id/img_back_arrow"
+                android:layout_width="36dp"
+                android:layout_height="35dp"
+                android:layout_marginRight="30dp"
+                android:src="@drawable/ic_back_arrow" />
 
-        <ImageView
-            android:layout_width="36dp"
-            android:layout_height="35dp"
-            android:id="@+id/img_back_arrow"
-            android:layout_marginRight="30dp"
-            android:src="@drawable/ic_back_arrow"/>
+
+            <TextView
+                android:id="@+id/toolbar_title_measurement"
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:gravity="left"
+                android:maxLines="1"
+                android:text="User options"
+                android:textColor="#FFF"
+                android:textSize="18dp" />
+
+        </android.support.v7.widget.Toolbar>
 
 
-        <TextView
-            android:layout_width="240dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:text="User options"
-            android:layout_gravity="left"
-            android:textColor="#FFF"
-            android:gravity="left"
-            android:textSize="18dp"
-            android:id="@+id/toolbar_title_measurement" />
+            android:layout_below="@+id/userpanel_toolbar"
+            android:orientation="vertical">
 
-    </android.support.v7.widget.Toolbar>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="#003e5266"
-        android:layout_alignParentBottom="true"
-        android:text="@string/logout"
-        android:id="@+id/btn_logout"
-        android:onClick="logout"
-        android:layout_marginBottom="25dp"
-        android:textSize="13dp"
-        android:textColor="#F62459"
-        android:textAllCaps="false"
-        android:layout_centerHorizontal="true"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/userpanel_toolbar"
-        android:orientation="vertical"
-        >
-
-       <LinearLayout
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="15dp">
 
 
-           <TextView
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:text="Update information"
-               android:layout_margin="10dp"
-               android:textSize="20dp"
-               android:textColor="@color/white"/>
-           <ImageView
-               android:layout_width="200dp"
-               android:layout_height="1dp"
-               android:background="@color/white"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="Update information"
+                    android:textColor="@color/white"
+                    android:textSize="20dp" />
 
-           <Button
-               android:layout_width="wrap_content"
-               android:layout_height="35dp"
-               android:background="#003e5266"
-               android:text="Change workout days"
-               android:layout_marginLeft="10dp"
-               android:onClick="changeWorkoutDays"
-               android:textAllCaps="false"
-               android:textSize="13dp"
-               android:id="@+id/btn_update_workout_days"
-               android:textColor="#F62459"
-               />
-           <Button
-               android:layout_width="wrap_content"
-               android:layout_height="35dp"
-               android:background="#003e5266"
-               android:text="Change height"
-               android:layout_marginLeft="10dp"
-               android:onClick="changeHeight"
-               android:textAllCaps="false"
-               android:textSize="13dp"
-               android:id="@+id/btn_update_height"
-               android:textColor="#F62459"
-               />
-           <Button
-               android:layout_width="wrap_content"
-               android:layout_height="35dp"
-               android:background="#003e5266"
-               android:text="Change weight"
-               android:layout_marginLeft="10dp"
-               android:onClick="changeWeight"
-               android:textAllCaps="false"
-               android:textSize="13dp"
-               android:id="@+id/btn_update_weight"
-               android:textColor="#F62459"
-               />
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:alpha="0.5"
+                    android:background="@color/white" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:onClick="changeWorkoutDays"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_calendar" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="5dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/change_workout_schedule_option_text"
+                            android:textAllCaps="true"
+                            android:textColor="#fff"
+                            android:textSize="17dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="top"
+                            android:text="@string/change_workout_schedule_option_subtext"
+                            android:textAllCaps="false"
+                            android:textColor="#fff"
+                            android:textSize="11dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="55dp"
+                    android:alpha="0.1"
+                    android:background="@color/white" />
 
 
-       </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:onClick="changeHeight"
+                    android:orientation="horizontal">
 
-    </LinearLayout>
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_ruler" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="5dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/change_height_option_text"
+                            android:textAllCaps="true"
+                            android:textColor="#fff"
+                            android:textSize="17dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="top"
+                            android:text="@string/change_height_option_subtext"
+                            android:textAllCaps="false"
+                            android:textColor="#fff"
+                            android:textSize="11dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="55dp"
+                    android:alpha="0.1"
+                    android:background="@color/white" />
 
 
-</RelativeLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:onClick="changeWeight"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_scales" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="5dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/change_weight_option_text"
+                            android:textAllCaps="true"
+                            android:textColor="#fff"
+                            android:textSize="17dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="top"
+                            android:text="@string/change_weight_option_subtext"
+                            android:textAllCaps="false"
+                            android:textColor="#fff"
+                            android:textSize="11dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="Your account"
+                    android:textColor="@color/white"
+                    android:textSize="20dp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:alpha="0.5"
+                    android:background="@color/white" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:onClick="logout"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_power_button_symbol" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="5dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/logout"
+                            android:textAllCaps="true"
+                            android:textColor="#fff"
+                            android:textSize="17dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="top"
+                            android:text="@string/logout_option_subtext"
+                            android:textAllCaps="false"
+                            android:textColor="#fff"
+                            android:textSize="11dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</ScrollView>

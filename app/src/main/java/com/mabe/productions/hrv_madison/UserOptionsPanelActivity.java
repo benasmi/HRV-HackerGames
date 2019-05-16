@@ -17,7 +17,6 @@ import com.mabe.productions.hrv_madison.initialInfo.IntroInitialWeight;
 public class UserOptionsPanelActivity extends AppCompatActivity {
 
 
-    private Button btn_logout;
     private ImageView img_back_arrow;
 
     @Override
@@ -39,8 +38,6 @@ public class UserOptionsPanelActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-
-        btn_logout = (Button) findViewById(R.id.btn_logout);
         img_back_arrow = (ImageView) findViewById(R.id.img_back_arrow);
 
     }
