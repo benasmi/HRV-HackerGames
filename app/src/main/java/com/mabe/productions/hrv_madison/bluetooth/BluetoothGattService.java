@@ -87,7 +87,6 @@ public class BluetoothGattService extends Service {
                 LocalBroadcastManager.getInstance(BluetoothGattService.this).sendBroadcast(new Intent(ACTION_DISCONNECTED));
                 isGattDeviceConnected = false;
             }
-
         }
 
 
