@@ -12,7 +12,7 @@
     <string name="proceed_without_account">Continue without an account</string>
     <string name="health_index">Health index</string>
     <string name="just_now">Just now</string>
-    <string name="time_ago">Just now!</string> <!--  Use this with a plural from plurals.xml!-->
+    <string name="time_ago">Just now.</string>
     <string name="yesterday">Yesterday</string>
     <string name="heart_rate">Heart rate</string>
     <string name="average">Average: %s</string>
@@ -26,39 +26,39 @@
     <string name="standarts">Baselines</string>
     <string name="devices">Devices</string>
     <string name="scan">Scan</string>
-    <string name="already_scanning">Scanning...</string>
+    <string name="already_scanning">Scanning…</string>
     <string name="today">Today</string>
     <string name="history">History</string>
-    <string name="hrv">Hrv</string>
-    <string name="measure">Measure!</string>
+    <string name="hrv">HRV</string>
+    <string name="measure">Measure.</string>
     <string name="measure_with_camera">Measure with camera</string>
-    <string name="got_it">Got it!</string>
+    <string name="got_it">Got it.</string>
 
     <string name="training_intensity_0">Low (Ex. Walking)</string>
-    <string name="training_intensity_1">Easy (Ex. Eastern excercise)</string>
+    <string name="training_intensity_1">Easy (Ex. Eastern exercise)</string>
     <string name="training_intensity_2">Medium (Ex. Riding a bike)</string>
     <string name="training_intensity_3">Hard (Ex. Basketball)</string>
     <string name="training_intensity_4">Extremely hard (Ex. Swimming)</string>
 
     <string name="training_duration_0">Less then 10min</string>
-    <string name="training_duration_1">10-20min</string>
-    <string name="training_duration_2">20-30min</string>
+    <string name="training_duration_1">10–20min</string>
+    <string name="training_duration_2">20–30min</string>
     <string name="training_duration_3">More than 30min</string>
 
     <string name="training_frequency_0">Less than 1 time/month</string>
     <string name="training_frequency_1">Few times per month.</string>
-    <string name="training_frequency_2">1-2 times/week</string>
-    <string name="training_frequency_3">3-5 times/week</string>
-    <string name="training_frequency_4">6-7 times/week</string>
+    <string name="training_frequency_2">1–2 times/week</string>
+    <string name="training_frequency_3">3–5 times/week</string>
+    <string name="training_frequency_4">6–7 times/week</string>
     <string name="no_device">No device</string>
-    <string name="measurement_is_over">Measurement is done!</string>
+    <string name="measurement_is_over">Measurement is done.</string>
     <string name="review_btn">Review</string>
     <string name="measure_btn">Measure</string>
-    <string name="failed_connection_status">Unable to connect...</string>
-    <string name="connecting_to">Connecting to...</string>
+    <string name="failed_connection_status">Unable to connect…</string>
+    <string name="connecting_to">Connecting to…</string>
     <string name="already_measured_today_message">You have already measured today. Do you want to measure it again?</string>
-    <string name="please_wait">Please wait!</string>
-    <string name="measuring">Measuring...</string>
+    <string name="please_wait">Please wait.</string>
+    <string name="measuring">Measuring…</string>
     <string name="cancel">Cancel</string>
     <string name="title_activity_intro_initial_day_selection">IntroInitialDaySelection</string>
     <string name="choose_workout_days">Which days of the week can you do sports?</string>
@@ -69,20 +69,13 @@
     <string name="wednesday">Wednesday</string>
     <string name="tuesday">Tuesday</string>
     <string name="monday">Monday</string>
-    <string name="please_select_gender">Please choose your gender!</string>
-    <string name="select_at_least_two_days">You have to select atleast two days!</string>
+    <string name="please_select_gender">Please choose your gender.</string>
+    <string name="select_at_least_two_days">You have to select atleast two days.</string>
     <string name="how_long_can_you_work_out">How much time are you willing to work out?</string>
     <string name="weekly_program">Weekly program</string>
-
-    <!--<string name="todays_program">Šiandienos programa</string>-->
-    <!--<string name="todays_program_subtext">Šiandien jums rekomenduojame</string>-->
-    <!--<string name="bpm_rate">Pulso rodikliai</string>-->
-    <string name="program_downgraded">Your hrv is abnormally low. Suggesting to ease down today.</string>
-    <string name="program_upgraded">Your hrv is elevated. Suggesting you work out harder today.</string>
-    <string name="program_unchanged">Your hrv is normal. Not altering your workout.
-    </string>
-
-
+    <string name="program_downgraded">Your HRV is abnormally low. Suggesting to ease down today.</string>
+    <string name="program_upgraded">Your HRV is elevated. Suggesting you work out harder today.</string>
+    <string name="program_unchanged">Your HRV is normal. Not altering your workout.</string>
     <string name="todays_program_subtext">Today we recommend you</string>
     <string name="bpm_rate">BPM and RMSSD data</string>
     <string name="txt_average_bpm">Average BPM</string>
@@ -92,8 +85,8 @@
     <string name="initial_what_is_your_height">What\'s your height?</string>
     <string name="initial_when_is_your_birthday">When\'s your birthday?</string>
     <string name="initial_what_is_your_weight">What\'s your weight?</string>
-    <string name="initial_ask_user_info">One more thing!\n\n We would like you to provide information about yourself to generate sport programs based on you</string>
-    <string name="initial_start_btn">Let\'s get started!</string>
+    <string name="initial_ask_user_info">One more thing.\n\n We kindly ask you to provide additional information to generate your personal training program.</string>
+    <string name="initial_start_btn">Let\'s get started.</string>
     <string name="logout">Log out</string>
     <string name="initial_continue_btn">Next</string>
     <string name="initial_how_much_do_you_workout">How much time do you workout?</string>
@@ -101,8 +94,8 @@
     <string name="txt_hrv_increase">+14 % \n increase</string>
     <string name="txt_duration">30 min</string>
     <string name="txt_suggestion">Your HRV is elevated. Suggesting to workout harder</string>
-    <string name="start_your_workout">Start workout!</string>
-    <string name="txt_pulse_zone">1-2 pulse zone</string>
+    <string name="start_your_workout">Start workout.</string>
+    <string name="txt_pulse_zone">1st-2nd pulse zone</string>
     <string name="txt_how_do_you_feel">How are you feeling today?</string>
     <string name="negatively_excited">Negatively excited</string>
     <string name="negatively_mellow">Negatively mellow</string>
@@ -112,7 +105,7 @@
     <string name="end_training">End training</string>
     <string name="start_training">Start training</string>
     <string name="lost_connection">Lost connection</string>
-    <string name="do_you_really_want_to_stop_training_prompt">Are you sure you want to cancel your workout? The progress will be lost!</string>
+    <string name="do_you_really_want_to_stop_training_prompt">Are you sure you want to cancel your workout? The progress will be lost.</string>
     <string name="no">No</string>
     <string name="end">Finish</string>
     <string name="workout">Workout</string>
@@ -123,13 +116,13 @@
     <string name="repeat_password">Re-enter password</string>
     <string name="register">Register</string>
     <string name="info_txt">During the measurement stay calm and quiet</string>
-    <string name="warmup">Warmup</string>
+    <string name="warmup">Warm-up</string>
     <string name="bpm_data_after_workout">Workout BPM data</string>
     <string name="txt_max_bpm_history">Max BPM</string>
-    <string name="duration_info">The reccomended duration of your workout\nbased on your HRV!</string>
-    <string name="hrv_info">Your hrv today in comparison to the last time you measured</string>
-    <string name="intensity_info">The reccomended pulse range of your workout.</string>
-    <string name="rmssd_info">RMSSD is a measure used to assess heart rate variability (HRV)</string>
+    <string name="duration_info">The recommended duration of your workout\nbased on your HRV.</string>
+    <string name="hrv_info">Your HRV today in comparison to the last time you measured.</string>
+    <string name="intensity_info">The recommended pulse range of your workout.</string>
+    <string name="rmssd_info">RMSSD is a measure used to assess heart rate variability (HRV).</string>
     <string name="workout_card_info">Basic information about your last workout.</string>
     <string name="frequencies_info">Spectral analysis of your measurements enables us to analyze your nervous system\'s condition.</string>
     <string name="pulse_distribution">Pulse zone is simply a range of heart rate. These ranges vary based on your age, weight and gender. This graph shows what pulse zones your heart rate was in during the workout.</string>
@@ -140,6 +133,29 @@
     <string name="change_weight_option_text">Change your weight</string>
     <string name="change_weight_option_subtext">Make sure the information is up-to-date</string>
     <string name="logout_option_subtext">Switch your account</string>
+    <string name="info_vibration_explanation">If you turn this feature on, throughout your workout we will help you to stay in recommended pulse zone by vibration indications.</string>
+    <string name="personalised_workout_explanation">Right now your workout is generated based on Classical Aerobics Theory. If you want unique workout plan generated for you, please measure your \'HRV\' and comeback.</string>
+    <string name="personalised_workout_explanation_title">What is personalized workout?</string>
+    <string name="reccomended_workout_duration_explanation">This is the recommended duration of your workout.</string>
+    <string name="reccomended_pulse_zone_explanation">This is recommended pulse zone of your workout.</string>
+    <string name="ideal_ratio">Ideal balance.</string>
+    <string name="ideal_ratio_explanation">Your body is feeling great, keep it up.</string>
+    <string name="stressed_ratio">Your body starts to feel stressed.</string>
+    <string name="stressed_ratio_explanation">Consider some relaxation exercises and not pushing yourself too hard today.</string>
+    <string name="recovering_ratio">Your body is recovering.</string>
+    <string name="recovering_ratio_explanation">Consider doing some non-stressful activities with higher intensity during your daily schedule.</string>
+    <string name="pressure_ratio">Your body is under pressure.</string>
+    <string name="pressure_ratio_explanation">Ratio indicates anxiety, stress, pressure. You should reduce your work load and physical activities.</string>
+    <string name="exhausted_ratio">Your body is exhausted.</string>
+    <string name="exhausted_ratio_explanation">Ratio indicates low energy and exhaustion. You should consider taking a day off and relaxing.</string>
+    <string name="hrv_definition">One of the heart activity parameter, which evaluates heart beat consistency in time</string>
+    <string name="hrv_definition_title">What is HRV?</string>
+    <string name="hrv_representation_title">What does it represent?</string>
+    <string name="hrv_representation_info">Heart rate variability is one of the indicators of the state of your health and fitness, recovery and readiness</string>
+    <string name="hrv_usage_title">How do we use it?</string>
+    <string name="hrv_usage_description">We use HRV data to generate the most optimal workout for you</string>
+    <string name="nervous_system_info_title">What is sympathetic/parasympathetic nervous system?</string>
+    <string name="nervous_system_info_description">Sympathetic is responsible for the response commonly referred to as \'fight or flight,\' while parasympathetic is referred to as \'rest and digest.\'</string>
 
 </resources>
 

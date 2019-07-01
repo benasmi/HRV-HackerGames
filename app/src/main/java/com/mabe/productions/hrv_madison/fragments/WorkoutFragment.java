@@ -482,7 +482,7 @@ public class WorkoutFragment extends Fragment {
 
             if (infoDuration == null) {
                 infoDuration = new Tooltip.Builder(view)
-                        .setText("This is reccomended duration of your workout")
+                        .setText(R.string.reccomended_workout_duration_explanation)
                         .setDismissOnClick(true)
                         .setBackgroundColor(getActivity().getResources().getColor(R.color.colorAccent))
                         .setTextColor(getActivity().getResources().getColor(R.color.white))
@@ -515,7 +515,7 @@ public class WorkoutFragment extends Fragment {
 
             if (infoVibration == null) {
                 infoVibration = new Tooltip.Builder(view)
-                        .setText("If you turn this feature on, throughout your workout we will help you to stay in reccommended pulse zone by vibration indications!")
+                        .setText(R.string.info_vibration_explanation)
                         .setDismissOnClick(true)
                         .setBackgroundColor(getActivity().getResources().getColor(R.color.colorAccent))
                         .setTextColor(getActivity().getResources().getColor(R.color.white))
@@ -544,8 +544,8 @@ public class WorkoutFragment extends Fragment {
             } else {
                 builder = new AlertDialog.Builder(getContext());
             }
-            builder.setTitle("What is personalized workout?")
-                    .setMessage("Right now your workout is generated based on Classical Aerobics Theory. If you want unique workout plan generated for you, please measure your 'HRV' and comeback!")
+            builder.setTitle(R.string.personalised_workout_explanation_title)
+                    .setMessage(R.string.personalised_workout_explanation)
                     .setPositiveButton(R.string.got_it, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             //Got it!
@@ -596,7 +596,7 @@ public class WorkoutFragment extends Fragment {
 
             if (infoPulse == null) {
                 infoPulse = new Tooltip.Builder(view)
-                        .setText("This is recommended pulse zone of your workout")
+                        .setText(R.string.reccomended_pulse_zone_explanation)
                         .setDismissOnClick(true)
                         .setBackgroundColor(getActivity().getResources().getColor(R.color.colorAccent))
                         .setTextColor(getActivity().getResources().getColor(R.color.white))
@@ -1037,7 +1037,7 @@ public class WorkoutFragment extends Fragment {
                             //Setting timer numbers
                             if (timePassed <= WARMUP_DURATION) {
                                 //It's warmup my dudes
-                                //The timer shows how much time is left for the warmup to end
+                                //The timer shows how much time is left for the warm up to end
                                 minutes = (int) (WARMUP_DURATION - timePassed) / 60000;
                                 seconds = Math.round((WARMUP_DURATION - timePassed) / 1000 - (minutes * 60));
                             } else {
@@ -1490,7 +1490,6 @@ public class WorkoutFragment extends Fragment {
         final int icon_resource;
         final int textResource;
 
-        //TODO: find appropriate walking gif
         if (exercise == EXERCISE_JOGGING) {
             icon_resource = R.drawable.human;
             textResource = R.string.jogging;

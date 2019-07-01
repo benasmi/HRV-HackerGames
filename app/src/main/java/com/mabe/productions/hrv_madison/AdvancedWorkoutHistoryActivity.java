@@ -270,8 +270,8 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
         //Other info
         advanced_history_txt_card_duration.setText((int) (workout.getWorkout_duration() / 1000 / 60) + " min running");
         advanced_history_txt_card_date.setText(formatDate(workout.getDate()));
-        advanced_history_txt_calories_value.setText(workout.getCalories_burned() == 0 ? "-" : String.valueOf(workout.getCalories_burned()) + " Kcal");
-        advanced_history_txt_bpm_value.setText(String.valueOf(workout.getAverage_bpm() == 0 ? "-" : workout.getAverage_bpm()));
+        advanced_history_txt_calories_value.setText(workout.getCalories_burned() == 0 ? "-" : String.valueOf(workout.getCalories_burned()) + " kcal");
+        advanced_history_txt_bpm_value.setText(String.valueOf(workout.getAverage_bpm() == 0 ? "-" : Math.round(workout.getAverage_bpm())));
         advanced_history_txt_pace_value.setText(String.valueOf(workout.getAveragePace()) + " m/s");
         advanced_history_txt_distance_value.setText(String.valueOf(workout.getDistance()) + " km");
 

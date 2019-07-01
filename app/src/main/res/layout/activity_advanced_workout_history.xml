@@ -424,16 +424,16 @@
                 android:layout_marginLeft="10dp"
 
                 android:layout_gravity="center"/>
+
             <TextView
+                android:id="@+id/advanced_history_txt_bpm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="BPM"
-                android:textSize="17dp"
-                android:id="@+id/advanced_history_txt_bpm"
-                android:layout_marginLeft="20dp"
-                android:textColor="#FFFFFF"
                 android:layout_gravity="center"
-                />
+                android:layout_marginLeft="20dp"
+                android:text="Average BPM"
+                android:textColor="#FFFFFF"
+                android:textSize="17dp" />
 
             <TextView
                 android:layout_width="match_parent"

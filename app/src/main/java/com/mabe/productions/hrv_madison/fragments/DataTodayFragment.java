@@ -433,24 +433,24 @@ public class DataTodayFragment extends Fragment {
     private void setLF_HF_RatioZone(float ratio) {
         freq_card_ratio_scale.setElementPosition(ratio);
         if (ratio >= 1.4f && ratio <= 1.6f) {
-            freq_card_ratio_meaning.setText("Ideal balance!");
-            freq_card_ratio_meaning_advice.setText("Your body is feeling great, keep it up!");
+            freq_card_ratio_meaning.setText(R.string.ideal_ratio);
+            freq_card_ratio_meaning_advice.setText(R.string.ideal_ratio_explanation);
         }
         if (ratio >= 1.61f && ratio <= 2f) {
-            freq_card_ratio_meaning.setText("Your body starts to feel stressed!");
-            freq_card_ratio_meaning_advice.setText("Consider some relaxation exercises and not pushing yourself too hard today!");
+            freq_card_ratio_meaning.setText(R.string.stressed_ratio);
+            freq_card_ratio_meaning_advice.setText(R.string.stressed_ratio_explanation);
         }
         if (ratio >= 0.5f && ratio <= 1.39f) {
-            freq_card_ratio_meaning.setText("Your body is recovering!");
-            freq_card_ratio_meaning_advice.setText("Consider doing some non-stresful activities with higher intensity during your daily schedule ");
+            freq_card_ratio_meaning.setText(R.string.recovering_ratio);
+            freq_card_ratio_meaning_advice.setText(R.string.recovering_ratio_explanation);
         }
         if (ratio > 2f) {
-            freq_card_ratio_meaning.setText("Your body is under pressure!");
-            freq_card_ratio_meaning_advice.setText("Ratio indicates anxiety, stress, pressure. You should reduce your work load and physical activities!");
+            freq_card_ratio_meaning.setText(R.string.pressure_ratio);
+            freq_card_ratio_meaning_advice.setText(R.string.pressure_ratio_explanation);
         }
         if (ratio < 0.5f) {
-            freq_card_ratio_meaning.setText("Your body is exhausted!");
-            freq_card_ratio_meaning_advice.setText("Ratio indicates low energy and exhaustion. You should consider taking a day off and relaxing!");
+            freq_card_ratio_meaning.setText(R.string.exhausted_ratio);
+            freq_card_ratio_meaning_advice.setText(R.string.exhausted_ratio_explanation);
         }
 
 
