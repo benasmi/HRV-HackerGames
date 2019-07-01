@@ -134,7 +134,7 @@
     <string name="change_weight_option_subtext">Make sure the information is up-to-date</string>
     <string name="logout_option_subtext">Switch your account</string>
     <string name="info_vibration_explanation">If you turn this feature on, throughout your workout we will help you to stay in recommended pulse zone by vibration indications.</string>
-    <string name="personalised_workout_explanation">Right now your workout is generated based on Classical Aerobics Theory. If you want unique workout plan generated for you, please measure your \'HRV\' and comeback.</string>
+    <string name="personalised_workout_explanation">Right now your workout is generated based on Classical Aerobics Theory. If you want unique workout plan generated for you, please measure your \'HRV\' and come back.</string>
     <string name="personalised_workout_explanation_title">What is personalized workout?</string>
     <string name="reccomended_workout_duration_explanation">This is the recommended duration of your workout.</string>
     <string name="reccomended_pulse_zone_explanation">This is recommended pulse zone of your workout.</string>
