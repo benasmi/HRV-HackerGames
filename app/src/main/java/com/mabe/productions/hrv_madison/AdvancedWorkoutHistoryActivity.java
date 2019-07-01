@@ -55,6 +55,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
 
@@ -457,7 +458,7 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
     private String formatDate(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM, hh:mm 'val'");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM, hh:mm 'val'", Locale.ENGLISH);
         return dateFormat.format(cal.getTime());
 
     }

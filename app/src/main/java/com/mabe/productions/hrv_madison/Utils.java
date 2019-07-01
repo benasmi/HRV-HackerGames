@@ -36,6 +36,7 @@ import com.mabe.productions.hrv_madison.fragments.ViewPagerAdapter;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -313,7 +314,7 @@ public class Utils {
     }
 
     public static Date getDateFromString(String date) {
-        SimpleDateFormat format = new SimpleDateFormat(FeedReaderDbHelper.DATE_FORMAT);
+        SimpleDateFormat format = new SimpleDateFormat(FeedReaderDbHelper.DATE_FORMAT, Locale.ENGLISH);
 
         try {
             return format.parse(date);
@@ -324,7 +325,7 @@ public class Utils {
 
 
     public static String getStringFromDate(Date date) {
-        SimpleDateFormat format = new SimpleDateFormat(FeedReaderDbHelper.DATE_FORMAT);
+        SimpleDateFormat format = new SimpleDateFormat(FeedReaderDbHelper.DATE_FORMAT, Locale.ENGLISH);
         return format.format(date);
     }
 

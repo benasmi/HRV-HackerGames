@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecyclerViewAdapter.MyAdapterHolder> {
 
@@ -63,7 +64,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
     private String showDate(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM", Locale.ENGLISH);
         return dateFormat.format(cal.getTime());
 
     }
