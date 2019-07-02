@@ -58,7 +58,7 @@ public class MainScreenActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private boolean isReceiverRegistered = false;
 
-    private ViewPagerAdapter viewPagerAdapter;
+    public ViewPagerAdapter viewPagerAdapter;
 
     private AHBottomNavigation bottomNavigation;
     private ViewPager viewpager;

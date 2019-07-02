@@ -390,7 +390,7 @@ public class DataTodayFragment extends Fragment {
             }
 
             updateData(getContext());
-
+            ((MainScreenActivity) getActivity()).viewPagerAdapter.workoutFragment.updateData();
             pull_refresh_layout.setRefreshing(false);
         }
 
@@ -414,6 +414,7 @@ public class DataTodayFragment extends Fragment {
 
 
             pull_refresh_layout.setRefreshing(false);
+            ((MainScreenActivity) getActivity()).viewPagerAdapter.workoutFragment.updateData();
         }
 
         @Override

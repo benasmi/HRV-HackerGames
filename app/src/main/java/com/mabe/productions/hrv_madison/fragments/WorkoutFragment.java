@@ -14,7 +14,6 @@ import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
@@ -63,7 +62,6 @@ import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.firebase.FireWorkout;
 import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
 import com.mabe.productions.hrv_madison.measurements.BPM;
-import com.mabe.productions.hrv_madison.measurements.Measurement;
 import com.mabe.productions.hrv_madison.measurements.WorkoutMeasurements;
 import com.tooltip.Tooltip;
 
@@ -118,7 +116,7 @@ public class WorkoutFragment extends Fragment {
     private TextView reccomended_duration;
     private TextView txt_minutes;
     private TextView txt_pulse_zone;
-    private TextView txt_personolized_workout;
+    private TextView txt_personalized_workout;
     private AppCompatImageButton imgButton_view_duration_info;
     private AppCompatImageButton imgButton_view_pulse_info;
     private AppCompatImageButton imgButton_info_about_vibration;
@@ -288,7 +286,7 @@ public class WorkoutFragment extends Fragment {
         imgButton_info_about_vibration = rootView.findViewById(R.id.imgButton_info_about_vibration);
         imgButton_view_duration_info = rootView.findViewById(R.id.imgButton_view_duration_info);
         layout_bpm = rootView.findViewById(R.id.layout_bpm);
-        txt_personolized_workout = rootView.findViewById(R.id.txt_personolized_workout);
+        txt_personalized_workout = rootView.findViewById(R.id.txt_personolized_workout);
         button_personalised_workout = rootView.findViewById(R.id.button_personalised_workout);
         layout_reccomended_workout = rootView.findViewById(R.id.layout_reccomended_workout);
         txt_reccomended_duration = rootView.findViewById(R.id.txt_reccomended_duration);
@@ -349,6 +347,8 @@ public class WorkoutFragment extends Fragment {
         }
 
         exercise = MainScreenActivity.user.getExercise();
+
+        setUpPersonalisedButton();
     }
 
     private void initializeAnimations() {
@@ -745,15 +745,8 @@ public class WorkoutFragment extends Fragment {
                 editText_seconds.setEnabled(true);
                 updateData();
 
+                setUpPersonalisedButton();
 
-                //Todo: fix that, it's ugly now :(
-                if (MainScreenActivity.user.getTodaysMeasurement() == null) {
-                    button_personalised_workout.setVisibility(View.VISIBLE);
-                    txt_personolized_workout.setVisibility(View.GONE);
-                } else {
-                    button_personalised_workout.setVisibility(View.GONE);
-                    txt_personolized_workout.setVisibility(View.VISIBLE);
-                }
                 //I suspect that disabling editTexts removes their listeners
                 setupEditTextBehavior();
 
@@ -781,7 +774,7 @@ public class WorkoutFragment extends Fragment {
                 layout_bpm.setVisibility(View.VISIBLE);
                 layout_reccomended_workout.setVisibility(View.GONE);
                 txt_warning_dayoff.setVisibility(View.GONE);
-                txt_personolized_workout.setVisibility(View.GONE);
+                txt_personalized_workout.setVisibility(View.GONE);
                 button_personalised_workout.setVisibility(View.GONE);
                 layout_pulse_by_vibration_switch.setVisibility(View.GONE);
                 btn_toggle.setVisibility(View.GONE);
@@ -832,6 +825,16 @@ public class WorkoutFragment extends Fragment {
 
                 break;
 
+        }
+    }
+
+    private void setUpPersonalisedButton(){
+        if (MainScreenActivity.user.getTodaysMeasurement() == null) {
+            button_personalised_workout.setVisibility(View.VISIBLE);
+            txt_personalized_workout.setVisibility(View.GONE);
+        } else {
+            button_personalised_workout.setVisibility(View.GONE);
+            txt_personalized_workout.setVisibility(View.VISIBLE);
         }
     }
 
