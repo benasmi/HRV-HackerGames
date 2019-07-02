@@ -151,7 +151,7 @@
     <string name="hrv_definition">One of the heart activity parameter, which evaluates heart beat consistency in time</string>
     <string name="hrv_definition_title">What is HRV?</string>
     <string name="hrv_representation_title">What does it represent?</string>
-    <string name="hrv_representation_info">Heart rate variability is one of the indicators of the state of your health and fitness, recovery and readiness</string>
+    <string name="hrv_representation_info">Heart rate variability is one of the indicators of the state of your health and fitness, cardiac stress, recovery and readiness</string>
     <string name="hrv_usage_title">How do we use it?</string>
     <string name="hrv_usage_description">We use HRV data to generate the most optimal workout for you</string>
     <string name="nervous_system_info_title">What is sympathetic/parasympathetic nervous system?</string>
