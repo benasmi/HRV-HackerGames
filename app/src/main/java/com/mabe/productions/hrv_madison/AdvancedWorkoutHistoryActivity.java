@@ -458,7 +458,7 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
     private String formatDate(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM, hh:mm 'val'", Locale.ENGLISH);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM, hh:mm 'h'", Locale.ENGLISH);
         return dateFormat.format(cal.getTime());
 
     }
