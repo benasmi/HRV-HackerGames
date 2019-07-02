@@ -27,6 +27,7 @@
         android:orientation="vertical"
         android:layout_below="@+id/txt_what_is_your_workout_routine"
         android:weightSum="7"
+        android:id="@+id/day_selection_layout"
         android:layout_marginTop="40dp"
         android:layout_centerHorizontal="true">
 
@@ -115,6 +116,19 @@
             android:background="@drawable/login_socialmedia"/>
 
     </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/reccomended_days_notice"
+        android:padding="8dp"
+        android:gravity="center"
+        android:textColor="#FFF"
+        android:textSize="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/day_selection_layout"
+        android:id="@+id/reccomended_days_notice"/>
+
 
     <Button
         android:layout_width="368dp"
