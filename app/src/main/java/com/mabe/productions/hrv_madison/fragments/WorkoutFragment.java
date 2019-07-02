@@ -31,6 +31,7 @@ import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.KeyListener;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -108,6 +109,8 @@ public class WorkoutFragment extends Fragment {
     private LinearLayout layout_pulse_by_vibration_switch;
     private LinearLayout layout_workout_name;
     private PulseZoneView pulseZoneView;
+
+    private boolean isGPSAvailable = true;
 
     private TextView txt_reccomended_duration;
     private TextView txt_reccomended_pulse;
@@ -383,6 +386,7 @@ public class WorkoutFragment extends Fragment {
 
             IntentFilter filter = new IntentFilter();
             filter.addAction(GoogleMapService.ACTION_SEND_GPS_DATA);
+            filter.addAction(GoogleMapService.ACTION_SEND_GPS_AVAILABILITY_DATA);
             LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver, filter);
 
             isReceiverRegistered = true;
@@ -617,8 +621,12 @@ public class WorkoutFragment extends Fragment {
     private View.OnClickListener resumeButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            runThread = false;
-            setState(STATE_WORKING_OUT);
+            if(isGPSAvailable){
+                runThread = false;
+                setState(STATE_WORKING_OUT);
+            }else{
+                Toast.makeText(WorkoutFragment.this.getContext(), "No GPS signal", Toast.LENGTH_LONG).show();
+            }
         }
     };
 
@@ -863,10 +871,24 @@ public class WorkoutFragment extends Fragment {
                     }
                     break;
 
+                case GoogleMapService.ACTION_SEND_GPS_AVAILABILITY_DATA:
+                    boolean isGPSAvailable = intent.getExtras().getBoolean(GoogleMapService.LOCATION_AVAILABILITY_DATA);
+                    Log.i("TEST", "GPS availability update: " + isGPSAvailable);
+                    if(!isGPSAvailable){
+                        timePauseFlashing();
+                        setState(STATE_PAUSED);
+                        Toast.makeText(WorkoutFragment.this.getContext(), "GPS connection lost", Toast.LENGTH_LONG).show();
+                        Utils.vibrate(WorkoutFragment.this.getContext(), 1000L);
+                    }
+                    WorkoutFragment.this.isGPSAvailable = isGPSAvailable;
+                    break;
+
 
             }
         }
     };
+
+
 
 
     private void startLocationListener() {
@@ -875,7 +897,6 @@ public class WorkoutFragment extends Fragment {
         }
 
         getActivity().startService(new Intent(getActivity(), GoogleMapService.class));
-
 
         GoogleMapService.isLocationListeningEnabled = true;
     }

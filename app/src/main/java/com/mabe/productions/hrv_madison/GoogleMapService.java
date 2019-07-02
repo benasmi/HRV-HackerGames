@@ -1,5 +1,6 @@
 package com.mabe.productions.hrv_madison;
 
+import android.annotation.SuppressLint;
 import android.app.KeyguardManager;
 import android.app.Service;
 import android.content.Context;
@@ -11,6 +12,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -23,7 +25,9 @@ public class GoogleMapService extends Service {
 
     public static boolean isLocationListeningEnabled = false;
     public static final String ACTION_SEND_GPS_DATA = "SEND_GPS_DATA";
+    public static final String ACTION_SEND_GPS_AVAILABILITY_DATA = "SEND_GPS_AVAILABILITY_DATA";
     public static final String GPS_DATA = "LOCATION_RESULT";
+    public static final String LOCATION_AVAILABILITY_DATA = "LOCATION_AVAILABILITY";
     public static final String GPS_WAKELOCK_TAG = "HRV_MADISON_GPS";
     private FusedLocationProviderClient mFusedLocationClient;
     private KeyguardManager myKM;
@@ -36,6 +40,7 @@ public class GoogleMapService extends Service {
         return null;
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onCreate() {
         super.onCreate();
@@ -105,10 +110,14 @@ public class GoogleMapService extends Service {
 
             //Clear arrayList after sending, to start adding new data
             locationArrayList.clear();
-
         }
 
 
+        @Override
+        public void onLocationAvailability(LocationAvailability locationAvailability) {
+            LocalBroadcastManager.getInstance(GoogleMapService.this).sendBroadcast(new Intent(ACTION_SEND_GPS_AVAILABILITY_DATA).putExtra(LOCATION_AVAILABILITY_DATA, locationAvailability.isLocationAvailable()));
+            super.onLocationAvailability(locationAvailability);
+        }
     };
 
     @Override
