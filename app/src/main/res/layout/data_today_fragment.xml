@@ -463,15 +463,33 @@
                         android:layout_weight="1"
                         android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/txt_average_bpm"
-                            android:textSize="@dimen/cardview_pink_explain_txt"
-                            android:id="@+id/bpm_txt_average"
-                            android:layout_gravity="center"
-                            android:textColor="#F62459"
-                            />
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/txt_average_bpm"
+                                android:id="@+id/bpm_txt_average"
+                                android:textSize="@dimen/cardview_pink_explain_txt"
+                                android:layout_gravity="center"
+                                android:textColor="#F62459"
+                                />
+
+                            <android.support.v7.widget.AppCompatImageButton
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:background="@color/transparent"
+                                android:scaleType="fitCenter"
+                                android:id="@+id/imgButton_bpm_info"
+                                android:layout_marginLeft="5dp"
+                                android:src="@drawable/ic_info_icon"
+                                />
+
+                        </LinearLayout>
 
                         <TextView
                             android:layout_width="wrap_content"

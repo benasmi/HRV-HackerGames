@@ -111,6 +111,7 @@ public class DataTodayFragment extends Fragment {
     private TextView bpm_card_txt_hrv_average_value;
     private TextView bpm_card_hrv_average_value;
     private AppCompatImageButton imgButton_rmssd_info;
+    private AppCompatImageButton imgButton_bpm_info;
 
 
     //Daily reccomendation cardview
@@ -595,6 +596,7 @@ public class DataTodayFragment extends Fragment {
         bpm_card_txt_hrv_average_value = (TextView) view.findViewById(R.id.bpm_card_txt_hrv_average_value);
         bpm_card_hrv_average_value = (TextView) view.findViewById(R.id.bpm_card_hrv_average_value);
         imgButton_rmssd_info = view.findViewById(R.id.imgButton_rmssd_info);
+        imgButton_bpm_info = view.findViewById(R.id.imgButton_bpm_info);
 
 
         //Reccomendation cardview
@@ -735,6 +737,8 @@ public class DataTodayFragment extends Fragment {
         imgButton_rmssd_info.setOnClickListener(createTooltipListener(R.string.rmssd_info));
         imgButton_workout_card_info.setOnClickListener(createTooltipListener(R.string.workout_card_info));
         imgButton_frequencies_info.setOnClickListener(createTooltipListener(R.string.frequencies_info));
+        imgButton_bpm_info.setOnClickListener(createTooltipListener(R.string.bpm_info_text));
+
 
         scrollview = view.findViewById(R.id.data_today_fragment_scrollview);
         scrollview.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {

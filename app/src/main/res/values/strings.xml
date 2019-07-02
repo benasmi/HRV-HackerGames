@@ -156,6 +156,7 @@
     <string name="hrv_usage_description">We use HRV data to generate the most optimal workout for you</string>
     <string name="nervous_system_info_title">What is sympathetic/parasympathetic nervous system?</string>
     <string name="nervous_system_info_description">Sympathetic is responsible for the response commonly referred to as \'fight or flight,\' while parasympathetic is referred to as \'rest and digest.\'</string>
+    <string name="bpm_info_text">The amout of times your heart beats in a minute.</string>
 
 </resources>
 
