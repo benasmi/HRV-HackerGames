@@ -284,54 +284,69 @@ public class MeasurementFragment extends Fragment {
 
                         Date lastMeasurementDate = Utils.getDateFromString(Utils.readFromSharedPrefs_string(getContext(), FeedReaderDbHelper.FIELD_LAST_MEASUREMENT_DATE, FeedReaderDbHelper.SHARED_PREFS_USER_DATA));
 
-                        boolean hasMeasuredToday = false;
+                        final boolean hasMeasuredToday;
 
                         if (lastMeasurementDate != null) {
                             Calendar calendar = Calendar.getInstance();
                             int today = calendar.get(Calendar.DAY_OF_YEAR);
                             calendar.setTime(lastMeasurementDate);
                             int measurementDay = calendar.get(Calendar.DAY_OF_YEAR);
-                            hasMeasuredToday = today == measurementDay ? true : false;
+                            hasMeasuredToday = today == measurementDay;
 
                         } else {
                             //user is about to measure for the first time. We may want to add a tutorial or something
+                            hasMeasuredToday = false;
                         }
 
+                        DialogInterface.OnClickListener measureClickListener = new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                if (hasMeasuredToday) {
 
-                        if (hasMeasuredToday) {
+                                    Utils.buildAlertDialogPrompt(
+                                            getContext(),
+                                            getString(R.string.please_wait),
+                                            getString(R.string.already_measured_today_message),
+                                            getString(R.string.measure),
+                                            getString(R.string.cancel),
+                                            new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
 
-                            Utils.buildAlertDialogPrompt(
-                                    getContext(),
-                                    getString(R.string.please_wait),
-                                    getString(R.string.already_measured_today_message),
-                                    getString(R.string.measure),
-                                    getString(R.string.cancel),
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                            //if device is connected
-                                            if (BluetoothGattService.isGattDeviceConnected) {
-                                                startMeasuring();
-                                            } else {
-                                                autoConnectDevice();
-                                            }
-                                        }
-                                    },
-                                    null
-                            );
+                                                    //if device is connected
+                                                    if (BluetoothGattService.isGattDeviceConnected) {
+                                                        startMeasuring();
+                                                    } else {
+                                                        autoConnectDevice();
+                                                    }
+                                                }
+                                            },
+                                            null
+                                    );
 
 
-                        } else {
-                            //if device is connected
-                            if (BluetoothGattService.isGattDeviceConnected) {
-                                startMeasuring();
-                            } else {
-                                autoConnectDevice();
+                                } else {
+                                    //if device is connected
+                                    if (BluetoothGattService.isGattDeviceConnected) {
+                                        startMeasuring();
+                                    } else {
+                                        autoConnectDevice();
+                                    }
+                                }
                             }
+                        };
+
+                        if(measurement_duration.getValue() < 3){
+                            Utils.buildAlertDialogPrompt(getContext(),
+                                    getString(R.string.please_wait),
+                                    getString(R.string.short_measurement_duration_notice),
+                                    getString(R.string.measure_anyway),
+                                    getString(R.string.cancel),
+                                    measureClickListener,
+                                    null);
+                        }else{
+                            measureClickListener.onClick(null,0);
                         }
-
-
                         break;
 
                     case STATE_REVIEW_DATA:

@@ -158,6 +158,8 @@
     <string name="nervous_system_info_description">Sympathetic is responsible for the response commonly referred to as \'fight or flight,\' while parasympathetic is referred to as \'rest and digest.\'</string>
     <string name="bpm_info_text">The amout of times your heart beats in a minute.</string>
     <string name="reccomended_days_notice">We recommend to work out on mondays, tuesdays, thursdays and fridays.</string>
+    <string name="short_measurement_duration_notice">Measurements of less than three minutes are insufficient to perform spectral analysis or calculate accurate HRV. Please consider increasing measurement duration.</string>
+    <string name="measure_anyway">Measure anyway</string>
 
 </resources>
 
