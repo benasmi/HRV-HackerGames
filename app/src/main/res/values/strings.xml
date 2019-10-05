@@ -85,7 +85,7 @@
     <string name="initial_what_is_your_height">What\'s your height?</string>
     <string name="initial_when_is_your_birthday">When\'s your birthday?</string>
     <string name="initial_what_is_your_weight">What\'s your weight?</string>
-    <string name="initial_ask_user_info">One more thing.\n\n We kindly ask you to provide additional information to generate your personal training program.</string>
+    <string name="initial_ask_user_info">One more thing.\n\n We kindly ask you to provide additional information to generate your personal training program. It will only take two minutes!</string>
     <string name="initial_start_btn">Let\'s get started.</string>
     <string name="logout">Log out</string>
     <string name="initial_continue_btn">Next</string>
