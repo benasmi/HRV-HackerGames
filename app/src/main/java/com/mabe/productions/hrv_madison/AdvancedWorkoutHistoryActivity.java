@@ -55,6 +55,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
@@ -265,7 +266,7 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
 
         int[] percentages = getPulseZonePercentages(HRMax, workout.getBpm_data());
 
-        pulse_zone_lineChart(percentages);
+        pulse_zone_lineChart(percentages, workout.getExercise().getMinimumPulseZone(), workout.getExercise().getMaximumPulseZone());
 
         //Other info
         advanced_history_txt_card_duration.setText((int) (workout.getWorkout_duration() / 1000 / 60) + " min running");
@@ -379,7 +380,7 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
 
     }
 
-    private void pulse_zone_lineChart(int[] pulse_zone_distribution) {
+    private void pulse_zone_lineChart(int[] pulse_zone_distribution, int lowerIntensityBound, int upperIntensityBound) {
 
         ArrayList<String> labels = new ArrayList<>();
         labels.add("1st");
@@ -421,6 +422,17 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
         singleValueList.add(new BarEntry(3, pulse_zone_distribution[3]));
         singleValueList.add(new BarEntry(4, pulse_zone_distribution[4]));
         BarDataSet set = new BarDataSet(singleValueList, "HR");
+        List<Integer> colors = new ArrayList<Integer>();
+
+
+        for(int i = 1; i <= 5; i++){
+            if(i >= lowerIntensityBound && i <= upperIntensityBound){
+                colors.add(getResources().getColor(R.color.colorAccent));
+            }else{
+                colors.add(Color.parseColor("#ffffff"));
+            }
+        }
+        set.setColors(colors);
 
 
         //Set label count to 5 as we are displaying 5 star rating
@@ -428,7 +440,6 @@ public class AdvancedWorkoutHistoryActivity extends AppCompatActivity {
         horizontal_pulse_distribution_history.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
 
         set.setDrawValues(false);
-        set.setColor(Color.parseColor("#F62459"));
 
         GradientDrawable drawable = new GradientDrawable();
         drawable.setColors(new int[]{
