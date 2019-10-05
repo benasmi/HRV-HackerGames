@@ -71,7 +71,7 @@
     <string name="monday">Monday</string>
     <string name="please_select_gender">Please choose your gender.</string>
     <string name="select_at_least_two_days">You have to select atleast two days.</string>
-    <string name="how_long_can_you_work_out">How much time are you willing to work out?</string>
+    <string name="how_long_can_you_work_out">How long are you willing to work out?</string>
     <string name="weekly_program">Weekly program</string>
     <string name="program_downgraded">Your HRV is abnormally low. Suggesting to ease down today.</string>
     <string name="program_upgraded">Your HRV is elevated. Suggesting you work out harder today.</string>
