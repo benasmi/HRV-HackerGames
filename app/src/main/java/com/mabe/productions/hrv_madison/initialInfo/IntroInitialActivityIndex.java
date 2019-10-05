@@ -18,6 +18,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.jaygoo.widget.OnRangeChangedListener;
+import com.jaygoo.widget.RangeSeekBar;
 import com.mabe.productions.hrv_madison.LoginActivity;
 import com.mabe.productions.hrv_madison.MainScreenActivity;
 import com.mabe.productions.hrv_madison.R;
@@ -28,9 +30,9 @@ import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
 
 public class IntroInitialActivityIndex extends AppCompatActivity {
 
-    RangeSliderView rng_activity_index;
-    RangeSliderView rng_training_duration;
-    RangeSliderView rng_training_frequency;
+    RangeSeekBar rng_activity_index;
+    RangeSeekBar rng_training_duration;
+    RangeSeekBar rng_training_frequency;
 
     TextView txt_training_duration_question;
     TextView txt_training_duration_explanation;
@@ -57,9 +59,11 @@ public class IntroInitialActivityIndex extends AppCompatActivity {
         initializeViews();
         setFonts();
 
-        rng_activity_index.setOnSlideListener(new RangeSliderView.OnSlideListener() {
+        rng_activity_index.setOnRangeChangedListener(new OnRangeChangedListener() {
             @Override
-            public void onSlide(int index) {
+            public void onRangeChanged(RangeSeekBar rangeSeekBar, float v, float v1, boolean b) {
+                int index = (int) (((float) rangeSeekBar.getSteps())/100f * v);
+
                 i_training_intensity = index + 1;
 
                 switch (index) {
@@ -80,12 +84,23 @@ public class IntroInitialActivityIndex extends AppCompatActivity {
                         break;
                 }
             }
+
+            @Override
+            public void onStartTrackingTouch(RangeSeekBar rangeSeekBar, boolean b) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(RangeSeekBar rangeSeekBar, boolean b) {
+
+            }
         });
 
 
-        rng_training_frequency.setOnSlideListener(new RangeSliderView.OnSlideListener() {
+        rng_training_frequency.setOnRangeChangedListener(new OnRangeChangedListener() {
             @Override
-            public void onSlide(int index) {
+            public void onRangeChanged(RangeSeekBar rangeSeekBar, float v, float v1, boolean b) {
+                int index = (int) (((float) rangeSeekBar.getSteps())/100f * v);
                 i_training_frequency = index + 1;
                 switch (index) {
                     case 0:
@@ -105,11 +120,22 @@ public class IntroInitialActivityIndex extends AppCompatActivity {
                         break;
                 }
             }
+
+            @Override
+            public void onStartTrackingTouch(RangeSeekBar rangeSeekBar, boolean b) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(RangeSeekBar rangeSeekBar, boolean b) {
+
+            }
         });
 
-        rng_training_duration.setOnSlideListener(new RangeSliderView.OnSlideListener() {
+        rng_training_duration.setOnRangeChangedListener(new OnRangeChangedListener() {
             @Override
-            public void onSlide(int index) {
+            public void onRangeChanged(RangeSeekBar rangeSeekBar, float v, float v1, boolean b) {
+                int index = (int) (((float) rangeSeekBar.getSteps())/100f * v);
                 i_training_duration = index + 1;
                 switch (index) {
                     case 0:
@@ -126,6 +152,16 @@ public class IntroInitialActivityIndex extends AppCompatActivity {
                         break;
                 }
             }
+
+            @Override
+            public void onStartTrackingTouch(RangeSeekBar rangeSeekBar, boolean b) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(RangeSeekBar rangeSeekBar, boolean b) {
+
+            }
         });
     }
 
@@ -139,9 +175,9 @@ public class IntroInitialActivityIndex extends AppCompatActivity {
 
         btn_next = (Button) findViewById(R.id.initial_continue_activity_index);
 
-        rng_activity_index = (RangeSliderView) findViewById(R.id.activity_index);
-        rng_training_duration = (RangeSliderView) findViewById(R.id.training_duration);
-        rng_training_frequency = (RangeSliderView) findViewById(R.id.training_frequency);
+        rng_activity_index = (RangeSeekBar) findViewById(R.id.activity_index);
+        rng_training_duration = (RangeSeekBar) findViewById(R.id.training_duration);
+        rng_training_frequency = (RangeSeekBar) findViewById(R.id.training_frequency);
 
         txt_training_duration_question = (TextView) findViewById(R.id.training_duration_question);
         txt_training_duration_explanation = (TextView) findViewById(R.id.training_duration_explanation);

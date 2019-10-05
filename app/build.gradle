@@ -69,7 +69,6 @@ dependencies {
     compile 'com.shawnlin:number-picker:2.4.5'
     compile 'com.qindachang:ruler-view:1.0.0'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.2'
-    compile 'com.github.channguyen:rsv:1.0.1'
     compile 'org.adw.library:discrete-seekbar:1.0.1'
     compile 'com.budiyev.android:circular-progress-bar:1.1.8'
     compile 'io.nlopez.smartlocation:library:3.3.3'
@@ -78,6 +77,9 @@ dependencies {
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.baoyz.pullrefreshlayout:library:1.2.0'
 
+    compile 'com.github.channguyen:rsv:1.0.1'
+
+    compile 'com.github.Jay-Goo:RangeSeekBar:v3.0.0'
     // Add dependency
     compile 'com.crashlytics.sdk.android:crashlytics:2.9.5'
 

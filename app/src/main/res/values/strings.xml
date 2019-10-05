@@ -40,7 +40,7 @@
     <string name="training_intensity_3">Hard (Ex. Basketball)</string>
     <string name="training_intensity_4">Extremely hard (Ex. Swimming)</string>
 
-    <string name="training_duration_0">Less then 10min</string>
+    <string name="training_duration_0">Less than 10min</string>
     <string name="training_duration_1">10–20min</string>
     <string name="training_duration_2">20–30min</string>
     <string name="training_duration_3">More than 30min</string>
