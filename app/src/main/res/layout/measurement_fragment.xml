@@ -47,10 +47,6 @@
             android:id="@+id/txt_duration_left"
             android:layout_marginRight="10dp"/>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
 
             <ImageView
                 android:layout_width="100dp"
@@ -61,42 +57,67 @@
                 android:visibility="gone"
                 android:src="@drawable/breathing_indicator_anim"/>
 
-            <com.shawnlin.numberpicker.NumberPicker
+
+            <LinearLayout
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_height="wrap_content"
-                android:id="@+id/number_picker"
                 android:layout_centerInParent="true"
-                app:np_width="180dp"
-                app:np_height="64dp"
-                app:np_dividerColor="#00ffffff"
-                app:np_max="5"
-                app:np_min="1"
-                app:np_order="ascending"
-                app:np_orientation="horizontal"
-                app:np_selectedTextColor="#ffffff"
-                app:np_value="4"
-                app:np_selectedTextSize="@dimen/selected_text_size"
-                app:np_textColor="#ecf0f1"
-                app:np_textSize="@dimen/selected_text_size"
-                app:np_typeface="futura_light.ttf"
-                app:np_fadingEdgeEnabled="true"
-                app:np_scrollerEnabled="true"
-                app:np_wrapSelectorWheel="false"
-                ></com.shawnlin.numberpicker.NumberPicker>
+                android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/number_picker"
-                android:id="@+id/duration_picker_min_txt"
-                android:text="min"
-                android:layout_marginBottom="10dp"
-                android:textSize="12dp"
-                android:textColor="#fff"/>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@id/number_picker"
+                        android:id="@+id/duration_picker_min_txt"
+                        android:text="min"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="12dp"
+                        android:textColor="#fff"/>
+                    <com.shawnlin.numberpicker.NumberPicker
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/number_picker"
+                        app:np_width="180dp"
+                        app:np_height="64dp"
+                        app:np_dividerColor="#00ffffff"
+                        app:np_max="5"
+                        app:np_min="1"
+                        app:np_order="ascending"
+                        app:np_orientation="horizontal"
+                        app:np_selectedTextColor="#ffffff"
+                        app:np_value="5"
+                        app:np_selectedTextSize="@dimen/selected_text_size"
+                        app:np_textColor="#ecf0f1"
+                        app:np_textSize="@dimen/selected_text_size"
+                        app:np_typeface="futura_light.ttf"
+                        app:np_fadingEdgeEnabled="true"
+                        app:np_scrollerEnabled="true"
+                        app:np_wrapSelectorWheel="false"
+                        />
+                </RelativeLayout>
 
-        </RelativeLayout>
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@color/transparent"
+                    android:scaleType="fitCenter"
+                    android:id="@+id/imgButton_measurement_duration_info"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_info_icon"
+                    android:layout_marginLeft="5dp"
+                    />
+
+            </LinearLayout>
+
+
+
+
 
         <TextView
             android:layout_width="match_parent"

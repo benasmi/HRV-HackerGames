@@ -72,6 +72,7 @@ public class MeasurementFragment extends Fragment {
     private TextView txt_hrv;
     private TextView txt_hr_value;
     private ImageView imgButton_view_hrv_finger_info;
+    private ImageView imgButton_measurement_duration_info;
     private TextView txt_hrv_value;
     public TextView txt_connection_status;
     private static AppCompatButton btn_start_measuring;
@@ -86,6 +87,7 @@ public class MeasurementFragment extends Fragment {
     private int failureIntervalTimes = 0;
 
     public Tooltip infoHrvFinger = null;
+    public Tooltip infoMeasurementDuration = null;
     private int[] interval_values;
 
     private User user;
@@ -175,6 +177,7 @@ public class MeasurementFragment extends Fragment {
         });
         img_breathing_indicator.setImageDrawable(animatedBreathingVector);
         imgButton_view_hrv_finger_info = view.findViewById(R.id.imgButton_view_hrv_finger_info);
+        imgButton_measurement_duration_info = view.findViewById(R.id.imgButton_measurement_duration_info);
         txt_time_left = view.findViewById(R.id.txt_duration_left);
         txt_connection_status = view.findViewById(R.id.txt_connection_status);
         txt_hr = view.findViewById(R.id.txt_hr);
@@ -223,6 +226,29 @@ public class MeasurementFragment extends Fragment {
                 }
             }
         });
+
+        imgButton_measurement_duration_info.setOnClickListener(new View.OnClickListener() {
+                                                                   @Override
+                                                                   public void onClick(View view) {
+                                                                       if (infoMeasurementDuration == null) {
+                                                                           infoMeasurementDuration = new Tooltip.Builder(view)
+                                                                                   .setText("The best duration for short-time HRV measurements is 5 minutes. Lower measurement durations result in less accurate results.")
+                                                                                   .setDismissOnClick(true)
+                                                                                   .setBackgroundColor(getActivity().getResources().getColor(R.color.colorAccent))
+                                                                                   .setTextColor(getActivity().getResources().getColor(R.color.white))
+                                                                                   .setCornerRadius(7f)
+                                                                                   .setGravity(Gravity.TOP)
+                                                                                   .setCancelable(true)
+                                                                                   .show();
+
+                                                                       }
+
+                                                                       if (!infoMeasurementDuration.isShowing()) {
+                                                                           infoMeasurementDuration.show();
+                                                                       }
+                                                                   }
+                                                               }
+        );
 
         measure_with_camera.setOnClickListener(new View.OnClickListener() {
             @Override
