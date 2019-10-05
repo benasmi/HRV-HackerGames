@@ -11,16 +11,14 @@
 
     <Button
         android:layout_width="368dp"
-        android:layout_height="48dp"
-        android:background="#003e5266"
-        android:layout_marginBottom="20dp"
+        android:layout_height="35dp"
+        android:layout_margin="20dp"
         android:layout_alignParentBottom="true"
+        style="@style/IpulsusButton"
         android:text="@string/initial_continue_btn"
         android:onClick="start"
         android:textAllCaps="false"
-        android:textSize="13dp"
         android:id="@+id/initiral_continue_height"
-        android:textColor="#F62459"
         android:layout_centerHorizontal="true"/>
 
     <LinearLayout

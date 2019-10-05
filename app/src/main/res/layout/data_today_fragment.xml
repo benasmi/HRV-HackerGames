@@ -43,17 +43,14 @@
             <android.support.v7.widget.AppCompatButton
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
-                android:textSize="15dp"
                 android:text="Measure"
-                android:textColor="#FFF"
+                style="@style/IpulsusButton"
                 android:textAllCaps="false"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/login_button_gradient"
                 android:layout_margin="10dp"
                 android:id="@+id/first_time_measure_button"
 
                 />
-
 
 
         </LinearLayout>

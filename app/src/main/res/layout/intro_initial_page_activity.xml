@@ -11,15 +11,13 @@
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="#003e5266"
+        android:layout_height="35dp"
         android:layout_alignParentBottom="true"
         android:text="@string/initial_start_btn"
         android:id="@+id/initial_start_btn"
         android:onClick="start"
-        android:layout_marginBottom="25dp"
-        android:textSize="13dp"
-        android:textColor="#F62459"
+        style="@style/IpulsusButton"
+        android:layout_margin="20dp"
         android:textAllCaps="false"
         android:layout_centerHorizontal="true"/>
 

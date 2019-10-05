@@ -132,16 +132,14 @@
 
     <Button
         android:layout_width="368dp"
-        android:layout_height="48dp"
-        android:background="#003e5266"
-        android:layout_marginBottom="20dp"
+        android:layout_height="35dp"
+        android:layout_margin="20dp"
         android:layout_alignParentBottom="true"
         android:text="@string/initial_continue_btn"
+        style="@style/IpulsusButton"
         android:onClick="start"
         android:textAllCaps="false"
         android:id="@+id/initial_btn_continue_day_selection"
-        android:textSize="13dp"
-        android:textColor="#F62459"
         android:layout_centerHorizontal="true"/>
 
 
