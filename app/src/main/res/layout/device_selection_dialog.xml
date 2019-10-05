@@ -41,12 +41,14 @@
 
 
 
-    <Button
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/action_scan"
-        style="@style/buttonStyle"
+        android:textColor="#fff"
+        android:textSize="15dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/login_button_gradient"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#00ffffff"
+        android:layout_height="35dp"
         android:text="@string/scan"/>
 
 </LinearLayout>
