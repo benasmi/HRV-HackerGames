@@ -76,9 +76,6 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.baoyz.pullrefreshlayout:library:1.2.0'
-
-    compile 'com.github.channguyen:rsv:1.0.1'
-
     compile 'com.github.Jay-Goo:RangeSeekBar:v3.0.0'
     // Add dependency
     compile 'com.crashlytics.sdk.android:crashlytics:2.9.5'
