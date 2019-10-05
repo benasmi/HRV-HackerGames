@@ -81,7 +81,7 @@
     <string name="txt_average_bpm">Average BPM</string>
     <string name="txt_average_rmssd">Average RMSSD</string>
     <string name="txt_what_gender">What is your gender?</string>
-    <string name="txt_activity_index_question">Evaluate your activity</string>
+    <string name="txt_activity_index_question">How often do you work out?</string>
     <string name="initial_what_is_your_height">What\'s your height?</string>
     <string name="initial_when_is_your_birthday">When\'s your birthday?</string>
     <string name="initial_what_is_your_weight">What\'s your weight?</string>
