@@ -710,7 +710,7 @@ public class User {
             firstWeeklyDate = calendar.getTime();
             Utils.saveToSharedPrefs(context, FeedReaderDbHelper.FIELD_WEEKLY_PROGRAM_GENERATED_DATE, Utils.getStringFromDate(firstWeeklyDate), FeedReaderDbHelper.SHARED_PREFS_SPORT);
             FirebaseUtils.saveFirstWeeklyProgramDate(Utils.getStringFromDate(firstWeeklyDate));
-            Utils.buildAlertDialogPrompt(context, "Weekly program status!", "We have created your first weekly workout program. Based on your activity evaluation you should start from week: " + String.valueOf(activity_streak + 1), "Close", "", null, null);
+            Utils.buildAlertDialogPrompt(context, "Weekly program status!", "We have created your first weekly workout program.", "Close", "", null, null);
             return true;
         }
         first_time = false;
