@@ -16,14 +16,30 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"/>
 
-
-
-    <ListView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:id="@+id/list_devices"
-        >
-    </ListView>
+        android:layout_height="400dp">
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/list_devices"
+            >
+        </ListView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:id="@+id/no_devices_textview"
+            android:padding="10dp"
+            android:visibility="gone"
+            android:text="No devices"
+            android:textColor="#fff" />
+
+    </RelativeLayout>
+
+
 
     <Button
         android:id="@+id/action_scan"

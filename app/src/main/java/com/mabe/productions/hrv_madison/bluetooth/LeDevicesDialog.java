@@ -27,6 +27,8 @@ import android.widget.TextView;
 
 import com.mabe.productions.hrv_madison.R;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class LeDevicesDialog {
@@ -41,6 +43,7 @@ public class LeDevicesDialog {
     private Dialog dialog;
     private Button button_scan;
     private ListView listview_devices;
+    private TextView no_devices_textview;
     public DevicesAdapter adapter;
     private SharedPreferences devicePreference;
 
@@ -115,7 +118,8 @@ public class LeDevicesDialog {
         //Initializing views
         button_scan = dialog.findViewById(R.id.action_scan);
         listview_devices = dialog.findViewById(R.id.list_devices);
-
+        no_devices_textview = dialog.findViewById(R.id.no_devices_textview);
+        listview_devices.setEmptyView(no_devices_textview);
         button_scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,10 +129,12 @@ public class LeDevicesDialog {
             }
         });
 
+
         adapter = new DevicesAdapter();
         listview_devices.setAdapter(adapter);
 
         dialog.show();
+
     }
 
     private BluetoothAdapter.LeScanCallback mLeScanCallback =
