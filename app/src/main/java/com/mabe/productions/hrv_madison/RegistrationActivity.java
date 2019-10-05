@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +13,6 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -85,7 +85,16 @@ public class RegistrationActivity extends AppCompatActivity {
         register_button = (AppCompatButton) findViewById(R.id.buttonRegister);
 
         terms_checkbox = (AppCompatCheckBox) findViewById(R.id.terms_checkbox);
-        txt_terms = (TextView) findViewById(R.id.textView2);
+        txt_terms = (TextView) findViewById(R.id.terms_and_conditions_textview);
+        txt_terms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url = "http://www.ipulsus.lt/privatumo_politika";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
         terms_layout = (LinearLayout) findViewById(R.id.layout_terms);
 
         register_name_input = (TextInputLayout) findViewById(R.id.register_name_input);
