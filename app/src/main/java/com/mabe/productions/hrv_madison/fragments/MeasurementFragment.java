@@ -31,6 +31,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,6 +76,7 @@ public class MeasurementFragment extends Fragment {
     private ImageView imgButton_measurement_duration_info;
     private TextView txt_hrv_value;
     public TextView txt_connection_status;
+    private LinearLayout measurement_duration_layout;
     private static AppCompatButton btn_start_measuring;
     private ProgressBar progressbar_measurement;
     private ImageView img_breathing_indicator;
@@ -187,6 +189,7 @@ public class MeasurementFragment extends Fragment {
         txt_duration_picker_text = view.findViewById(R.id.duration_picker_min_txt);
         chart_hr = view.findViewById(R.id.hr_chart);
         //Customizing HR chart
+        measurement_duration_layout = view.findViewById(R.id.measurement_duration_layout);
         chart_hr.setData(new LineData());
         chart_hr.getLineData().setDrawValues(false);
         chart_hr.getLegend().setEnabled(false);
@@ -498,7 +501,7 @@ public class MeasurementFragment extends Fragment {
 
         MainScreenActivity.setDisplayOnLockscreen(true, getActivity());
 
-        measurement_duration.setVisibility(View.GONE);
+        measurement_duration_layout.setVisibility(View.GONE);
         imgButton_view_hrv_finger_info.setVisibility(View.GONE);
         txt_duration_picker_text.setVisibility(View.GONE);
         img_breathing_indicator.setVisibility(View.VISIBLE);
@@ -665,7 +668,7 @@ public class MeasurementFragment extends Fragment {
         timePassed = 0;
         times = 0;
         txt_time_left.setText("");
-        measurement_duration.setVisibility(View.VISIBLE);
+        measurement_duration_layout.setVisibility(View.VISIBLE);
         measure_with_camera.setVisibility(View.VISIBLE);
         imgButton_view_hrv_finger_info.setVisibility(View.VISIBLE);
         img_breathing_indicator.setVisibility(View.GONE);

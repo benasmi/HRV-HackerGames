@@ -730,6 +730,7 @@ public class WorkoutFragment extends Fragment {
                 paceData.clear();
                 stopLocationListener();
                 txt_distance.setText(String.valueOf(0f));
+                txt_current_pace.setText(String.valueOf(0f));
                 btn_toggle.setVisibility(View.VISIBLE);
                 layout_pulse_by_vibration_switch.setVisibility(View.VISIBLE);
                 btn_toggle.setText(R.string.start_training);
@@ -910,6 +911,7 @@ public class WorkoutFragment extends Fragment {
         route.clear();
         paceData.clear();
         totalDistance = 0f;
+        GoogleMapService.isLocationListeningEnabled = false;
     }
 
     public void onMeasurement(int bpm) {
