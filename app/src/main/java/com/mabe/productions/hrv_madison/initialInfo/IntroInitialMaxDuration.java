@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.mabe.productions.hrv_madison.CustomLoadingDialog;
 import com.mabe.productions.hrv_madison.MainScreenActivity;
 import com.mabe.productions.hrv_madison.R;
+import com.mabe.productions.hrv_madison.TutorialActivity;
 import com.mabe.productions.hrv_madison.Utils;
 import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 import com.mabe.productions.hrv_madison.firebase.FirebaseUtils;
@@ -120,7 +121,7 @@ public class IntroInitialMaxDuration extends AppCompatActivity {
 
                 new CustomLoadingDialog(this, "Loading").show();
 
-                startActivity(new Intent(this, MainScreenActivity.class));
+                startActivity(new Intent(this, TutorialActivity.class));
             }
         }
 
