@@ -207,6 +207,7 @@
                 android:text="I have read and agree to the Terms and Conditions"
                 android:layout_marginLeft="10dp"
                 android:clickable="true"
+                android:focusable="true"
                 android:id="@+id/terms_and_conditions_textview" />
 
         </LinearLayout>
