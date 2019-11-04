@@ -26,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mabe.productions.hrv_madison.R;
+import com.mabe.productions.hrv_madison.database.FeedReaderDbHelper;
 
 import org.w3c.dom.Text;
 
@@ -63,8 +64,7 @@ public class LeDevicesDialog {
                 (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
 
         mBluetoothAdapter = bluetoothManager.getAdapter();
-        devicePreference = context.getSharedPreferences("SavedDevice", Context.MODE_PRIVATE);
-
+        devicePreference = context.getSharedPreferences(FeedReaderDbHelper.SHARED_PREFS_DEVICES, Context.MODE_PRIVATE);
         setupDialog();
     }
 
