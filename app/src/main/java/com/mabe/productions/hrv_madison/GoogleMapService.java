@@ -71,6 +71,7 @@ public class GoogleMapService extends Service {
                 .setChannelId(channelId)
                 .build();
 
+        startForeground(ID_SERVICE, notification);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
