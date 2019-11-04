@@ -120,7 +120,7 @@ public class IntroInitialMaxDuration extends AppCompatActivity {
                 Utils.saveToSharedPrefs(this, FeedReaderDbHelper.FIELD_DONE_INITIAL, true, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
 
                 new CustomLoadingDialog(this, "Loading").show();
-
+                finish();
                 startActivity(new Intent(this, TutorialActivity.class));
             }
         }

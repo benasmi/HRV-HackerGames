@@ -925,6 +925,7 @@ public class WorkoutFragment extends Fragment {
             int weight = (int) MainScreenActivity.user.getWeight();
 
             long time = System.currentTimeMillis();
+
             double timePassed = lastMeasurementTime == -1 ? 1d : (time - lastMeasurementTime)/1000d;
             calories_burned = calories_burned + calculateCalories(gender, age, weight, bpm, timePassed);
             pulse_zone = pulseZone(gender, age, bpm);
