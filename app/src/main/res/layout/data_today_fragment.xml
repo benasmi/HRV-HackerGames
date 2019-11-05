@@ -318,6 +318,7 @@
             card_view:cardMaxElevation="6dp"
             android:layout_margin="10dp"
             android:id="@+id/feeling_card"
+            android:visibility="gone"
             card_view:cardCornerRadius="5dp"
             card_view:contentPadding="5dp"
             card_view:cardBackgroundColor="#2c3e50">
@@ -403,6 +404,7 @@
             android:layout_margin="10dp"
             card_view:cardMaxElevation="6dp"
             card_view:cardCornerRadius="5dp"
+            android:visibility="gone"
             android:id="@+id/bpm_card"
             android:layout_marginTop="15dp"
             card_view:contentPadding="5dp"

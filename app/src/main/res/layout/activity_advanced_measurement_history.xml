@@ -372,6 +372,7 @@
             card_view:cardElevation="4dp"
             card_view:cardMaxElevation="6dp"
             android:layout_margin="10dp"
+            android:visibility="gone"
             android:id="@+id/feeling_card"
             card_view:cardCornerRadius="5dp"
             card_view:contentPadding="5dp"

@@ -223,8 +223,8 @@ public class DataTodayFragment extends Fragment {
         if (hasMeasuredToday) {
 
             //Show: ---> mood ; BPM ; LFHF; Training Plan
-            feeling_cardview.setVisibility(View.VISIBLE);
-            bpm_card.setVisibility(View.VISIBLE);
+            //feeling_cardview.setVisibility(View.VISIBLE);
+            //bpm_card.setVisibility(View.VISIBLE);
             freq_card.setVisibility(View.VISIBLE);
             recommendation_card.setVisibility(View.VISIBLE);
             //Hide: ---> No measurement layout
@@ -1133,8 +1133,8 @@ public class DataTodayFragment extends Fragment {
         }
 
         lastMeasurement.setMood(status);
-        User.updateMeasurement(getContext(), lastMeasurement, User.UPDATE_TYPE_BY_ID);
-        FirebaseUtils.updateMeasurement(lastMeasurement);
+        //User.updateMeasurement(getContext(), lastMeasurement, User.UPDATE_TYPE_BY_ID);
+        //FirebaseUtils.updateMeasurement(lastMeasurement);
     }
 
 
