@@ -76,7 +76,6 @@
                 android:layout_width="35dp"
                 android:id="@+id/loading_progress"
                 android:layout_centerHorizontal="true"
-                style="?android:attr/android:progressBarStyleLarge"
                 android:layout_centerVertical="true"
                 android:layout_height="35dp" />
 

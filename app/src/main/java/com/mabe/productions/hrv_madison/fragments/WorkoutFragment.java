@@ -78,7 +78,7 @@ public class WorkoutFragment extends Fragment {
     private static final long VIBRATE_DURATION_TIME_ENDED = 1000l;
     private static final long VIBRATE_DURATION_CONNECTION_LOST = 5000l;
     private static final int PERMISSION_GPS_REQUEST = 0;
-
+    private long lastMeasurementTime = -1L;
     public static final long WARMUP_DURATION = 300000L;
     //public static final long WARMUP_DURATION = 6000L;
     private static CircularProgressBar progressbar_duration;
@@ -712,7 +712,7 @@ public class WorkoutFragment extends Fragment {
         switch (workout_state) {
 
             case STATE_BEFORE_WORKOUT:
-                MainScreenActivity.setDisplayOnLockscreen(false, getActivity());
+                //MainScreenActivity.setDisplayOnLockscreen(false, getActivity());
                 if (vibrationTimer != null) {
                     vibrationTimer.cancel();
                 }
@@ -730,6 +730,7 @@ public class WorkoutFragment extends Fragment {
                 paceData.clear();
                 stopLocationListener();
                 txt_distance.setText(String.valueOf(0f));
+                txt_current_pace.setText(String.valueOf(0f));
                 btn_toggle.setVisibility(View.VISIBLE);
                 layout_pulse_by_vibration_switch.setVisibility(View.VISIBLE);
                 btn_toggle.setText(R.string.start_training);
@@ -744,7 +745,7 @@ public class WorkoutFragment extends Fragment {
                 editText_minutes.setEnabled(true);
                 editText_seconds.setEnabled(true);
                 updateData();
-
+                calories_burned = 0;
                 setUpPersonalisedButton();
 
                 //I suspect that disabling editTexts removes their listeners
@@ -754,7 +755,7 @@ public class WorkoutFragment extends Fragment {
 
             case STATE_WORKING_OUT:
 
-                MainScreenActivity.setDisplayOnLockscreen(true, getActivity());
+                //MainScreenActivity.setDisplayOnLockscreen(true, getActivity());
                 if (infoDuration != null) {
                     infoDuration.dismiss();
                 }
@@ -795,7 +796,7 @@ public class WorkoutFragment extends Fragment {
                 }
 
                 startTimer();
-                calories_burned = 0;
+
 
                 break;
 
@@ -910,6 +911,7 @@ public class WorkoutFragment extends Fragment {
         route.clear();
         paceData.clear();
         totalDistance = 0f;
+        GoogleMapService.isLocationListeningEnabled = false;
     }
 
     public void onMeasurement(int bpm) {
@@ -922,7 +924,10 @@ public class WorkoutFragment extends Fragment {
             int age = Utils.getAgeFromDate(MainScreenActivity.user.getBirthday());
             int weight = (int) MainScreenActivity.user.getWeight();
 
-            calories_burned = calories_burned + calculateCalories(gender, age, weight, bpm, 1f / 60f);
+            long time = System.currentTimeMillis();
+
+            double timePassed = lastMeasurementTime == -1 ? 1d : (time - lastMeasurementTime)/1000d;
+            calories_burned = calories_burned + calculateCalories(gender, age, weight, bpm, timePassed);
             pulse_zone = pulseZone(gender, age, bpm);
             float realPercentage = calculateUIMultiplier(HRMax * 0.5f, HRMax, bpm);
             pulseZoneView.setProgressPercentageWithAnim(realPercentage);
@@ -1244,11 +1249,11 @@ public class WorkoutFragment extends Fragment {
 
         switch (gender) {
             case User.GENDER_FEMALE:
-                calories = ((((double) age * 0.074d) - (((double) weight) * 0.05741d)) + (((double) heartRate) * 0.4472d) - 20.4022d) * timePassed / 4.184d;
+                calories = ((-20.4022d + (0.4472d * heartRate) - (0.1263d * weight) + (0.074d * age))/4.184d) * (timePassed/60d);
                 break;
 
             case User.GENDER_MALE:
-                calories = ((((double) age * 0.2017d) - (((double) weight) * 0.09036d)) + (((double) heartRate) * 0.6309d) - 20.4022d) * timePassed / 4.184d;
+                calories = ((-55.0969d + (0.6309d * heartRate) + (0.1988d * weight) + (0.2017 * age))/4.184) * (timePassed/60d);
                 break;
         }
 

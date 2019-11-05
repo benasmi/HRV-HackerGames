@@ -89,9 +89,7 @@ public class RegistrationActivity extends AppCompatActivity {
         txt_terms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String url = "http://www.ipulsus.lt/privatumo_politika";
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
+                Intent i = new Intent(RegistrationActivity.this, LegalInfoActivity.class);
                 startActivity(i);
             }
         });

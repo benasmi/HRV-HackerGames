@@ -2,12 +2,18 @@ package com.mabe.productions.hrv_madison;
 
 import android.annotation.SuppressLint;
 import android.app.KeyguardManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -20,8 +26,15 @@ import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
 
+import static android.support.v4.app.NotificationCompat.PRIORITY_HIGH;
+
 
 public class GoogleMapService extends Service {
+
+    private static final int ID_SERVICE = 1234;
+    private NotificationCompat.Builder notificationBuilder;
+    private NotificationManager notificationManager;
+    private String channelId;
 
     public static boolean isLocationListeningEnabled = false;
     public static final String ACTION_SEND_GPS_DATA = "SEND_GPS_DATA";
@@ -45,6 +58,21 @@ public class GoogleMapService extends Service {
     public void onCreate() {
         super.onCreate();
 
+
+        Context context = this;
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        channelId = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? createNotificationChannel(notificationManager) : "";
+        notificationBuilder = new NotificationCompat.Builder(context,channelId);
+        Notification notification = notificationBuilder.setOngoing(true)
+                .setSmallIcon(R.drawable.ic_appicon_heart)
+                .setPriority(PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_SERVICE)
+                .setContentText("Working out")
+                .setChannelId(channelId)
+                .build();
+
+        startForeground(ID_SERVICE, notification);
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         LocationRequest mLocationRequest = LocationRequest.create();
@@ -65,6 +93,18 @@ public class GoogleMapService extends Service {
         myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
 
 
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private String createNotificationChannel(NotificationManager notificationManager){
+        String channelId = "my_service_channelid";
+        String channelName = "My Foreground Service";
+        NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT);
+        // omitted the LED color
+        channel.setImportance(NotificationManager.IMPORTANCE_DEFAULT);
+        channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        notificationManager.createNotificationChannel(channel);
+        return channelId;
     }
 
 

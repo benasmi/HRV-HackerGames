@@ -21,6 +21,7 @@
     <string name="hrv_frequency_bands">HRV Frequency-Domain results</string>
     <string name="after_this_measurement">After this measurement</string>
     <string name="HF">HF: </string>
+    <string name="terms_and_conditions_link"><u>I have read and agree to the Terms and Conditions</u></string>
     <string name="LF">LF: </string>
     <string name="VLF">VLF: </string>
     <string name="standarts">Baselines</string>

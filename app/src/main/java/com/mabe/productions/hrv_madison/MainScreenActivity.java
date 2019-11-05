@@ -89,7 +89,7 @@ public class MainScreenActivity extends AppCompatActivity {
         registerReceiver();
 
         //Setting toolbar text
-        String deviceName = Utils.readFromSharedPrefs_string(this, FeedReaderDbHelper.BT_FIELD_DEVICE_NAME, FeedReaderDbHelper.SHARED_PREFS_USER_DATA);
+        String deviceName = Utils.readFromSharedPrefs_string(this, FeedReaderDbHelper.BT_FIELD_DEVICE_NAME, FeedReaderDbHelper.SHARED_PREFS_DEVICES);
         if (!deviceName.equals("")) {
             txt_toolbar_device_status.setText(deviceName);
         }
