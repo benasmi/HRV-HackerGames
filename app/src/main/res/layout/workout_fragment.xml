@@ -632,7 +632,7 @@
                 android:id="@+id/txt_intensity"
                 />
 
-            <com.mabe.productions.hrv_madison.PulseZoneView
+            <com.mabe.productions.pr_ipulsus_running.PulseZoneView
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginLeft="5dp"

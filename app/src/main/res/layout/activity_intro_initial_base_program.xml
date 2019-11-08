@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:background="@drawable/login_background"
     android:layout_height="match_parent"
-    tools:context="com.mabe.productions.hrv_madison.initialInfo.IntroInitialActivityIndex">
+    tools:context="com.mabe.productions.pr_ipulsus_running.initialInfo.IntroInitialActivityIndex">
 
 
     <Button

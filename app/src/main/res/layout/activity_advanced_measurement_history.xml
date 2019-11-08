@@ -215,7 +215,7 @@
                         android:layout_margin="5dp"
                         android:layout_height="wrap_content" />
 
-                    <com.mabe.productions.hrv_madison.FrequencyZoneView
+                    <com.mabe.productions.pr_ipulsus_running.FrequencyZoneView
                         android:layout_width="match_parent"
                         android:id="@+id/freq_card_ratio_scale"
                         android:layout_height="60dp" />

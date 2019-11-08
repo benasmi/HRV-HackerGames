@@ -15,7 +15,23 @@
       },
       "oauth_client": [
         {
-          "client_id": "220914111240-ckpvmlhggfqguqchbmbu6u5n5hgp2fbd.apps.googleusercontent.com",
+          "client_id": "220914111240-jna4tk5pket1kga6cppdu1n26m3ncqio.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mabe.productions.hrv_madison",
+            "certificate_hash": "ead2e28ce16a8e3364cf18e926016c0150948333"
+          }
+        },
+        {
+          "client_id": "220914111240-csm0shlgj0uunhom4srhh845b3841jnl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mabe.productions.hrv_madison",
+            "certificate_hash": "590ee1ebbada35d8c6a7d0dc9aeff0e319866151"
+          }
+        },
+        {
+          "client_id": "220914111240-p2ui2u6n3itlfe0119e9n7n0v3cm90hb.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.mabe.productions.hrv_madison",
@@ -33,20 +49,267 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "220914111240-3ccdlpb5ob1d405gomo8v8fqh7tgvrck.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:220914111240:android:ec1ec64902981f9b",
+        "android_client_info": {
+          "package_name": "com.mabe.productions.hrv_madison_aerobics"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "220914111240-a2t80l71kojsnq2s52srd8d8ruhm46ap.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mabe.productions.hrv_madison_aerobics",
+            "certificate_hash": "b045f0ac207496935f90adc248780a5d0a4fae69"
+          }
         },
-        "ads_service": {
-          "status": 2
+        {
+          "client_id": "220914111240-3e2pbdtaka521f3hqq1had4cpsfunrs6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mabe.productions.hrv_madison_aerobics",
+            "certificate_hash": "f10694c71eaad7255d901b8bd7c02901972ac40a"
+          }
+        },
+        {
+          "client_id": "220914111240-efn1so2h198e841ob68q2qb15seel81t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mabe.productions.hrv_madison_aerobics",
+            "certificate_hash": "ca7cf3c67d6c664d2e1d8cca3c6b0b089e577865"
+          }
+        },
+        {
+          "client_id": "220914111240-ev0garpoml3gkb71mojb2pr01cfs7acu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBt_RRRt_zQ_j2d_AkKRIORmReGU_6NctA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "220914111240-3ccdlpb5ob1d405gomo8v8fqh7tgvrck.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:220914111240:android:14e64c246e641c2d",
+        "android_client_info": {
+          "package_name": "com.mabe.productions.hrv_madison_cycling"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "220914111240-176jjkptuf420g7glodf0pt0tt2cnuqk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mabe.productions.hrv_madison_cycling",
+            "certificate_hash": "527627e7c2d8a539ca8773759c23ee8d2864e5dc"
+          }
+        },
+        {
+          "client_id": "220914111240-1ras3bj2ojf292tvmv4klomvtj5pv2t9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mabe.productions.hrv_madison_cycling",
+            "certificate_hash": "efe097ba0ee9807eeb34b9ab6c6983c5e7a09073"
+          }
+        },
+        {
+          "client_id": "220914111240-q12jaacvgi974ioclnftgdpl7p4a174a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mabe.productions.hrv_madison_cycling",
+            "certificate_hash": "0907ef546eb96b4fd1f7f90a9061d9a3e826e48f"
+          }
+        },
+        {
+          "client_id": "220914111240-ev0garpoml3gkb71mojb2pr01cfs7acu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBt_RRRt_zQ_j2d_AkKRIORmReGU_6NctA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "220914111240-3ccdlpb5ob1d405gomo8v8fqh7tgvrck.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:220914111240:android:1d6fdcfb922be1e9",
+        "android_client_info": {
+          "package_name": "com.mabe.productions.hrv_madison_rowing"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "220914111240-173i264bdhb93ntjkcumv9eumrst7738.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mabe.productions.hrv_madison_rowing",
+            "certificate_hash": "4016a77d3860a3947b88dbc0f67709d610fef63e"
+          }
+        },
+        {
+          "client_id": "220914111240-29a5tqo4qg88ok12vk69ieol2vgv0ql4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mabe.productions.hrv_madison_rowing",
+            "certificate_hash": "b980a8d6c93f02a2b14a97a81827e930a8ebca3e"
+          }
+        },
+        {
+          "client_id": "220914111240-4vqo6mfbjfo1pijrpidi9qisog4s7p6c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mabe.productions.hrv_madison_rowing",
+            "certificate_hash": "72f3376681fc6d5e4477e24497086f8225e0e5c7"
+          }
+        },
+        {
+          "client_id": "220914111240-ev0garpoml3gkb71mojb2pr01cfs7acu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBt_RRRt_zQ_j2d_AkKRIORmReGU_6NctA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "220914111240-3ccdlpb5ob1d405gomo8v8fqh7tgvrck.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:220914111240:android:933bc099de6ef2cf",
+        "android_client_info": {
+          "package_name": "com.mabe.productions.hrv_madison_walking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "220914111240-fr1pct2gcafrpm98lksam0nc1spu5dko.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mabe.productions.hrv_madison_walking",
+            "certificate_hash": "3001ac7e311416c214a782993300782a4a8b19d1"
+          }
+        },
+        {
+          "client_id": "220914111240-ev0garpoml3gkb71mojb2pr01cfs7acu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBt_RRRt_zQ_j2d_AkKRIORmReGU_6NctA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "220914111240-3ccdlpb5ob1d405gomo8v8fqh7tgvrck.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:220914111240:android:3cebe465d5d8d53f5ed2bd",
+        "android_client_info": {
+          "package_name": "com.mabe.productions.pr_ipulsus_aerobics"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "220914111240-ev0garpoml3gkb71mojb2pr01cfs7acu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBt_RRRt_zQ_j2d_AkKRIORmReGU_6NctA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "220914111240-3ccdlpb5ob1d405gomo8v8fqh7tgvrck.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:220914111240:android:76941c4af46024cf5ed2bd",
+        "android_client_info": {
+          "package_name": "com.mabe.productions.pr_ipulsus_running"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "220914111240-ev0garpoml3gkb71mojb2pr01cfs7acu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBt_RRRt_zQ_j2d_AkKRIORmReGU_6NctA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "220914111240-3ccdlpb5ob1d405gomo8v8fqh7tgvrck.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

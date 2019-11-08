@@ -15,7 +15,7 @@
     android:clickable="true"
     android:focusableInTouchMode="true"
     android:focusable="true"
-    tools:context="com.mabe.productions.hrv_madison.LoginActivity">
+    tools:context="com.mabe.productions.pr_ipulsus_running.LoginActivity">
 
     <TextView
         android:text="@string/app_name"

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/login_background"
-    tools:context="com.mabe.productions.hrv_madison.AdvancedWorkoutHistoryActivity">
+    tools:context="com.mabe.productions.pr_ipulsus_running.AdvancedWorkoutHistoryActivity">
 
 
     <LinearLayout

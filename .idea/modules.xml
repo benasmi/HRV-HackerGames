@@ -3,8 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/HRV-HackerGames.iml" filepath="$PROJECT_DIR$/HRV-HackerGames.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/HRV-HackerGames-app.iml" filepath="$PROJECT_DIR$/app/HRV-HackerGames-app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Projektai-HRV-HackerGames.iml" filepath="$PROJECT_DIR$/Projektai-HRV-HackerGames.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

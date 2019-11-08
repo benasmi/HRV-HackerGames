@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/login_background"
-    tools:context="com.mabe.productions.hrv_madison.initialInfo.IntroInitialHeight">
+    tools:context="com.mabe.productions.pr_ipulsus_running.initialInfo.IntroInitialHeight">
 
 
     <Button

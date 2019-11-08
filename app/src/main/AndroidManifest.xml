@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:name="android.support.multidex.MultiDexApplication"
-    package="com.mabe.productions.hrv_madison">
+    package="com.mabe.productions.pr_ipulsus_running">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -27,12 +27,12 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".LegalInfoActivity"
+        <activity android:name="com.mabe.productions.pr_ipulsus_running.LegalInfoActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar">
         </activity>
 
-        <activity android:name=".TutorialActivity"
+        <activity android:name="com.mabe.productions.pr_ipulsus_running.TutorialActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar"/>
 
@@ -41,61 +41,61 @@
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
         <activity
-            android:name=".LoginActivity"
+            android:name="com.mabe.productions.pr_ipulsus_running.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name=".MainScreenActivity"
+            android:name="com.mabe.productions.pr_ipulsus_running.MainScreenActivity"
             android:screenOrientation="portrait"
             android:showOnLockScreen="true"
             android:theme="@style/NoActionBar" />
 
         <service
-            android:name=".bluetooth.BluetoothGattService"
+            android:name="com.mabe.productions.pr_ipulsus_running.bluetooth.BluetoothGattService"
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name=".GoogleMapService"
+            android:name="com.mabe.productions.pr_ipulsus_running.GoogleMapService"
             android:enabled="true"
             android:exported="true" />
 
         <activity
-            android:name=".initialInfo.IntroInitialPage"
+            android:name="com.mabe.productions.pr_ipulsus_running.initialInfo.IntroInitialPage"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name=".initialInfo.IntroInitialHeight"
+            android:name="com.mabe.productions.pr_ipulsus_running.initialInfo.IntroInitialHeight"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name=".initialInfo.IntroInitialWeight"
+            android:name="com.mabe.productions.pr_ipulsus_running.initialInfo.IntroInitialWeight"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name=".initialInfo.IntroInitialGender"
+            android:name="com.mabe.productions.pr_ipulsus_running.initialInfo.IntroInitialGender"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name=".initialInfo.IntroInitialInfoBirthday"
+            android:name="com.mabe.productions.pr_ipulsus_running.initialInfo.IntroInitialInfoBirthday"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name=".initialInfo.IntroInitialActivityIndex"
+            android:name="com.mabe.productions.pr_ipulsus_running.initialInfo.IntroInitialActivityIndex"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name=".initialInfo.IntroInitialDaySelection"
+            android:name="com.mabe.productions.pr_ipulsus_running.initialInfo.IntroInitialDaySelection"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name=".initialInfo.IntroInitialMaxDuration"
+            android:name="com.mabe.productions.pr_ipulsus_running.initialInfo.IntroInitialMaxDuration"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
@@ -105,7 +105,7 @@
             android:value="AIzaSyDvZJ_zkfNX-Gg8Ep-JgpRmde7n0I54QoM" />
 
         <activity
-            android:name=".SplashScreenActivity"
+            android:name="com.mabe.productions.pr_ipulsus_running.SplashScreenActivity"
             android:noHistory="true"
             android:theme="@style/NoActionBar">
             <intent-filter>
@@ -115,28 +115,28 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".FrequentlyAskedActivity"
+            android:name="com.mabe.productions.pr_ipulsus_running.FrequentlyAskedActivity"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name=".RegistrationActivity"
+            android:name="com.mabe.productions.pr_ipulsus_running.RegistrationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name=".HistoryActivity"
+            android:name="com.mabe.productions.pr_ipulsus_running.HistoryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name=".AdvancedWorkoutHistoryActivity"
+            android:name="com.mabe.productions.pr_ipulsus_running.AdvancedWorkoutHistoryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name=".AdvancedMeasurementHistoryActivity"
+            android:name="com.mabe.productions.pr_ipulsus_running.AdvancedMeasurementHistoryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
-        <activity android:name=".FingerHRV.HeartRateMonitor" />
-        <activity android:name=".UserOptionsPanelActivity"
+        <activity android:name="com.mabe.productions.pr_ipulsus_running.FingerHRV.HeartRateMonitor" />
+        <activity android:name="com.mabe.productions.pr_ipulsus_running.UserOptionsPanelActivity"
             android:theme="@style/NoActionBar"
             android:noHistory="true"
             android:screenOrientation="portrait"
